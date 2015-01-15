@@ -7,16 +7,15 @@ body {
   padding-top: 50px;
 }
 .container {
-  width: 100%;
+  width: 100vw;
   padding: 0;
-  margin: 0;
 }
 #content {
-  height: -webkit-calc(100vh - 64px);
-  height: -moz-calc(100vh - 64px);
-  height: -ms-calc(100vh - 64px);
-  height: -o-calc(100vh - 64px);
-  height: calc(100vh - 64px);
+  height: -webkit-calc(100vh - 50px);
+  height: -moz-calc(100vh - 50px);
+  height: -ms-calc(100vh - 50px);
+  height: -o-calc(100vh - 50px);
+  height: calc(100vh - 50px);
 }
 .tab {
   float: left;
@@ -31,23 +30,19 @@ body {
 }
 #nav {
   background-color: #ff0;
-  width: 10%;
+  width: 10vw;
 }
 #form {
   background-color: #ffa500;
-  width: 35%;
+  width: 35vw;
   overflow-y: auto;
   overflow-x: hidden;
 }
 #map {
   background-color: #008000;
-  width: 45%;
+  width: 45vw;
 }
 #utils {
   background-color: #a52a2a;
-  width: -webkit-calc(10% - 1px);
-  width: -moz-calc(10% - 1px);
-  width: -ms-calc(10% - 1px);
-  width: -o-calc(10% - 1px);
-  width: calc(10% - 1px);
+  width: 10vw;
 }

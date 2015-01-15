@@ -1,11 +1,14 @@
-var config = require('getconfig');
-var stylizer = require('stylizer');
-var templatizer = require('templatizer');
+/*jslint node: true, browser: true, nomen: true, todo: true */
+/*global app, me, $*/
+'use strict';
 
-// for reuse
-var appDir = __dirname + '/client';
-var cssDir = __dirname + '/public/css';
-var libDir = __dirname + '/lib';
+var config      = require('getconfig'),
+    stylizer    = require('stylizer'),
+    templatizer = require('templatizer'),
+    // for reuse
+    appDir = __dirname + '/client',
+    cssDir = __dirname + '/public/css',
+    libDir = __dirname + '/lib';
 
 
 module.exports = {
@@ -19,10 +22,10 @@ module.exports = {
     // The moonboots config
     moonboots: {
         // The base name of the javascript file served in the <script src="the_name.*.js">
-        jsFileName: 'ortinfo',
+        jsFileName:      'ortinfo',
         // The base name of the css file served in the <link rel="stylesheet" src="the_name.*.css">
-        cssFileName: 'ortinfo',
-        main: appDir + '/app.js',
+        cssFileName:     'ortinfo',
+        main:            appDir + '/app.js',
         developmentMode: config.isDev,
         // Specify any non-commonjs libraries we wish to include.
         // You can think of this as your list of <script> tags in your HTML.
@@ -62,12 +65,12 @@ module.exports = {
             // refreshing styles without waiting for you to refresh or running/configuring
             // the live reload app.
             stylizer({
-                infile: cssDir + '/app.styl',
-                outfile: cssDir + '/app.css',
+                infile:      cssDir + '/app.styl',
+                outfile:     cssDir + '/app.css',
                 development: true,
                 // Beware there's an issue with watch on OSX that causes issues with
                 // watch if you're not running node 0.10.25 or later.
-                watch: cssDir + '/**/*.styl'
+                watch:       cssDir + '/**/*.styl'
             }, done);
         }
     }

@@ -2,16 +2,16 @@
 /*global app, me, $*/
 'use strict';
 
-var _ = require('underscore');
-var logger = require('andlog');
-var config = require('clientconfig');
-
-var Router = require('./router');
-var tracking = require('./helpers/metrics');
-var MainView = require('./views/main');
-var Me = require('./models/me');
-var People = require('./models/persons');
-var domReady = require('domready');
+var _                  = require('underscore'),
+    logger             = require('andlog'),
+    config             = require('clientconfig'),
+    Router             = require('./router'),
+    tracking           = require('./helpers/metrics'),
+    MainView           = require('./views/main'),
+    Me                 = require('./models/me'),
+    People             = require('./models/persons'),
+    domReady           = require('domready'),
+    initiateResizables = require('./modules/initiateResizables');
 
 
 module.exports = {
@@ -40,6 +40,8 @@ module.exports = {
 
             // we have what we need, we can now start our router and show the appropriate page
             self.router.history.start({pushState: true, root: '/'});
+
+            initiateResizables();
         });
     },
 
