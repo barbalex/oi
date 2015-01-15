@@ -1,0 +1,905 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"la",
+				"layersArray"
+			],
+			[
+				"tpop",
+				"tpopkontrzaehl"
+			],
+			[
+				"del",
+				"deltaY"
+			],
+			[
+				"tpo",
+				"tpopArray"
+			],
+			[
+				"max",
+				"max-height"
+			],
+			[
+				"ret",
+				"returnWert"
+			],
+			[
+				"Pop",
+				"PopMassnBerId"
+			],
+			[
+				"lee",
+				"leereZaehleinheit"
+			],
+			[
+				"massnb",
+				"massnberText"
+			],
+			[
+				"get",
+				"getZaehleinheiten"
+			],
+			[
+				"erstell",
+				"erstelleTree"
+			],
+			[
+				"latl",
+				"latlng2"
+			],
+			[
+				"ak",
+				"aktiverNode"
+			],
+			[
+				"info",
+				"infowindow_beob"
+			],
+			[
+				"Con",
+				"Content-Type"
+			],
+			[
+				"ini",
+				"initiiereIndex"
+			],
+			[
+				"nodeT",
+				"nodeText2"
+			],
+			[
+				"Inser",
+				"insertIntoTblAktionsplan"
+			],
+			[
+				"feldkontr",
+				"feldkontrZaehleinheit"
+			],
+			[
+				"node",
+				"nodeText"
+			],
+			[
+				"tpopf",
+				"tpopFeldkontrListe"
+			],
+			[
+				"tpopm",
+				"tpopMassnBerListe"
+			],
+			[
+				"str",
+				"strukturtyp"
+			],
+			[
+				"initiiereT",
+				"initiiereTPopFeldkontr"
+			],
+			[
+				"massnber",
+				"massnberVonPop"
+			],
+			[
+				"vor",
+				"voranzustellendeNullen"
+			],
+			[
+				"Z",
+				"ZielId"
+			],
+			[
+				"legene",
+				"legende_url"
+			],
+			[
+				"eigene_",
+				"eigene_ebenen_string"
+			],
+			[
+				"fea",
+				"features"
+			],
+			[
+				"strc",
+				"strict"
+			],
+			[
+				"rb",
+				"rgba()"
+			],
+			[
+				"popu",
+				"popup_id_array"
+			],
+			[
+				"overl",
+				"overlays"
+			],
+			[
+				"zeigeF",
+				"zeigeFeatureInfo"
+			],
+			[
+				"feat",
+				"feature"
+			],
+			[
+				"entfern",
+				"entferneApfloraLayer"
+			],
+			[
+				"my",
+				"my_label"
+			],
+			[
+				"marker_s",
+				"marker_style_markiert"
+			],
+			[
+				"zus",
+				"zusammenfassend"
+			],
+			[
+				"Ur",
+				"Ursprungsdatensammlung"
+			],
+			[
+				"beste",
+				"bestehende_es"
+			],
+			[
+				"mar",
+				"margin-top"
+			],
+			[
+				"hPr",
+				"hProjektListe"
+			],
+			[
+				"op",
+				"option"
+			],
+			[
+				"loc",
+				"localStorage"
+			],
+			[
+				"htmlC",
+				"HtmlContainerBody"
+			],
+			[
+				"user",
+				"user_kommt_vor"
+			],
+			[
+				"ind",
+				"indexpos_hierarchisch"
+			],
+			[
+				"index",
+				"indexpos_einfach"
+			],
+			[
+				"rem",
+				"removeDoc"
+			],
+			[
+				"sess",
+				"sessionStorage"
+			],
+			[
+				"table",
+				"table_id"
+			],
+			[
+				"hier",
+				"hierarchiestufe"
+			],
+			[
+				"löschePro",
+				"löscheProjekt_2"
+			],
+			[
+				"strin",
+				"stringify"
+			],
+			[
+				"qry",
+				"qryLrMethode"
+			],
+			[
+				"LrD",
+				"LrDocs"
+			],
+			[
+				"und",
+				"undelete"
+			],
+			[
+				"apziel_von",
+				"apziel_von_ordner_apziel"
+			],
+			[
+				"insertTPopFe",
+				"insertTPopFeldKontrKopie_3"
+			],
+			[
+				"deleteTPop",
+				"deleteTPopFeldKontr"
+			],
+			[
+				"insert",
+				"insertTPopFeldKontr_3"
+			],
+			[
+				"insertTPop",
+				"insertTPopFeldKontrKopie_2"
+			],
+			[
+				"ordne",
+				"ordneBeobachtungZu_3"
+			],
+			[
+				"ordn",
+				"ordneBeobachtungZu_2"
+			],
+			[
+				"fuege",
+				"fuegeTPopEin_3"
+			],
+			[
+				"getTPo",
+				"getTPopMassnBer"
+			],
+			[
+				"berj_",
+				"berj_ber_id"
+			],
+			[
+				"indber",
+				"indber_ind_kuerzel"
+			],
+			[
+				"löschen_m",
+				"löschen_meldung_meldung"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 392.0,
+		"selected_items":
+		[
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"lint",
+				"SublimeLinter: Next Error"
+			],
+			[
+				"pack",
+				"Preferences: Browse Packages"
+			]
+		],
+		"width": 416.0
+	},
+	"console":
+	{
+		"height": 558.0,
+		"history":
+		[
+			"import urllib.request,os; pr='Preferences.sublime-settings'; ip='ignored_packages'; n='Package Control'; s=sublime.load_settings(pr); ig=s.get(ip); ig.append(n); s.set(ip,ig); sublime.save_settings('Preferences.sublime-settings'); pf=n+'.sublime-package'; urllib.request.install_opener(urllib.request.build_opener(urllib.request.ProxyHandler())); by=urllib.request.urlopen('https://packagecontrol.io/'+pf.replace(' ','%20')).read(); open(os.path.join(sublime.installed_packages_path(),pf),'wb').write(by); ig.remove(n); s.set(ip,ig); sublime.save_settings(pr); print('Package Control: 3.0.0 upgrade successful!')",
+			"import urllib.request,os; pr='Preferences.sublime-settings'; ip='ignored_packages'; n='Package Control'; s=sublime.load_settings(pr); ig=s.get(ip); ig.append(",
+			"import urllib.request,os; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); open(os.path.join(ipp, pf), 'wb').write(urllib.request.urlopen( 'http://sublime.wbond.net/' + pf.replace(' ','%20')).read())"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/C/Users/alex/oi"
+	],
+	"file_history":
+	[
+		"/C/Users/alex/oi/package.json",
+		"/C/Users/alex/apflora/src/modules/jstree/zeigePopsAufOlmap.js",
+		"/C/Users/alex/apflora/src/apflora_browserified.js",
+		"/C/Users/alex/apflora/package.json",
+		"/C/Users/alex/apflora/src/modules/olMap/getLayersWithTitle.js",
+		"/C/Users/alex/apflora/src/modules/olMap/getLayerNames.js",
+		"/C/Users/alex/apflora/src/modules/olMap/zeigePop.js",
+		"/C/Users/alex/apflora/src/modules/zeigeFormular.js",
+		"/C/Users/alex/apflora/src/modules/olMap/waehleAusschnittFuerUebergebenePop.js",
+		"/C/Users/alex/apflora/src/modules/jstree/treeKontextmenu.js",
+		"/C/Users/alex/apflora/src/modules/jstree/zeigePopAufOlmap.js",
+		"/C/Users/alex/apflora/src/modules/createGlobals.js",
+		"/C/Users/alex/apflora/gulp-tasks/prod_sftp_sftp.js",
+		"/C/Users/alex/apflora/gulp-tasks/prod_clean_dist.js",
+		"/C/Users/alex/apflora/style/apflora.css",
+		"/C/Users/alex/apflora/src/modules/setupEvents.js",
+		"/C/Users/alex/apflora/index.html",
+		"/C/Users/alex/apflora/src/modules/events/forms/gMap/onClickDetailplaeneCheckbox.js",
+		"/C/Users/alex/apflora/src/modules/gMap/zeigeTPop.js",
+		"/C/Users/alex/apflora/src/modules/events/forms/gMap/onClickOeffneBeob.js",
+		"/C/Users/alex/apflora/dist/style/apflora.css",
+		"/C/Users/alex/apflora/src/modules/events/onClickUndelete.js",
+		"/C/Users/alex/apflora/src/modules/frageObUndeleteDatensatz.js",
+		"/C/Users/alex/apflora/src/modules/undeleteDatensatz.js",
+		"/C/Users/alex/apflora/sql/ViewsGenerieren.sql",
+		"/C/Users/alex/artendb_euring_update/package.json",
+		"/C/Users/alex/apflora/src/modules/erstelleApliste.js",
+		"/C/Users/alex/apflora/src/modules/download.js",
+		"/C/Users/alex/apflora/src/modules/beschrifteTPopMitNrFuerKarte.js",
+		"/F/Google Drive/2014 FNS Arteigenschaften/euring.json",
+		"/C/Users/alex/apflora/sql/createEvabTblPersonen.sql",
+		"/C/Users/alex/apflora/src/modules/jstree/beurteileBeobAufOlmap.js",
+		"/C/Users/alex/apflora/src/modules/olMap/erstelleBeobLayer.js",
+		"/C/Users/alex/apflora/src/modules/olMap/initiiereOlmap.js",
+		"/C/Users/alex/apflora/src/modules/olMap/addShowFeatureInfoOnClick.js",
+		"/C/Users/alex/apflora/src/modules/olMap/zeigeFeatureInfo.js",
+		"/C/Users/alex/apflora/src/modules/olMap/createLayers.js",
+		"/C/Users/alex/apflora/src/modules/olMap/erstelleMarkerFuerTPopLayer.js",
+		"/C/Users/alex/apflora/src/jquery.qtip.js",
+		"/C/Users/alex/apflora/src/modules/olMap/initiiereLayertree.js",
+		"/C/Users/alex/apflora/src/modules/olMap/erstelleTPopLayer.js",
+		"/C/Users/alex/apflora/src/modules/olMap/addDragBeob.js",
+		"/C/Users/alex/apflora/src/modules/olMap/erstelleModifyInteractionFuerVectorLayer.js",
+		"/C/Users/alex/apflora/src/modules/olMap/olInteractionModifyWithEvents.js",
+		"/C/Users/alex/apflora/src/modules/olMap/erstelleModifyInteractionFuerTPop.js",
+		"/C/Users/alex/apflora/src/modules/olMap/addDragAndDropGeofiles.js",
+		"/C/Users/alex/apflora/src/modules/olMap/erstelleBeobZuordnungsLayer.js",
+		"/C/Users/alex/apflora/src/modules/olMap/removeDragForBeob.js",
+		"/C/Users/alex/apflora/src/modules/olMap/addDragBoxForPopTpop.js",
+		"/C/Users/alex/apflora/gulp-tasks/watch.js",
+		"/C/Users/alex/apflora/gulp-tasks/prod_2.js",
+		"/C/Users/alex/apflora/gulp-tasks/prod_3.js",
+		"/C/Users/alex/apflora/gulp-tasks/prod_copy.js",
+		"/C/Users/alex/apflora/gulp-tasks/dev_src.js",
+		"/C/Users/alex/apflora/gulp-tasks/dev_style.js",
+		"/C/Users/alex/apflora/gulp-tasks/dev_2.js",
+		"/C/Users/alex/apflora/gulp-tasks/dev_3.js",
+		"/C/Users/alex/apflora/gulp-tasks/prod_build_style.js",
+		"/C/Users/alex/apflora/gulp-tasks/prod_build_src.js",
+		"/C/Users/alex/apflora/gulp-tasks/prod_build_html.js",
+		"/C/Users/alex/apflora/gulp-tasks/dev_notify.js",
+		"/C/Users/alex/apflora/gulp-tasks/dev_4.js",
+		"/C/Users/alex/apflora/src/modules/oeffneFormularAlsPopup.js",
+		"/C/Users/alex/apflora/queries/beobZuordnen.js",
+		"/C/Users/alex/apflora/src/modules/initiiereBeob.js",
+		"/C/Users/alex/apflora/src/modules/speichern.js",
+		"/C/Users/alex/apflora/src/modules/olMap/styleBeobZuordnung.js",
+		"/C/Users/alex/apflora/src/modules/olMap/styleBeob.js",
+		"/C/Users/alex/apflora/src/modules/olMap/stylePop.js",
+		"/C/Users/alex/apflora/src/modules/olMap/styleTPop.js",
+		"/C/Users/alex/apflora/src/modules/olMap/stapleLayerXTiefer.js",
+		"/C/Users/alex/apflora/src/modules/olMap/stapleLayerXHoeherTiefer.js",
+		"/C/Users/alex/apflora/src/modules/olMap/erstellePopLayer.js",
+		"/C/Users/alex/apflora/src/modules/configuration.js",
+		"/C/Users/alex/apflora/src/modules/olMap/stapleLayerEineEbeneHoeher.js",
+		"/C/Users/alex/apflora/src/modules/olMap/stapleLayerZuunterst.js",
+		"/C/Users/alex/apflora/src/modules/olMap/stapleLayerEineEbeneTiefer.js",
+		"/C/Users/alex/apflora/src/modules/olMap/stapleLayerZuoberst.js",
+		"/C/Users/alex/apflora/src/templatesDev/beobZuordnenRadio.hbs",
+		"/C/Users/alex/apflora/gulp-tasks/templates.js",
+		"/C/Users/alex/apflora/src/templatesDev/olMap/olmapPopupTpop.hbs",
+		"/C/Users/alex/apflora/src/templatesDev/olMap/popupBeob.hbs",
+		"/C/Users/alex/apflora/src/templatesDev/olMap/olmapPopupBeob.hbs",
+		"/C/Users/alex/apflora/src/templatesDev/olmapPopupBeob.hbs",
+		"/C/Users/alex/apflora/src/templatesDev/olMap/olmapLayertreeEigeneEbene.hbs",
+		"/C/Users/alex/apflora/src/modules/oeffneBeob.js",
+		"/C/Users/alex/apflora/src/modules/oeffneBeobInNeuemTab.js",
+		"/C/Users/alex/apflora/src/modules/oeffneTPopBeob.js",
+		"/C/Users/alex/apflora/src/modules/olMap/waehleAusschnittFuerUebergebeneTPop.js",
+		"/C/Users/alex/apflora/src/modules/jstree/select_node.js",
+		"/C/Users/alex/apflora/src/modules/events/forms/olMap/layertree/onClickLayertreeTpopStyle.js",
+		"/C/Users/alex/apflora/src/modules/erstelleIdAusDomAttributId.js",
+		"/C/Users/alex/apflora/src/modules/gMap/zeigeBeob.js",
+		"/C/Users/alex/apflora/src/modules/initiiereTPopKontr.js",
+		"/C/Users/alex/apflora/src/modules/setupJqueryUi.js",
+		"/C/Users/alex/apflora/src/modules/initializeTooltipsInElement.js",
+		"/C/Users/alex/apflora/src/templatesDev/olmapLayertreeEigeneEbene.hbs",
+		"/C/Users/alex/apflora/src/templates/beob.js",
+		"/C/Users/alex/apflora/src/templatesDev/olmapLayertreePop.hbs",
+		"/C/Users/alex/apflora/src/templatesDev/olmapLayertreeTpop.hbs",
+		"/C/Users/alex/apflora/src/modules/events/forms/olMap/layertree/onClickLayertreePopStyle.js",
+		"/C/Users/alex/apflora/src/templates/olmapLayertreeTpop.js",
+		"/C/Users/alex/apflora/src/templatesDev/beob.hbs",
+		"/C/Users/alex/apflora/src/templatesDev/olmapPopupTpop.hbs",
+		"/C/Users/alex/apflora/src/modules/olMap/erstelleContentFuerTPop.js",
+		"/C/Users/alex/apflora/src/templatesDev/olmapPopupPop.hbs",
+		"/C/Users/alex/apflora/src/templatesDev/tPopKontrZaehl.hbs",
+		"/C/Users/alex/apflora/src/templates/olmapPopupTpop.js",
+		"/C/Users/alex/apflora/src/modules/olMap/erstelleContentFuerPop.js",
+		"/C/Users/alex/apflora/src/templates/olmapPopupPop.js",
+		"/C/Users/alex/apflora/src/modules/olMap/zeigeBeob.js",
+		"/C/Users/alex/apflora/server.js",
+		"/C/Users/alex/apflora/src/modules/olMap/pruefeObPopTpopGewaehltWurden.js",
+		"/C/Users/alex/apflora/src/modules/olMap/zeigeBeobUmTpopZuzuordnen.js",
+		"/C/Users/alex/apflora/queries/apKarte.js",
+		"/C/Users/alex/apflora/queries/apInsert_async.js",
+		"/C/Users/alex/apflora/queries/beobKarte.js",
+		"/C/Users/alex/apflora/README.md",
+		"/C/Users/alex/apflora/etc/admin.js",
+		"/C/Users/alex/apflora/src/modules/events/forms/onClickExportDatenstrukturGrafisch.js",
+		"/C/Users/alex/apflora/etc/apflora_struktur.sql",
+		"/C/Users/alex/apflora/sql/201412umbenennen/20141221NeueNamenDbUndTabellen.txt",
+		"/C/Users/alex/apflora/Access/apflora.dsn",
+		"/C/Users/alex/apflora/sql/201412migration/addForeignKeys_div.sql",
+		"/C/Users/alex/apflora/sql/201412migration/updateGuids.sql",
+		"/C/Users/alex/Documents/apflora_views_lokal.dsn",
+		"/C/Users/alex/Documents/apflora_views.dsn",
+		"/C/Users/alex/Documents/apflora_lokal.dsn"
+	],
+	"find":
+	{
+		"height": 36.0
+	},
+	"find_in_files":
+	{
+		"height": 147.0,
+		"where_history":
+		[
+			"C:\\Users\\alex\\apflora, -apflora_built.js, -apflora_browserified.js, -apflora_built.css, -main_built.css, -jquery-ui.js, -jquery.hotkeys.js, -jquery.js, -jquery.jstree.js, -markerwithlabel.js, -underscore.js, -hammer.js, -jquery-migrate.js, -jquery.cookie.js, -jquery.fileDownload.js, -jquery.hammer.js, -jquery.qtip.js, -jquery.ui.touch-punch.js, -jsuri.js, -markerclusterer.js, -proj4.js, -ruler.js, -ApFloraAdmin.accdb, -ApFloraAdminNeu.accdb, -workspace.xml, -backbone.js, -alex.xml, -EvabGeoDB_apflora.mdb, -EvabGeoDB_Template.mdb, -apflora.qgs, -tabellenUmbenennen.sql, -FileSaver.js, -handlebars.js, -apflora_struktur.sql, -20141221NeueNamenDbUndTabellen.txt, -renameTables.sql",
+			"C:\\Users\\alex\\apflora, -apflora_built.js, -apflora_browserified.js, -apflora_built.css, -main_built.css, -jquery-ui.js, -jquery.hotkeys.js, -jquery.js, -jquery.jstree.js, -markerwithlabel.js, -underscore.js, -hammer.js, -jquery-migrate.js, -jquery.cookie.js, -jquery.fileDownload.js, -jquery.hammer.js, -jquery.qtip.js, -jquery.ui.touch-punch.js, -jsuri.js, -markerclusterer.js, -proj4.js, -ruler.js, -ApFloraAdmin.accdb, -ApFloraAdminNeu.accdb, -workspace.xml, -backbone.js, -alex.xml, -Beziehungen.accdb, -EvabGeoDB_apflora.mdb, -EvabGeoDB_Template.mdb, -apflora.qgs, -tabellenUmbenennen.sql, -FileSaver.js, -handlebars.js, -apflora_struktur.sql, -20141221NeueNamenDbUndTabellen.txt, -renameTables.sql",
+			"C:\\Users\\alex\\apflora, -apflora_built.js, -apflora_browserified.js, -apflora_built.css, -main_built.css, -jquery-ui.js, -jquery.hotkeys.js, -jquery.js, -jquery.jstree.js, -markerwithlabel.js, -underscore.js, -hammer.js, -jquery-migrate.js, -jquery.cookie.js, -jquery.fileDownload.js, -jquery.hammer.js, -jquery.qtip.js, -jquery.ui.touch-punch.js, -jsuri.js, -markerclusterer.js, -proj4.js, -ruler.js, -ApFloraAdmin.accdb, -ApFloraAdminNeu.accdb, -workspace.xml, -backbone.js, -alex.xml, -Beziehungen.accdb, -EvabGeoDB_apflora.mdb, -EvabGeoDB_Template.mdb, -apflora.qgs, -tabellenUmbenennen.sql, -FileSaver.js, -handlebars.js, -apflora_struktur.sql, -20141221NeueNamenDbUndTabellen.txt",
+			"C:\\Users\\alex\\apflora, -apflora_built.js, -apflora_browserified.js, -apflora_built.css, -main_built.css, -jquery-ui.js, -jquery.hotkeys.js, -jquery.js, -jquery.jstree.js, -markerwithlabel.js, -underscore.js, -hammer.js, -jquery-migrate.js, -jquery.cookie.js, -jquery.fileDownload.js, -jquery.hammer.js, -jquery.qtip.js, -jquery.ui.touch-punch.js, -jsuri.js, -markerclusterer.js, -proj4.js, -ruler.js, -ApFloraAdmin.accdb, -ApFloraAdminNeu.accdb, -workspace.xml, -backbone.js, -alex.xml, -Beziehungen.accdb, -EvabGeoDB_apflora.mdb, -EvabGeoDB_Template.mdb, -apflora.qgs, -tabellenUmbenennen.sql, -FileSaver.js, -handlebars.js, -apflora_struktur.sql, -'2014 12 21 Neue Namen DB und Tabellen.txt'",
+			"C:\\Users\\alex\\apflora, -apflora_built.js, -apflora_browserified.js, -apflora_built.css, -main_built.css, -jquery-ui.js, -jquery.hotkeys.js, -jquery.js, -jquery.jstree.js, -markerwithlabel.js, -underscore.js, -hammer.js, -jquery-migrate.js, -jquery.cookie.js, -jquery.fileDownload.js, -jquery.hammer.js, -jquery.qtip.js, -jquery.ui.touch-punch.js, -jsuri.js, -markerclusterer.js, -proj4.js, -ruler.js, -ApFloraAdmin.accdb, -ApFloraAdminNeu.accdb, -workspace.xml, -backbone.js, -alex.xml, -Beziehungen.accdb, -EvabGeoDB_apflora.mdb, -EvabGeoDB_Template.mdb, -apflora.qgs, -tabellenUmbenennen.sql, -FileSaver.js, -handlebars.js, -apflora_struktur.sql",
+			"C:\\Users\\alex\\apflora, -apflora_built.js, -apflora_browserified.js, -apflora_built.css, -main_built.css, -jquery-ui.js, -jquery.hotkeys.js, -jquery.js, -jquery.jstree.js, -markerwithlabel.js, -underscore.js, -hammer.js, -jquery-migrate.js, -jquery.cookie.js, -jquery.fileDownload.js, -jquery.hammer.js, -jquery.qtip.js, -jquery.ui.touch-punch.js, -jsuri.js, -markerclusterer.js, -proj4.js, -ruler.js, -ApFloraAdmin.accdb, -ApFloraAdminNeu.accdb, -workspace.xml, -backbone.js, -alex.xml, -Beziehungen.accdb, -EvabGeoDB_apflora.mdb, -EvabGeoDB_Template.mdb, -apflora.qgs, -tabellenUmbenennen.sql, -FileSaver.js, -handlebars.js",
+			"C:\\Users\\alex\\apflora, -apflora_built.js, -apflora_browserified.js, -apflora_built.css, -main_built.css, -jquery-ui.js, -jquery.hotkeys.js, -jquery.js, -jquery.jstree.js, -markerwithlabel.js, -underscore.js, -hammer.js, -jquery-migrate.js, -jquery.cookie.js, -jquery.fileDownload.js, -jquery.hammer.js, -jquery.qtip.js, -jquery.ui.touch-punch.js, -jsuri.js, -markerclusterer.js, -proj4.js, -ruler.js, -ApFloraAdmin.accdb, -ApFloraAdminNeu.accdb, -workspace.xml, -backbone.js, -alex.xml, -Beziehungen.accdb, -EvabGeoDB_apflora.mdb, -EvabGeoDB_Template.mdb, -apflora.qgs, -tabellenUmbenennen.sql, -react.js, -FileSaver.js",
+			"C:\\Users\\alex\\apflora, -apflora_built.js, -apflora_browserified.js, -apflora_built.css, -main_built.css, -jquery-ui.js, -jquery.hotkeys.js, -jquery.js, -jquery.jstree.js, -markerwithlabel.js, -underscore.js, -hammer.js, -jquery-migrate.js, -jquery.cookie.js, -jquery.fileDownload.js, -jquery.hammer.js, -jquery.qtip.js, -jquery.ui.touch-punch.js, -jsuri.js, -markerclusterer.js, -proj4.js, -ruler.js, -ApFloraAdmin.accdb, -ApFloraAdminNeu.accdb, -workspace.xml, -backbone.js, -alex.xml, -Beziehungen.accdb, -EvabGeoDB_apflora.mdb, -EvabGeoDB_Template.mdb, -apflora.qgs, -tabellenUmbenennen.sql, -react.js",
+			"C:\\Users\\alex\\apflora, -apflora_built.js, -apflora_browserified.js, -apflora_built.css, -main_built.css, -jquery-ui.js, -jquery.hotkeys.js, -jquery.js, -jquery.jstree.js, -markerwithlabel.js, -underscore.js, -hammer.js, -jquery-migrate.js, -jquery.cookie.js, -jquery.fileDownload.js, -jquery.hammer.js, -jquery.qtip.js, -jquery.ui.touch-punch.js, -jsuri.js, -markerclusterer.js, -proj4.js, -ruler.js, -ApFloraAdmin.accdb, -ApFloraAdminNeu.accdb, -workspace.xml, -backbone.js, -alex.xml, -Beziehungen.accdb, -EvabGeoDB_apflora.mdb, -EvabGeoDB_Template.mdb, -apflora.qgs, -tabellenUmbenennen.sql",
+			"C:\\Users\\alex\\apflora, -apflora_built.js, -apflora_browserified.js, -apflora_built.css, -main_built.css, -jquery-ui.js, -jquery.hotkeys.js, -jquery.js, -jquery.jstree.js, -markerwithlabel.js, -underscore.js, -hammer.js, -jquery-migrate.js, -jquery.cookie.js, -jquery.fileDownload.js, -jquery.hammer.js, -jquery.qtip.js, -jquery.ui.touch-punch.js, -jsuri.js, -markerclusterer.js, -proj4.js, -ruler.js, -ApFloraAdmin.accdb, -workspace.xml, -backbone.js, -alex.xml, -Beziehungen.accdb, -EvabGeoDB_apflora.mdb, -EvabGeoDB_Template.mdb, -apflora.qgs, -tabellenUmbenennen.sql",
+			"C:\\Users\\alex\\apflora, -apflora_built.js, -apflora_browserified.js, -apflora_built.css, -main_built.css, -jquery-ui.js, -jquery.hotkeys.js, -jquery.js, -jquery.jstree.js, -markerwithlabel.js, -underscore.js, -hammer.js, -jquery-migrate.js, -jquery.cookie.js, -jquery.fileDownload.js, -jquery.hammer.js, -jquery.qtip.js, -jquery.ui.touch-punch.js, -jsuri.js, -markerclusterer.js, -proj4.js, -ruler.js, -ApFloraAdmin.accdb, -workspace.xml, -backbone.js, -alex.xml, -Beziehungen.accdb, -EvabGeoDB_apflora.mdb, -EvabGeoDB_Template.mdb, -apflora.qgs",
+			"C:\\Users\\alex\\apflora, -apflora_built.js, -apflora_browserified.js, -apflora_built.css, -main_built.css, -jquery-ui.js, -jquery.hotkeys.js, -jquery.js, -jquery.jstree.js, -markerwithlabel.js, -underscore.js, -hammer.js, -jquery-migrate.js, -jquery.cookie.js, -jquery.fileDownload.js, -jquery.hammer.js, -jquery.qtip.js, -jquery.ui.touch-punch.js, -jsuri.js, -markerclusterer.js, -proj4.js, -ruler.js, -ApFloraAdmin.accdb, -workspace.xml, -backbone.js, -alex.xml, -Beziehungen.accdb, -EvabGeoDB_apflora.mdb, -EvabGeoDB_Template.mdb",
+			"C:\\Users\\alex\\apflora",
+			"C:\\Users\\alex\\apflora\\queries",
+			"C:\\Users\\alex\\apflora\\src\\modules",
+			"C:\\Users\\alex\\apflora",
+			"C:\\Users\\alex\\apflora\\src\\modules",
+			"C:\\Users\\alex\\apflora",
+			"C:\\Users\\alex\\apflora, -'\\.idea\\workspace.xml'",
+			"C:\\Users\\alex\\apflora, -\\.idea\\workspace.xml",
+			"C:\\Users\\alex\\apflora, -/.idea/workspace.xml",
+			"C:\\Users\\alex\\apflora, -'/.idea/workspace.xml'",
+			"C:\\Users\\alex\\apflora, -'/.idea/*'",
+			"C:\\Users\\alex\\apflora, -'/.idea*'",
+			"C:\\Users\\alex\\apflora, -'.idea\\workspace.xml'",
+			"C:\\Users\\alex\\apflora, -'/.idea\\workspace.xml'",
+			"C:\\Users\\alex\\apflora, -/.idea\\workspace.xml",
+			"C:\\Users\\alex\\apflora, -.idea\\workspace.xml",
+			"C:\\Users\\alex\\apflora -.idea\\workspace.xml",
+			"C:\\Users\\alex\\apflora",
+			"C:\\Users\\alex\\EvabMobile",
+			"C:\\Users\\alex\\ab",
+			"C:\\Users\\alex\\apflora, -main.js, -jquery.js, -jquery.jstree.js",
+			"C:\\Users\\alex\\apflora, -main.js, -jquery.js",
+			"C:\\Users\\alex\\apflora, -main.js, -jqery.js",
+			"C:\\Users\\alex\\apflora, -main.js",
+			"C:\\Users\\alex\\apflora\\php, -main.js",
+			"C:\\Users\\alex\\apflora, -main.js",
+			"C:\\Users\\alex\\apflora, -main.js, -C:\\Users\\alex\\apflora\\node_modules",
+			"C:\\Users\\alex\\apflora, -main.js, -\\node_modules",
+			"C:\\Users\\alex\\apflora, -main.js, -/node_modules",
+			"C:\\Users\\alex\\apflora, -main.js, -node_modules",
+			"C:\\Users\\alex\\apflora, -main.js",
+			"C:\\Users\\alex\\apflora",
+			"C:\\Users\\alex\\apflora,-main.js",
+			"C:\\Users\\alex\\apflora",
+			"C:\\Users\\alex\\artendb\\views",
+			"C:\\Users\\alex\\artendb",
+			"C:\\Users\\alex\\EvabMobile",
+			"C:\\Users\\alex\\artendb/views",
+			"C:\\Users\\alex\\EvabMobile",
+			"C:\\Users\\alex\\artendb",
+			"C:\\Users\\alex\\EvabMobile",
+			"C:\\Users\\alex\\artendb",
+			"C:\\Users\\alex\\artendb_import",
+			"C:\\Users\\alex\\apflora",
+			"C:\\Users\\alex\\apflora\\php",
+			"C:\\Users\\alex\\apflora",
+			"C:\\Users\\alex\\EvabMobile",
+			"C:\\Users\\alex\\apflora",
+			"C:\\Users\\alex\\artendb\\lists",
+			"C:\\Users\\alex\\artendb\\views",
+			"C:\\Users\\alex\\artendb"
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": true,
+		"find_history":
+		[
+			"projection",
+			"ga",
+			"getLayerNames",
+			"_.map",
+			"zhKartierungenLayerSource",
+			"zeigePopsAufOlmap",
+			"auf CH-Karten zeigen",
+			"View2D",
+			"checked",
+			"window.apf.googleKarteDetailplaene",
+			"gMapDetailplaeneCheckbox",
+			"gMapDetailplaeneDiv",
+			"gMap",
+			"rueteren",
+			".ico",
+			".jpg",
+			"exporte.png",
+			"exporte.jpg",
+			"bable4.jpg",
+			"m5.png",
+			"close1",
+			"table2.jpg",
+			"undelete",
+			"v_exportevab_alle",
+			"evab",
+			"apflora.ap.ApJahr",
+			"v_beob",
+			"beob",
+			"210",
+			"v_apber_a9lpop",
+			"v_apber_a8ltpop",
+			"a7lpop",
+			"v_apber_a7lpop",
+			"v_apber_a7ltpop",
+			"v_apber_a6ltpop",
+			"v_apber_a3rtpop",
+			"v_apber_a4ltpop",
+			"v_apber_a4lpop",
+			"v_apber_a3ltpop",
+			"v_apber_a3lpop",
+			"PopHerkunft=210",
+			"apflora.pop.PopHerkunft=210",
+			"a4lpop",
+			"apflora.pop.PopBekanntSeit",
+			"apflora.tpop.TPopBekanntSeit",
+			"v_apber_a4ltpop",
+			"v_apber_a3rpop",
+			"v_apber_a3lpop",
+			"a2l",
+			"ApJahr",
+			"v_tpopkontr",
+			"Kontrollen: Anzahl pro",
+			"apflora.tpopkontr.TPopKontrTyp=\"Zwischenbeurteilung\" Or apflora.tpopkontr.TPopKontrTyp=\"Freiwilligen-Erfolgskontrolle\"",
+			"pop_status_werte",
+			"adresse",
+			"tpopkontr",
+			"tpop",
+			"pop",
+			"ap",
+			"adresse",
+			"tpopkontr",
+			"tpop",
+			"pop",
+			"ap",
+			"pop_status_werte",
+			"ap_umsetzung_werte",
+			"ap_bearbstand_werte",
+			"tpop",
+			"pop",
+			"ap",
+			"tpopkontr",
+			"apflora_beob.",
+			"apflora.",
+			"apflora_beob.",
+			"apflora.",
+			"#",
+			"ga.Map",
+			"getView2D",
+			"View2D",
+			"removeDragBeob",
+			".getTitle",
+			"modify. event",
+			"console.log('modify. event: ', event);",
+			"evt",
+			"}, 200);",
+			"modifyBeobInteractionZaehler",
+			"modifyBeobInteraction.zaehler",
+			"}, 200)",
+			"window.apf.z",
+			"window.apf.zaehler",
+			"feature.on('change",
+			"ol.interaction.Select",
+			"addDragBeob",
+			"selectInteractionFuerVectorlayer",
+			"prototype",
+			"window.apf.olMap",
+			"polygonFeature",
+			"window.apf.olmap.DragBeob",
+			"dragBoxInteraction",
+			"app.Drag",
+			"dragBoxInteraction",
+			"window.apf.olMap.dragBoxInteraction",
+			"gulp-notify",
+			"allgemein / querbeet",
+			"stylePop",
+			"$",
+			"popMitNrLayer",
+			"marker",
+			"markers",
+			"popLayerErstellt",
+			"pop",
+			"new ol.layer.Vector",
+			"form",
+			"beob",
+			"tabelleInDb   = table.tabelleInDb",
+			"dateformat",
+			"BeobBemerkungen",
+			"allgemein / querbeet",
+			"../../templates/olMap/layertreeTpop",
+			"allgemein / querbeet",
+			"'",
+			"htmlDistzutpop += ",
+			"popupBeob",
+			"olmapPopupBeob",
+			"olmapPopupTpop",
+			"olmapPopupPop",
+			"olmapPopupBeob",
+			"olmapLayertreeTpop"
+		],
+		"highlight": false,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"PopHerkunft In (200, 210)",
+			"apflora.pop.PopHerkunft In (200, 210)",
+			"apflora.tpopkontr.TPopKontrTyp In (\"Zwischenbeurteilung\", \"Freiwilligen-Erfolgskontrolle\")",
+			"apflora.pop_status_werte",
+			"apflora.adresse",
+			"apflora.tpopkontr",
+			"apflora.tpop",
+			"apflora.pop",
+			"apflora.ap",
+			"apflora.adresse",
+			"apflora.tpopkontr",
+			"apflora.tpop",
+			"apflora.pop",
+			"apflora.ap",
+			"apflora.pop_status_werte",
+			"apflora.ap_umsetzung_werte",
+			"apflora.ap_bearbstand_werte",
+			"apflora.tpop",
+			"apflora.pop",
+			"apflora.ap",
+			"apflora.tpopkontr",
+			"",
+			"event",
+			"modifyBeobFeatureZaehler",
+			"modifyBeobInteractionZaehler",
+			"olMap",
+			"window.apf.olMap.DragBeob",
+			"dragBeobInteraction",
+			"window.apf.olmap.DragBeob",
+			"dragBeobInteraction",
+			"styleBeobZuordnung",
+			"beobZuordnungLayer",
+			"line",
+			"lines",
+			"beobZuordnungsLayerErstellt",
+			"beob",
+			"",
+			"popupTpop",
+			"popupPop",
+			"popupBeob",
+			"layertreeTpop",
+			"layertreePop",
+			"layertreeEigeneEbene",
+			"apflora.pop",
+			"apflora.tpop",
+			"apflora.beobzuordnung",
+			"apflora_beob.beob_bereitgestellt",
+			"apflora_beob.beob_infospezies",
+			"",
+			"apflora.pop",
+			"apflora.tpop",
+			"apflora.beobzuordnung",
+			"apflora_beob.beob_bereitgestellt",
+			"apflora_beob.beob_evab",
+			"",
+			"\"",
+			"",
+			"styleBeob",
+			"style",
+			"{{{layertitel}}}",
+			"",
+			"beobLayer",
+			"",
+			"beob",
+			"beobidMarkiert",
+			"beobArray",
+			"beobLayerErstellt",
+			"tpopArray",
+			"beobArray",
+			"sql",
+			"beziehungen.png",
+			"NO ACTION",
+			"adb_eigenschaften",
+			"tpop",
+			"v_tpop_berjahrundmassnjahr",
+			"pop",
+			"ap",
+			"adb_eigenschaften",
+			"pop",
+			"adb_eigenschaften",
+			"ziel",
+			"zielber",
+			"adb_eigenschaften",
+			"ap",
+			"ziel",
+			"adb_eigenschaften",
+			"pop",
+			"tpop",
+			"tpopmassnber",
+			"adb_eigenschaften",
+			"ap",
+			"adb_eigenschaften",
+			"pop",
+			"tpop",
+			"tpopmassn",
+			"ap",
+			"adb_eigenschaften",
+			"pop",
+			"tpop",
+			"tpopkontr",
+			"pop",
+			"tpopber",
+			"tpop",
+			"adb_eigenschaften",
+			"ap",
+			"adb_eigenschaften",
+			"tpopber",
+			"pop",
+			"ap",
+			"adb_eigenschaften",
+			"tpop",
+			"pop",
+			"adb_eigenschaften",
+			"ap",
+			"pop",
+			"popmassnber",
+			"adb_eigenschaften",
+			"ap",
+			"pop",
+			"popber",
+			"ap",
+			"adb_eigenschaften",
+			"pop",
+			"adb_eigenschaften",
+			"ap",
+			"apberuebersicht",
+			"apber",
+			"adb_eigenschaften"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": true,
+		"wrap": false
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 36.0
+	},
+	"input":
+	{
+		"height": 40.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 34.0
+	},
+	"project": "oi.sublime-project",
+	"replace":
+	{
+		"height": 68.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": false,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 373.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
