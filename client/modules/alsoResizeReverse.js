@@ -49,16 +49,23 @@ module.exports = function () {
                         var el    = $(this),
                             start = $(this).data("ui-resizable-alsoresize-reverse"),
                             style = {},
+                            // andere Werte ausschalten, weil das diese Werte teilweise beeinflusste!
                             css   = c && c.length ? c : ['width'/*, 'height', 'top', 'left'*/];
 
                         $.each(css || ['width'/*, 'height', 'top', 'left'*/], function (i, prop) {
                             var sum = (start[prop] || 0) - (delta[prop] || 0), // subtracting instead of adding
-                                corr = 10; // correct for having broad right border
+                                corr = 0;
+
+                            if (prop === 'width') {
+                                // correct for some divs having broad right border
+                                if (self.element.context.id === 'map') {
+                                    corr = 5;
+                                } else {
+                                    corr = 10;
+                                }
+                            }
 
                             if (sum && sum >= 0) {
-                                if (self.element.context.id === 'map') {
-                                    corr = 5;  // correct for map utils not having broad right border
-                                }
                                 style[prop] = sum + corr || null;
                             }
                         });
