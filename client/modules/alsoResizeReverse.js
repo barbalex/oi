@@ -36,7 +36,10 @@ module.exports = function () {
         },
 
         resize: function (event, ui) {
-            var self = $(this).data("ui-resizable"), o = self.options, os = self.originalSize, op = self.originalPosition,
+            var self  = $(this).data("ui-resizable"),
+                o     = self.options,
+                os    = self.originalSize,
+                op    = self.originalPosition,
                 delta = {
                     height: (self.size.height - os.height) || 0,
                     width:  (self.size.width - os.width)   || 0,
@@ -53,7 +56,7 @@ module.exports = function () {
                             css   = c && c.length ? c : ['width'/*, 'height', 'top', 'left'*/];
 
                         $.each(css || ['width'/*, 'height', 'top', 'left'*/], function (i, prop) {
-                            var sum = (start[prop] || 0) - (delta[prop] || 0), // subtracting instead of adding
+                            var sum  = (start[prop] || 0) - (delta[prop] || 0), // subtracting instead of adding
                                 corr = 0;
 
                             if (prop === 'width') {

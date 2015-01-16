@@ -291,6 +291,73 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "client/app.js",
+			"settings":
+			{
+				"buffer_size": 2021,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "client/modules/initiateResizables.js",
+			"settings":
+			{
+				"buffer_size": 1723,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "client/modules/alsoResizeReverse.js",
+			"settings":
+			{
+				"buffer_size": 3793,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "client/modules/setWidthOfTabs.js",
+			"settings":
+			{
+				"buffer_size": 1164,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "client/views/main.js",
+			"settings":
+			{
+				"buffer_size": 3043,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "templates/body.jade",
+			"settings":
+			{
+				"buffer_size": 1002,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "templates/pages/home.jade",
+			"settings":
+			{
+				"buffer_size": 118,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "// app/layout.styl\n\n@import '../_variables'\n@import '../_mixins'\n\n\n// you styles here:\n\n.navbar-nav>.active>a\n    border: 1px solid #333; \n\nbody\n    background-color: #222\n    padding-top: 50px\n\n.container\n    width: 100vw\n    padding: 0\n\n#content\n    height: calc(unquote('100vh - 50px'))\n\n.tab\n    float: left\n    height: 100%\n\n#nav,#form,#map\n    border-width: 0 5px 0 0\n    border-style: solid\n    border-image:\n        linear-gradient(to left, rgba(0, 0, 0, 1), rgba(84, 84, 84, 0.8)) 1 100%\n\n#nav\n    background-color: yellow\n    width: 10vw\n\n#form\n    background-color: orange\n    width: 35vw\n    overflow-y: auto\n    overflow-x: hidden\n\n#map\n    background-color: green\n    width: 45vw\n\n#utils\n    background-color: brown\n    // wenn nicht -1px\n    // bricht utils beim Schieben auf die nächste Zeile\n    width: 10vw",
+			"file": "public/css/app/main.styl",
+			"file_size": 839,
+			"file_write_time": 130658318785080324,
+			"settings":
+			{
+				"buffer_size": 824,
+				"line_ending": "Unix"
+			}
+		}
 	],
 	"build_system": "",
 	"command_palette":
@@ -334,10 +401,37 @@
 	},
 	"expanded_folders":
 	[
-		"/C/Users/alex/oi"
+		"/C/Users/alex/oi",
+		"/C/Users/alex/oi/client",
+		"/C/Users/alex/oi/client/helpers",
+		"/C/Users/alex/oi/client/models",
+		"/C/Users/alex/oi/client/modules",
+		"/C/Users/alex/oi/client/pages",
+		"/C/Users/alex/oi/client/views",
+		"/C/Users/alex/oi/public",
+		"/C/Users/alex/oi/public/css",
+		"/C/Users/alex/oi/public/css/app",
+		"/C/Users/alex/oi/templates",
+		"/C/Users/alex/oi/templates/pages"
 	],
 	"file_history":
 	[
+		"/C/Users/alex/oi/client/modules/alsoResizeReverse.js",
+		"/C/Users/alex/oi/client/modules/showTab.js",
+		"/C/Users/alex/oi/client/modules/initiateResizables.js",
+		"/C/Users/alex/oi/moonbootsConfig.js",
+		"/C/Users/alex/oi/templates/head.jade",
+		"/C/Users/alex/oi/.gitignore",
+		"/C/Users/alex/oi/README.md",
+		"/C/Users/alex/oi/client/router.js",
+		"/C/Users/alex/oi/client/pages/home.js",
+		"/C/Users/alex/oi/client/views/person.js",
+		"/C/Users/alex/oi/public/css/app.css",
+		"/C/Users/alex/oi/lib/jquery.js",
+		"/C/Users/alex/oi/client/models/me.js",
+		"/C/Users/alex/apflora/src/modules/download.js",
+		"/C/Users/alex/apflora/src/modules/setzeWindowZielber.js",
+		"/C/Users/alex/oi/.npmignore",
 		"/C/Users/alex/oi/package.json",
 		"/C/Users/alex/apflora/src/modules/jstree/zeigePopsAufOlmap.js",
 		"/C/Users/alex/apflora/src/apflora_browserified.js",
@@ -365,7 +459,6 @@
 		"/C/Users/alex/apflora/sql/ViewsGenerieren.sql",
 		"/C/Users/alex/artendb_euring_update/package.json",
 		"/C/Users/alex/apflora/src/modules/erstelleApliste.js",
-		"/C/Users/alex/apflora/src/modules/download.js",
 		"/C/Users/alex/apflora/src/modules/beschrifteTPopMitNrFuerKarte.js",
 		"/F/Google Drive/2014 FNS Arteigenschaften/euring.json",
 		"/C/Users/alex/apflora/sql/createEvabTblPersonen.sql",
@@ -450,26 +543,11 @@
 		"/C/Users/alex/apflora/src/templates/olmapPopupPop.js",
 		"/C/Users/alex/apflora/src/modules/olMap/zeigeBeob.js",
 		"/C/Users/alex/apflora/server.js",
-		"/C/Users/alex/apflora/src/modules/olMap/pruefeObPopTpopGewaehltWurden.js",
-		"/C/Users/alex/apflora/src/modules/olMap/zeigeBeobUmTpopZuzuordnen.js",
-		"/C/Users/alex/apflora/queries/apKarte.js",
-		"/C/Users/alex/apflora/queries/apInsert_async.js",
-		"/C/Users/alex/apflora/queries/beobKarte.js",
-		"/C/Users/alex/apflora/README.md",
-		"/C/Users/alex/apflora/etc/admin.js",
-		"/C/Users/alex/apflora/src/modules/events/forms/onClickExportDatenstrukturGrafisch.js",
-		"/C/Users/alex/apflora/etc/apflora_struktur.sql",
-		"/C/Users/alex/apflora/sql/201412umbenennen/20141221NeueNamenDbUndTabellen.txt",
-		"/C/Users/alex/apflora/Access/apflora.dsn",
-		"/C/Users/alex/apflora/sql/201412migration/addForeignKeys_div.sql",
-		"/C/Users/alex/apflora/sql/201412migration/updateGuids.sql",
-		"/C/Users/alex/Documents/apflora_views_lokal.dsn",
-		"/C/Users/alex/Documents/apflora_views.dsn",
-		"/C/Users/alex/Documents/apflora_lokal.dsn"
+		"/C/Users/alex/apflora/src/modules/olMap/pruefeObPopTpopGewaehltWurden.js"
 	],
 	"find":
 	{
-		"height": 36.0
+		"height": 72.0
 	},
 	"find_in_files":
 	{
@@ -546,6 +624,12 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			";\nvar ",
+			"$",
+			";\nvar ",
+			"idLength",
+			"tracking",
+			"container",
 			"projection",
 			"ga",
 			"getLayerNames",
@@ -667,13 +751,7 @@
 			"../../templates/olMap/layertreeTpop",
 			"allgemein / querbeet",
 			"'",
-			"htmlDistzutpop += ",
-			"popupBeob",
-			"olmapPopupBeob",
-			"olmapPopupTpop",
-			"olmapPopupPop",
-			"olmapPopupBeob",
-			"olmapLayertreeTpop"
+			"htmlDistzutpop += "
 		],
 		"highlight": false,
 		"in_selection": false,
@@ -681,6 +759,8 @@
 		"regex": false,
 		"replace_history":
 		[
+			",\n    ",
+			",",
 			"PopHerkunft In (200, 210)",
 			"apflora.pop.PopHerkunft In (200, 210)",
 			"apflora.tpopkontr.TPopKontrTyp In (\"Zwischenbeurteilung\", \"Freiwilligen-Erfolgskontrolle\")",
@@ -806,21 +886,288 @@
 			"pop",
 			"adb_eigenschaften",
 			"ap",
-			"apberuebersicht",
-			"apber",
-			"adb_eigenschaften"
+			"apberuebersicht"
 		],
 		"reverse": false,
 		"show_context": true,
 		"use_buffer2": true,
-		"whole_word": true,
+		"whole_word": false,
 		"wrap": false
 	},
 	"groups":
 	[
 		{
+			"selected": 4,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "client/app.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2021,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1558,
+								1558
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 273.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 8,
+					"type": "text"
+				},
+				{
+					"buffer": 0,
+					"file": "client/app.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2021,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								854,
+								854
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 308.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "client/modules/initiateResizables.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1723,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								627,
+								627
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 5.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "client/modules/alsoResizeReverse.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3793,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								130,
+								130
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 504.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "client/modules/setWidthOfTabs.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1164,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1164,
+								1164
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "client/views/main.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3043,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								693,
+								693
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 504.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "templates/body.jade",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1002,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								387,
+								387
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "templates/pages/home.jade",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 118,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								117,
+								117
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "public/css/app/main.styl",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 824,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								547,
+								547
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 308.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				}
 			]
 		}
 	],
@@ -862,7 +1209,7 @@
 	"project": "oi.sublime-project",
 	"replace":
 	{
-		"height": 68.0
+		"height": 138.0
 	},
 	"save_all_on_build": true,
 	"select_file":
