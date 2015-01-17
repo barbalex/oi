@@ -21,12 +21,25 @@ body {
   float: left;
   height: 100%;
 }
-#nav,
-#form,
-#map {
-  border-width: 0 5px 0 0;
-  border-style: solid;
-  border-image: linear-gradient(to left, #000, rgba(84,84,84,0.8)) 1 100%;
+.tabTitleContainer {
+  height: 30px;
+  background-color: rgba(210,210,210,0.2);
+  padding: 5px;
+}
+.tabSeparator {
+  height: 100%;
+  width: 8px;
+  right: 0;
+  cursor: col-resize;
+  background-image: linear-gradient(to left, #000 0%, rgba(84,84,84,0.8) 100%);
+}
+.tabSeparator span {
+  background: url("../images/handle-hor.png") center center no-repeat;
+  display: block;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 #nav {
   background-color: #ff0;

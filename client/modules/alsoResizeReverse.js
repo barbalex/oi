@@ -56,20 +56,10 @@ module.exports = function () {
                             css   = c && c.length ? c : ['width'/*, 'height', 'top', 'left'*/];
 
                         $.each(css || ['width'/*, 'height', 'top', 'left'*/], function (i, prop) {
-                            var sum  = (start[prop] || 0) - (delta[prop] || 0), // subtracting instead of adding
-                                corr = 0;
-
-                            if (prop === 'width') {
-                                // correct for some divs having broad right border
-                                if (self.element.context.id === 'map') {
-                                    corr = 5;
-                                } else {
-                                    corr = 10;
-                                }
-                            }
+                            var sum  = (start[prop] || 0) - (delta[prop] || 0); // subtracting instead of adding
 
                             if (sum && sum >= 0) {
-                                style[prop] = sum + corr || null;
+                                style[prop] = sum || null;
                             }
                         });
 

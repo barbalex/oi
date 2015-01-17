@@ -16,18 +16,21 @@ module.exports = function () {
     alsoResizeReverse();
 
     $('#nav').resizable({
-        handles: 'e',
-        alsoResizeReverse: '#form'
+        handles: { 'e': '#navSeparator' },
+        alsoResizeReverse: '#form',
+        containment: '#content'
     });
 
     $('#form').resizable({
-        handles: 'e',
-        alsoResizeReverse: '#map'
+        handles: { 'e': '#formSeparator' },
+        alsoResizeReverse: '#map',
+        containment: '#content'
     });
 
     $('#map').resizable({
-        handles: 'e',
-        alsoResizeReverse: '#utils'
+        handles: { 'e': '#mapSeparator' },
+        alsoResizeReverse: '#utils',
+        containment: '#content'
     });
 
     $('.nav').on('click', 'li', function () {

@@ -28,9 +28,11 @@ module.exports = function () {
         if (index === widths.length -1) {
             // den letzten Tab aufrunden, damit kein einzelner Pixel unbenutzt bleibt
             widthAfter = parentWidth - totalWidthNew;
+            $('#' + widthObject.id + 'Separator').hide();
         } else {
             widthAfter     = Math.floor(widthAfter);
             totalWidthNew += Math.floor(widthAfter);
+            $('#' + widthObject.id + 'Separator').show();
         }
 
         $('#' + widthObject.id).css('width', widthAfter);
