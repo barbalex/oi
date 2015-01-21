@@ -33,14 +33,6 @@ body {
   cursor: col-resize;
   background-image: linear-gradient(to left, #000 0%, rgba(84,84,84,0.8) 100%);
 }
-.tabSeparator span {
-  background: url("../images/handle-hor.png") center center no-repeat;
-  display: block;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
 #nav {
   background-color: #ff0;
   width: 10vw;
@@ -57,5 +49,9 @@ body {
 }
 #utils {
   background-color: #a52a2a;
-  width: 10vw;
+  width: -webkit-calc(10vw - 1px);
+  width: -moz-calc(10vw - 1px);
+  width: -ms-calc(10vw - 1px);
+  width: -o-calc(10vw - 1px);
+  width: calc(10vw - 1px);
 }

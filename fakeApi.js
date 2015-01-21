@@ -38,6 +38,58 @@ var people = [
         coolnessFactor: 4
     }
 ];
+
+var hierarchies = [
+    {
+        id: 'xy',
+        type: 'hierarchy',
+        users: ['z@z.ch'],
+        editedBy: [
+            {date: 'xx', user: 'z@z.ch'}
+        ],
+        levels: [
+            {
+                level: 0,
+                name: 'Projekt',
+                fields: [
+                    {
+                        name: 'Field1',
+                        type: 'text',
+                        valueList: [],
+                        order: 1,
+                        dataType: 'text',
+                        standardValue: ''
+                    },
+                    {
+                        name: 'Field2',
+                        type: 'text',
+                        valueList: [],
+                        order: 1,
+                        dataType: 'text',
+                        standardValue: ''
+                    }
+                ]
+            }
+        ]
+    }
+];
+
+var objects = [
+    {
+        id: 'o1',
+        type: 'object',
+        level: 0,                                                               // das muss ein Projekt sein
+        parent: null,
+        name: "apflora",
+        users: [],
+        editedBy: [{date: "xx", user: "xx"}],
+        data: {                                                                // jetzt die fields, wie in hierarchy definiert
+            field1: "",
+            field2: ""
+        }
+    }
+];
+
 var id = 7;
 
 function get(id) {

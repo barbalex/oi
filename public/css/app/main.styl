@@ -55,5 +55,5 @@ body
 #utils
     background-color: brown
     // wenn nicht -1px
-    // bricht utils beim Schieben auf die nächste Zeile
-    width: 10vw
+    // bricht utils beim Schieben auf die nächste Zeile (offenbar nur in IE)
+    width: calc(unquote('10vw - 1px'))
