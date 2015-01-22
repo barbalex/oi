@@ -44,7 +44,7 @@ var hierarchies = [
         id: 'h1',
         type: 'hierarchy',
         hTypeUid: 'xyz',  // documents saved get this uid. App can look up leven and structure of the document
-        level: 0,
+        level: 0,         // no order yet (to be saved later for user, not for the project)
         name: 'apflora.ch',
         users: ['z@z.ch'],
         editedBy: [
@@ -55,7 +55,7 @@ var hierarchies = [
                 name: 'Bemerkungen zum Projekt',
                 type: 'text',
                 valueList: [],
-                order: 1,
+                order: 1,          // user with rights can drag and drop to change order of fields
                 dataType: 'text',
                 standardValue: ''
             }
@@ -63,6 +63,7 @@ var hierarchies = [
         children: [
             {
                 level: 1,
+                order: 1,           // user with rights can drag and drop to change order of hierarchies
                 name: 'Programm',
                 users: ['z@z.ch'],  // if not set is inherited from higher level
                 editedBy: [
@@ -91,13 +92,144 @@ var hierarchies = [
                 children: [
                     {
                         level: 2,
-                        name: 'Population',
-                        users: ['z@z.ch'],  // if not set else is inherited from higher level
+                        order: 1,
+                        name: 'Populationen',
+                        users: ['z@z.ch'],
                         editedBy: [
                             {date: 'xx', user: 'z@z.ch'}
                         ],
                         fields: [
-
+                            {
+                                name: 'Name',
+                                type: 'text',
+                                valueList: [],
+                                order: 1,
+                                dataType: 'text',
+                                standardValue: ''
+                            },
+                            {
+                                name: 'Status',
+                                type: 'optionsgroup',
+                                valueList: [{value: 1, label: 'ursprünglich, aktuell'}, {value: 3, label: 'angesiedelt, aktuell'}],
+                                order: 2,
+                                dataType: '',
+                                standardValue: ''
+                            }
+                        ],
+                        children: [
+                            {
+                                level: 3,
+                                order: 1,
+                                name: 'Teilpopulationen',
+                                users: ['z@z.ch'],
+                                editedBy: [
+                                    {date: 'xx', user: 'z@z.ch'}
+                                ],
+                                fields: [
+                                    {
+                                        name: 'Nr',
+                                        type: 'number',
+                                        valueList: [],
+                                        order: 1,
+                                        dataType: '',
+                                        standardValue: ''
+                                    },
+                                    {
+                                        name: 'Flurname',
+                                        type: 'text',
+                                        valueList: [],
+                                        order: 2,
+                                        dataType: 'text',
+                                        standardValue: ''
+                                    }
+                                ],
+                                children: [
+                                    {
+                                        level: 4,
+                                        order: 1,
+                                        name: 'Massnahmen',
+                                        users: ['z@z.ch'],
+                                        editedBy: [
+                                            {date: 'xx', user: 'z@z.ch'}
+                                        ],
+                                        fields: []
+                                    },
+                                    {
+                                        level: 4,
+                                        order: 2,
+                                        name: 'Feldkontrollen',
+                                        users: ['z@z.ch'],
+                                        editedBy: [
+                                            {date: 'xx', user: 'z@z.ch'}
+                                        ],
+                                        fields: []
+                                    },
+                                    {
+                                        level: 4,
+                                        order: 3,
+                                        name: 'Teilpopulations-Berichte',
+                                        users: ['z@z.ch'],
+                                        editedBy: [
+                                            {date: 'xx', user: 'z@z.ch'}
+                                        ],
+                                        fields: []
+                                    }
+                                ]
+                            },
+                            {
+                                level: 3,
+                                order: 2,
+                                name: 'Populations-Berichte',
+                                users: ['z@z.ch'],
+                                editedBy: [
+                                    {date: 'xx', user: 'z@z.ch'}
+                                ],
+                                fields: [
+                                    {
+                                        name: 'Jahr',
+                                        type: 'number',
+                                        valueList: [],
+                                        order: 1,
+                                        dataType: '',
+                                        standardValue: ''
+                                    },
+                                    {
+                                        name: 'Entwicklung',
+                                        type: 'optionsgroup',
+                                        valueList: [{value: 1, label: 'zunehmend'}, {value: 3, label: 'abnehmend'}],
+                                        order: 2,
+                                        dataType: '',
+                                        standardValue: ''
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        level: 2,
+                        order: 2,
+                        name: 'AP-Berichte',
+                        users: ['z@z.ch'],
+                        editedBy: [
+                            {date: 'xx', user: 'z@z.ch'}
+                        ],
+                        fields: [
+                            {
+                                name: 'Jahr',
+                                type: 'number',
+                                valueList: [],
+                                order: 1,
+                                dataType: '',
+                                standardValue: ''
+                            },
+                            {
+                                name: 'Situation',
+                                type: 'text',
+                                valueList: [],
+                                order: 2,
+                                dataType: 'text',
+                                standardValue: ''
+                            }
                         ]
                     }
                 ]
