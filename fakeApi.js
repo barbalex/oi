@@ -41,9 +41,9 @@ var people = [
 
 var hierarchies = [
     {
-        id: 'h1',
+        id: 'h0',
         type: 'hierarchy',
-        hTypeUid: 'xyz',  // documents saved get this uid. App can look up leven and structure of the document
+        hTypeUid: 'h0',  // documents saved get this uid. App can look up leven and structure of the document
         level: 0,         // no order yet (to be saved later for user, not for the project)
         name: 'apflora.ch',
         users: ['z@z.ch'],
@@ -52,7 +52,7 @@ var hierarchies = [
         ],
         fields: [
             {
-                name: 'Bemerkungen zum Projekt',
+                name: 'Bemerkungen',
                 type: 'text',
                 valueList: [],
                 order: 1,          // user with rights can drag and drop to change order of fields
@@ -62,6 +62,7 @@ var hierarchies = [
         ],
         children: [
             {
+                hTypeUid: 'h11',
                 level: 1,
                 order: 1,           // user with rights can drag and drop to change order of hierarchies
                 name: 'Programm',
@@ -91,6 +92,7 @@ var hierarchies = [
                 ],
                 children: [
                     {
+                        hTypeUid: 'h21',
                         level: 2,
                         order: 1,
                         name: 'Populationen',
@@ -118,6 +120,7 @@ var hierarchies = [
                         ],
                         children: [
                             {
+                                hTypeUid: 'h31',
                                 level: 3,
                                 order: 1,
                                 name: 'Teilpopulationen',
@@ -145,6 +148,7 @@ var hierarchies = [
                                 ],
                                 children: [
                                     {
+                                        hTypeUid: 'h41',
                                         level: 4,
                                         order: 1,
                                         name: 'Massnahmen',
@@ -152,9 +156,27 @@ var hierarchies = [
                                         editedBy: [
                                             {date: 'xx', user: 'z@z.ch'}
                                         ],
-                                        fields: []
+                                        fields: [
+                                            {
+                                                name: 'Jahr',
+                                                type: 'number',
+                                                valueList: [],
+                                                order: 1,
+                                                dataType: '',
+                                                standardValue: ''
+                                            },
+                                            {
+                                                name: 'Typ',
+                                                type: 'optionsgroup',
+                                                valueList: [{value: 1, label: 'spezial'}, {value: 2, label: 'Ansiedlung: Ansaat'}],
+                                                order: 1,
+                                                dataType: '',
+                                                standardValue: ''
+                                            }
+                                        ]
                                     },
                                     {
+                                        hTypeUid: 'h42',
                                         level: 4,
                                         order: 2,
                                         name: 'Feldkontrollen',
@@ -165,6 +187,7 @@ var hierarchies = [
                                         fields: []
                                     },
                                     {
+                                        hTypeUid: 'h43',
                                         level: 4,
                                         order: 3,
                                         name: 'Teilpopulations-Berichte',
@@ -177,6 +200,7 @@ var hierarchies = [
                                 ]
                             },
                             {
+                                hTypeUid: 'h32',
                                 level: 3,
                                 order: 2,
                                 name: 'Populations-Berichte',
@@ -206,6 +230,7 @@ var hierarchies = [
                         ]
                     },
                     {
+                        hTypeUid: 'h22',
                         level: 2,
                         order: 2,
                         name: 'AP-Berichte',
@@ -240,16 +265,86 @@ var hierarchies = [
 
 var objects = [
     {
-        id: 'o1',
-        type: 'object',
-        hTypeUid: 'xyz',
-        parent: null,                           // das muss ein Projekt sein
-        name: "apflora",
-        users: [],
-        editedBy: [{date: "xx", user: "xx"}],
+        id:       'o1',
+        type:     'object',
+        hTypeUid: 'h0',                                   // app can check meta information here
+        parent:   null,                                   // must be top hierarchy
+        users:    ['z@z.ch'],                             // gets inherited from project
+        editedBy: [{date: '02.01.2015', user: 'z@z.ch'}],
         data: {                                 // jetzt die fields, wie in hierarchy definiert
-            field1: "",
-            field2: ""
+            Bemerkungen: "Artförderprojekt der FNS Kt. Zürich"
+        }
+    },
+    {
+        id:       'o2',
+        type:     'object',
+        hTypeUid: 'h11',
+        parent:   'o1',
+        users:    ['z@z.ch'],
+        editedBy: [{date: '02.01.2015', user: 'z@z.ch'}],
+        data: {
+            Art: 100,
+            Aktionsplan: 4
+        }
+    },
+    {
+        id:       'o3',
+        type:     'object',
+        hTypeUid: 'h21',
+        parent:   'o2',
+        users:    ['z@z.ch'],
+        editedBy: [{date: '02.01.2015', user: 'z@z.ch'}],
+        data: {
+            Name: 'Niederhasli, Mettmenhaslisee',
+            Status: 3
+        }
+    },
+    {
+        id:       'o4',
+        type:     'object',
+        hTypeUid: 'h22',
+        parent:   'o2',
+        users:    ['z@z.ch'],
+        editedBy: [{date: '02.01.2015', user: 'z@z.ch'}],
+        data: {
+            Jahr: 2014,
+            Situation: 'Im Jahr 2014 fanden 3 Anpflanzungen bzw. Populationsstärkungen (Zürich, Seeholzriet, reg. Torfstich Mitte; Zürich, Seeholzriet, Torfstich E Schwarzerle; Zürich, Hänsiried, Parz. 1790 N) in 2 Populationen statt.'
+        }
+    },
+    {
+        id:       'o5',
+        type:     'object',
+        hTypeUid: 'h31',
+        parent:   'o3',
+        users:    ['z@z.ch'],
+        editedBy: [{date: '02.01.2015', user: 'z@z.ch'}],
+        data: {
+            Nr: 1,
+            Flurname: 'Mettmenhaslisee'
+        }
+    },
+    {
+        id:       'o6',
+        type:     'object',
+        hTypeUid: 'h32',
+        parent:   'o3',
+        users:    ['z@z.ch'],
+        editedBy: [{date: '02.01.2015', user: 'z@z.ch'}],
+        data: {
+            Jahr: 2009,
+            Entwicklung: 3
+        }
+    },
+    {
+        id:       'o7',
+        type:     'object',
+        hTypeUid: 'h41',
+        parent:   'o5',
+        users:    ['z@z.ch'],
+        editedBy: [{date: '02.01.2015', user: 'z@z.ch'}],
+        data: {
+            Jahr: 2009,
+            Typ: 2
         }
     }
 ];
