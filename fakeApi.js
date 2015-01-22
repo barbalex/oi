@@ -41,32 +41,64 @@ var people = [
 
 var hierarchies = [
     {
-        id: 'xy',
+        id: 'h1',
         type: 'hierarchy',
+        hTypeUid: 'xyz',  // documents saved get this uid. App can look up leven and structure of the document
+        level: 0,
+        name: 'apflora.ch',
         users: ['z@z.ch'],
         editedBy: [
-            {date: 'xx', user: 'z@z.ch'}
+            {date: 'xx', user: 'z@z.ch'}  // history of changes
         ],
-        levels: [
+        fields: [
             {
-                level: 0,
-                name: 'Projekt',
+                name: 'Bemerkungen zum Projekt',
+                type: 'text',
+                valueList: [],
+                order: 1,
+                dataType: 'text',
+                standardValue: ''
+            }
+        ],
+        children: [
+            {
+                level: 1,
+                name: 'Programm',
+                users: ['z@z.ch'],  // if not set is inherited from higher level
+                editedBy: [
+                    {date: 'xx', user: 'z@z.ch'}
+                ],
                 fields: [
                     {
-                        name: 'Field1',
-                        type: 'text',
-                        valueList: [],
+                        name: 'Art',
+                        type: 'select',
+                        // valueList can be imported by user
+                        // big lists arent too bad: data is accessed locally and hopefully cached
+                        valueList: [{value: 100, label: 'Abies alba Mill. (Weiss-Tanne)'}, {value: 150, label: 'Abutilon theophrasti Medik.'}],
                         order: 1,
-                        dataType: 'text',
+                        dataType: '',
                         standardValue: ''
                     },
                     {
-                        name: 'Field2',
-                        type: 'text',
-                        valueList: [],
-                        order: 1,
-                        dataType: 'text',
+                        name: 'Aktionsplan',
+                        type: 'optionsgroup',
+                        valueList: [{value: null, label: '(kein Eintrag)'}, {value: 1, label: 'keiner'}, {value: 4, label: 'erstellt'}],
+                        order: 2,
+                        dataType: '',
                         standardValue: ''
+                    }
+                ],
+                children: [
+                    {
+                        level: 2,
+                        name: 'Population',
+                        users: ['z@z.ch'],  // if not set else is inherited from higher level
+                        editedBy: [
+                            {date: 'xx', user: 'z@z.ch'}
+                        ],
+                        fields: [
+
+                        ]
                     }
                 ]
             }
@@ -78,12 +110,12 @@ var objects = [
     {
         id: 'o1',
         type: 'object',
-        level: 0,                                                               // das muss ein Projekt sein
-        parent: null,
+        hTypeUid: 'xyz',
+        parent: null,                           // das muss ein Projekt sein
         name: "apflora",
         users: [],
         editedBy: [{date: "xx", user: "xx"}],
-        data: {                                                                // jetzt die fields, wie in hierarchy definiert
+        data: {                                 // jetzt die fields, wie in hierarchy definiert
             field1: "",
             field2: ""
         }
