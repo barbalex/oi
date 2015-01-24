@@ -1,9 +1,12 @@
-/*global me, app*/
-var Router = require('ampersand-router');
-var HomePage = require('./pages/home');
+/*jslint node: true, browser: true, nomen: true, todo: true */
+/*global app, me, $*/
+'use strict';
+
+var Router         = require('ampersand-router');
+var HomePage       = require('./pages/home');
 var CollectionDemo = require('./pages/collection-demo');
-var InfoPage = require('./pages/info');
-var PersonAddPage = require('./pages/person-add');
+var InfoPage       = require('./pages/info');
+var PersonAddPage  = require('./pages/person-add');
 var PersonEditPage = require('./pages/person-edit');
 var PersonViewPage = require('./pages/person-view');
 
@@ -11,6 +14,7 @@ var PersonViewPage = require('./pages/person-view');
 module.exports = Router.extend({
     routes: {
         '': 'home',
+        'hierarchies': 'hierarchies',
         'collections': 'collectionDemo',
         'info': 'info',
         'person/add': 'personAdd',
@@ -22,7 +26,15 @@ module.exports = Router.extend({
     // ------- ROUTE HANDLERS ---------
     home: function () {
         this.trigger('page', new HomePage({
-            model: me
+            model: me,
+            collection: app.hierarchies
+        }));
+    },
+
+    hierarchies: function () {
+        this.trigger('page', new HomePage({
+            model: me,
+            collection: app.hierarchies
         }));
     },
 

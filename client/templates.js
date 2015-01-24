@@ -40,8 +40,8 @@
         return '<section class="page pageOne"><h2>Collection demo</h2><p>Intelligently rendering collections can be a bit tricky. </p><p><a href="https://github.com/ampersandjs/ampersand-view">ampersand-view\'s</a> <code>renderCollection()</code> method makes it simple.</p><p>The only code required to manage the collection is:</p><pre><code>this.renderCollection(\n   this.collection, \n   PersonView, \n   this.queryByHook(\'people-list\')\n);</code></pre><h3>People container:</h3><ul data-hook="people-list" class="list-group"></ul><p>Try it by clicking the buttons</p><div class="buttons btn-group"><button data-hook="reset" class="btn btn-default">.reset() </button><button data-hook="fetch" class="btn btn-default">.fetch() </button><button data-hook="shuffle" class="btn btn-default">.shuffle() </button><button data-hook="add" class="btn btn-default">.addRandom()</button><a href="/person/add" class="btn btn-default">Add Person</a></div><p>Events are always managed so you don\'t get any leaks.</p></section>';
     };
 
-    // pages\home.jade compiled template
-    templatizer["pages"]["home"] = function tmpl_pages_home() {
+    // pages\hierarchies.jade compiled template
+    templatizer["pages"]["hierarchies"] = function tmpl_pages_hierarchies() {
         return '<section class="page home"><div id="content"><div id="nav" class="tab"><div class="tabTitleContainer"><div class="tabTitle">nav</div></div><div id="navSeparator" class="tabSeparator ui-resizable-handle ui-resizable-e"></div></div><div id="form" class="tab"><div class="tabTitleContainer"><div class="tabTitle">form</div></div><div id="formSeparator" class="tabSeparator ui-resizable-handle ui-resizable-e"></div></div><div id="map" class="tab"><div class="tabTitleContainer"><div class="tabTitle">map</div></div><div id="mapSeparator" class="tabSeparator ui-resizable-handle ui-resizable-e"></div></div><div id="utils" class="tab"><div class="tabTitleContainer"><div class="tabTitle">utils</div></div></div></div></section>';
     };
 

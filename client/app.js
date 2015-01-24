@@ -10,6 +10,7 @@ var _                  = require('underscore'),
     MainView           = require('./views/main'),
     Me                 = require('./models/me'),
     People             = require('./models/persons'),
+    Hierarchies        = require('./models/hierarchies'),
     domReady           = require('domready'),
     initiateResizables = require('./modules/initiateResizables');
 
@@ -19,9 +20,10 @@ module.exports = {
     blastoff: function () {
         var self = window.app = this;
 
-        // create our global 'me' object and an empty collection for our people models.
-        window.me = new Me();
-        this.people = new People();
+        // create our global 'me' object and an empty collection for our people models
+        window.me        = new Me();
+        this.people      = new People();
+        this.hierarchies = new Hierarchies();
 
         // init our URL handlers and the history tracker
         this.router = new Router();

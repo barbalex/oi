@@ -1,3 +1,7 @@
+/*jslint node: true, browser: true, nomen: true, todo: true */
+/*global app, me, $*/
+'use strict';
+
 var _ = require('underscore');
 
 var people = [
@@ -36,6 +40,23 @@ var people = [
         firstName: 'Larry',
         lastName: 'Johannson',
         coolnessFactor: 4
+    }
+];
+
+var hierarchiesTest = [
+    {
+        id: 'h0',
+        type: 'hierarchy',
+        hTypeUid: 'h0',
+        level: 0,
+        name: 'apflora.ch'
+    },
+    {
+        id: 'h1',
+        type: 'hierarchy',
+        hTypeUid: 'h1',
+        level: 0,
+        name: 'name2'
     }
 ];
 
@@ -358,6 +379,22 @@ function get(id) {
 exports.name = 'fake_api';
 exports.version = '0.0.0';
 exports.register = function (plugin, options, next) {
+    plugin.route({
+        method: 'GET',
+        path: '/api/objects/{id}',
+        handler: function (request, reply) {
+            reply(objects);
+        }
+    });
+
+    plugin.route({
+        method: 'GET',
+        path: '/api/hierarchies',
+        handler: function (request, reply) {
+            reply(hierarchiesTest);
+        }
+    });
+
     plugin.route({
         method: 'GET',
         path: '/api/people',
