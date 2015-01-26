@@ -45,14 +45,14 @@ var people = [
 
 var hierarchiesTest = [
     {
-        id: 'h0',
+        id: 1,
         type: 'hierarchy',
         hTypeUid: 'h0',
         level: 0,
         name: 'apflora.ch'
     },
     {
-        id: 'h1',
+        id: 2,
         type: 'hierarchy',
         hTypeUid: 'h1',
         level: 0,
