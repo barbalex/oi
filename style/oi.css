@@ -11,10 +11,6 @@ body {
   padding: 0;
 }
 #content {
-  height: -webkit-calc(100vh - 50px);
-  height: -moz-calc(100vh - 50px);
-  height: -ms-calc(100vh - 50px);
-  height: -o-calc(100vh - 50px);
   height: calc(100vh - 50px);
 }
 .tab {
@@ -49,9 +45,5 @@ body {
 }
 #utils {
   background-color: #a52a2a;
-  width: -webkit-calc(10vw - 1px);
-  width: -moz-calc(10vw - 1px);
-  width: -ms-calc(10vw - 1px);
-  width: -o-calc(10vw - 1px);
   width: calc(10vw - 1px);
 }

@@ -6,9 +6,10 @@ var gulp   = require('gulp'),
 
 gulp.task('dev_src', function () {
     return gulp.src([
-        'src/jquery.js',
-        'src/jquery-ui.js',
-        'src/li_browserified.js'
+        './src/jquery.js',
+        './src/jquery-ui.js',
+        './src/bootstrap.js',
+        './src/oi_browserified.js'
     ])
         .pipe(concat('oi_built.js'))
         .pipe(gulp.dest('./src'));

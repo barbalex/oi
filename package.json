@@ -3,11 +3,16 @@
   "author": "Alexander Gabriel",
   "version": "0.0.0",
   "main": "server.js",
+  "browserify": {
+    "transform": [
+      "browserify-shim"
+    ]
+  },
+  "browserify-shim": {
+    "jquery": "global:$"
+  },
   "dependencies": {
-    "ampersand-input-view": "^2.0.0",
-    "ampersand-view": "^7.0.1",
-    "favicon-setter": "^0.1.1",
-    "getconfig": "^1.0.0",
+    "browserify-shim": "^3.8.2",
     "hapi": "^6.0.2",
     "jquery": "^2.1.3",
     "jquery-ui": "^1.10.5",
@@ -29,17 +34,5 @@
     "node-notifier": "^4.0.3",
     "require-dir": "^0.1.0",
     "vinyl-source-stream": "^1.0.0"
-  },
-  "jshintConfig": {
-    "asi": false,
-    "browser": true,
-    "curly": false,
-    "expr": true,
-    "indent": 4,
-    "loopfunc": true,
-    "node": true,
-    "trailing": true,
-    "undef": true,
-    "white": true
   }
 }

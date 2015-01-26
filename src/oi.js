@@ -1,8 +1,8 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $                         = require('jquery'),
-    _                         = require('underscore');
+var _                         = require('underscore'),
+    initiateResizables        = require('./modules/initiateResizables');
     //createGlobals             = require('./modules/createGlobals'),
     //clearLocalStorage         = require('./modules/clearLocalStorage'),
     //waehleApliste             = require('./modules/waehleApliste'),
@@ -19,6 +19,8 @@ window.oi.olMap = window.oi.olMap || {};
 // oi.js kann den anderen Modulen nicht als browserify-Modul bereitgestellt werden,
 // weil es die Quelle der Modularisierung ist
 window.oi.initiiereApp = function () {
+
+    console.log('initiiereApp');
     //createGlobals();
 
     // localStorage ausräumen
@@ -37,6 +39,8 @@ window.oi.initiiereApp = function () {
     window.oi.setupJqueryUi = function () {
         //setupJqueryUi();
     };
+
+    initiateResizables();
 };
 
 // gleich ein mal ausführen

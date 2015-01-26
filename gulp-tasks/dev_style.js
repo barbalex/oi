@@ -6,10 +6,10 @@ var gulp = require('gulp'),
 
 gulp.task('dev_style', function () {
     return gulp.src([
-        'style/bootstrap.css',
-        'style/jquery-ui.css',
-        'style/jquery-ui.structure.css',
-        'style/oi.css'
+        './style/jquery-ui.css',
+        './style/jquery-ui.structure.css',
+        './style/bootstrap.css',
+        './style/oi.css'
     ])
         .pipe(concat('oi_built.css'))
         .pipe(gulp.dest('./style'));

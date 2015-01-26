@@ -291,6 +291,30 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "index.html",
+			"settings":
+			{
+				"buffer_size": 3915,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/oi.js",
+			"settings":
+			{
+				"buffer_size": 1638,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/modules/initiateResizables.js",
+			"settings":
+			{
+				"buffer_size": 1886,
+				"line_ending": "Windows"
+			}
+		}
 	],
 	"build_system": "",
 	"command_palette":
@@ -340,12 +364,33 @@
 	[
 		"/C/Users/alex/oi",
 		"/C/Users/alex/oi/client",
-		"/C/Users/alex/oi/client/pages",
 		"/C/Users/alex/oi/client/views",
+		"/C/Users/alex/oi/gulp-tasks",
+		"/C/Users/alex/oi/src",
+		"/C/Users/alex/oi/src/modules",
 		"/C/Users/alex/oi/templates"
 	],
 	"file_history":
 	[
+		"/C/Users/alex/oi/gulp-tasks/browserify.js",
+		"/C/Users/alex/oi/gulp-tasks/dev_style.js",
+		"/C/Users/alex/oi/gulp-tasks/dev_src.js",
+		"/C/Users/alex/oi/.gitignore",
+		"/C/Users/alex/oi/src/oi_built.js",
+		"/C/Users/alex/oi/src/oi_browserified.js",
+		"/C/Users/alex/oi/style/oi.css",
+		"/C/Users/alex/oi/gulp-tasks/default.js",
+		"/C/Users/alex/oi/package.json",
+		"/C/Users/alex/oi/style/oi_built.css",
+		"/C/Users/alex/oi/gulp-tasks/templates.js",
+		"/C/Users/alex/oi/gulp-tasks/dev_3.js",
+		"/C/Users/alex/oi/gulp-tasks/dev.js",
+		"/C/Users/alex/oi/gulp-tasks/templates_when_watch.js",
+		"/C/Users/alex/oi/gulp-tasks/watch.js",
+		"/C/Users/alex/oi/gulpfile.js",
+		"/C/Users/alex/oi/server.js",
+		"/C/Users/alex/oi/gulp-tasks/dev_src_when_watch.js",
+		"/C/Users/alex/oi/templates/body.jade",
 		"/C/Users/alex/apflora/index.html",
 		"/C/Users/alex/oi/fakeApi.js",
 		"/C/Users/alex/oi/public/css/app.css",
@@ -354,13 +399,11 @@
 		"/C/Users/alex/oi/client/pages/home.js",
 		"/C/Users/alex/oi/client/views/main.js",
 		"/C/Users/alex/oi/client/models/hierarchy.js",
-		"/C/Users/alex/oi/server.js",
 		"/C/Users/alex/oi/client/models/hierarchies.js",
 		"/C/Users/alex/oi/client/app.js",
 		"/C/Users/alex/oi/client/router.js",
 		"/C/Users/alex/oi/client/templates.js",
 		"/C/Users/alex/oi/public/css/app.styl",
-		"/C/Users/alex/oi/templates/body.jade",
 		"/C/Users/alex/oi/client/pages/base.js",
 		"/C/Users/alex/oi/client/models/objects.js",
 		"/C/Users/alex/oi/client/models/object.js",
@@ -369,13 +412,11 @@
 		"/C/Users/alex/oi/client/modules/initiateResizables.js",
 		"/C/Users/alex/oi/client/modules/showTab.js",
 		"/C/Users/alex/oi/client/pages/info.js",
-		"/C/Users/alex/oi/package.json",
 		"/C/Users/alex/AppData/Roaming/Sublime Text 3/Packages/User/Default.sublime-theme",
 		"/C/Users/alex/AppData/Roaming/Sublime Text 3/Packages/User/Default.sublime-theme.txt",
 		"/C/Users/alex/AppData/Roaming/Sublime Text 3/Packages/Default/Preferences.sublime-settings",
 		"/C/Users/alex/oi/moonbootsConfig.js",
 		"/C/Users/alex/oi/templates/head.jade",
-		"/C/Users/alex/oi/.gitignore",
 		"/C/Users/alex/oi/README.md",
 		"/C/Users/alex/oi/client/views/person.js",
 		"/C/Users/alex/oi/lib/jquery.js",
@@ -458,22 +499,7 @@
 		"/C/Users/alex/apflora/src/modules/olMap/stapleLayerZuunterst.js",
 		"/C/Users/alex/apflora/src/modules/olMap/stapleLayerEineEbeneTiefer.js",
 		"/C/Users/alex/apflora/src/modules/olMap/stapleLayerZuoberst.js",
-		"/C/Users/alex/apflora/src/templatesDev/beobZuordnenRadio.hbs",
-		"/C/Users/alex/apflora/gulp-tasks/templates.js",
-		"/C/Users/alex/apflora/src/templatesDev/olMap/olmapPopupTpop.hbs",
-		"/C/Users/alex/apflora/src/templatesDev/olMap/popupBeob.hbs",
-		"/C/Users/alex/apflora/src/templatesDev/olMap/olmapPopupBeob.hbs",
-		"/C/Users/alex/apflora/src/templatesDev/olmapPopupBeob.hbs",
-		"/C/Users/alex/apflora/src/templatesDev/olMap/olmapLayertreeEigeneEbene.hbs",
-		"/C/Users/alex/apflora/src/modules/oeffneBeob.js",
-		"/C/Users/alex/apflora/src/modules/oeffneBeobInNeuemTab.js",
-		"/C/Users/alex/apflora/src/modules/oeffneTPopBeob.js",
-		"/C/Users/alex/apflora/src/modules/olMap/waehleAusschnittFuerUebergebeneTPop.js",
-		"/C/Users/alex/apflora/src/modules/jstree/select_node.js",
-		"/C/Users/alex/apflora/src/modules/events/forms/olMap/layertree/onClickLayertreeTpopStyle.js",
-		"/C/Users/alex/apflora/src/modules/erstelleIdAusDomAttributId.js",
-		"/C/Users/alex/apflora/src/modules/gMap/zeigeBeob.js",
-		"/C/Users/alex/apflora/src/modules/initiiereTPopKontr.js"
+		"/C/Users/alex/apflora/src/templatesDev/beobZuordnenRadio.hbs"
 	],
 	"find":
 	{
@@ -555,6 +581,7 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"body",
 			"\"",
 			"favicon.ico",
 			"window.oi",
@@ -681,8 +708,7 @@
 			"tabelleInDb   = table.tabelleInDb",
 			"dateformat",
 			"BeobBemerkungen",
-			"allgemein / querbeet",
-			"../../templates/olMap/layertreeTpop"
+			"allgemein / querbeet"
 		],
 		"highlight": false,
 		"in_selection": false,
@@ -828,8 +854,97 @@
 	"groups":
 	[
 		{
+			"selected": 0,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "index.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3915,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3844,
+								3844
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 1396.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "src/oi.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1638,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1530,
+								1543
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 45.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "src/modules/initiateResizables.js",
+					"semi_transient": true,
+					"settings":
+					{
+						"buffer_size": 1886,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				}
 			]
 		}
 	],
