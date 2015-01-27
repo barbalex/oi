@@ -16040,7 +16040,8 @@ module.exports = config;
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var PouchDB = require('pouchdb'),
+var _       = require('underscore'),
+    PouchDB = require('pouchdb'),
     db      = new PouchDB('oi'),
     sync    = require('./syncPouch');
 
@@ -16056,11 +16057,17 @@ module.exports = function () {
 
     db.query({map: mapHierarchies}, {reduce: false, include_docs: true}, function (err, response) {
         if (err) { return console.log('error: ', err); }
-        console.log('response: ', response);
+        var hierarchies = _.map(response.rows, function (row) {
+            return row.doc;
+        });
+        console.log('hierarchies: ', hierarchies);
+        _.each(hierarchies, function (hierarchy) {
+
+        });
     });
 
 };
-},{"./syncPouch":86,"pouchdb":35}],82:[function(require,module,exports){
+},{"./syncPouch":86,"pouchdb":35,"underscore":78}],82:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
