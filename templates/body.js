@@ -1,7 +1,0 @@
-function template(locals) {
-var buf = [];
-var jade_mixins = {};
-var jade_interp;
-
-buf.push("<body><nav class=\"navbar navbar-default navbar-fixed-top navbar-inverse\"><div class=\"container-fluid\"><div class=\"navbar-header\"><button type=\"button\" data-toggle=\"collapse\" data-target=\"#bs-example-navbar-collapse-1\" class=\"navbar-toggle collapsed\"><span class=\"sr-only\">Toggle navigation</span><span class=\"icon-bar\"></span><span class=\"icon-bar\"></span><span class=\"icon-bar\"></span></button><a href=\"/\" class=\"navbar-brand\">ortinfo</a></div><div id=\"bs-example-navbar-collapse-1\" class=\"collapse navbar-collapse\"><ul class=\"nav navbar-nav\"><li><a href=\"/collections\">collection demo</a></li><li><a href=\"/info\">more info</a></li></ul><ul class=\"nav navbar-nav navbar-right\"><li id=\"navMenu\" role=\"presentation\" class=\"active\"><a href=\"/\">nav</a></li><li id=\"formMenu\" role=\"presentation\" class=\"active\"><a href=\"/\">form</a></li><li id=\"mapMenu\" role=\"presentation\" class=\"active\"><a href=\"/\">map</a></li><li id=\"utilsMenu\" role=\"presentation\" class=\"active\"><a href=\"/\">utils</a></li></ul></div></div></nav><div class=\"container\"><main data-hook=\"page-container\"></main></div></body>");;return buf.join("");
-}

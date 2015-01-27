@@ -1,7 +1,7 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var gulp = require('gulp'),
+var gulp   = require('gulp'),
     concat = require('gulp-concat-sourcemap');
 
 gulp.task('dev_style', function () {

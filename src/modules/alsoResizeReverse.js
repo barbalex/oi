@@ -2,6 +2,8 @@
 /*global app, me, $*/
 'use strict';
 
+var $ = require('jquery');
+
 module.exports = function () {
     // add plugin to resize folowing tab
     $.ui.plugin.add("resizable", "alsoResizeReverse", {

@@ -1,8 +1,8 @@
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus */
-/*global app, me, $*/
 'use strict';
 
-var _ = require('underscore');
+var _ = require('underscore'),
+    $ = require('jquery');
 
 module.exports = function () {
     var widths         = [],

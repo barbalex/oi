@@ -1,8 +1,7 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
-/*global app, me, $*/
 'use strict';
 
-var _                 = require('underscore'),
+var $                 = require('jquery'),
     alsoResizeReverse = require('./alsoResizeReverse'),
     setWidthOfTabs    = require('./setWidthOfTabs'),
     showTab           = require('./showTab');
@@ -10,7 +9,7 @@ var _                 = require('underscore'),
 module.exports = function () {
     var zaehler;
 
-    window.oi = window.oi || {};
+    //console.log('$.ui: ', $.ui);
 
     // add plugin to resize folowing tab
     alsoResizeReverse();
@@ -33,10 +32,11 @@ module.exports = function () {
         containment: '#content'
     });
 
-    $('.nav').on('click', 'li', function () {
-        var id = $(this).attr('id'),
+    $('.nav').on('click', 'li', function (event) {
+        var id  = $(this).attr('id'),
             tab = id.substring(0, id.length - 4);
 
+        event.preventDefault();
         showTab(tab);
         setWidthOfTabs();
     });

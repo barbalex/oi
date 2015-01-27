@@ -46,3 +46,4 @@ node_modules
 oi_browserified.js
 oi_built.js
 oi_built.css
+couchpass.json
