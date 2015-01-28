@@ -43,7 +43,7 @@ Temporary Items
 .apdisk
 
 node_modules
-oi_browserified.js
-oi_built.js
-oi_built.css
+src/oi_browserified.js
+style/oi_built.css
 couchpass.json
+src/oi_built.js

@@ -162,7 +162,7 @@ module.exports = function () {
         console.log('topObjectsData: ', topObjectsData);
 
         $('#navContent').jstree({
-            'plugins': ['wholerow', 'unique', 'dnd', 'state', 'contextmenu'],
+            'plugins': ['wholerow', 'state'],
             'core': {
                 'data': _.union(objectsData, descendantHierarchiesData, topObjectsData),
                 'themes': {
