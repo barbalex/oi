@@ -1,4 +1,3 @@
-# oi
-ortinfo
+# ortinfo
 
 Das soll mal was feines werden ;-)
