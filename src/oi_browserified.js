@@ -51,7 +51,7 @@ window.oi.initiiereApp = function () {
 
 // gleich ein mal ausführen
 window.oi.initiiereApp();
-},{"./modules/initiateNav":84,"./modules/initiateResizables":85,"./modules/setupEvents":87}],2:[function(require,module,exports){
+},{"./modules/initiateNav":85,"./modules/initiateResizables":86,"./modules/setupEvents":88}],2:[function(require,module,exports){
 module.exports={
     "user": "barbalex",
     "pass": "dLhdMg12"
@@ -33618,6 +33618,25 @@ module.exports = config;
 var $       = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
     _       = require('underscore'),
     PouchDB = require('pouchdb'),
+    db      = new PouchDB('oi');
+
+module.exports = function (_id) {
+    console.log('_id: ', _id);
+    db.get(_id, function (err, body) {
+        if (err) { console.log('error: ', err); }
+        console.log('body: ', body);
+        $('#formContent').html(JSON.stringify(body));
+    });
+};
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"pouchdb":38,"underscore":81}],85:[function(require,module,exports){
+(function (global){
+/*jslint node: true, browser: true, nomen: true, todo: true */
+'use strict';
+
+var $       = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+    _       = require('underscore'),
+    PouchDB = require('pouchdb'),
     db      = new PouchDB('oi'),
     sync    = require('./syncPouch'),
     jstree  = require('jstree'),
@@ -33654,6 +33673,8 @@ function createObjectsData(object, results, objectsData) {
         }
         // parent ist ein descendant hierarchy, ausser in der obersten Ebene
         jstreeObject.parent = object.parent + h._id;
+        jstreeObject.li_attr = {};
+        jstreeObject.li_attr.typ = object.typ;
         objectsData.push(jstreeObject);
     }
 }
@@ -33680,6 +33701,8 @@ function createTopObjectsData(objects, results) {
         }
         // parent ist ein descendant hierarchy, ausser in der obersten Ebene
         jstreeObject.parent = '#';
+        jstreeObject.li_attr = {};
+        jstreeObject.li_attr.typ = object.typ;
         topObjectsArray.push(jstreeObject);
     });
 
@@ -33702,6 +33725,9 @@ function createDescendantHierarchiesOfObject(object, hierarchies, descendantHier
         jstreeHierarchy.parent = object._id;
         // text is name
         jstreeHierarchy.text = hierarchy.name || '(?)';
+        // typ mitgeben
+        jstreeHierarchy.li_attr = {};
+        jstreeHierarchy.li_attr.typ = hierarchy.typ;
         // add to array
         descendantHierarchiesData.push(jstreeHierarchy);
     });
@@ -33723,6 +33749,8 @@ function createTopHierarchies(hierarchies) {
         jstreeHierarchy.parent = '#';
         // text is name
         jstreeHierarchy.text = hierarchy.name || '(?)';
+        // typ mitgeben
+        jstreeHierarchy.typ = hierarchy.typ;
         topHierarchiesData.push(jstreeHierarchy);
     });
 
@@ -33764,16 +33792,13 @@ module.exports = function () {
         _.each(results.objects, function (object) {
             createObjectsData(object, results, objectsData);
         });
-        console.log('objectsData: ', objectsData);
 
         var descendantHierarchiesData = [];
         _.each(results.objects, function (object) {
             createDescendantHierarchiesOfObject(object, results.hierarchies, descendantHierarchiesData);
         });
-        console.log('descendantHierarchiesData: ', descendantHierarchiesData);
 
         var topObjectsData = createTopObjectsData(objects, results);
-        console.log('topObjectsData: ', topObjectsData);
 
         $('#navContent').jstree({
             'plugins': ['wholerow', 'state'],
@@ -33791,7 +33816,7 @@ module.exports = function () {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./syncPouch":89,"async":3,"jstree":12,"pouchdb":38,"underscore":81}],85:[function(require,module,exports){
+},{"./syncPouch":90,"async":3,"jstree":12,"pouchdb":38,"underscore":81}],86:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -33857,7 +33882,7 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./alsoResizeReverse":82,"./setWidthOfTabs":86,"./showTab":88}],86:[function(require,module,exports){
+},{"./alsoResizeReverse":82,"./setWidthOfTabs":87,"./showTab":89}],87:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus */
 'use strict';
@@ -33901,18 +33926,20 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"underscore":81}],87:[function(require,module,exports){
+},{"underscore":81}],88:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $ = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null);
+var $            = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+    initiateForm = require('./initiateForm');
 
 module.exports = function () {
 
     $('#navContent')
         .on('activate_node.jstree', function (e, data) {
-            console.log('data.node.id: ', data.node.id);
+            console.log('data: ', data);
+            initiateForm(data.node.id);
         });
 
     $(document).on('click.nav', '.navbar-collapse.in', function (e) {
@@ -33928,7 +33955,7 @@ module.exports = function () {
 
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],88:[function(require,module,exports){
+},{"./initiateForm":84}],89:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -33953,7 +33980,7 @@ module.exports = function (tab) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],89:[function(require,module,exports){
+},{}],90:[function(require,module,exports){
 /**
  * synchronisiert die Daten aus einer CouchDB in PouchDB
  */

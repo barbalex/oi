@@ -40,6 +40,8 @@ function createObjectsData(object, results, objectsData) {
         }
         // parent ist ein descendant hierarchy, ausser in der obersten Ebene
         jstreeObject.parent = object.parent + h._id;
+        jstreeObject.li_attr = {};
+        jstreeObject.li_attr.typ = object.typ;
         objectsData.push(jstreeObject);
     }
 }
@@ -66,6 +68,8 @@ function createTopObjectsData(objects, results) {
         }
         // parent ist ein descendant hierarchy, ausser in der obersten Ebene
         jstreeObject.parent = '#';
+        jstreeObject.li_attr = {};
+        jstreeObject.li_attr.typ = object.typ;
         topObjectsArray.push(jstreeObject);
     });
 
@@ -88,6 +92,9 @@ function createDescendantHierarchiesOfObject(object, hierarchies, descendantHier
         jstreeHierarchy.parent = object._id;
         // text is name
         jstreeHierarchy.text = hierarchy.name || '(?)';
+        // typ mitgeben
+        jstreeHierarchy.li_attr = {};
+        jstreeHierarchy.li_attr.typ = hierarchy.typ;
         // add to array
         descendantHierarchiesData.push(jstreeHierarchy);
     });
@@ -109,6 +116,8 @@ function createTopHierarchies(hierarchies) {
         jstreeHierarchy.parent = '#';
         // text is name
         jstreeHierarchy.text = hierarchy.name || '(?)';
+        // typ mitgeben
+        jstreeHierarchy.typ = hierarchy.typ;
         topHierarchiesData.push(jstreeHierarchy);
     });
 
@@ -150,16 +159,13 @@ module.exports = function () {
         _.each(results.objects, function (object) {
             createObjectsData(object, results, objectsData);
         });
-        console.log('objectsData: ', objectsData);
 
         var descendantHierarchiesData = [];
         _.each(results.objects, function (object) {
             createDescendantHierarchiesOfObject(object, results.hierarchies, descendantHierarchiesData);
         });
-        console.log('descendantHierarchiesData: ', descendantHierarchiesData);
 
         var topObjectsData = createTopObjectsData(objects, results);
-        console.log('topObjectsData: ', topObjectsData);
 
         $('#navContent').jstree({
             'plugins': ['wholerow', 'state'],
