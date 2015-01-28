@@ -7188,6 +7188,11 @@ body {
   width: calc(100% - 8px);
 }
 
+#formContent {
+  width: calc(100% - 8px);
+  padding: 5px 5px 5px 5px;
+}
+
 #navContent ul {
   /*color: red;*/
   width: 100%;

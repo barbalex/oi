@@ -1,0 +1,4 @@
+<div class="form-group">
+    <label for="{{objectId}}{{label}}">{{label}}</label>
+    <input type="{{type}}" class="form-control" id="{{objectId}}{{label}}" value="{{value}}">
+</div>

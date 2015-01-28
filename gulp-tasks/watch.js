@@ -11,7 +11,7 @@ return gulp.task('watch', function () {
             'src/**/*',
             'index.html',
             'server.js',
-            '-src/oi_brwoserified.js',
+            '-src/oi_browserified.js',
             '-src/oi_built.js',
             '-src/oi_built.js.map'
         ],
@@ -26,7 +26,7 @@ return gulp.task('watch', function () {
         ['dev_style']
     );
     gulp.watch(
-        ['src/templates/*.jade'],
+        ['src/templates/*.hdb'],
         ['templates_when_watch']
     );
     notifier.notify({
