@@ -7182,6 +7182,8 @@ body {
   width: calc(10vw - 1px);
 }
 
+/* jstree */
+
 #navContent {
   width: calc(100% - 8px);
 }
@@ -7197,6 +7199,24 @@ body {
 
 #navContent ul ul ul {
   /*color: green;*/
+}
+
+#navContent .jstree-icon {
+  width: 20px;
+}
+
+#navContent .jstree-node {
+  margin-left: 16px;
+}
+
+@media (max-width: 768px) {
+   #navContent .jstree-icon {
+    width: 40px;
+  }
+}
+
+#navContent .jstree-node[aria-level="1"] {
+  margin-left: 0;
 }
 
 /*# sourceMappingURL=oi_built.css.map */
