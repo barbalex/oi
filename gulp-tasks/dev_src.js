@@ -9,6 +9,7 @@ gulp.task('dev_src', function () {
         './src/jquery.js',
         './src/jquery-ui.js',
         './src/bootstrap.js',
+        './src/jstree.js',
         './src/oi_browserified.js'
     ])
         .pipe(concat('oi_built.js'))

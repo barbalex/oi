@@ -1,12 +1,15 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var _       = require('underscore'),
+var $       = require('jquery'),
+    _       = require('underscore'),
     PouchDB = require('pouchdb'),
     db      = new PouchDB('oi'),
     sync    = require('./syncPouch'),
+    jstree  = require('jstree'),
+    async   = require('async'),
     hierarchies,
-    number;
+    objects;
 
 function mapHierarchies(doc) {
     if (doc.type === 'hierarchy') {
@@ -14,64 +17,103 @@ function mapHierarchies(doc) {
     }
 }
 
-function getHierarchyOfLevel(level) {
-    return 
+function mapObjects(doc) {
+    if (doc.type === 'object') {
+        emit(doc._id);
+    }
+}
+
+function mapHierarchyToJstreeData(hierarchy) {
+    // _id wird id
+    hierarchy.id = hierarchy._id;
+    delete hierarchy._id;
+    // parent
+}
+
+function mapObjectToJstreeData(object) {
+    // _id wird id
+    object.id = object._id;
+    delete object._id;
+    // parent ist das Hierarchieobjekt
+    object.parent = object.hId;
+    delete object.type;
+    delete object.users;
+    delete object.editedBy;
+    delete object.data;
+    delete object._rev;
+    return object;
 }
 
 module.exports = function () {
 
     sync();
 
-    db.query({map: mapHierarchies}, {reduce: false, include_docs: true}, function (err, response) {
+    async.parallel({
+        hierarchies: function (callback) {
+            db.query({map: mapHierarchies}, {reduce: false, include_docs: true}, function (err, response) {
+                hierarchies = _.map(response.rows, function (row) {
+                    return row.doc;
+                });
+                callback(null, hierarchies);
+            });
+        },
+        objects: function (callback) {
+            db.query({map: mapObjects}, {reduce: false, include_docs: true}, function (err, response) {
+                objects = _.map(response.rows, function (row) {
+                    return row.doc;
+                });
+                callback(null, objects);
+            });
+        }
+    }, function (err, results) {
         if (err) { return console.log('error: ', err); }
-        var hierarchiesLevel0,
-            html;
+        // results equals to: { hierarchies: hierarchies, objects: objects }
 
-        hierarchies = _.map(response.rows, function (row) {
-            return row.doc;
+        var data = [];
+
+        console.log('results.hierarchies: ', results.hierarchies);
+        console.log('results.objects: ', results.objects);
+
+        // höchste Hierarchieebene holen
+        /*var hierarchy0 = _.find(results.hierarchies, function (hierarchy) {
+            return hierarchy.parent === null;
+        });*/
+
+        // Daten für jstree aufbereiten
+        // alle Objekte holen
+        var objectData = _.map(results.objects, mapObjectToJstreeData);
+
+        console.log('objectData after map: ', objectData);
+
+        _.each(objectData, function (data) {
+            var h = _.find(results.hierarchies, function (hierarchy) {
+                return hierarchy._id == data.hId;
+            });
+            if (h && h.nameField) {
+                data.text = data[h.nameField];
+            } else {
+                data.text = '(?)';
+            }
         });
 
-        console.log('hierarchies: ', hierarchies);
-        // level 0 holen
-        hierarchiesLevel0 = _.filter(hierarchies, function (hierarchy) {
-            return hierarchy.level === 0;
+        console.log('objectData after find: ', objectData);
+
+        // hierarchie holen
+
+        // name als text ergänzen
+
+        $('#navContent').jstree({
+            'plugins': ['wholerow', 'unique', 'dnd', 'state', 'contextmenu'],
+            'core': {
+                'data': objectData,
+                'themes': {
+                    'responsive': true,
+                    'icons':      false,
+                    'dots':       true
+                },
+                'check_callback': true,
+                'multiple':       false
+            }
         });
-
-        // navContent beginnen
-        // panel group beginnen
-        html = '<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">';
-
-        _.each(hierarchiesLevel0, function (hierarchy) {
-            // panel beginnen
-            html += '<div class="panel panel-default">';
-            // panel heading beginnen
-            html += '<div class="panel-heading" role="tablist" id="heading' + hierarchy.hTypeUid + '"><h4 class="panel-title">';
-            html += '<a data-toggle="collapse" data-parent="#accordion" href="#collapse' + hierarchy.hTypeUid + '" aria-expanded="true" aria-controls="collapse' + hierarchy.hTypeUid + '">';
-            html += hierarchy.name;
-            // panel heading abschliessen
-            html += '</a></h4></div>';
-
-            // collapse beginnen
-            html += '<div id="collapse' + hierarchy.hTypeUid + '" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading' + hierarchy.hTypeUid + '">';
-
-            html += '<ul class="list-group">';
-
-            // get chidren
-            html += '<li class="list-group-item">list group item 1</li>';
-            html += '<li class="list-group-item">list group item 2</li>';
-
-            // collapse abschliessen
-            html += '</ul></div>';
-
-            // panel abschliessen
-            html += '</div>';
-        });
-
-        // collapsilbe group abschliessen
-        html += '</div>';
-
-        // collapsible group initiieren
-        $('#navContent').html(html).collapse();
     });
-
 };

@@ -47,3 +47,15 @@ body {
   background-color: #a52a2a;
   width: calc(10vw - 1px);
 }
+
+#navContent ul {
+  color: red;
+}
+
+#navContent ul ul {
+  color: blue;
+}
+
+#navContent ul ul ul {
+  color: green;
+}

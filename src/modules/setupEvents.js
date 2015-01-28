@@ -5,6 +5,11 @@ var $ = require('jquery');
 
 module.exports = function () {
 
+    $('#navContent')
+        .on('activate_node.jstree', function (e, data) {
+            console.log('data.node.id: ', data.node.id);
+        });
+
     $(document).on('click.nav', '.navbar-collapse.in', function (e) {
         if ($(e.target).is('a')) {
             $(this).collapse('hide');
