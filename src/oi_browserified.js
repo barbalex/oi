@@ -36846,9 +36846,9 @@ function createObjectsData(object, results, objectsData) {
         });
         // beschrifte object
         if (object.data && h && h.nameField) {
-            jstreeObject.text = object.data[h.nameField];
+            jstreeObject.text = '<strong>' + object.data[h.nameField] + '</strong>';
         } else {
-            jstreeObject.text = '(?)';
+            jstreeObject.text = '<strong>(?)</strong>';
         }
         // parent ist ein descendant hierarchy, ausser in der obersten Ebene
         jstreeObject.parent = object.parent + h._id;
@@ -36874,9 +36874,9 @@ function createTopObjectsData(objects, results) {
         });
         // beschirfte object
         if (object.data && h && h.nameField) {
-            jstreeObject.text = object.data[h.nameField];
+            jstreeObject.text = '<strong>' + object.data[h.nameField] + '</strong>';
         } else {
-            jstreeObject.text = '(?)';
+            jstreeObject.text = '<strong>(?)</strong>';
         }
         // parent ist ein descendant hierarchy, ausser in der obersten Ebene
         jstreeObject.parent = '#';

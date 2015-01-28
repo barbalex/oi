@@ -7218,6 +7218,10 @@ body {
    #navContent .jstree-icon {
     width: 40px;
   }
+  #navContent .jstree-wholerow {
+    background-color: rgba(0, 0, 0, 0);
+    box-shadow: inset 0 0 0 0 rgba(0, 0, 0, 0);
+  }
 }
 
 #navContent .jstree-node[aria-level="1"] {
