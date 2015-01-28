@@ -28,10 +28,13 @@ body {
   right: 0;
   cursor: col-resize;
   background-image: linear-gradient(to left, #000 0%, rgba(84,84,84,0.8) 100%);
+  z-index: 1;
 }
 #nav {
   background-color: #ff0;
   width: 10vw;
+  /*overflow-x: auto;
+  overflow-y: hidden;*/
 }
 #form {
   background-color: #ffa500;
@@ -48,14 +51,19 @@ body {
   width: calc(10vw - 1px);
 }
 
+#navContent {
+  width: calc(100% - 8px);
+}
+
 #navContent ul {
-  color: red;
+  /*color: red;*/
+  width: 100%;
 }
 
 #navContent ul ul {
-  color: blue;
+  /*color: blue;*/
 }
 
 #navContent ul ul ul {
-  color: green;
+  /*color: green;*/
 }

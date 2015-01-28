@@ -52408,7 +52408,7 @@ function createObjectsData(object, results, objectsData) {
         var h = _.find(results.hierarchies, function (hierarchy) {
             return hierarchy._id == object.hId;
         });
-        // beschirfte object
+        // beschrifte object
         if (object.data && h && h.nameField) {
             jstreeObject.text = object.data[h.nameField];
         } else {
