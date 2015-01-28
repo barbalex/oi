@@ -33660,6 +33660,10 @@ function mapObjectToJstreeData(object) {
 
 module.exports = function () {
 
+    // NUR FÜR ENTWICKLUNG
+    // zuerst db komprimieren - sonst sind komische Daten drin
+    db.compact();
+
     sync();
 
     async.parallel({
@@ -33701,10 +33705,10 @@ module.exports = function () {
 
         _.each(objectData, function (data) {
             var h = _.find(results.hierarchies, function (hierarchy) {
-                return hierarchy._id == data.hId;
+                return hierarchy._id == data.parent;
             });
-            if (h && h.nameField) {
-                data.text = data[h.nameField];
+            if (data.data && h && h.nameField) {
+                data.text = data.data[h.nameField];
             } else {
                 data.text = '(?)';
             }

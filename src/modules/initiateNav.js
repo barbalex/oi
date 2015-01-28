@@ -36,15 +36,27 @@ function mapObjectToJstreeData(object) {
     delete object._id;
     // parent ist das Hierarchieobjekt
     object.parent = object.hId;
+    var h = _.find(results.hierarchies, function (hierarchy) {
+        return hierarchy._id == object.hId;
+    });
+    if (object.data && h && h.nameField) {
+        object.text = object.data[h.nameField];
+    } else {
+        object.text = '(?)';
+    }
+    delete object.hId;
     delete object.type;
     delete object.users;
     delete object.editedBy;
-    delete object.data;
     delete object._rev;
     return object;
 }
 
 module.exports = function () {
+
+    // NUR FÜR ENTWICKLUNG
+    // zuerst db komprimieren - sonst sind komische Daten drin
+    db.compact();
 
     sync();
 
@@ -85,16 +97,17 @@ module.exports = function () {
 
         console.log('objectData after map: ', objectData);
 
-        _.each(objectData, function (data) {
+        /*_.each(objectData, function (data) {
             var h = _.find(results.hierarchies, function (hierarchy) {
-                return hierarchy._id == data.hId;
+                return hierarchy._id == data.parent;
             });
-            if (h && h.nameField) {
-                data.text = data[h.nameField];
+            if (data.data && h && h.nameField) {
+                data.text = data.data[h.nameField];
+                delete data.data;
             } else {
                 data.text = '(?)';
             }
-        });
+        });*/
 
         console.log('objectData after find: ', objectData);
 
