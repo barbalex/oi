@@ -33624,8 +33624,14 @@ module.exports = function (_id) {
     console.log('_id: ', _id);
     db.get(_id, function (err, body) {
         if (err) { console.log('error: ', err); }
-        console.log('body: ', body);
+        //console.log('body: ', body);
         $('#formContent').html(JSON.stringify(body));
+        console.log('body.hId: ', body.hId);
+        // get metainformation about fields
+        db.get(body.hId, function (err, body) {
+            if (err) { console.log('error: ', err); }
+            console.log('body: ', body);
+        });
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
@@ -33938,7 +33944,7 @@ module.exports = function () {
 
     $('#navContent')
         .on('activate_node.jstree', function (e, data) {
-            console.log('data: ', data);
+            //console.log('data: ', data);
             initiateForm(data.node.id);
         });
 

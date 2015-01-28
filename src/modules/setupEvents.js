@@ -8,7 +8,7 @@ module.exports = function () {
 
     $('#navContent')
         .on('activate_node.jstree', function (e, data) {
-            console.log('data: ', data);
+            //console.log('data: ', data);
             initiateForm(data.node.id);
         });
 

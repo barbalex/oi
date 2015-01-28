@@ -10,7 +10,13 @@ module.exports = function (_id) {
     console.log('_id: ', _id);
     db.get(_id, function (err, body) {
         if (err) { console.log('error: ', err); }
-        console.log('body: ', body);
+        //console.log('body: ', body);
         $('#formContent').html(JSON.stringify(body));
+        console.log('body.hId: ', body.hId);
+        // get metainformation about fields
+        db.get(body.hId, function (err, body) {
+            if (err) { console.log('error: ', err); }
+            console.log('body: ', body);
+        });
     });
 };
