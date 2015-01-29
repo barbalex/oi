@@ -1,8 +1,9 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $            = require('jquery'),
-    initiateForm = require('./initiateForm');
+var $                    = require('jquery'),
+    initiateForm         = require('./initiateForm'),
+    fitTextareaToContent = require('./fitTextareaToContent');
 
 module.exports = function () {
 
@@ -10,6 +11,9 @@ module.exports = function () {
         .on('activate_node.jstree', function (e, data) {
             initiateForm(data.node.id);
         });
+
+    $('#formContent')
+        .on('keyup focus', 'textarea', fitTextareaToContent);
 
     $(document).on('click.nav', '.navbar-collapse.in', function (e) {
         if ($(e.target).is('a')) {

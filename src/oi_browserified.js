@@ -51,7 +51,7 @@ window.oi.initiiereApp = function () {
 
 // gleich ein mal ausführen
 window.oi.initiiereApp();
-},{"./modules/initiateNav":102,"./modules/initiateResizables":103,"./modules/setupEvents":105}],2:[function(require,module,exports){
+},{"./modules/initiateNav":103,"./modules/initiateResizables":104,"./modules/setupEvents":106}],2:[function(require,module,exports){
 module.exports={
     "user": "barbalex",
     "pass": "dLhdMg12"
@@ -36772,20 +36772,75 @@ config.couch.passWord = couch_passfile.pass;
 
 module.exports = config;
 },{"../../couchpass.json":2}],101:[function(require,module,exports){
+// setzt die Höhe von textareas so, dass der Text genau rein passt
+
+/*jslint node: true, browser: true, nomen: true, todo: true, plusplus: true*/
+'use strict';
+
+module.exports = function (id, maxHeight) {
+    var text,
+        adjustedHeight;
+
+    if (id.currentTarget) {
+        // id kam über event-Handler als dessen event rein
+        text = id.currentTarget;
+    } else if (id && id.style) {
+        // es wurde das element des textareas übergeben
+        text = id;
+    } else {
+        // es wurde die id eines textareas übergeben
+        text = document.getElementById(id);
+    }
+
+    if (!text) {
+        return;
+    }
+
+    maxHeight = maxHeight || document.documentElement.clientHeight;
+
+    /* Accounts for rows being deleted, pixel value may need adjusting */
+    if (text.clientHeight === text.scrollHeight) {
+        text.style.height = '30px';
+    }
+
+    adjustedHeight = text.clientHeight;
+    if (!maxHeight || maxHeight > adjustedHeight) {
+        adjustedHeight = Math.max(text.scrollHeight, adjustedHeight);
+    }
+    if (maxHeight) {
+        adjustedHeight = Math.min(maxHeight, adjustedHeight);
+    }
+
+    // minimale Höhe soll 2px grösser sein, damit textareas nicht kleiner sind als inputs type text
+    adjustedHeight += 2;
+
+    if (adjustedHeight > 34) {
+        // Scrollbalken werden angezeigt, nicht schön > 2px grösser
+        adjustedHeight += 2;
+    }
+
+    if (adjustedHeight > text.clientHeight) {
+        text.style.height = adjustedHeight + 'px';
+    }
+};
+},{}],102:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $        = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
-    _        = require('underscore'),
-    PouchDB  = require('pouchdb'),
-    db       = new PouchDB('oi'),
-    input    = require('../../templates/input'),
-    textarea = require('../../templates/textarea');
+var $                    = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+    _                    = require('underscore'),
+    PouchDB              = require('pouchdb'),
+    db                   = new PouchDB('oi'),
+    input                = require('../../templates/input'),
+    textarea             = require('../../templates/textarea'),
+    fitTextareaToContent = require('./fitTextareaToContent');
 
 module.exports = function (_id) {
 
-    var html = '';
+    var html         = '',
+        $formContent = $('#formContent'),
+        textareaIds  = [];
 
     console.log('_id: ', _id);
 
@@ -36804,20 +36859,25 @@ module.exports = function (_id) {
                 switch (field.type) {
                 case 'textarea':
                     html += textarea(templateObject);
+                    textareaIds.push(object._id + field.label);
                     break;
-                case 'input':
+                // case 'input':
                 default:
                     html += input(templateObject);
                     break;
                 }
             });
 
-            $('#formContent').html(html);
+            $formContent.html(html);
+            
+            _.each(textareaIds, function (textareaId) {
+                fitTextareaToContent(textareaId);
+            });
         });
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../templates/input":108,"../../templates/textarea":109,"pouchdb":55,"underscore":98}],102:[function(require,module,exports){
+},{"../../templates/input":109,"../../templates/textarea":110,"./fitTextareaToContent":101,"pouchdb":55,"underscore":98}],103:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -37004,7 +37064,7 @@ module.exports = function () {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./syncPouch":107,"async":3,"jstree":29,"pouchdb":55,"underscore":98}],103:[function(require,module,exports){
+},{"./syncPouch":108,"async":3,"jstree":29,"pouchdb":55,"underscore":98}],104:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -37070,7 +37130,7 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./alsoResizeReverse":99,"./setWidthOfTabs":104,"./showTab":106}],104:[function(require,module,exports){
+},{"./alsoResizeReverse":99,"./setWidthOfTabs":105,"./showTab":107}],105:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus */
 'use strict';
@@ -37114,13 +37174,14 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"underscore":98}],105:[function(require,module,exports){
+},{"underscore":98}],106:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $            = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
-    initiateForm = require('./initiateForm');
+var $                    = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+    initiateForm         = require('./initiateForm'),
+    fitTextareaToContent = require('./fitTextareaToContent');
 
 module.exports = function () {
 
@@ -37128,6 +37189,9 @@ module.exports = function () {
         .on('activate_node.jstree', function (e, data) {
             initiateForm(data.node.id);
         });
+
+    $('#formContent')
+        .on('keyup focus', 'textarea', fitTextareaToContent);
 
     $(document).on('click.nav', '.navbar-collapse.in', function (e) {
         if ($(e.target).is('a')) {
@@ -37142,7 +37206,7 @@ module.exports = function () {
 
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./initiateForm":101}],106:[function(require,module,exports){
+},{"./fitTextareaToContent":101,"./initiateForm":102}],107:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -37167,7 +37231,7 @@ module.exports = function (tab) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],107:[function(require,module,exports){
+},{}],108:[function(require,module,exports){
 /**
  * synchronisiert die Daten aus einer CouchDB in PouchDB
  */
@@ -37198,7 +37262,7 @@ module.exports = function () {
     if (remoteCouch) { sync(); }
 };
 
-},{"./configuration":100,"pouchdb":55}],108:[function(require,module,exports){
+},{"./configuration":100,"pouchdb":55}],109:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
   return "<div class=\"form-group\">\r\n    <label for=\""
@@ -37215,7 +37279,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(((helper = (helper = helpers.value || (depth0 != null ? depth0.value : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"value","hash":{},"data":data}) : helper)))
     + "\">\r\n</div>";
 },"useData":true});
-},{"handlebars":27}],109:[function(require,module,exports){
+},{"handlebars":27}],110:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
   return "<div class=\"form-group\">\r\n    <label for=\""

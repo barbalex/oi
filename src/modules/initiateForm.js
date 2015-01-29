@@ -1,16 +1,19 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $        = require('jquery'),
-    _        = require('underscore'),
-    PouchDB  = require('pouchdb'),
-    db       = new PouchDB('oi'),
-    input    = require('../../templates/input'),
-    textarea = require('../../templates/textarea');
+var $                    = require('jquery'),
+    _                    = require('underscore'),
+    PouchDB              = require('pouchdb'),
+    db                   = new PouchDB('oi'),
+    input                = require('../../templates/input'),
+    textarea             = require('../../templates/textarea'),
+    fitTextareaToContent = require('./fitTextareaToContent');
 
 module.exports = function (_id) {
 
-    var html = '';
+    var html         = '',
+        $formContent = $('#formContent'),
+        textareaIds  = [];
 
     console.log('_id: ', _id);
 
@@ -29,15 +32,20 @@ module.exports = function (_id) {
                 switch (field.type) {
                 case 'textarea':
                     html += textarea(templateObject);
+                    textareaIds.push(object._id + field.label);
                     break;
-                case 'input':
+                // case 'input':
                 default:
                     html += input(templateObject);
                     break;
                 }
             });
 
-            $('#formContent').html(html);
+            $formContent.html(html);
+            
+            _.each(textareaIds, function (textareaId) {
+                fitTextareaToContent(textareaId);
+            });
         });
     });
 };
