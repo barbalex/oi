@@ -51,7 +51,7 @@ window.oi.initiiereApp = function () {
 
 // gleich ein mal ausführen
 window.oi.initiiereApp();
-},{"./modules/initiateNav":103,"./modules/initiateResizables":104,"./modules/setupEvents":107}],2:[function(require,module,exports){
+},{"./modules/initiateNav":104,"./modules/initiateResizables":105,"./modules/setupEvents":107}],2:[function(require,module,exports){
 module.exports={
     "user": "barbalex",
     "pass": "dLhdMg12"
@@ -36663,6 +36663,38 @@ exports.parse = function (str) {
 }.call(this));
 
 },{}],99:[function(require,module,exports){
+/*
+ * erstellt aus einer valueArray einen Array von Objekten
+ * mit value und checked
+ * wird benutzt, um opionGroup und checkboxGroup zu bauen
+ */
+
+/*jslint node: true, browser: true, nomen: true, todo: true */
+'use strict';
+
+var _ = require('underscore');
+
+module.exports = function (valueArray, fieldValueArray) {
+
+    return _.map(valueArray, function (value) {
+        var valueObject = {};
+
+        if (typeof value === 'object') {
+            // valueList enthielt Objekte mit values und labels
+            valueObject.value = value.value;
+            valueObject.label = value.label;
+            // setzen, ob checkbox checked ist
+            valueObject.checked = _.indexOf(fieldValueArray, value.value) > -1 ? 'checked' : '';
+        } else {
+            valueObject.value = valueObject.label = value;
+            // setzen, ob checkbox checked ist
+            valueObject.checked = _.indexOf(fieldValueArray, value) > -1 ? 'checked' : '';
+        }
+
+        return valueObject;
+    });
+};
+},{"underscore":98}],100:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 /*global app, me, $*/
@@ -36753,7 +36785,7 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],100:[function(require,module,exports){
+},{}],101:[function(require,module,exports){
 /**
  * Hier werden zentral alle Konfigurationsparameter gesammelt
  */
@@ -36771,7 +36803,7 @@ config.couch.userName = couch_passfile.user;
 config.couch.passWord = couch_passfile.pass;
 
 module.exports = config;
-},{"../../couchpass.json":2}],101:[function(require,module,exports){
+},{"../../couchpass.json":2}],102:[function(require,module,exports){
 // setzt die Höhe von textareas so, dass der Text genau rein passt
 
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus: true*/
@@ -36823,22 +36855,22 @@ module.exports = function (id, maxHeight) {
         text.style.height = adjustedHeight + 'px';
     }
 };
-},{}],102:[function(require,module,exports){
+},{}],103:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $                                = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
-    _                                = require('underscore'),
-    PouchDB                          = require('pouchdb'),
-    db                               = new PouchDB('oi'),
-    input                            = require('../../templates/input'),
-    textarea                         = require('../../templates/textarea'),
-    checkbox                         = require('../../templates/checkbox'),
-    optionGroup                      = require('../../templates/optionGroup'),
-    checkboxGroup                    = require('../../templates/checkboxGroup'),
-    fitTextareaToContent             = require('./fitTextareaToContent'),
-    makeValueObjectListFromValueList = require('./makeValueObjectListFromValueList');
+var $                     = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+    _                     = require('underscore'),
+    PouchDB               = require('pouchdb'),
+    db                    = new PouchDB('oi'),
+    input                 = require('../../templates/input'),
+    textarea              = require('../../templates/textarea'),
+    checkbox              = require('../../templates/checkbox'),
+    optionGroup           = require('../../templates/optionGroup'),
+    checkboxGroup         = require('../../templates/checkboxGroup'),
+    fitTextareaToContent  = require('./fitTextareaToContent'),
+    addCheckedToValueList = require('./addCheckedToValueList');
 
 module.exports = function (_id) {
     var html        = '',
@@ -36873,12 +36905,12 @@ module.exports = function (_id) {
                         break;
                     case 'checkboxGroup':
                         // checkboxGroup erstellen
-                        templateObject.valueList = makeValueObjectListFromValueList(field.valueList, object.data[field.label]);
+                        templateObject.valueList = addCheckedToValueList(field.valueList, object.data[field.label]);
                         html += checkboxGroup(templateObject);
                         break;
                     case 'optionGroup':
                         // object.data muss Array sein - ist bei optionsgrup nicht so, weil eh nur ein Wert gesetzt werden kann > Wert in Array setzen
-                        templateObject.valueList = makeValueObjectListFromValueList(field.valueList, [object.data[field.label]]);
+                        templateObject.valueList = addCheckedToValueList(field.valueList, [object.data[field.label]]);
                         html += optionGroup(templateObject);
                         break;
                     case 'text':
@@ -36903,7 +36935,7 @@ module.exports = function (_id) {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../templates/checkbox":110,"../../templates/checkboxGroup":111,"../../templates/input":112,"../../templates/optionGroup":113,"../../templates/textarea":114,"./fitTextareaToContent":101,"./makeValueObjectListFromValueList":105,"pouchdb":55,"underscore":98}],103:[function(require,module,exports){
+},{"../../templates/checkbox":110,"../../templates/checkboxGroup":111,"../../templates/input":112,"../../templates/optionGroup":113,"../../templates/textarea":114,"./addCheckedToValueList":99,"./fitTextareaToContent":102,"pouchdb":55,"underscore":98}],104:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -37090,7 +37122,7 @@ module.exports = function () {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./syncPouch":109,"async":3,"jstree":29,"pouchdb":55,"underscore":98}],104:[function(require,module,exports){
+},{"./syncPouch":109,"async":3,"jstree":29,"pouchdb":55,"underscore":98}],105:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -37156,30 +37188,7 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./alsoResizeReverse":99,"./setWidthOfTabs":106,"./showTab":108}],105:[function(require,module,exports){
-/*
- * erstellt aus einer valueArray einen Array von Objekten
- * mit value und checked
- * wird benutzt, um opionGroup und checkboxGroup zu bauen
- */
-
-/*jslint node: true, browser: true, nomen: true, todo: true */
-'use strict';
-
-var _ = require('underscore');
-
-module.exports = function (valueArray, fieldValueArray) {
-
-    return _.map(valueArray, function (value) {
-        var valueObject = {};
-
-        valueObject.value = value;
-        // setzen, ob checkbox checked ist
-        valueObject.checked = _.indexOf(fieldValueArray, value) > -1 ? 'checked' : '';
-        return valueObject;
-    });
-};
-},{"underscore":98}],106:[function(require,module,exports){
+},{"./alsoResizeReverse":100,"./setWidthOfTabs":106,"./showTab":108}],106:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus */
 'use strict';
@@ -37255,7 +37264,7 @@ module.exports = function () {
 
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./fitTextareaToContent":101,"./initiateForm":102}],108:[function(require,module,exports){
+},{"./fitTextareaToContent":102,"./initiateForm":103}],108:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -37311,7 +37320,7 @@ module.exports = function () {
     if (remoteCouch) { sync(); }
 };
 
-},{"./configuration":100,"pouchdb":55}],110:[function(require,module,exports){
+},{"./configuration":101,"pouchdb":55}],110:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
   return "<div class=\"form-group\">\r\n    <label class=\"control-label\">"
@@ -37335,7 +37344,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
     + "\" "
     + escapeExpression(lambda((depth0 != null ? depth0.checked : depth0), depth0))
     + ">\r\n                    "
-    + escapeExpression(lambda((depth0 != null ? depth0.value : depth0), depth0))
+    + escapeExpression(lambda((depth0 != null ? depth0.label : depth0), depth0))
     + "\r\n                </label>\r\n            </div>\r\n";
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data,depths) {
   var stack1, helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, buffer = "<div class=\"form-group\">\r\n    <label class=\"control-label\">"
@@ -37377,7 +37386,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
     + "\" "
     + escapeExpression(lambda((depth0 != null ? depth0.checked : depth0), depth0))
     + ">\r\n                    "
-    + escapeExpression(lambda((depth0 != null ? depth0.value : depth0), depth0))
+    + escapeExpression(lambda((depth0 != null ? depth0.label : depth0), depth0))
     + "\r\n                </label>\r\n            </div>\r\n";
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data,depths) {
   var stack1, helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, buffer = "<div class=\"form-group\">\r\n    <label class=\"control-label\">"

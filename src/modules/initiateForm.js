@@ -1,17 +1,17 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $                                = require('jquery'),
-    _                                = require('underscore'),
-    PouchDB                          = require('pouchdb'),
-    db                               = new PouchDB('oi'),
-    input                            = require('../../templates/input'),
-    textarea                         = require('../../templates/textarea'),
-    checkbox                         = require('../../templates/checkbox'),
-    optionGroup                      = require('../../templates/optionGroup'),
-    checkboxGroup                    = require('../../templates/checkboxGroup'),
-    fitTextareaToContent             = require('./fitTextareaToContent'),
-    makeValueObjectListFromValueList = require('./makeValueObjectListFromValueList');
+var $                     = require('jquery'),
+    _                     = require('underscore'),
+    PouchDB               = require('pouchdb'),
+    db                    = new PouchDB('oi'),
+    input                 = require('../../templates/input'),
+    textarea              = require('../../templates/textarea'),
+    checkbox              = require('../../templates/checkbox'),
+    optionGroup           = require('../../templates/optionGroup'),
+    checkboxGroup         = require('../../templates/checkboxGroup'),
+    fitTextareaToContent  = require('./fitTextareaToContent'),
+    addCheckedToValueList = require('./addCheckedToValueList');
 
 module.exports = function (_id) {
     var html        = '',
@@ -46,12 +46,12 @@ module.exports = function (_id) {
                         break;
                     case 'checkboxGroup':
                         // checkboxGroup erstellen
-                        templateObject.valueList = makeValueObjectListFromValueList(field.valueList, object.data[field.label]);
+                        templateObject.valueList = addCheckedToValueList(field.valueList, object.data[field.label]);
                         html += checkboxGroup(templateObject);
                         break;
                     case 'optionGroup':
                         // object.data muss Array sein - ist bei optionsgrup nicht so, weil eh nur ein Wert gesetzt werden kann > Wert in Array setzen
-                        templateObject.valueList = makeValueObjectListFromValueList(field.valueList, [object.data[field.label]]);
+                        templateObject.valueList = addCheckedToValueList(field.valueList, [object.data[field.label]]);
                         html += optionGroup(templateObject);
                         break;
                     case 'text':

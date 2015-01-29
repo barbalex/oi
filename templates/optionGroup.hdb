@@ -5,7 +5,7 @@
             <div class="radio">
                 <label>
                     <input type="radio" name="{{../objectId}}{{../label}}" id="{{../objectId}}{{../label}}{{@index}}" value="{{this.value}}" {{this.checked}}>
-                    {{this.value}}
+                    {{this.label}}
                 </label>
             </div>
         {{/each}}
