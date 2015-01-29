@@ -1,11 +1,12 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $       = require('jquery'),
-    _       = require('underscore'),
-    PouchDB = require('pouchdb'),
-    db      = new PouchDB('oi'),
-    input   = require('../../templates/input');
+var $        = require('jquery'),
+    _        = require('underscore'),
+    PouchDB  = require('pouchdb'),
+    db       = new PouchDB('oi'),
+    input    = require('../../templates/input'),
+    textarea = require('../../templates/textarea');
 
 module.exports = function (_id) {
 
@@ -23,9 +24,17 @@ module.exports = function (_id) {
                 var templateObject = {};
                 templateObject.objectId = object._id;
                 templateObject.label = field.label;
-                templateObject.type = field.type;
+                templateObject.type = field.type || null;
                 templateObject.value = object.data[field.label] || null;
-                html += input(templateObject);
+                switch (field.type) {
+                case 'textarea':
+                    html += textarea(templateObject);
+                    break;
+                case 'input':
+                default:
+                    html += input(templateObject);
+                    break;
+                }
             });
 
             $('#formContent').html(html);

@@ -36776,11 +36776,12 @@ module.exports = config;
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $       = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
-    _       = require('underscore'),
-    PouchDB = require('pouchdb'),
-    db      = new PouchDB('oi'),
-    input   = require('../../templates/input');
+var $        = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+    _        = require('underscore'),
+    PouchDB  = require('pouchdb'),
+    db       = new PouchDB('oi'),
+    input    = require('../../templates/input'),
+    textarea = require('../../templates/textarea');
 
 module.exports = function (_id) {
 
@@ -36798,9 +36799,17 @@ module.exports = function (_id) {
                 var templateObject = {};
                 templateObject.objectId = object._id;
                 templateObject.label = field.label;
-                templateObject.type = field.type;
+                templateObject.type = field.type || null;
                 templateObject.value = object.data[field.label] || null;
-                html += input(templateObject);
+                switch (field.type) {
+                case 'textarea':
+                    html += textarea(templateObject);
+                    break;
+                case 'input':
+                default:
+                    html += input(templateObject);
+                    break;
+                }
             });
 
             $('#formContent').html(html);
@@ -36808,7 +36817,7 @@ module.exports = function (_id) {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../templates/input":108,"pouchdb":55,"underscore":98}],102:[function(require,module,exports){
+},{"../../templates/input":108,"../../templates/textarea":109,"pouchdb":55,"underscore":98}],102:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -37205,5 +37214,20 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + "\" value=\""
     + escapeExpression(((helper = (helper = helpers.value || (depth0 != null ? depth0.value : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"value","hash":{},"data":data}) : helper)))
     + "\">\r\n</div>";
+},"useData":true});
+},{"handlebars":27}],109:[function(require,module,exports){
+var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
+  return "<div class=\"form-group\">\r\n    <label for=\""
+    + escapeExpression(((helper = (helper = helpers.objectId || (depth0 != null ? depth0.objectId : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"objectId","hash":{},"data":data}) : helper)))
+    + escapeExpression(((helper = (helper = helpers.label || (depth0 != null ? depth0.label : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"label","hash":{},"data":data}) : helper)))
+    + "\">"
+    + escapeExpression(((helper = (helper = helpers.label || (depth0 != null ? depth0.label : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"label","hash":{},"data":data}) : helper)))
+    + "</label>\r\n    <textarea  class=\"form-control\" id=\""
+    + escapeExpression(((helper = (helper = helpers.objectId || (depth0 != null ? depth0.objectId : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"objectId","hash":{},"data":data}) : helper)))
+    + escapeExpression(((helper = (helper = helpers.label || (depth0 != null ? depth0.label : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"label","hash":{},"data":data}) : helper)))
+    + "\">"
+    + escapeExpression(((helper = (helper = helpers.value || (depth0 != null ? depth0.value : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"value","hash":{},"data":data}) : helper)))
+    + "</textarea>\r\n</div>";
 },"useData":true});
 },{"handlebars":27}]},{},[1]);
