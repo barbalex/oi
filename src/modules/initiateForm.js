@@ -1,22 +1,21 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $                    = require('jquery'),
-    _                    = require('underscore'),
-    PouchDB              = require('pouchdb'),
-    db                   = new PouchDB('oi'),
-    input                = require('../../templates/input'),
-    textarea             = require('../../templates/textarea'),
-    checkbox             = require('../../templates/checkbox'),
-    options              = require('../../templates/options'),
-    fitTextareaToContent = require('./fitTextareaToContent');
+var $                                = require('jquery'),
+    _                                = require('underscore'),
+    PouchDB                          = require('pouchdb'),
+    db                               = new PouchDB('oi'),
+    input                            = require('../../templates/input'),
+    textarea                         = require('../../templates/textarea'),
+    checkbox                         = require('../../templates/checkbox'),
+    optionGroup                      = require('../../templates/optionGroup'),
+    checkboxGroup                    = require('../../templates/checkboxGroup'),
+    fitTextareaToContent             = require('./fitTextareaToContent'),
+    makeValueObjectListFromValueList = require('./makeValueObjectListFromValueList');
 
 module.exports = function (_id) {
-
-    var html            = '',
-        $formContent    = $('#formContent'),
-        textareaIds     = [],
-        valueObjectList = [];
+    var html        = '',
+        textareaIds = [];
 
     // get data for object
     db.get(_id, function (err, object) {
@@ -25,11 +24,14 @@ module.exports = function (_id) {
         db.get(object.hId, function (err, hierarchy) {
             if (err) { console.log('error: ', err); }
             _.each(hierarchy.fields, function (field) {
-                var templateObject = {};
+                var templateObject      = {};
+
                 templateObject.objectId = object._id;
-                templateObject.label = field.label;
-                templateObject.type = field.type || null;
-                templateObject.value = object.data[field.label] || null;
+                templateObject.label    = field.label;
+                templateObject.type     = field.type || null;
+                templateObject.value    = object.data[field.label] || null;
+
+                // Felder bauen
                 switch (field.type) {
                 case 'textarea':
                     html += textarea(templateObject);
@@ -38,29 +40,25 @@ module.exports = function (_id) {
                 case 'input':
                     switch (field.dataType) {
                     case 'checkbox':
-                        // setzen, ob checkbox checked ist
+                        // es ist eine einzelne checkbox. Mitgeben, ob sie checked ist
                         templateObject.checked = object.data[field.label] ? 'checked' : '';
                         html += checkbox(templateObject);
                         break;
-                    //case 'text':
+                    case 'checkboxGroup':
+                        // checkboxGroup erstellen
+                        templateObject.valueList = makeValueObjectListFromValueList(field.valueList, object.data[field.label]);
+                        html += checkboxGroup(templateObject);
+                        break;
+                    case 'optionGroup':
+                        // object.data muss Array sein - ist bei optionsgrup nicht so, weil eh nur ein Wert gesetzt werden kann > Wert in Array setzen
+                        templateObject.valueList = makeValueObjectListFromValueList(field.valueList, [object.data[field.label]]);
+                        html += optionGroup(templateObject);
+                        break;
+                    case 'text':
                     default:
                         html += input(templateObject);
                         break;
                     }
-                    break;
-                case 'options':
-                    // convert valueList into an array of objects
-                    valueObjectList = _.map(field.valueList, function (value) {
-                        var valueObject = {};
-                        valueObject.value = value;
-                        // setzen, ob checkbox checked ist
-                        valueObject.checked = value == object.data[field.label] ? 'checked' : '';
-                        return valueObject;
-
-                    });
-                    templateObject.divName = object._id + field.label + 'div';
-                    templateObject.valueList = valueObjectList;
-                    html += options(templateObject);
                     break;
                 default:
                     html += input(templateObject);
@@ -68,7 +66,7 @@ module.exports = function (_id) {
                 }
             });
 
-            $formContent.html(html);
+            $('#formContent').html(html);
 
             // textareas: Grösse an Wert anpassen
             _.each(textareaIds, function (textareaId) {

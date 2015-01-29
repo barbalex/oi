@@ -1,0 +1,13 @@
+<div class="form-group">
+    <label class="control-label">{{label}}</label>
+    <div class="controls">
+        {{#each valueList}}
+            <div class="radio">
+                <label>
+                    <input type="radio" name="{{../objectId}}{{../label}}" id="{{../objectId}}{{../label}}{{@index}}" value="{{this.value}}" {{this.checked}}>
+                    {{this.value}}
+                </label>
+            </div>
+        {{/each}}
+    </div>
+</div>
