@@ -2,8 +2,8 @@
 'use strict';
 
 var $                    = require('jquery'),
-    initiateForm         = require('./initiateForm'),
-    fitTextareaToContent = require('./fitTextareaToContent');
+    initiateForm         = require('./form/initiateForm'),
+    fitTextareaToContent = require('./form/fitTextareaToContent');
 
 module.exports = function () {
 

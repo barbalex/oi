@@ -3,7 +3,7 @@
 
 var initiateResizables          = require('./modules/initiateResizables'),
     setupEvents                 = require('./modules/setupEvents'),
-    initiateNav                = require('./modules/initiateNav');
+    initiateNav                 = require('./modules/nav/initiateNav');
     //createGlobals             = require('./modules/createGlobals'),
     //clearLocalStorage         = require('./modules/clearLocalStorage'),
     //waehleApliste             = require('./modules/waehleApliste'),
