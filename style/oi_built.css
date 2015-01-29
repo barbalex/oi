@@ -7182,6 +7182,11 @@ body {
   width: calc(10vw - 1px);
 }
 
+/* form */
+#form .reducedMargin {
+  margin-top: -13px;
+}
+
 /* jstree */
 
 #navContent {

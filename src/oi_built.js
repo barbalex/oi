@@ -55429,6 +55429,7 @@ exports.parse = function (str) {
  * erstellt aus einer valueArray einen Array von Objekten
  * mit value und checked
  * wird benutzt, um opionGroup und checkboxGroup zu bauen
+ * damit es auch für select benutzt werden kann, kann selectedOrChecked übergeben werden 
  */
 
 /*jslint node: true, browser: true, nomen: true, todo: true */
@@ -55436,7 +55437,9 @@ exports.parse = function (str) {
 
 var _ = require('underscore');
 
-module.exports = function (valueArray, fieldValueArray) {
+module.exports = function (valueArray, fieldValueArray, selectedOrChecked) {
+
+    selectedOrChecked = selectedOrChecked || 'checked';
 
     return _.map(valueArray, function (value) {
         var valueObject = {};
@@ -55446,11 +55449,11 @@ module.exports = function (valueArray, fieldValueArray) {
             valueObject.value = value.value;
             valueObject.label = value.label;
             // setzen, ob checkbox checked ist
-            valueObject.checked = _.indexOf(fieldValueArray, value.value) > -1 ? 'checked' : '';
+            valueObject.checked = _.indexOf(fieldValueArray, value.value) > -1 ? selectedOrChecked : '';
         } else {
             valueObject.value = valueObject.label = value;
             // setzen, ob checkbox checked ist
-            valueObject.checked = _.indexOf(fieldValueArray, value) > -1 ? 'checked' : '';
+            valueObject.checked = _.indexOf(fieldValueArray, value) > -1 ? selectedOrChecked : '';
         }
 
         return valueObject;
@@ -55631,6 +55634,7 @@ var $                     = (typeof window !== "undefined" ? window.$ : typeof g
     checkbox              = require('../../templates/checkbox'),
     optionGroup           = require('../../templates/optionGroup'),
     checkboxGroup         = require('../../templates/checkboxGroup'),
+    select                = require('../../templates/select'),
     fitTextareaToContent  = require('./fitTextareaToContent'),
     addCheckedToValueList = require('./addCheckedToValueList');
 
@@ -55681,6 +55685,11 @@ module.exports = function (_id) {
                         break;
                     }
                     break;
+                case 'select':
+                    // object.data muss Array sein - ist bei optionsgrup nicht so, weil eh nur ein Wert gesetzt werden kann > Wert in Array setzen
+                    templateObject.valueList = addCheckedToValueList(field.valueList, object.data[field.label], 'selected');
+                    html += select(templateObject);
+                    break;
                 default:
                     html += input(templateObject);
                     break;
@@ -55697,7 +55706,7 @@ module.exports = function (_id) {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../templates/checkbox":110,"../../templates/checkboxGroup":111,"../../templates/input":112,"../../templates/optionGroup":113,"../../templates/textarea":114,"./addCheckedToValueList":99,"./fitTextareaToContent":102,"pouchdb":55,"underscore":98}],104:[function(require,module,exports){
+},{"../../templates/checkbox":110,"../../templates/checkboxGroup":111,"../../templates/input":112,"../../templates/optionGroup":113,"../../templates/select":114,"../../templates/textarea":115,"./addCheckedToValueList":99,"./fitTextareaToContent":102,"pouchdb":55,"underscore":98}],104:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -56087,7 +56096,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
   var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
   return "<div class=\"form-group\">\r\n    <label class=\"control-label\">"
     + escapeExpression(((helper = (helper = helpers.label || (depth0 != null ? depth0.label : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"label","hash":{},"data":data}) : helper)))
-    + "</label>\r\n    <div class=\"controls\">\r\n        <div class=\"checkbox\">\r\n            <label>\r\n                <input type=\"checkbox\" id=\""
+    + "</label>\r\n    <div class=\"controls reducedMargin\">\r\n        <div class=\"checkbox\">\r\n            <label>\r\n                <input type=\"checkbox\" id=\""
     + escapeExpression(((helper = (helper = helpers.objectId || (depth0 != null ? depth0.objectId : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"objectId","hash":{},"data":data}) : helper)))
     + escapeExpression(((helper = (helper = helpers.label || (depth0 != null ? depth0.label : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"label","hash":{},"data":data}) : helper)))
     + "\" "
@@ -56111,7 +56120,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data,depths) {
   var stack1, helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, buffer = "<div class=\"form-group\">\r\n    <label class=\"control-label\">"
     + escapeExpression(((helper = (helper = helpers.label || (depth0 != null ? depth0.label : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"label","hash":{},"data":data}) : helper)))
-    + "</label>\r\n    <div class=\"controls\">\r\n";
+    + "</label>\r\n    <div class=\"controls reducedMargin\">\r\n";
   stack1 = helpers.each.call(depth0, (depth0 != null ? depth0.valueList : depth0), {"name":"each","hash":{},"fn":this.program(1, data, depths),"inverse":this.noop,"data":data});
   if (stack1 != null) { buffer += stack1; }
   return buffer + "    </div>\r\n</div>";
@@ -56153,12 +56162,33 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data,depths) {
   var stack1, helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, buffer = "<div class=\"form-group\">\r\n    <label class=\"control-label\">"
     + escapeExpression(((helper = (helper = helpers.label || (depth0 != null ? depth0.label : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"label","hash":{},"data":data}) : helper)))
-    + "</label>\r\n    <div class=\"controls\">\r\n";
+    + "</label>\r\n    <div class=\"controls reducedMargin\">\r\n";
   stack1 = helpers.each.call(depth0, (depth0 != null ? depth0.valueList : depth0), {"name":"each","hash":{},"fn":this.program(1, data, depths),"inverse":this.noop,"data":data});
   if (stack1 != null) { buffer += stack1; }
   return buffer + "    </div>\r\n</div>";
 },"useData":true,"useDepths":true});
 },{"handlebars":27}],114:[function(require,module,exports){
+var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data) {
+  var lambda=this.lambda, escapeExpression=this.escapeExpression;
+  return "                <option value=\""
+    + escapeExpression(lambda((depth0 != null ? depth0.value : depth0), depth0))
+    + "\" "
+    + escapeExpression(lambda((depth0 != null ? depth0.checked : depth0), depth0))
+    + ">"
+    + escapeExpression(lambda((depth0 != null ? depth0.label : depth0), depth0))
+    + "</option>\r\n";
+},"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  var stack1, helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, buffer = "<div class=\"form-group\">\r\n    <label class=\"control-label\">"
+    + escapeExpression(((helper = (helper = helpers.label || (depth0 != null ? depth0.label : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"label","hash":{},"data":data}) : helper)))
+    + "</label>\r\n    <div class=\"controls\">\r\n        <select id=\""
+    + escapeExpression(((helper = (helper = helpers.objectId || (depth0 != null ? depth0.objectId : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"objectId","hash":{},"data":data}) : helper)))
+    + escapeExpression(((helper = (helper = helpers.label || (depth0 != null ? depth0.label : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"label","hash":{},"data":data}) : helper)))
+    + "\" class=\"form-control\">\r\n";
+  stack1 = helpers.each.call(depth0, (depth0 != null ? depth0.valueList : depth0), {"name":"each","hash":{},"fn":this.program(1, data),"inverse":this.noop,"data":data});
+  if (stack1 != null) { buffer += stack1; }
+  return buffer + "        </select>\r\n    </div>\r\n</div>";
+},"useData":true});
+},{"handlebars":27}],115:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
   return "<div class=\"form-group\">\r\n    <label for=\""

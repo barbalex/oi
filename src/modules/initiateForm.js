@@ -10,6 +10,7 @@ var $                     = require('jquery'),
     checkbox              = require('../../templates/checkbox'),
     optionGroup           = require('../../templates/optionGroup'),
     checkboxGroup         = require('../../templates/checkboxGroup'),
+    select                = require('../../templates/select'),
     fitTextareaToContent  = require('./fitTextareaToContent'),
     addCheckedToValueList = require('./addCheckedToValueList');
 
@@ -59,6 +60,11 @@ module.exports = function (_id) {
                         html += input(templateObject);
                         break;
                     }
+                    break;
+                case 'select':
+                    // object.data muss Array sein - ist bei optionsgrup nicht so, weil eh nur ein Wert gesetzt werden kann > Wert in Array setzen
+                    templateObject.valueList = addCheckedToValueList(field.valueList, object.data[field.label], 'selected');
+                    html += select(templateObject);
                     break;
                 default:
                     html += input(templateObject);
