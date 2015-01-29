@@ -7,6 +7,7 @@ var $                    = require('jquery'),
     db                   = new PouchDB('oi'),
     input                = require('../../templates/input'),
     textarea             = require('../../templates/textarea'),
+    checkbox             = require('../../templates/checkbox'),
     fitTextareaToContent = require('./fitTextareaToContent');
 
 module.exports = function (_id) {
@@ -14,8 +15,6 @@ module.exports = function (_id) {
     var html         = '',
         $formContent = $('#formContent'),
         textareaIds  = [];
-
-    console.log('_id: ', _id);
 
     // get data for object
     db.get(_id, function (err, object) {
@@ -34,7 +33,17 @@ module.exports = function (_id) {
                     html += textarea(templateObject);
                     textareaIds.push(object._id + field.label);
                     break;
-                // case 'input':
+                case 'input':
+                    switch (field.dataType) {
+                    case 'checkbox':
+                        html += checkbox(templateObject);
+                        break;
+                    case 'text':
+                    default:
+                        html += input(templateObject);
+                        break;
+                    };
+                    break;
                 default:
                     html += input(templateObject);
                     break;
@@ -42,7 +51,7 @@ module.exports = function (_id) {
             });
 
             $formContent.html(html);
-            
+
             _.each(textareaIds, function (textareaId) {
                 fitTextareaToContent(textareaId);
             });

@@ -36834,6 +36834,7 @@ var $                    = (typeof window !== "undefined" ? window.$ : typeof gl
     db                   = new PouchDB('oi'),
     input                = require('../../templates/input'),
     textarea             = require('../../templates/textarea'),
+    checkbox             = require('../../templates/checkbox'),
     fitTextareaToContent = require('./fitTextareaToContent');
 
 module.exports = function (_id) {
@@ -36841,8 +36842,6 @@ module.exports = function (_id) {
     var html         = '',
         $formContent = $('#formContent'),
         textareaIds  = [];
-
-    console.log('_id: ', _id);
 
     // get data for object
     db.get(_id, function (err, object) {
@@ -36861,7 +36860,17 @@ module.exports = function (_id) {
                     html += textarea(templateObject);
                     textareaIds.push(object._id + field.label);
                     break;
-                // case 'input':
+                case 'input':
+                    switch (field.dataType) {
+                    case 'checkbox':
+                        html += checkbox(templateObject);
+                        break;
+                    case 'text':
+                    default:
+                        html += input(templateObject);
+                        break;
+                    };
+                    break;
                 default:
                     html += input(templateObject);
                     break;
@@ -36869,7 +36878,7 @@ module.exports = function (_id) {
             });
 
             $formContent.html(html);
-            
+
             _.each(textareaIds, function (textareaId) {
                 fitTextareaToContent(textareaId);
             });
@@ -36877,7 +36886,7 @@ module.exports = function (_id) {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../templates/input":109,"../../templates/textarea":110,"./fitTextareaToContent":101,"pouchdb":55,"underscore":98}],103:[function(require,module,exports){
+},{"../../templates/checkbox":109,"../../templates/input":110,"../../templates/textarea":111,"./fitTextareaToContent":101,"pouchdb":55,"underscore":98}],103:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -37265,6 +37274,18 @@ module.exports = function () {
 },{"./configuration":100,"pouchdb":55}],109:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
+  return "<div class=\"checkbox\">\r\n    <label>\r\n        <input type=\"checkbox\" id=\""
+    + escapeExpression(((helper = (helper = helpers.objectId || (depth0 != null ? depth0.objectId : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"objectId","hash":{},"data":data}) : helper)))
+    + escapeExpression(((helper = (helper = helpers.label || (depth0 != null ? depth0.label : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"label","hash":{},"data":data}) : helper)))
+    + "\" checked=\""
+    + escapeExpression(((helper = (helper = helpers.value || (depth0 != null ? depth0.value : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"value","hash":{},"data":data}) : helper)))
+    + "\">\r\n        "
+    + escapeExpression(((helper = (helper = helpers.label || (depth0 != null ? depth0.label : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"label","hash":{},"data":data}) : helper)))
+    + "\r\n    </label>\r\n</div>";
+},"useData":true});
+},{"handlebars":27}],110:[function(require,module,exports){
+var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
   return "<div class=\"form-group\">\r\n    <label for=\""
     + escapeExpression(((helper = (helper = helpers.objectId || (depth0 != null ? depth0.objectId : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"objectId","hash":{},"data":data}) : helper)))
     + escapeExpression(((helper = (helper = helpers.label || (depth0 != null ? depth0.label : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"label","hash":{},"data":data}) : helper)))
@@ -37279,7 +37300,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(((helper = (helper = helpers.value || (depth0 != null ? depth0.value : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"value","hash":{},"data":data}) : helper)))
     + "\">\r\n</div>";
 },"useData":true});
-},{"handlebars":27}],110:[function(require,module,exports){
+},{"handlebars":27}],111:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
   return "<div class=\"form-group\">\r\n    <label for=\""

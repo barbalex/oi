@@ -1,0 +1,6 @@
+<div class="checkbox">
+    <label>
+        <input type="checkbox" id="{{objectId}}{{label}}" checked="{{value}}">
+        {{label}}
+    </label>
+</div>
