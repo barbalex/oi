@@ -8,13 +8,15 @@ var $                    = require('jquery'),
     input                = require('../../templates/input'),
     textarea             = require('../../templates/textarea'),
     checkbox             = require('../../templates/checkbox'),
+    options              = require('../../templates/options'),
     fitTextareaToContent = require('./fitTextareaToContent');
 
 module.exports = function (_id) {
 
-    var html         = '',
-        $formContent = $('#formContent'),
-        textareaIds  = [];
+    var html            = '',
+        $formContent    = $('#formContent'),
+        textareaIds     = [],
+        valueObjectList = [];
 
     // get data for object
     db.get(_id, function (err, object) {
@@ -36,13 +38,29 @@ module.exports = function (_id) {
                 case 'input':
                     switch (field.dataType) {
                     case 'checkbox':
+                        // setzen, ob checkbox checked ist
+                        templateObject.checked = object.data[field.label] ? 'checked' : '';
                         html += checkbox(templateObject);
                         break;
-                    case 'text':
+                    //case 'text':
                     default:
                         html += input(templateObject);
                         break;
-                    };
+                    }
+                    break;
+                case 'options':
+                    // convert valueList into an array of objects
+                    valueObjectList = _.map(field.valueList, function (value) {
+                        var valueObject = {};
+                        valueObject.value = value;
+                        // setzen, ob checkbox checked ist
+                        valueObject.checked = value == object.data[field.label] ? 'checked' : '';
+                        return valueObject;
+
+                    });
+                    templateObject.divName = object._id + field.label + 'div';
+                    templateObject.valueList = valueObjectList;
+                    html += options(templateObject);
                     break;
                 default:
                     html += input(templateObject);
@@ -52,6 +70,7 @@ module.exports = function (_id) {
 
             $formContent.html(html);
 
+            // textareas: Grösse an Wert anpassen
             _.each(textareaIds, function (textareaId) {
                 fitTextareaToContent(textareaId);
             });

@@ -36835,13 +36835,15 @@ var $                    = (typeof window !== "undefined" ? window.$ : typeof gl
     input                = require('../../templates/input'),
     textarea             = require('../../templates/textarea'),
     checkbox             = require('../../templates/checkbox'),
+    options              = require('../../templates/options'),
     fitTextareaToContent = require('./fitTextareaToContent');
 
 module.exports = function (_id) {
 
-    var html         = '',
-        $formContent = $('#formContent'),
-        textareaIds  = [];
+    var html            = '',
+        $formContent    = $('#formContent'),
+        textareaIds     = [],
+        valueObjectList = [];
 
     // get data for object
     db.get(_id, function (err, object) {
@@ -36863,13 +36865,29 @@ module.exports = function (_id) {
                 case 'input':
                     switch (field.dataType) {
                     case 'checkbox':
+                        // setzen, ob checkbox checked ist
+                        templateObject.checked = object.data[field.label] ? 'checked' : '';
                         html += checkbox(templateObject);
                         break;
-                    case 'text':
+                    //case 'text':
                     default:
                         html += input(templateObject);
                         break;
-                    };
+                    }
+                    break;
+                case 'options':
+                    // convert valueList into an array of objects
+                    valueObjectList = _.map(field.valueList, function (value) {
+                        var valueObject = {};
+                        valueObject.value = value;
+                        // setzen, ob checkbox checked ist
+                        valueObject.checked = value == object.data[field.label] ? 'checked' : '';
+                        return valueObject;
+
+                    });
+                    templateObject.divName = object._id + field.label + 'div';
+                    templateObject.valueList = valueObjectList;
+                    html += options(templateObject);
                     break;
                 default:
                     html += input(templateObject);
@@ -36879,6 +36897,7 @@ module.exports = function (_id) {
 
             $formContent.html(html);
 
+            // textareas: Grösse an Wert anpassen
             _.each(textareaIds, function (textareaId) {
                 fitTextareaToContent(textareaId);
             });
@@ -36886,7 +36905,7 @@ module.exports = function (_id) {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../templates/checkbox":109,"../../templates/input":110,"../../templates/textarea":111,"./fitTextareaToContent":101,"pouchdb":55,"underscore":98}],103:[function(require,module,exports){
+},{"../../templates/checkbox":109,"../../templates/input":110,"../../templates/options":111,"../../templates/textarea":112,"./fitTextareaToContent":101,"pouchdb":55,"underscore":98}],103:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -37274,14 +37293,14 @@ module.exports = function () {
 },{"./configuration":100,"pouchdb":55}],109:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
-  return "<div class=\"checkbox\">\r\n    <label>\r\n        <input type=\"checkbox\" id=\""
+  return "<div class=\"form-group\">\r\n    <label class=\"control-label\">"
+    + escapeExpression(((helper = (helper = helpers.label || (depth0 != null ? depth0.label : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"label","hash":{},"data":data}) : helper)))
+    + "</label>\r\n    <div class=\"controls\">\r\n        <div class=\"checkbox\">\r\n            <label>\r\n                <input type=\"checkbox\" id=\""
     + escapeExpression(((helper = (helper = helpers.objectId || (depth0 != null ? depth0.objectId : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"objectId","hash":{},"data":data}) : helper)))
     + escapeExpression(((helper = (helper = helpers.label || (depth0 != null ? depth0.label : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"label","hash":{},"data":data}) : helper)))
-    + "\" checked=\""
-    + escapeExpression(((helper = (helper = helpers.value || (depth0 != null ? depth0.value : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"value","hash":{},"data":data}) : helper)))
-    + "\">\r\n        "
-    + escapeExpression(((helper = (helper = helpers.label || (depth0 != null ? depth0.label : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"label","hash":{},"data":data}) : helper)))
-    + "\r\n    </label>\r\n</div>";
+    + "\" "
+    + escapeExpression(((helper = (helper = helpers.checked || (depth0 != null ? depth0.checked : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"checked","hash":{},"data":data}) : helper)))
+    + ">\r\n            </label>\r\n        </div>\r\n    </div>\r\n</div>";
 },"useData":true});
 },{"handlebars":27}],110:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
@@ -37301,6 +37320,31 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + "\">\r\n</div>";
 },"useData":true});
 },{"handlebars":27}],111:[function(require,module,exports){
+var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,depths) {
+  var lambda=this.lambda, escapeExpression=this.escapeExpression;
+  return "            <div class=\"radio\">\r\n                <label>\r\n                    <input type=\"radio\" name=\""
+    + escapeExpression(lambda((depths[1] != null ? depths[1].objectId : depths[1]), depth0))
+    + escapeExpression(lambda((depths[1] != null ? depths[1].label : depths[1]), depth0))
+    + "\" id=\""
+    + escapeExpression(lambda((depths[1] != null ? depths[1].objectId : depths[1]), depth0))
+    + escapeExpression(lambda((depths[1] != null ? depths[1].label : depths[1]), depth0))
+    + escapeExpression(lambda((data && data.index), depth0))
+    + "\" value=\""
+    + escapeExpression(lambda((depth0 != null ? depth0.value : depth0), depth0))
+    + "\" "
+    + escapeExpression(lambda((depth0 != null ? depth0.checked : depth0), depth0))
+    + ">\r\n                    "
+    + escapeExpression(lambda((depth0 != null ? depth0.value : depth0), depth0))
+    + "\r\n                </label>\r\n            </div>\r\n";
+},"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data,depths) {
+  var stack1, helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, buffer = "<div class=\"control-group\">\r\n    <label class=\"control-label\">"
+    + escapeExpression(((helper = (helper = helpers.label || (depth0 != null ? depth0.label : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"label","hash":{},"data":data}) : helper)))
+    + "</label>\r\n    <div class=\"controls\">\r\n";
+  stack1 = helpers.each.call(depth0, (depth0 != null ? depth0.valueList : depth0), {"name":"each","hash":{},"fn":this.program(1, data, depths),"inverse":this.noop,"data":data});
+  if (stack1 != null) { buffer += stack1; }
+  return buffer + "    </div>\r\n</div>";
+},"useData":true,"useDepths":true});
+},{"handlebars":27}],112:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
   return "<div class=\"form-group\">\r\n    <label for=\""
