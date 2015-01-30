@@ -1,26 +1,25 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $                     = require('jquery'),
-    _                     = require('underscore'),
-    PouchDB               = require('pouchdb'),
-    db                    = new PouchDB('oi'),
-    input                 = require('../../../templates/input'),
-    textarea              = require('../../../templates/textarea'),
-    checkbox              = require('../../../templates/checkbox'),
-    optionGroup           = require('../../../templates/optionGroup'),
-    checkboxGroup         = require('../../../templates/checkboxGroup'),
-    select                = require('../../../templates/select'),
-    fitTextareaToContent  = require('./fitTextareaToContent'),
-    addCheckedToValueList = require('./addCheckedToValueList'),
+var $                       = require('jquery'),
+    _                       = require('underscore'),
+    PouchDB                 = require('pouchdb'),
+    db                      = new PouchDB('oi'),
+    input                   = require('../../../templates/input'),
+    textarea                = require('../../../templates/textarea'),
+    checkbox                = require('../../../templates/checkbox'),
+    optionGroup             = require('../../../templates/optionGroup'),
+    checkboxGroup           = require('../../../templates/checkboxGroup'),
+    select                  = require('../../../templates/select'),
+    fitTextareaToContent    = require('./fitTextareaToContent'),
+    addCheckedToValueList   = require('./addCheckedToValueList'),
     bindModelInputForObject = require('../bindModelInputForObject');
 
 module.exports = function (_id) {
     var html        = '',
         textareaIds = [],
         object,
-        hierarchy,
-        loadedObject;
+        hierarchy;
 
     // get data for object
     object = _.find(window.oi.objects, function (object) {
