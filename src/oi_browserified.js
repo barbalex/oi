@@ -51,7 +51,7 @@ window.oi.initiiereApp = function () {
 
 // gleich ein mal ausführen
 window.oi.initiiereApp();
-},{"./modules/initiateResizables":104,"./modules/nav/initiateNav":107,"./modules/setupEvents":109}],2:[function(require,module,exports){
+},{"./modules/initiateResizables":106,"./modules/nav/initiateNav":109,"./modules/setupEvents":111}],2:[function(require,module,exports){
 module.exports={
     "user": "barbalex",
     "pass": "dLhdMg12"
@@ -36754,6 +36754,66 @@ module.exports = function () {
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],100:[function(require,module,exports){
+(function (global){
+/*jslint node: true, browser: true, nomen: true, todo: true */
+'use strict';
+
+var $       = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+    _       = require('underscore'),
+    jstree  = require('jstree'),
+    PouchDB = require('pouchdb'),
+    db      = new PouchDB('oi');
+
+module.exports = function (object, property) {
+    // das Element liess sich auf keine andere Art holen!
+    var domElem = $('#formContent').find('#' + object._id + property)[0];
+
+    Object.defineProperty(object.data, property, {
+        get: function () {
+            return domElem.value;
+        },
+        set: function (newValue) {
+            domElem.value = newValue;
+            // write to pouch
+            db.put(object, function (err, response) {
+                if (err) { return console.log('error: ', err); }
+                // update rev in object
+                object._rev = response.rev;
+                // if field is nameField, update name in tree
+                var correspondingHierarchy = _.find(window.oi.hierarchies, function (hierarchy) {
+                    return hierarchy._id == object.hId;
+                });
+                if (object.data && correspondingHierarchy && correspondingHierarchy.nameField && correspondingHierarchy.nameField === property) {
+                    $('#navContent').jstree().rename_node('#' + object._id, '<strong>' + newValue + '</strong>');
+                }
+            });
+        },
+        configurable: true
+    });
+    domElem.onchange = function () {
+        object.data[property] = domElem.value;
+    };
+};
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"jstree":29,"pouchdb":55,"underscore":98}],101:[function(require,module,exports){
+(function (global){
+/*jslint node: true, browser: true, nomen: true, todo: true */
+'use strict';
+
+var $              = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+    _              = require('underscore'),
+    bindModelInput = require('./bindModelInput');
+
+module.exports = function (object) {
+    // für alle objekte: two way binding zwischen model und view schaffen
+    if (object.data) {
+        _.each(object.data, function (value, key) {
+            bindModelInput(object, key);
+        });
+    }
+};
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./bindModelInput":100,"underscore":98}],102:[function(require,module,exports){
 /**
  * Hier werden zentral alle Konfigurationsparameter gesammelt
  */
@@ -36771,7 +36831,7 @@ config.couch.userName = couch_passfile.user;
 config.couch.passWord = couch_passfile.pass;
 
 module.exports = config;
-},{"../../couchpass.json":2}],101:[function(require,module,exports){
+},{"../../couchpass.json":2}],103:[function(require,module,exports){
 /*
  * erstellt aus einer valueArray einen Array von Objekten
  * mit value und checked
@@ -36806,7 +36866,7 @@ module.exports = function (valueArray, fieldValueArray, selectedOrChecked) {
         return valueObject;
     });
 };
-},{"underscore":98}],102:[function(require,module,exports){
+},{"underscore":98}],104:[function(require,module,exports){
 // setzt die Höhe von textareas so, dass der Text genau rein passt
 
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus: true*/
@@ -36858,7 +36918,7 @@ module.exports = function (id, maxHeight) {
         text.style.height = adjustedHeight + 'px';
     }
 };
-},{}],103:[function(require,module,exports){
+},{}],105:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -36874,77 +36934,86 @@ var $                     = (typeof window !== "undefined" ? window.$ : typeof g
     checkboxGroup         = require('../../../templates/checkboxGroup'),
     select                = require('../../../templates/select'),
     fitTextareaToContent  = require('./fitTextareaToContent'),
-    addCheckedToValueList = require('./addCheckedToValueList');
+    addCheckedToValueList = require('./addCheckedToValueList'),
+    bindModelInputForObject = require('../bindModelInputForObject');
 
 module.exports = function (_id) {
     var html        = '',
-        textareaIds = [];
+        textareaIds = [],
+        object,
+        hierarchy,
+        loadedObject;
 
     // get data for object
-    db.get(_id, function (err, object) {
-        if (err) { console.log('error: ', err); }
-        // get metainformation about fields
-        db.get(object.hId, function (err, hierarchy) {
-            if (err) { console.log('error: ', err); }
-            _.each(hierarchy.fields, function (field) {
-                var templateObject      = {};
+    object = _.find(window.oi.objects, function (object) {
+        return object._id == _id;
+    });
+    hierarchy = _.find(window.oi.hierarchies, function (hierarchy) {
+        return hierarchy._id === object.hId;
+    });
 
-                templateObject.objectId = object._id;
-                templateObject.label    = field.label;
-                templateObject.type     = field.type || null;
-                templateObject.value    = object.data[field.label] || null;
+    _.each(hierarchy.fields, function (field) {
+        var templateObject      = {};
 
-                // Felder bauen
-                switch (field.type) {
-                case 'textarea':
-                    html += textarea(templateObject);
-                    textareaIds.push(object._id + field.label);
-                    break;
-                case 'input':
-                    switch (field.dataType) {
-                    case 'checkbox':
-                        // es ist eine einzelne checkbox. Mitgeben, ob sie checked ist
-                        templateObject.checked = object.data[field.label] ? 'checked' : '';
-                        html += checkbox(templateObject);
-                        break;
-                    case 'checkboxGroup':
-                        // checkboxGroup erstellen
-                        templateObject.valueList = addCheckedToValueList(field.valueList, object.data[field.label]);
-                        html += checkboxGroup(templateObject);
-                        break;
-                    case 'optionGroup':
-                        // object.data muss Array sein - ist bei optionsgrup nicht so, weil eh nur ein Wert gesetzt werden kann > Wert in Array setzen
-                        templateObject.valueList = addCheckedToValueList(field.valueList, [object.data[field.label]]);
-                        html += optionGroup(templateObject);
-                        break;
-                    case 'text':
-                    default:
-                        html += input(templateObject);
-                        break;
-                    }
-                    break;
-                case 'select':
-                    // object.data muss Array sein - ist bei optionsgrup nicht so, weil eh nur ein Wert gesetzt werden kann > Wert in Array setzen
-                    templateObject.valueList = addCheckedToValueList(field.valueList, object.data[field.label], 'selected');
-                    html += select(templateObject);
-                    break;
-                default:
-                    html += input(templateObject);
-                    break;
-                }
-            });
+        templateObject.objectId = object._id;
+        templateObject.label    = field.label;
+        templateObject.type     = field.type || null;
+        templateObject.value    = object.data[field.label] || null;
 
-            $('#formContent').html(html);
+        // Felder bauen
+        switch (field.type) {
+        case 'textarea':
+            html += textarea(templateObject);
+            textareaIds.push(object._id + field.label);
+            break;
+        case 'input':
+            switch (field.dataType) {
+            case 'checkbox':
+                // es ist eine einzelne checkbox. Mitgeben, ob sie checked ist
+                templateObject.checked = object.data[field.label] ? 'checked' : '';
+                html += checkbox(templateObject);
+                break;
+            case 'checkboxGroup':
+                // checkboxGroup erstellen
+                templateObject.valueList = addCheckedToValueList(field.valueList, object.data[field.label]);
+                html += checkboxGroup(templateObject);
+                break;
+            case 'optionGroup':
+                // object.data muss Array sein - ist bei optionsgrup nicht so, weil eh nur ein Wert gesetzt werden kann > Wert in Array setzen
+                templateObject.valueList = addCheckedToValueList(field.valueList, [object.data[field.label]]);
+                html += optionGroup(templateObject);
+                break;
+            case 'text':
+            default:
+                html += input(templateObject);
+                break;
+            }
+            break;
+        case 'select':
+            // object.data muss Array sein - ist bei optionsgrup nicht so, weil eh nur ein Wert gesetzt werden kann > Wert in Array setzen
+            templateObject.valueList = addCheckedToValueList(field.valueList, object.data[field.label], 'selected');
+            html += select(templateObject);
+            break;
+        default:
+            html += input(templateObject);
+            break;
+        }
+    });
 
-            // textareas: Grösse an Wert anpassen
-            _.each(textareaIds, function (textareaId) {
-                fitTextareaToContent(textareaId);
-            });
-        });
+    $('#formContent').html(html);
+
+    bindModelInputForObject(object);
+
+    // objekt als geladen markieren
+    $('#formContent').data('id', object._id);
+
+    // textareas: Grösse an Wert anpassen
+    _.each(textareaIds, function (textareaId) {
+        fitTextareaToContent(textareaId);
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../../templates/checkbox":112,"../../../templates/checkboxGroup":113,"../../../templates/input":114,"../../../templates/optionGroup":115,"../../../templates/select":116,"../../../templates/textarea":117,"./addCheckedToValueList":101,"./fitTextareaToContent":102,"pouchdb":55,"underscore":98}],104:[function(require,module,exports){
+},{"../../../templates/checkbox":114,"../../../templates/checkboxGroup":115,"../../../templates/input":116,"../../../templates/optionGroup":117,"../../../templates/select":118,"../../../templates/textarea":119,"../bindModelInputForObject":101,"./addCheckedToValueList":103,"./fitTextareaToContent":104,"pouchdb":55,"underscore":98}],106:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -37010,7 +37079,7 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./alsoResizeReverse":99,"./setWidthOfTabs":108,"./showTab":110}],105:[function(require,module,exports){
+},{"./alsoResizeReverse":99,"./setWidthOfTabs":110,"./showTab":112}],107:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -37035,7 +37104,7 @@ module.exports = function () {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./generateDataForTree":106,"jstree":29}],106:[function(require,module,exports){
+},{"./generateDataForTree":108,"jstree":29}],108:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -37054,11 +37123,12 @@ function createObjectsData(object, objectsData) {
         // beschrifte object
         if (object.data && correspondingHierarchy && correspondingHierarchy.nameField) {
             jstreeObject.text = '<strong>' + object.data[correspondingHierarchy.nameField] + '</strong>';
+            // parent ist ein descendant hierarchy, ausser in der obersten Ebene
+            jstreeObject.parent = object.parent + correspondingHierarchy._id;
         } else {
-            jstreeObject.text = '<strong>(?)</strong>';
+            jstreeObject.text   = '<strong>(?)</strong>';
+            jstreeObject.parent = object.parent;
         }
-        // parent ist ein descendant hierarchy, ausser in der obersten Ebene
-        jstreeObject.parent      = object.parent + correspondingHierarchy._id;
         jstreeObject.li_attr     = {};
         jstreeObject.li_attr.typ = object.typ;
         objectsData.push(jstreeObject);
@@ -37167,7 +37237,7 @@ module.exports = function () {
 
     return _.union(objectsData, descendantHierarchiesData, topObjectsData);
 };
-},{"underscore":98}],107:[function(require,module,exports){
+},{"underscore":98}],109:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -37178,7 +37248,8 @@ var $          = (typeof window !== "undefined" ? window.$ : typeof global !== "
     db         = new PouchDB('oi'),
     sync       = require('../syncPouch'),
     async      = require('async'),
-    createTree = require('./createTree');
+    createTree = require('./createTree'),
+    initiateForm = require('../form/initiateForm');
 
 // TODO: auf den aktuellen Benutzer einschränken
 function mapHierarchies(doc) {
@@ -37201,6 +37272,47 @@ module.exports = function () {
     db.compact();
 
     sync();
+
+    // TODO: filter only the users documents
+    db.changes({since: 'now', live: true, include_docs: true}).on('change', function (change) {
+        var modelObject,
+            correspondingHierarchy;
+
+        switch (change.doc.type) {
+        case 'object':
+            modelObject = _.find(window.oi.objects, function (object) {
+                return object._id === change.id;
+            });
+            if (modelObject) {
+                console.log('modelObject: ', modelObject);
+                console.log('change.doc: ', change.doc);
+                _.each(modelObject, function (value, key) {
+                    delete modelObject[key];
+                });
+                _.extend(modelObject, change.doc);
+                // form aktualisieren, wenn nötig
+                if ($('#formContent').html() !== "" && $('#formContent').data('id') == change.doc._id) {
+                    initiateForm(change.doc._id);
+                }
+                // tree aktualisieren
+                correspondingHierarchy = _.find(window.oi.hierarchies, function (hierarchy) {
+                    return hierarchy._id == change.doc.hId;
+                });
+                if (change.doc.data && correspondingHierarchy && correspondingHierarchy.nameField) {
+                    $('#navContent').jstree().rename_node('#' + change.doc._id, '<strong>' + change.doc.data[correspondingHierarchy.nameField] + '</strong>');
+                }
+            }
+            break;
+        case 'hierarchy':
+            modelObject = _.find(window.oi.hierarchies, function (hierarchy) {
+                return hierarchy._id === change.id;
+            });
+            break;
+        }
+
+        //modelObject = change.doc;
+
+    });
 
     async.parallel({
         hierarchies: function (callback) {
@@ -37229,11 +37341,12 @@ module.exports = function () {
         window.oi.hierarchies = results.hierarchies;
         window.oi.objects     = results.objects;
 
+        window.oi.createTree = createTree;
         createTree();
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../syncPouch":111,"./createTree":105,"async":3,"pouchdb":55,"underscore":98}],108:[function(require,module,exports){
+},{"../form/initiateForm":105,"../syncPouch":113,"./createTree":107,"async":3,"pouchdb":55,"underscore":98}],110:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus */
 'use strict';
@@ -37277,7 +37390,7 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"underscore":98}],109:[function(require,module,exports){
+},{"underscore":98}],111:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -37309,7 +37422,7 @@ module.exports = function () {
 
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./form/fitTextareaToContent":102,"./form/initiateForm":103}],110:[function(require,module,exports){
+},{"./form/fitTextareaToContent":104,"./form/initiateForm":105}],112:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -37334,7 +37447,7 @@ module.exports = function (tab) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],111:[function(require,module,exports){
+},{}],113:[function(require,module,exports){
 /**
  * synchronisiert die Daten aus einer CouchDB in PouchDB
  */
@@ -37365,7 +37478,7 @@ module.exports = function () {
     if (remoteCouch) { sync(); }
 };
 
-},{"./configuration":100,"pouchdb":55}],112:[function(require,module,exports){
+},{"./configuration":102,"pouchdb":55}],114:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
   return "<div class=\"form-group\">\r\n    <label class=\"control-label\">"
@@ -37377,7 +37490,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(((helper = (helper = helpers.checked || (depth0 != null ? depth0.checked : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"checked","hash":{},"data":data}) : helper)))
     + ">\r\n            </label>\r\n        </div>\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":27}],113:[function(require,module,exports){
+},{"handlebars":27}],115:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,depths) {
   var lambda=this.lambda, escapeExpression=this.escapeExpression;
   return "            <div class=\"checkbox\">\r\n                <label>\r\n                    <input type=\"checkbox\" id=\""
@@ -37399,7 +37512,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "    </div>\r\n</div>";
 },"useData":true,"useDepths":true});
-},{"handlebars":27}],114:[function(require,module,exports){
+},{"handlebars":27}],116:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
   return "<div class=\"form-group\">\r\n    <label for=\""
@@ -37416,7 +37529,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(((helper = (helper = helpers.value || (depth0 != null ? depth0.value : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"value","hash":{},"data":data}) : helper)))
     + "\">\r\n</div>";
 },"useData":true});
-},{"handlebars":27}],115:[function(require,module,exports){
+},{"handlebars":27}],117:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,depths) {
   var lambda=this.lambda, escapeExpression=this.escapeExpression;
   return "            <div class=\"radio\">\r\n                <label>\r\n                    <input type=\"radio\" name=\""
@@ -37441,7 +37554,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "    </div>\r\n</div>";
 },"useData":true,"useDepths":true});
-},{"handlebars":27}],116:[function(require,module,exports){
+},{"handlebars":27}],118:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data) {
   var lambda=this.lambda, escapeExpression=this.escapeExpression;
   return "                <option value=\""
@@ -37462,7 +37575,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "        </select>\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":27}],117:[function(require,module,exports){
+},{"handlebars":27}],119:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
   return "<div class=\"form-group\">\r\n    <label for=\""

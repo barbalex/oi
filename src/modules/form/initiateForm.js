@@ -12,72 +12,81 @@ var $                     = require('jquery'),
     checkboxGroup         = require('../../../templates/checkboxGroup'),
     select                = require('../../../templates/select'),
     fitTextareaToContent  = require('./fitTextareaToContent'),
-    addCheckedToValueList = require('./addCheckedToValueList');
+    addCheckedToValueList = require('./addCheckedToValueList'),
+    bindModelInputForObject = require('../bindModelInputForObject');
 
 module.exports = function (_id) {
     var html        = '',
-        textareaIds = [];
+        textareaIds = [],
+        object,
+        hierarchy,
+        loadedObject;
 
     // get data for object
-    db.get(_id, function (err, object) {
-        if (err) { console.log('error: ', err); }
-        // get metainformation about fields
-        db.get(object.hId, function (err, hierarchy) {
-            if (err) { console.log('error: ', err); }
-            _.each(hierarchy.fields, function (field) {
-                var templateObject      = {};
+    object = _.find(window.oi.objects, function (object) {
+        return object._id == _id;
+    });
+    hierarchy = _.find(window.oi.hierarchies, function (hierarchy) {
+        return hierarchy._id === object.hId;
+    });
 
-                templateObject.objectId = object._id;
-                templateObject.label    = field.label;
-                templateObject.type     = field.type || null;
-                templateObject.value    = object.data[field.label] || null;
+    _.each(hierarchy.fields, function (field) {
+        var templateObject      = {};
 
-                // Felder bauen
-                switch (field.type) {
-                case 'textarea':
-                    html += textarea(templateObject);
-                    textareaIds.push(object._id + field.label);
-                    break;
-                case 'input':
-                    switch (field.dataType) {
-                    case 'checkbox':
-                        // es ist eine einzelne checkbox. Mitgeben, ob sie checked ist
-                        templateObject.checked = object.data[field.label] ? 'checked' : '';
-                        html += checkbox(templateObject);
-                        break;
-                    case 'checkboxGroup':
-                        // checkboxGroup erstellen
-                        templateObject.valueList = addCheckedToValueList(field.valueList, object.data[field.label]);
-                        html += checkboxGroup(templateObject);
-                        break;
-                    case 'optionGroup':
-                        // object.data muss Array sein - ist bei optionsgrup nicht so, weil eh nur ein Wert gesetzt werden kann > Wert in Array setzen
-                        templateObject.valueList = addCheckedToValueList(field.valueList, [object.data[field.label]]);
-                        html += optionGroup(templateObject);
-                        break;
-                    case 'text':
-                    default:
-                        html += input(templateObject);
-                        break;
-                    }
-                    break;
-                case 'select':
-                    // object.data muss Array sein - ist bei optionsgrup nicht so, weil eh nur ein Wert gesetzt werden kann > Wert in Array setzen
-                    templateObject.valueList = addCheckedToValueList(field.valueList, object.data[field.label], 'selected');
-                    html += select(templateObject);
-                    break;
-                default:
-                    html += input(templateObject);
-                    break;
-                }
-            });
+        templateObject.objectId = object._id;
+        templateObject.label    = field.label;
+        templateObject.type     = field.type || null;
+        templateObject.value    = object.data[field.label] || null;
 
-            $('#formContent').html(html);
+        // Felder bauen
+        switch (field.type) {
+        case 'textarea':
+            html += textarea(templateObject);
+            textareaIds.push(object._id + field.label);
+            break;
+        case 'input':
+            switch (field.dataType) {
+            case 'checkbox':
+                // es ist eine einzelne checkbox. Mitgeben, ob sie checked ist
+                templateObject.checked = object.data[field.label] ? 'checked' : '';
+                html += checkbox(templateObject);
+                break;
+            case 'checkboxGroup':
+                // checkboxGroup erstellen
+                templateObject.valueList = addCheckedToValueList(field.valueList, object.data[field.label]);
+                html += checkboxGroup(templateObject);
+                break;
+            case 'optionGroup':
+                // object.data muss Array sein - ist bei optionsgrup nicht so, weil eh nur ein Wert gesetzt werden kann > Wert in Array setzen
+                templateObject.valueList = addCheckedToValueList(field.valueList, [object.data[field.label]]);
+                html += optionGroup(templateObject);
+                break;
+            case 'text':
+            default:
+                html += input(templateObject);
+                break;
+            }
+            break;
+        case 'select':
+            // object.data muss Array sein - ist bei optionsgrup nicht so, weil eh nur ein Wert gesetzt werden kann > Wert in Array setzen
+            templateObject.valueList = addCheckedToValueList(field.valueList, object.data[field.label], 'selected');
+            html += select(templateObject);
+            break;
+        default:
+            html += input(templateObject);
+            break;
+        }
+    });
 
-            // textareas: Grösse an Wert anpassen
-            _.each(textareaIds, function (textareaId) {
-                fitTextareaToContent(textareaId);
-            });
-        });
+    $('#formContent').html(html);
+
+    bindModelInputForObject(object);
+
+    // objekt als geladen markieren
+    $('#formContent').data('id', object._id);
+
+    // textareas: Grösse an Wert anpassen
+    _.each(textareaIds, function (textareaId) {
+        fitTextareaToContent(textareaId);
     });
 };

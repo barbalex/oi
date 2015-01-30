@@ -16,11 +16,12 @@ function createObjectsData(object, objectsData) {
         // beschrifte object
         if (object.data && correspondingHierarchy && correspondingHierarchy.nameField) {
             jstreeObject.text = '<strong>' + object.data[correspondingHierarchy.nameField] + '</strong>';
+            // parent ist ein descendant hierarchy, ausser in der obersten Ebene
+            jstreeObject.parent = object.parent + correspondingHierarchy._id;
         } else {
-            jstreeObject.text = '<strong>(?)</strong>';
+            jstreeObject.text   = '<strong>(?)</strong>';
+            jstreeObject.parent = object.parent;
         }
-        // parent ist ein descendant hierarchy, ausser in der obersten Ebene
-        jstreeObject.parent      = object.parent + correspondingHierarchy._id;
         jstreeObject.li_attr     = {};
         jstreeObject.li_attr.typ = object.typ;
         objectsData.push(jstreeObject);
