@@ -21,6 +21,7 @@ module.exports = function (change) {
             });
             _.extend(modelObject, change.doc);
             // refresh form if this object is shown
+            // cant update only changed field because it is unknown (?)
             if ($('#formContent').html() !== "" && $('#formContent').data('id') === change.doc._id) {
                 initiateForm(change.doc._id);
             }

@@ -23,7 +23,7 @@ module.exports = function (_id) {
 
     // get data for object
     object = _.find(window.oi.objects, function (object) {
-        return object._id == _id;
+        return object._id === _id;
     });
 
     if (object && object.hId) {
@@ -82,6 +82,13 @@ module.exports = function (_id) {
         $('#formContent').html(html);
 
         bindModelInputForObject(object);
+
+        // problem: 
+        // instead of binding view to Model:
+        // - always get data from pouch
+        // - insert templates into page
+        // - add change-event for data-hook "speichern"
+        // - remove change-events for previous inputs
 
         // objekt als geladen markieren
         $('#formContent').data('id', object._id);
