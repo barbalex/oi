@@ -4,7 +4,7 @@
 var Hapi            = require('hapi'),
     server          = new Hapi.Server(
         '0.0.0.0',
-        4000,
+        2000,
         {
             debug: {
                 request: ['error']
@@ -15,7 +15,7 @@ var Hapi            = require('hapi'),
 // start the server:
 server.start(function (err) {
     if (err) { throw err; }
-    console.log('ortinfo is running at: http://localhost:4000. Yep. That\'s pretty awesome.');
+    console.log('ortinfo is running at: http://localhost:2000. Yep. That\'s pretty awesome.');
 });
 
 server.route({

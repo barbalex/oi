@@ -10,6 +10,9 @@ var $          = require('jquery'),
     createTree = require('./createTree'),
     initiateForm = require('../form/initiateForm');
 
+// expose pouchdb to pouchdb-fauxton
+window.PouchDB = PouchDB;
+
 // TODO: auf den aktuellen Benutzer einschränken
 function mapHierarchies(doc) {
     if (doc.type === 'hierarchy') {

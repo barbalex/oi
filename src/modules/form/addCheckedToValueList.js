@@ -3,6 +3,7 @@
  * mit value und checked
  * wird benutzt, um opionGroup und checkboxGroup zu bauen
  * damit es auch für select benutzt werden kann, kann selectedOrChecked übergeben werden 
+ * type ist select, optionGroup oder checkboxgroup
  */
 
 /*jslint node: true, browser: true, nomen: true, todo: true */
@@ -10,25 +11,50 @@
 
 var _ = require('underscore');
 
-module.exports = function (valueArray, fieldValueArray, selectedOrChecked) {
+module.exports = function (valueArray, fieldValueArray, type) {
 
-    selectedOrChecked = selectedOrChecked || 'checked';
+    var valueList,
+        selectedOrChecked = type === 'select' ? 'selected' : 'checked',
+        nullObject = {};
+
+    nullObject.value = null;
+    nullObject.label = '(kein Wert)';
+
+    // add empty value in selects and optionGroups
+    if (type === 'select' || type === 'optionGroup') {
+        if (typeof valueArray[0] === 'object') {
+            // prüfen, ob null schon enthalten
+            valueList = _.pluck(valueArray, 'value');
+            if (_.indexOf(valueList, null) === -1) {
+                valueArray.unshift(nullObject);
+            }
+        } else {
+            if (_.indexOf(valueArray, null) === -1) {
+                valueArray.unshift(null);
+            }
+        }
+    }
 
     return _.map(valueArray, function (value) {
         var valueObject = {};
 
-        if (typeof value === 'object') {
+        // offenbar ist typeof null object!!!
+        if (value && typeof value === 'object') {
             // valueList enthielt Objekte mit values und labels
             valueObject.value = value.value;
             valueObject.label = value.label;
             // setzen, ob checkbox checked ist
             valueObject.checked = _.indexOf(fieldValueArray, value.value) > -1 ? selectedOrChecked : '';
         } else {
-            valueObject.value = valueObject.label = value;
+            valueObject.value = value;
+            if ((type === 'select' || type === 'optionGroup') && value === null) {
+                valueObject.label = '(kein Wert)';
+            } else {
+                valueObject.label = value;
+            }
             // setzen, ob checkbox checked ist
             valueObject.checked = _.indexOf(fieldValueArray, value) > -1 ? selectedOrChecked : '';
         }
-
         return valueObject;
     });
 };

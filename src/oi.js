@@ -4,7 +4,6 @@
 var initiateResizables          = require('./modules/initiateResizables'),
     setupEvents                 = require('./modules/setupEvents'),
     initiateNav                 = require('./modules/nav/initiateNav');
-    //createGlobals             = require('./modules/createGlobals'),
     //clearLocalStorage         = require('./modules/clearLocalStorage'),
     //waehleApliste             = require('./modules/waehleApliste'),
     //oeffneUri                 = require('./modules/oeffneUri'),
@@ -19,8 +18,6 @@ window.oi.olMap = window.oi.olMap || {};
 // oi.js kann den anderen Modulen nicht als browserify-Modul bereitgestellt werden,
 // weil es die Quelle der Modularisierung ist
 window.oi.initiiereApp = function () {
-
-    //createGlobals();
 
     // localStorage ausräumen
     //clearLocalStorage();

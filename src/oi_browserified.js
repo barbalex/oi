@@ -5,7 +5,6 @@
 var initiateResizables          = require('./modules/initiateResizables'),
     setupEvents                 = require('./modules/setupEvents'),
     initiateNav                 = require('./modules/nav/initiateNav');
-    //createGlobals             = require('./modules/createGlobals'),
     //clearLocalStorage         = require('./modules/clearLocalStorage'),
     //waehleApliste             = require('./modules/waehleApliste'),
     //oeffneUri                 = require('./modules/oeffneUri'),
@@ -20,8 +19,6 @@ window.oi.olMap = window.oi.olMap || {};
 // oi.js kann den anderen Modulen nicht als browserify-Modul bereitgestellt werden,
 // weil es die Quelle der Modularisierung ist
 window.oi.initiiereApp = function () {
-
-    //createGlobals();
 
     // localStorage ausräumen
     //clearLocalStorage();
@@ -36768,31 +36765,33 @@ module.exports = function (object, property) {
     // das Element liess sich auf keine andere Art holen!
     var domElem = $('#formContent').find('#' + object._id + property)[0];
 
-    Object.defineProperty(object.data, property, {
-        get: function () {
-            return domElem.value;
-        },
-        set: function (newValue) {
-            domElem.value = newValue;
-            // write to pouch
-            db.put(object, function (err, response) {
-                if (err) { return console.log('error: ', err); }
-                // update rev in object
-                object._rev = response.rev;
-                // if field is nameField, update name in tree
-                var correspondingHierarchy = _.find(window.oi.hierarchies, function (hierarchy) {
-                    return hierarchy._id == object.hId;
+    if (domElem) {
+        Object.defineProperty(object.data, property, {
+            get: function () {
+                return domElem.value;
+            },
+            set: function (newValue) {
+                domElem.value = newValue;
+                // write to pouch
+                db.put(object, function (err, response) {
+                    if (err) { return console.log('error: ', err); }
+                    // update rev in object
+                    object._rev = response.rev;
+                    // if field is nameField, update name in tree
+                    var correspondingHierarchy = _.find(window.oi.hierarchies, function (hierarchy) {
+                        return hierarchy._id == object.hId;
+                    });
+                    if (object.data && correspondingHierarchy && correspondingHierarchy.nameField && correspondingHierarchy.nameField === property) {
+                        $('#navContent').jstree().rename_node('#' + object._id, '<strong>' + newValue + '</strong>');
+                    }
                 });
-                if (object.data && correspondingHierarchy && correspondingHierarchy.nameField && correspondingHierarchy.nameField === property) {
-                    $('#navContent').jstree().rename_node('#' + object._id, '<strong>' + newValue + '</strong>');
-                }
-            });
-        },
-        configurable: true
-    });
-    domElem.onchange = function () {
-        object.data[property] = domElem.value;
-    };
+            },
+            configurable: true
+        });
+        domElem.onchange = function () {
+            object.data[property] = domElem.value;
+        };
+    }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"jstree":29,"pouchdb":55,"underscore":98}],101:[function(require,module,exports){
@@ -36837,6 +36836,7 @@ module.exports = config;
  * mit value und checked
  * wird benutzt, um opionGroup und checkboxGroup zu bauen
  * damit es auch für select benutzt werden kann, kann selectedOrChecked übergeben werden 
+ * type ist select, optionGroup oder checkboxgroup
  */
 
 /*jslint node: true, browser: true, nomen: true, todo: true */
@@ -36844,25 +36844,50 @@ module.exports = config;
 
 var _ = require('underscore');
 
-module.exports = function (valueArray, fieldValueArray, selectedOrChecked) {
+module.exports = function (valueArray, fieldValueArray, type) {
 
-    selectedOrChecked = selectedOrChecked || 'checked';
+    var valueList,
+        selectedOrChecked = type === 'select' ? 'selected' : 'checked',
+        nullObject = {};
+
+    nullObject.value = null;
+    nullObject.label = '(kein Wert)';
+
+    // add empty value in selects and optionGroups
+    if (type === 'select' || type === 'optionGroup') {
+        if (typeof valueArray[0] === 'object') {
+            // prüfen, ob null schon enthalten
+            valueList = _.pluck(valueArray, 'value');
+            if (_.indexOf(valueList, null) === -1) {
+                valueArray.unshift(nullObject);
+            }
+        } else {
+            if (_.indexOf(valueArray, null) === -1) {
+                valueArray.unshift(null);
+            }
+        }
+    }
 
     return _.map(valueArray, function (value) {
         var valueObject = {};
 
-        if (typeof value === 'object') {
+        // offenbar ist typeof null object!!!
+        if (value && typeof value === 'object') {
             // valueList enthielt Objekte mit values und labels
             valueObject.value = value.value;
             valueObject.label = value.label;
             // setzen, ob checkbox checked ist
             valueObject.checked = _.indexOf(fieldValueArray, value.value) > -1 ? selectedOrChecked : '';
         } else {
-            valueObject.value = valueObject.label = value;
+            valueObject.value = value;
+            if ((type === 'select' || type === 'optionGroup') && value === null) {
+                valueObject.label = '(kein Wert)';
+            } else {
+                valueObject.label = value;
+            }
             // setzen, ob checkbox checked ist
             valueObject.checked = _.indexOf(fieldValueArray, value) > -1 ? selectedOrChecked : '';
         }
-
         return valueObject;
     });
 };
@@ -36923,94 +36948,98 @@ module.exports = function (id, maxHeight) {
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $                     = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
-    _                     = require('underscore'),
-    PouchDB               = require('pouchdb'),
-    db                    = new PouchDB('oi'),
-    input                 = require('../../../templates/input'),
-    textarea              = require('../../../templates/textarea'),
-    checkbox              = require('../../../templates/checkbox'),
-    optionGroup           = require('../../../templates/optionGroup'),
-    checkboxGroup         = require('../../../templates/checkboxGroup'),
-    select                = require('../../../templates/select'),
-    fitTextareaToContent  = require('./fitTextareaToContent'),
-    addCheckedToValueList = require('./addCheckedToValueList'),
+var $                       = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+    _                       = require('underscore'),
+    PouchDB                 = require('pouchdb'),
+    db                      = new PouchDB('oi'),
+    input                   = require('../../../templates/input'),
+    textarea                = require('../../../templates/textarea'),
+    checkbox                = require('../../../templates/checkbox'),
+    optionGroup             = require('../../../templates/optionGroup'),
+    checkboxGroup           = require('../../../templates/checkboxGroup'),
+    select                  = require('../../../templates/select'),
+    fitTextareaToContent    = require('./fitTextareaToContent'),
+    addCheckedToValueList   = require('./addCheckedToValueList'),
     bindModelInputForObject = require('../bindModelInputForObject');
 
 module.exports = function (_id) {
     var html        = '',
         textareaIds = [],
         object,
-        hierarchy,
-        loadedObject;
+        hierarchy;
 
     // get data for object
     object = _.find(window.oi.objects, function (object) {
         return object._id == _id;
     });
-    hierarchy = _.find(window.oi.hierarchies, function (hierarchy) {
-        return hierarchy._id === object.hId;
-    });
 
-    _.each(hierarchy.fields, function (field) {
-        var templateObject      = {};
+    if (object && object.hId) {
+        hierarchy = _.find(window.oi.hierarchies, function (hierarchy) {
+            return hierarchy._id === object.hId;
+        });
 
-        templateObject.objectId = object._id;
-        templateObject.label    = field.label;
-        templateObject.type     = field.type || null;
-        templateObject.value    = object.data[field.label] || null;
+        _.each(hierarchy.fields, function (field) {
+            var templateObject      = {};
 
-        // Felder bauen
-        switch (field.type) {
-        case 'textarea':
-            html += textarea(templateObject);
-            textareaIds.push(object._id + field.label);
-            break;
-        case 'input':
-            switch (field.dataType) {
-            case 'checkbox':
-                // es ist eine einzelne checkbox. Mitgeben, ob sie checked ist
-                templateObject.checked = object.data[field.label] ? 'checked' : '';
-                html += checkbox(templateObject);
+            templateObject.objectId = object._id;
+            templateObject.label    = field.label;
+            templateObject.type     = field.type || null;
+            templateObject.value    = object.data[field.label] || null;
+
+            // Felder bauen
+            switch (field.type) {
+            case 'textarea':
+                html += textarea(templateObject);
+                textareaIds.push(object._id + field.label);
                 break;
-            case 'checkboxGroup':
-                // checkboxGroup erstellen
-                templateObject.valueList = addCheckedToValueList(field.valueList, object.data[field.label]);
-                html += checkboxGroup(templateObject);
+            case 'input':
+                switch (field.dataType) {
+                case 'checkbox':
+                    // es ist eine einzelne checkbox. Mitgeben, ob sie checked ist
+                    templateObject.checked = object.data[field.label] ? 'checked' : '';
+                    html += checkbox(templateObject);
+                    break;
+                case 'checkboxGroup':
+                    // checkboxGroup erstellen
+                    templateObject.valueList = addCheckedToValueList(field.valueList, object.data[field.label], 'checkboxGroup');
+                    html += checkboxGroup(templateObject);
+                    break;
+                case 'optionGroup':
+                    // object.data muss Array sein - ist bei optionsgroup nicht so, weil eh nur ein Wert gesetzt werden kann > Wert in Array setzen
+                    templateObject.valueList = addCheckedToValueList(field.valueList, [object.data[field.label]], 'optionGroup');
+                    html += optionGroup(templateObject);
+                    break;
+                case 'text':
+                default:
+                    html += input(templateObject);
+                    break;
+                }
                 break;
-            case 'optionGroup':
-                // object.data muss Array sein - ist bei optionsgrup nicht so, weil eh nur ein Wert gesetzt werden kann > Wert in Array setzen
-                templateObject.valueList = addCheckedToValueList(field.valueList, [object.data[field.label]]);
-                html += optionGroup(templateObject);
+            case 'select':
+                // object.data muss Array sein - ist bei select nicht so, weil eh nur ein Wert gesetzt werden kann > Wert in Array setzen
+                templateObject.valueList = addCheckedToValueList(field.valueList, [object.data[field.label]], 'select');
+                html += select(templateObject);
                 break;
-            case 'text':
             default:
                 html += input(templateObject);
                 break;
             }
-            break;
-        case 'select':
-            // object.data muss Array sein - ist bei optionsgrup nicht so, weil eh nur ein Wert gesetzt werden kann > Wert in Array setzen
-            templateObject.valueList = addCheckedToValueList(field.valueList, object.data[field.label], 'selected');
-            html += select(templateObject);
-            break;
-        default:
-            html += input(templateObject);
-            break;
-        }
-    });
+        });
 
-    $('#formContent').html(html);
+        $('#formContent').html(html);
 
-    bindModelInputForObject(object);
+        bindModelInputForObject(object);
 
-    // objekt als geladen markieren
-    $('#formContent').data('id', object._id);
+        // objekt als geladen markieren
+        $('#formContent').data('id', object._id);
 
-    // textareas: Grösse an Wert anpassen
-    _.each(textareaIds, function (textareaId) {
-        fitTextareaToContent(textareaId);
-    });
+        // textareas: Grösse an Wert anpassen
+        _.each(textareaIds, function (textareaId) {
+            fitTextareaToContent(textareaId);
+        });
+    } else {
+        console.log('error: found no object with id ', _id);
+    }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../../../templates/checkbox":114,"../../../templates/checkboxGroup":115,"../../../templates/input":116,"../../../templates/optionGroup":117,"../../../templates/select":118,"../../../templates/textarea":119,"../bindModelInputForObject":101,"./addCheckedToValueList":103,"./fitTextareaToContent":104,"pouchdb":55,"underscore":98}],106:[function(require,module,exports){
@@ -37251,6 +37280,9 @@ var $          = (typeof window !== "undefined" ? window.$ : typeof global !== "
     createTree = require('./createTree'),
     initiateForm = require('../form/initiateForm');
 
+// expose pouchdb to pouchdb-fauxton
+window.PouchDB = PouchDB;
+
 // TODO: auf den aktuellen Benutzer einschränken
 function mapHierarchies(doc) {
     if (doc.type === 'hierarchy') {
@@ -37284,8 +37316,6 @@ module.exports = function () {
                 return object._id === change.id;
             });
             if (modelObject) {
-                console.log('modelObject: ', modelObject);
-                console.log('change.doc: ', change.doc);
                 _.each(modelObject, function (value, key) {
                     delete modelObject[key];
                 });
