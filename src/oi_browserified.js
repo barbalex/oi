@@ -36782,7 +36782,7 @@ module.exports = function (object, property) {
                     domElem.value = newValue;
                     break;
                 case 'radio':
-                    domElem.value = newValue;
+                    domElem.find('[value="' + newValue + '"]').prop('checked', true);
                     break;
                 default:
                     domElem.value = newValue;
@@ -37002,7 +37002,7 @@ module.exports = function (_id) {
 
             templateObject.objectId = object._id;
             templateObject.label    = field.label;
-            templateObject.type     = field.type || null;
+            templateObject.dataType = field.dataType || null;
             templateObject.value    = object.data[field.label] || null;
 
             // Felder bauen
@@ -37047,7 +37047,14 @@ module.exports = function (_id) {
 
         $('#formContent').html(html);
 
-        bindModelInputForObject(object);
+        //bindModelInputForObject(object);
+
+        // problem: 
+        // instead of binding view to Model:
+        // - always get data from pouch
+        // - insert templates into page
+        // - add change-event for data-hook "speichern"
+        // - remove change-events for previous inputs
 
         // objekt als geladen markieren
         $('#formContent').data('id', object._id);
@@ -37465,7 +37472,10 @@ module.exports = function () {
         });
 
     $('#formContent')
-        .on('keyup focus', 'textarea', fitTextareaToContent);
+        .on('keyup focus', 'textarea', fitTextareaToContent)
+        .on('change', 'input[type="text"], input[type="checkbox"], textarea', function (event) {
+            console.log('changed: ', this);
+        });
 
     $(document).on('click.nav', '.navbar-collapse.in', function (e) {
         if ($(e.target).is('a')) {
@@ -37579,7 +37589,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + "\">"
     + escapeExpression(((helper = (helper = helpers.label || (depth0 != null ? depth0.label : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"label","hash":{},"data":data}) : helper)))
     + "</label>\r\n    <input type=\""
-    + escapeExpression(((helper = (helper = helpers.type || (depth0 != null ? depth0.type : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"type","hash":{},"data":data}) : helper)))
+    + escapeExpression(((helper = (helper = helpers.dataType || (depth0 != null ? depth0.dataType : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"dataType","hash":{},"data":data}) : helper)))
     + "\" class=\"form-control\" id=\""
     + escapeExpression(((helper = (helper = helpers.objectId || (depth0 != null ? depth0.objectId : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"objectId","hash":{},"data":data}) : helper)))
     + escapeExpression(((helper = (helper = helpers.label || (depth0 != null ? depth0.label : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"label","hash":{},"data":data}) : helper)))

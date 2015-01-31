@@ -36,7 +36,7 @@ module.exports = function (_id) {
 
             templateObject.objectId = object._id;
             templateObject.label    = field.label;
-            templateObject.type     = field.type || null;
+            templateObject.dataType = field.dataType || null;
             templateObject.value    = object.data[field.label] || null;
 
             // Felder bauen
@@ -81,7 +81,7 @@ module.exports = function (_id) {
 
         $('#formContent').html(html);
 
-        bindModelInputForObject(object);
+        //bindModelInputForObject(object);
 
         // problem: 
         // instead of binding view to Model:

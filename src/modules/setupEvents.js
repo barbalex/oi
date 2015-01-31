@@ -13,7 +13,10 @@ module.exports = function () {
         });
 
     $('#formContent')
-        .on('keyup focus', 'textarea', fitTextareaToContent);
+        .on('keyup focus', 'textarea', fitTextareaToContent)
+        .on('change', 'input[type="text"], input[type="checkbox"], textarea', function (event) {
+            console.log('changed: ', this);
+        });
 
     $(document).on('click.nav', '.navbar-collapse.in', function (e) {
         if ($(e.target).is('a')) {
