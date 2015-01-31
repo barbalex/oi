@@ -56045,14 +56045,15 @@ var $            = (typeof window !== "undefined" ? window.$ : typeof global !==
 // expose pouchdb to pouchdb-fauxton
 window.PouchDB = PouchDB;
 
-// TODO: auf den aktuellen Benutzer einschränken
+// TODO: get only the users data
+// TODO: create real views
 function mapHierarchies(doc) {
     if (doc.type === 'hierarchy') {
         emit(doc._id);
     }
 }
 
-// TODO: auf den aktuellen Benutzer einschränken
+// TODO: get only the users data
 function mapObjects(doc) {
     if (doc.type === 'object') {
         emit(doc._id);
@@ -56070,7 +56071,7 @@ module.exports = function () {
 
         switch (change.doc.type) {
         case 'object':
-            // update hierarchy of model
+            // update model of object
             modelObject = _.find(window.oi.objects, function (object) {
                 return object._id === change.id;
             });
@@ -56096,7 +56097,7 @@ module.exports = function () {
             modelObject = _.find(window.oi.hierarchies, function (hierarchy) {
                 return hierarchy._id === change.id;
             });
-            // TODO: update hierarchy of model
+            // TODO: update model of hierarchy
             break;
         }
     });
