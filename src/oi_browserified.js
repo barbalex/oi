@@ -37273,10 +37273,10 @@ module.exports = function () {
 
 var $            = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
     _            = require('underscore'),
+    async        = require('async'),
     PouchDB      = require('pouchdb'),
     db           = new PouchDB('oi'),
-    sync         = require('../syncPouch'),
-    async        = require('async'),
+    syncPouch    = require('../syncPouch'),
     createTree   = require('./createTree'),
     initiateForm = require('../form/initiateForm');
 
@@ -37299,7 +37299,7 @@ function mapObjects(doc) {
 
 module.exports = function () {
 
-    sync();
+    syncPouch();
 
     // TODO: filter only the users documents
     db.changes({since: 'now', live: true, include_docs: true}).on('change', function (change) {
