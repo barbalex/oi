@@ -13,14 +13,14 @@ var $            = require('jquery'),
 // expose pouchdb to pouchdb-fauxton
 window.PouchDB = PouchDB;
 
-// TODO: auf den aktuellen Benutzer einschränken
+// TODO: get only the users data
 function mapHierarchies(doc) {
     if (doc.type === 'hierarchy') {
         emit(doc._id);
     }
 }
 
-// TODO: auf den aktuellen Benutzer einschränken
+// TODO: get only the users data
 function mapObjects(doc) {
     if (doc.type === 'object') {
         emit(doc._id);
