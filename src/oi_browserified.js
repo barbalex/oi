@@ -37271,13 +37271,13 @@ module.exports = function () {
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $          = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
-    _          = require('underscore'),
-    PouchDB    = require('pouchdb'),
-    db         = new PouchDB('oi'),
-    sync       = require('../syncPouch'),
-    async      = require('async'),
-    createTree = require('./createTree'),
+var $            = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+    _            = require('underscore'),
+    PouchDB      = require('pouchdb'),
+    db           = new PouchDB('oi'),
+    sync         = require('../syncPouch'),
+    async        = require('async'),
+    createTree   = require('./createTree'),
     initiateForm = require('../form/initiateForm');
 
 // expose pouchdb to pouchdb-fauxton
@@ -37299,10 +37299,6 @@ function mapObjects(doc) {
 
 module.exports = function () {
 
-    // NUR FÜR ENTWICKLUNG
-    // zuerst db komprimieren - sonst sind komische Daten drin
-    db.compact();
-
     sync();
 
     // TODO: filter only the users documents
@@ -37312,6 +37308,7 @@ module.exports = function () {
 
         switch (change.doc.type) {
         case 'object':
+            // update hierarchy of model
             modelObject = _.find(window.oi.objects, function (object) {
                 return object._id === change.id;
             });
@@ -37320,13 +37317,13 @@ module.exports = function () {
                     delete modelObject[key];
                 });
                 _.extend(modelObject, change.doc);
-                // form aktualisieren, wenn nötig
-                if ($('#formContent').html() !== "" && $('#formContent').data('id') == change.doc._id) {
+                // refresh form if this object is shown
+                if ($('#formContent').html() !== "" && $('#formContent').data('id') === change.doc._id) {
                     initiateForm(change.doc._id);
                 }
-                // tree aktualisieren
+                // refresh tree
                 correspondingHierarchy = _.find(window.oi.hierarchies, function (hierarchy) {
-                    return hierarchy._id == change.doc.hId;
+                    return hierarchy._id === change.doc.hId;
                 });
                 if (change.doc.data && correspondingHierarchy && correspondingHierarchy.nameField) {
                     $('#navContent').jstree().rename_node('#' + change.doc._id, '<strong>' + change.doc.data[correspondingHierarchy.nameField] + '</strong>');
@@ -37337,16 +37334,15 @@ module.exports = function () {
             modelObject = _.find(window.oi.hierarchies, function (hierarchy) {
                 return hierarchy._id === change.id;
             });
+            // TODO: update hierarchy of model
             break;
         }
-
-        //modelObject = change.doc;
-
     });
 
+    // get data from db
     async.parallel({
         hierarchies: function (callback) {
-            // TODO: auf den aktuellen Benutzer einschränken
+            // TODO: get only the users data
             db.query({map: mapHierarchies}, {reduce: false, include_docs: true}, function (err, response) {
                 var hierarchies = _.map(response.rows, function (row) {
                     return row.doc;
@@ -37355,7 +37351,7 @@ module.exports = function () {
             });
         },
         objects: function (callback) {
-            // TODO: auf den aktuellen Benutzer einschränken
+            // TODO: get only the users data
             db.query({map: mapObjects}, {reduce: false, include_docs: true}, function (err, response) {
                 var objects = _.map(response.rows, function (row) {
                     return row.doc;
@@ -37364,14 +37360,14 @@ module.exports = function () {
             });
         }
     }, function (err, results) {
-        if (err) { return console.log('error: ', err); }
         // results equals to: { hierarchies: hierarchies, objects: objects }
 
-        // create globals for data
+        if (err) { return console.log('error: ', err); }
+
+        // create globals for data (primitive self-built models)
         window.oi.hierarchies = results.hierarchies;
         window.oi.objects     = results.objects;
 
-        window.oi.createTree = createTree;
         createTree();
     });
 };
