@@ -1,12 +1,14 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var _ = require('underscore');
+var _                 = require('underscore'),
+    getLabelForObject = require('./getLabelForObject');
 
 function createObjectsData(object, objectsData) {
     if (object.parent !== null) {
         var jstreeObject = {},
             correspondingHierarchy;
+
         // _id wird id
         jstreeObject.id = object._id;
         // text is nameField
@@ -15,7 +17,8 @@ function createObjectsData(object, objectsData) {
         });
         // beschrifte object
         if (object.data && correspondingHierarchy && correspondingHierarchy.nameField) {
-            jstreeObject.text = '<strong>' + object.data[correspondingHierarchy.nameField] + '</strong>';
+            // suche nach den Metadaten des Felds
+            jstreeObject.text = getLabelForObject(object, correspondingHierarchy);
             // parent ist ein descendant hierarchy, ausser in der obersten Ebene
             jstreeObject.parent = object.parent + correspondingHierarchy._id;
         } else {

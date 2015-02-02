@@ -11,9 +11,10 @@
  */
 'use strict';
 
-var $               = require('jquery'),
-    _               = require('underscore'),
-    initiateForm    = require('./form/initiateForm');
+var $                 = require('jquery'),
+    _                 = require('underscore'),
+    initiateForm      = require('./form/initiateForm'),
+    getLabelForObject = require('./nav/getLabelForObject');
 
 module.exports = function (change) {
     var modelObject,
@@ -48,7 +49,7 @@ module.exports = function (change) {
                 return hierarchy._id === change.doc.hId;
             });
             if (change.doc.data && correspondingHierarchy && correspondingHierarchy.nameField) {
-                $('#navContent').jstree().rename_node('#' + change.doc._id, '<strong>' + change.doc.data[correspondingHierarchy.nameField] + '</strong>');
+                $('#navContent').jstree().rename_node('#' + change.doc._id, getLabelForObject(change.doc, correspondingHierarchy));
             }
         }
         break;

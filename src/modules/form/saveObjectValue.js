@@ -1,10 +1,11 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $       = require('jquery'),
-    _       = require('underscore'),
-    PouchDB = require('pouchdb'),
-    db      = new PouchDB('oi');
+var $                 = require('jquery'),
+    _                 = require('underscore'),
+    PouchDB           = require('pouchdb'),
+    db                = new PouchDB('oi'),
+    getLabelForObject = require('../nav/getLabelForObject');
 
 module.exports = function (_id, field, value) {
     var object;
@@ -35,7 +36,7 @@ module.exports = function (_id, field, value) {
                 return hierarchy._id === object.hId;
             });
             if (object.data && correspondingHierarchy && correspondingHierarchy.nameField && correspondingHierarchy.nameField === field) {
-                $('#navContent').jstree().rename_node('#' + object._id, '<strong>' + value + '</strong>');
+                $('#navContent').jstree().rename_node('#' + object._id, getLabelForObject(object, correspondingHierarchy));
             }
         });
     } else {

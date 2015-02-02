@@ -18801,7 +18801,7 @@ window.oi.initiiereApp = function () {
 
 // gleich ein mal ausführen
 window.oi.initiiereApp();
-},{"./modules/initiateResizables":109,"./modules/nav/initiateNav":112,"./modules/setupEvents":114,"handlebars":27}],2:[function(require,module,exports){
+},{"./modules/initiateResizables":109,"./modules/nav/initiateNav":113,"./modules/setupEvents":115,"handlebars":27}],2:[function(require,module,exports){
 module.exports={
     "user": "barbalex",
     "pass": "dLhdMg12"
@@ -55829,7 +55829,7 @@ module.exports = function (_id) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../../templates/checkbox":117,"../../../templates/checkboxGroup":118,"../../../templates/input":119,"../../../templates/optionGroup":120,"../../../templates/select":121,"../../../templates/textarea":122,"./addCheckedToValueList":101,"./fitTextareaToContent":103,"pouchdb":55,"underscore":98}],106:[function(require,module,exports){
+},{"../../../templates/checkbox":118,"../../../templates/checkboxGroup":119,"../../../templates/input":120,"../../../templates/optionGroup":121,"../../../templates/select":122,"../../../templates/textarea":123,"./addCheckedToValueList":101,"./fitTextareaToContent":103,"pouchdb":55,"underscore":98}],106:[function(require,module,exports){
 // Hilfsfunktion, die typeof ersetzt und ergänzt
 // typeof gibt bei input-Feldern immer String zurück!
 
@@ -55875,10 +55875,11 @@ module.exports = function (wert) {
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $       = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
-    _       = require('underscore'),
-    PouchDB = require('pouchdb'),
-    db      = new PouchDB('oi');
+var $                 = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+    _                 = require('underscore'),
+    PouchDB           = require('pouchdb'),
+    db                = new PouchDB('oi'),
+    getLabelForObject = require('../nav/getLabelForObject');
 
 module.exports = function (_id, field, value) {
     var object;
@@ -55909,7 +55910,7 @@ module.exports = function (_id, field, value) {
                 return hierarchy._id === object.hId;
             });
             if (object.data && correspondingHierarchy && correspondingHierarchy.nameField && correspondingHierarchy.nameField === field) {
-                $('#navContent').jstree().rename_node('#' + object._id, '<strong>' + value + '</strong>');
+                $('#navContent').jstree().rename_node('#' + object._id, getLabelForObject(object, correspondingHierarchy));
             }
         });
     } else {
@@ -55917,7 +55918,7 @@ module.exports = function (_id, field, value) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"pouchdb":55,"underscore":98}],108:[function(require,module,exports){
+},{"../nav/getLabelForObject":112,"pouchdb":55,"underscore":98}],108:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 /*
@@ -55932,9 +55933,10 @@ module.exports = function (_id, field, value) {
  */
 'use strict';
 
-var $               = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
-    _               = require('underscore'),
-    initiateForm    = require('./form/initiateForm');
+var $                 = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+    _                 = require('underscore'),
+    initiateForm      = require('./form/initiateForm'),
+    getLabelForObject = require('./nav/getLabelForObject');
 
 module.exports = function (change) {
     var modelObject,
@@ -55969,7 +55971,7 @@ module.exports = function (change) {
                 return hierarchy._id === change.doc.hId;
             });
             if (change.doc.data && correspondingHierarchy && correspondingHierarchy.nameField) {
-                $('#navContent').jstree().rename_node('#' + change.doc._id, '<strong>' + change.doc.data[correspondingHierarchy.nameField] + '</strong>');
+                $('#navContent').jstree().rename_node('#' + change.doc._id, getLabelForObject(change.doc, correspondingHierarchy));
             }
         }
         break;
@@ -55982,7 +55984,7 @@ module.exports = function (change) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./form/initiateForm":105,"underscore":98}],109:[function(require,module,exports){
+},{"./form/initiateForm":105,"./nav/getLabelForObject":112,"underscore":98}],109:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -56048,7 +56050,7 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./alsoResizeReverse":99,"./setWidthOfTabs":113,"./showTab":115}],110:[function(require,module,exports){
+},{"./alsoResizeReverse":99,"./setWidthOfTabs":114,"./showTab":116}],110:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -56077,12 +56079,14 @@ module.exports = function () {
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var _ = require('underscore');
+var _                 = require('underscore'),
+    getLabelForObject = require('./getLabelForObject');
 
 function createObjectsData(object, objectsData) {
     if (object.parent !== null) {
         var jstreeObject = {},
             correspondingHierarchy;
+
         // _id wird id
         jstreeObject.id = object._id;
         // text is nameField
@@ -56091,7 +56095,8 @@ function createObjectsData(object, objectsData) {
         });
         // beschrifte object
         if (object.data && correspondingHierarchy && correspondingHierarchy.nameField) {
-            jstreeObject.text = '<strong>' + object.data[correspondingHierarchy.nameField] + '</strong>';
+            // suche nach den Metadaten des Felds
+            jstreeObject.text = getLabelForObject(object, correspondingHierarchy);
             // parent ist ein descendant hierarchy, ausser in der obersten Ebene
             jstreeObject.parent = object.parent + correspondingHierarchy._id;
         } else {
@@ -56206,7 +56211,35 @@ module.exports = function () {
 
     return _.union(objectsData, descendantHierarchiesData, topObjectsData);
 };
-},{"underscore":98}],112:[function(require,module,exports){
+},{"./getLabelForObject":112,"underscore":98}],112:[function(require,module,exports){
+/*jslint node: true, browser: true, nomen: true, todo: true */
+'use strict';
+
+var _ = require('underscore');
+
+module.exports = function (object, correspondingHierarchy) {
+    var objectFromValueList,
+        fieldMetadata,
+        label;
+
+    // suche nach den Metadaten des Felds
+    fieldMetadata = _.find(correspondingHierarchy.fields, function (field) {
+        return field.label === correspondingHierarchy.nameField;
+    });
+    if (fieldMetadata && fieldMetadata.valueList && typeof fieldMetadata.valueList[0] === 'object' && fieldMetadata.valueList[0] !== null) {
+        // die Daten dieses Felds haben labels
+        // tree mit label beschriften
+        objectFromValueList = _.find(fieldMetadata.valueList, function (valueObject) {
+            return valueObject.value === object.data[correspondingHierarchy.nameField];
+        });
+        objectFromValueList = objectFromValueList || {"label": "(kein Wert)"};
+        label = '<strong>' + objectFromValueList.label + '</strong>';
+    } else {
+        label = '<strong>' + object.data[correspondingHierarchy.nameField] + '</strong>';
+    }
+    return label;
+};
+},{"underscore":98}],113:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -56279,7 +56312,7 @@ module.exports = function () {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../handleDbChanges":108,"../syncPouch":116,"./createTree":110,"async":3,"pouchdb":55,"underscore":98}],113:[function(require,module,exports){
+},{"../handleDbChanges":108,"../syncPouch":117,"./createTree":110,"async":3,"pouchdb":55,"underscore":98}],114:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus */
 'use strict';
@@ -56323,7 +56356,7 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"underscore":98}],114:[function(require,module,exports){
+},{"underscore":98}],115:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -56371,7 +56404,7 @@ module.exports = function () {
 
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./form/fitTextareaToContent":103,"./form/getValueAfterChange":104,"./form/initiateForm":105,"./form/saveObjectValue":107,"underscore":98}],115:[function(require,module,exports){
+},{"./form/fitTextareaToContent":103,"./form/getValueAfterChange":104,"./form/initiateForm":105,"./form/saveObjectValue":107,"underscore":98}],116:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -56396,7 +56429,7 @@ module.exports = function (tab) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],116:[function(require,module,exports){
+},{}],117:[function(require,module,exports){
 /**
  * synchronisiert die Daten aus einer CouchDB in PouchDB
  */
@@ -56427,7 +56460,7 @@ module.exports = function () {
     if (remoteCouch) { sync(); }
 };
 
-},{"./configuration":100,"pouchdb":55}],117:[function(require,module,exports){
+},{"./configuration":100,"pouchdb":55}],118:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, helper, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing, functionType="function";
   return "<div class=\"form-group\">\r\n    <label class=\"control-label\">"
@@ -56441,7 +56474,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(((helper = (helper = helpers.checked || (depth0 != null ? depth0.checked : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"checked","hash":{},"data":data}) : helper)))
     + ">\r\n            </label>\r\n        </div>\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":27}],118:[function(require,module,exports){
+},{"handlebars":27}],119:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,depths) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "            <div class=\"checkbox\">\r\n                <label>\r\n                    <input type=\"checkbox\" id=\""
@@ -56468,7 +56501,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "    </div>\r\n</div>";
 },"useData":true,"useDepths":true});
-},{"handlebars":27}],119:[function(require,module,exports){
+},{"handlebars":27}],120:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "<div class=\"form-group\">\r\n    <label for=\""
@@ -56487,7 +56520,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.value : stack1), depth0))
     + "\">\r\n</div>";
 },"useData":true});
-},{"handlebars":27}],120:[function(require,module,exports){
+},{"handlebars":27}],121:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,depths) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "            <div class=\"radio\">\r\n                <label>\r\n                    <input type=\"radio\" name=\""
@@ -56514,7 +56547,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "    </div>\r\n</div>";
 },"useData":true,"useDepths":true});
-},{"handlebars":27}],121:[function(require,module,exports){
+},{"handlebars":27}],122:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, buffer = "                <option value=";
   stack1 = lambda((depth0 != null ? depth0.value : depth0), depth0);
@@ -56537,7 +56570,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "        </select>\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":27}],122:[function(require,module,exports){
+},{"handlebars":27}],123:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "<div class=\"form-group\">\r\n    <label for=\""
