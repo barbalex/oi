@@ -55580,7 +55580,7 @@ module.exports = function (possibleValues, setValues, type) {
             //console.log('value.label: ', value.label);
 
             // setzen, ob checkbox checked ist
-            if (setValues !== null && setValues.constructor === Array) {
+            if (setValues && setValues.constructor === Array) {
                 valueObject.checked = _.indexOf(setValues, value.value) > -1 ? selectedOrChecked : '';
             } else {
                 valueObject.checked = setValues == value.value ? selectedOrChecked : '';
@@ -55596,7 +55596,7 @@ module.exports = function (possibleValues, setValues, type) {
                 valueObject.label = value;
             }
             // setzen, ob checkbox checked ist
-            if (setValues !== null && setValues.constructor === Array) {
+            if (setValues && setValues.constructor === Array) {
                 valueObject.checked = _.indexOf(setValues, value) > -1 ? selectedOrChecked : '';
             } else {
                 valueObject.checked = setValues == value ? selectedOrChecked : '';
