@@ -23,6 +23,11 @@ module.exports = function () {
                 _id   = $that.data('object')._id,
                 field = $that.data('object').label;
 
+            //console.log('on change: typeof this.value: ', typeof this.value);
+            //console.log('on change: typeof $(this).val(): ', typeof $(this).val());
+            //console.log('on change: value: ', value);
+            //console.log('on change: typeof value: ', typeof value);
+
             saveObjectValue(_id, field, value);
         });
 

@@ -38,17 +38,17 @@ module.exports = function (_id) {
                 templateObject.object._id      = object._id;
                 templateObject.object.type     = object.type;
                 templateObject.object.label    = field.label;
-                templateObject.object.dataType = field.dataType || null;
+                templateObject.object.inputDataType = field.inputDataType || null;
                 templateObject.object.value    = object.data[field.label] || null;
 
                 // Felder bauen
-                switch (field.type) {
+                switch (field.inputType) {
                 case 'textarea':
                     html += textarea(templateObject);
                     textareaIds.push(object._id + field.label);
                     break;
                 case 'input':
-                    switch (field.dataType) {
+                    switch (field.inputDataType) {
                     case 'checkbox':
                         // es ist eine einzelne checkbox. Mitgeben, ob sie checked ist
                         templateObject.checked = object.data[field.label] ? 'checked' : '';
@@ -60,8 +60,7 @@ module.exports = function (_id) {
                         html += checkboxGroup(templateObject);
                         break;
                     case 'optionGroup':
-                        // object.data muss Array sein - ist bei optionsgroup nicht so, weil eh nur ein Wert gesetzt werden kann > Wert in Array setzen
-                        templateObject.object.valueList = addCheckedToValueList(field.valueList, [object.data[field.label]], 'optionGroup');
+                        templateObject.object.valueList = addCheckedToValueList(field.valueList, object.data[field.label], 'optionGroup');
                         html += optionGroup(templateObject);
                         break;
                     case 'text':
@@ -72,7 +71,7 @@ module.exports = function (_id) {
                     break;
                 case 'select':
                     // object.data muss Array sein - ist bei select nicht so, weil eh nur ein Wert gesetzt werden kann > Wert in Array setzen
-                    templateObject.object.valueList = addCheckedToValueList(field.valueList, [object.data[field.label]], 'select');
+                    templateObject.object.valueList = addCheckedToValueList(field.valueList, object.data[field.label], 'select');
                     html += select(templateObject);
                     break;
                 default:

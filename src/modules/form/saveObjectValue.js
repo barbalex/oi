@@ -11,7 +11,8 @@ module.exports = function (_id, field, value) {
 
     /*console.log('_id: ', _id);
     console.log('field: ', field);
-    console.log('value: ', value);*/
+    console.log('value: ', value);
+    console.log('typeof value: ', typeof value);*/
 
     // get data for object
     object = _.find(window.oi.objects, function (object) {

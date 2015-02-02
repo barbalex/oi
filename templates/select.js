@@ -1,8 +1,8 @@
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data) {
-  var lambda=this.lambda, escapeExpression=this.escapeExpression;
-  return "                <option value=\""
-    + escapeExpression(lambda((depth0 != null ? depth0.value : depth0), depth0))
-    + "\" "
+  var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, buffer = "                <option value=";
+  stack1 = lambda((depth0 != null ? depth0.value : depth0), depth0);
+  if (stack1 != null) { buffer += stack1; }
+  return buffer + " "
     + escapeExpression(lambda((depth0 != null ? depth0.checked : depth0), depth0))
     + ">"
     + escapeExpression(lambda((depth0 != null ? depth0.label : depth0), depth0))

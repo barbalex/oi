@@ -3,7 +3,7 @@
     <div class="controls">
         <select id="{{object._id}}{{object.label}}" data-object="{{json object}}" class="form-control">
             {{#each object.valueList}}
-                <option value="{{this.value}}" {{this.checked}}>{{this.label}}</option>
+                <option value={{{this.value}}} {{this.checked}}>{{this.label}}</option>
             {{/each}}
         </select>
     </div>

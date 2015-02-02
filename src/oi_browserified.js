@@ -39,7 +39,7 @@ window.oi.initiiereApp = function () {
 
 // gleich ein mal ausführen
 window.oi.initiiereApp();
-},{"./modules/initiateResizables":107,"./modules/nav/initiateNav":110,"./modules/setupEvents":112,"handlebars":27}],2:[function(require,module,exports){
+},{"./modules/initiateResizables":109,"./modules/nav/initiateNav":112,"./modules/setupEvents":114,"handlebars":27}],2:[function(require,module,exports){
 module.exports={
     "user": "barbalex",
     "pass": "dLhdMg12"
@@ -36761,7 +36761,7 @@ config.couch.passWord = couch_passfile.pass;
 module.exports = config;
 },{"../../couchpass.json":2}],101:[function(require,module,exports){
 /*
- * erstellt aus einer valueArray einen Array von Objekten
+ * erstellt aus einer possibleValues einen Array von Objekten
  * mit value und checked
  * wird benutzt, um opionGroup und checkboxGroup zu bauen
  * damit es auch für select benutzt werden kann, kann selectedOrChecked übergeben werden 
@@ -36773,31 +36773,39 @@ module.exports = config;
 
 var _ = require('underscore');
 
-module.exports = function (valueArray, fieldValueArray, type) {
+module.exports = function (possibleValues, setValues, type) {
 
-    var valueList,
+    var valueList = [],
         selectedOrChecked = type === 'select' ? 'selected' : 'checked',
         nullObject = {};
 
     nullObject.value = null;
     nullObject.label = '(kein Wert)';
 
+    if (typeof possibleValues[0] === 'object' && possibleValues[0] !== null) {
+        valueList = _.pluck(possibleValues, 'value');
+    }
+
     // add empty value in selects and optionGroups
     if (type === 'select' || type === 'optionGroup') {
         // Vorsicht: null ist auch ein Objekt!
-        if (typeof valueArray[0] === 'object' && valueArray[0] !== null) {
-            valueList = _.pluck(valueArray, 'value');
+        if (typeof possibleValues[0] === 'object' && possibleValues[0] !== null) {
             if (_.indexOf(valueList, null) === -1) {
-                valueArray.unshift(nullObject);
+                possibleValues.unshift(nullObject);
+                valueList.unshift(null);
             }
         } else {
-            if (_.indexOf(valueArray, null) === -1) {
-                valueArray.unshift(null);
+            if (_.indexOf(possibleValues, null) === -1) {
+                possibleValues.unshift(null);
             }
         }
     }
 
-    return _.map(valueArray, function (value) {
+    //console.log('valueList: ', valueList);
+    //console.log('possibleValues: ', possibleValues);
+    //console.log('setValues: ', setValues);
+
+    return _.map(possibleValues, function (value) {
         var valueObject = {};
 
         // offenbar ist typeof null object!!!
@@ -36805,8 +36813,19 @@ module.exports = function (valueArray, fieldValueArray, type) {
             // valueList enthielt Objekte mit values und labels
             valueObject.value = value.value;
             valueObject.label = value.label;
+
+            //console.log('value.value: ', value.value);
+            //console.log('value.label: ', value.label);
+
             // setzen, ob checkbox checked ist
-            valueObject.checked = _.indexOf(fieldValueArray, value.value) > -1 ? selectedOrChecked : '';
+            if (setValues !== null && setValues.constructor === Array) {
+                valueObject.checked = _.indexOf(setValues, value.value) > -1 ? selectedOrChecked : '';
+            } else {
+                valueObject.checked = setValues == value.value ? selectedOrChecked : '';
+            }
+
+            //console.log('valueObject.checked: ', valueObject.checked);
+
         } else {
             valueObject.value = value;
             if ((type === 'select' || type === 'optionGroup') && value === null) {
@@ -36815,12 +36834,33 @@ module.exports = function (valueArray, fieldValueArray, type) {
                 valueObject.label = value;
             }
             // setzen, ob checkbox checked ist
-            valueObject.checked = _.indexOf(fieldValueArray, value) > -1 ? selectedOrChecked : '';
+            if (setValues !== null && setValues.constructor === Array) {
+                valueObject.checked = _.indexOf(setValues, value) > -1 ? selectedOrChecked : '';
+            } else {
+                valueObject.checked = setValues == value ? selectedOrChecked : '';
+            }
         }
         return valueObject;
     });
 };
 },{"underscore":98}],102:[function(require,module,exports){
+/*jslint node: true, browser: true, nomen: true, todo: true, plusplus: true, white: true*/
+'use strict';
+
+var myTypeOf = require('./myTypeOf');
+
+module.exports = function (feldWert) {
+    var type = myTypeOf(feldWert);
+
+    if (type === 'boolean') { return Boolean(feldWert); }
+    if (type === 'float')   { return parseFloat(feldWert); }
+    if (type === 'integer') { return parseInt(feldWert, 10); }
+    if (type === 'number') { return parseInt(feldWert, 10); }
+
+    // object nicht umwandeln. Man muss beim Vergleichen unterscheiden können, ob es ein Object war
+    return feldWert;
+};
+},{"./myTypeOf":106}],103:[function(require,module,exports){
 // setzt die Höhe von textareas so, dass der Text genau rein passt
 
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus: true*/
@@ -36872,44 +36912,53 @@ module.exports = function (id, maxHeight) {
         text.style.height = adjustedHeight + 'px';
     }
 };
-},{}],103:[function(require,module,exports){
+},{}],104:[function(require,module,exports){
 (function (global){
+/*
+ * holt sich nach einer Änderung in einem Feld die Daten
+ * Vorsicht: Holt sich alle Daten als string
+ * daher müssen sie in den richtigen Datentyp konvertiert werden
+ */
+
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $ = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
-    _ = require('underscore');
+var $                    = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+    _                    = require('underscore'),
+    convertToCorrectType = require('./convertToCorrectType');
 
 module.exports = function (that) {
     var value,
         $that = $(that);
 
-    /*console.log('changed');
-    console.log('this: ', that);
-    console.log('object: ', $that.data('object'));
-    console.log('_id: ', $that.data('object')._id);
-    console.log('type: ', that.type);
-    console.log('dataType: ', $that.data('object').dataType);
-    console.log('label: ', $that.data('object').label);
-    console.log('value before: ', $that.data('object').value);*/
+    //console.log('changed');
+    //console.log('this: ', that);
+    //console.log('object: ', $that.data('object'));
+    //console.log('_id: ', $that.data('object')._id);
+    //console.log('type: ', that.type);
+    //console.log('inputDataType: ', $that.data('object').inputDataType);
+    //console.log('label: ', $that.data('object').label);
+    //console.log('value before: ', $that.data('object').value);
 
     switch (that.type) {
     case 'text':
+    case 'number':
     case 'textarea':
     case 'select-one':
     case 'radio':
-        value = that.value;
+        value = convertToCorrectType(that.value);
         break;
     case 'checkbox':
-        switch ($that.data('object').dataType) {
+        switch ($that.data('object').inputDataType) {
         case 'checkbox':
             value = $that.is(':checked');
             break;
         case 'checkboxGroup':
             value = [];
             _.each($('[name="' + $that.data('object')._id + $that.data('object').label + '"]:checked'), function (checkbox) {
-                value.push(checkbox.value);
+                value.push(convertToCorrectType(checkbox.value));
             });
+            console.log('getValueAfterChange: checkboxGroup: value: ', value);
             break;
         }
         break;
@@ -36917,7 +36966,7 @@ module.exports = function (that) {
     return value;
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"underscore":98}],104:[function(require,module,exports){
+},{"./convertToCorrectType":102,"underscore":98}],105:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -36959,17 +37008,17 @@ module.exports = function (_id) {
                 templateObject.object._id      = object._id;
                 templateObject.object.type     = object.type;
                 templateObject.object.label    = field.label;
-                templateObject.object.dataType = field.dataType || null;
+                templateObject.object.inputDataType = field.inputDataType || null;
                 templateObject.object.value    = object.data[field.label] || null;
 
                 // Felder bauen
-                switch (field.type) {
+                switch (field.inputType) {
                 case 'textarea':
                     html += textarea(templateObject);
                     textareaIds.push(object._id + field.label);
                     break;
                 case 'input':
-                    switch (field.dataType) {
+                    switch (field.inputDataType) {
                     case 'checkbox':
                         // es ist eine einzelne checkbox. Mitgeben, ob sie checked ist
                         templateObject.checked = object.data[field.label] ? 'checked' : '';
@@ -36981,8 +37030,7 @@ module.exports = function (_id) {
                         html += checkboxGroup(templateObject);
                         break;
                     case 'optionGroup':
-                        // object.data muss Array sein - ist bei optionsgroup nicht so, weil eh nur ein Wert gesetzt werden kann > Wert in Array setzen
-                        templateObject.object.valueList = addCheckedToValueList(field.valueList, [object.data[field.label]], 'optionGroup');
+                        templateObject.object.valueList = addCheckedToValueList(field.valueList, object.data[field.label], 'optionGroup');
                         html += optionGroup(templateObject);
                         break;
                     case 'text':
@@ -36993,7 +37041,7 @@ module.exports = function (_id) {
                     break;
                 case 'select':
                     // object.data muss Array sein - ist bei select nicht so, weil eh nur ein Wert gesetzt werden kann > Wert in Array setzen
-                    templateObject.object.valueList = addCheckedToValueList(field.valueList, [object.data[field.label]], 'select');
+                    templateObject.object.valueList = addCheckedToValueList(field.valueList, object.data[field.label], 'select');
                     html += select(templateObject);
                     break;
                 default:
@@ -37019,7 +37067,48 @@ module.exports = function (_id) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../../templates/checkbox":115,"../../../templates/checkboxGroup":116,"../../../templates/input":117,"../../../templates/optionGroup":118,"../../../templates/select":119,"../../../templates/textarea":120,"./addCheckedToValueList":101,"./fitTextareaToContent":102,"pouchdb":55,"underscore":98}],105:[function(require,module,exports){
+},{"../../../templates/checkbox":117,"../../../templates/checkboxGroup":118,"../../../templates/input":119,"../../../templates/optionGroup":120,"../../../templates/select":121,"../../../templates/textarea":122,"./addCheckedToValueList":101,"./fitTextareaToContent":103,"pouchdb":55,"underscore":98}],106:[function(require,module,exports){
+// Hilfsfunktion, die typeof ersetzt und ergänzt
+// typeof gibt bei input-Feldern immer String zurück!
+
+/*jslint node: true, browser: true, nomen: true, todo: true, plusplus: true, white: true*/
+'use strict';
+
+module.exports = function (wert) {
+    /* Quelle: http://stackoverflow.com/questions/4456336/finding-variable-type-in-javascript
+    funktioniert aber nicht für '2010'
+    
+    var objectType = Object.prototype.toString.call(wert);
+
+    switch (objectType) {
+    case '[object Array]':
+        return 'array';
+    case '[object String]':
+        return 'string';
+    case '[object Number]':
+        return 'number';
+    case '[object Boolean]':
+        return 'boolean';
+    default:
+        return 'string';
+    }*/
+
+    // Quelle: https://javascriptweblog.wordpress.com/2011/08/08/fixing-the-javascript-typeof-operator
+    // funktioniert aber nicht für '2010'
+    //return ({}).toString.call(wert).match(/\s([a-zA-Z]+)/)[1].toLowerCase();
+
+    if (typeof wert === 'boolean')   { return 'boolean'; }
+    if (typeof wert === 'number')    { return 'number'; }
+    /*if (parseInt(wert, 10) && parseFloat(wert) && parseInt(wert, 10) !== parseFloat(wert) && parseInt(wert, 10) == wert) { return 'float'; }
+    // verhindern, dass führende Nullen abgeschnitten werden
+    if ((parseInt(wert, 10) == wert && wert.toString().length === Math.ceil(parseInt(wert, 10) / 10)) || wert == '0') { return 'integer'; }*/
+    if (parseInt(wert, 10) == wert || wert == '0') { return 'number'; }
+    if (typeof wert === 'object')    { return 'object'; }
+    if (typeof wert === 'string')    { return 'string'; }
+    if (wert === undefined)          { return 'undefined'; }
+    if (typeof wert === 'function')  { return 'function'; }
+};
+},{}],107:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -37034,7 +37123,8 @@ module.exports = function (_id, field, value) {
 
     /*console.log('_id: ', _id);
     console.log('field: ', field);
-    console.log('value: ', value);*/
+    console.log('value: ', value);
+    console.log('typeof value: ', typeof value);*/
 
     // get data for object
     object = _.find(window.oi.objects, function (object) {
@@ -37065,7 +37155,7 @@ module.exports = function (_id, field, value) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"pouchdb":55,"underscore":98}],106:[function(require,module,exports){
+},{"pouchdb":55,"underscore":98}],108:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 /*
@@ -37130,7 +37220,7 @@ module.exports = function (change) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./form/initiateForm":104,"underscore":98}],107:[function(require,module,exports){
+},{"./form/initiateForm":105,"underscore":98}],109:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -37196,7 +37286,7 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./alsoResizeReverse":99,"./setWidthOfTabs":111,"./showTab":113}],108:[function(require,module,exports){
+},{"./alsoResizeReverse":99,"./setWidthOfTabs":113,"./showTab":115}],110:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -37221,7 +37311,7 @@ module.exports = function () {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./generateDataForTree":109,"jstree":29}],109:[function(require,module,exports){
+},{"./generateDataForTree":111,"jstree":29}],111:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -37354,7 +37444,7 @@ module.exports = function () {
 
     return _.union(objectsData, descendantHierarchiesData, topObjectsData);
 };
-},{"underscore":98}],110:[function(require,module,exports){
+},{"underscore":98}],112:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -37427,7 +37517,7 @@ module.exports = function () {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../handleDbChanges":106,"../syncPouch":114,"./createTree":108,"async":3,"pouchdb":55,"underscore":98}],111:[function(require,module,exports){
+},{"../handleDbChanges":108,"../syncPouch":116,"./createTree":110,"async":3,"pouchdb":55,"underscore":98}],113:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus */
 'use strict';
@@ -37471,7 +37561,7 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"underscore":98}],112:[function(require,module,exports){
+},{"underscore":98}],114:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -37498,6 +37588,11 @@ module.exports = function () {
                 _id   = $that.data('object')._id,
                 field = $that.data('object').label;
 
+            //console.log('on change: typeof this.value: ', typeof this.value);
+            //console.log('on change: typeof $(this).val(): ', typeof $(this).val());
+            //console.log('on change: value: ', value);
+            //console.log('on change: typeof value: ', typeof value);
+
             saveObjectValue(_id, field, value);
         });
 
@@ -37514,7 +37609,7 @@ module.exports = function () {
 
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./form/fitTextareaToContent":102,"./form/getValueAfterChange":103,"./form/initiateForm":104,"./form/saveObjectValue":105,"underscore":98}],113:[function(require,module,exports){
+},{"./form/fitTextareaToContent":103,"./form/getValueAfterChange":104,"./form/initiateForm":105,"./form/saveObjectValue":107,"underscore":98}],115:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -37539,7 +37634,7 @@ module.exports = function (tab) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],114:[function(require,module,exports){
+},{}],116:[function(require,module,exports){
 /**
  * synchronisiert die Daten aus einer CouchDB in PouchDB
  */
@@ -37570,7 +37665,7 @@ module.exports = function () {
     if (remoteCouch) { sync(); }
 };
 
-},{"./configuration":100,"pouchdb":55}],115:[function(require,module,exports){
+},{"./configuration":100,"pouchdb":55}],117:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, helper, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing, functionType="function";
   return "<div class=\"form-group\">\r\n    <label class=\"control-label\">"
@@ -37584,7 +37679,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(((helper = (helper = helpers.checked || (depth0 != null ? depth0.checked : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"checked","hash":{},"data":data}) : helper)))
     + ">\r\n            </label>\r\n        </div>\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":27}],116:[function(require,module,exports){
+},{"handlebars":27}],118:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,depths) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "            <div class=\"checkbox\">\r\n                <label>\r\n                    <input type=\"checkbox\" id=\""
@@ -37611,7 +37706,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "    </div>\r\n</div>";
 },"useData":true,"useDepths":true});
-},{"handlebars":27}],117:[function(require,module,exports){
+},{"handlebars":27}],119:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "<div class=\"form-group\">\r\n    <label for=\""
@@ -37620,7 +37715,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + "\">"
     + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.label : stack1), depth0))
     + "</label>\r\n    <input type=\""
-    + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.dataType : stack1), depth0))
+    + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.inputDataType : stack1), depth0))
     + "\" class=\"form-control\" id=\""
     + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1._id : stack1), depth0))
     + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.label : stack1), depth0))
@@ -37630,7 +37725,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.value : stack1), depth0))
     + "\">\r\n</div>";
 },"useData":true});
-},{"handlebars":27}],118:[function(require,module,exports){
+},{"handlebars":27}],120:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,depths) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "            <div class=\"radio\">\r\n                <label>\r\n                    <input type=\"radio\" name=\""
@@ -37657,12 +37752,12 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "    </div>\r\n</div>";
 },"useData":true,"useDepths":true});
-},{"handlebars":27}],119:[function(require,module,exports){
+},{"handlebars":27}],121:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data) {
-  var lambda=this.lambda, escapeExpression=this.escapeExpression;
-  return "                <option value=\""
-    + escapeExpression(lambda((depth0 != null ? depth0.value : depth0), depth0))
-    + "\" "
+  var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, buffer = "                <option value=";
+  stack1 = lambda((depth0 != null ? depth0.value : depth0), depth0);
+  if (stack1 != null) { buffer += stack1; }
+  return buffer + " "
     + escapeExpression(lambda((depth0 != null ? depth0.checked : depth0), depth0))
     + ">"
     + escapeExpression(lambda((depth0 != null ? depth0.label : depth0), depth0))
@@ -37680,7 +37775,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "        </select>\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":27}],120:[function(require,module,exports){
+},{"handlebars":27}],122:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "<div class=\"form-group\">\r\n    <label for=\""
