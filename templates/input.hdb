@@ -1,4 +1,4 @@
 <div class="form-group">
-    <label for="{{objectId}}{{label}}">{{label}}</label>
-    <input type="{{dataType}}" class="form-control" id="{{objectId}}{{label}}" value="{{value}}">
+    <label for="{{object._id}}{{object.label}}">{{object.label}}</label>
+    <input type="{{object.dataType}}" class="form-control" id="{{object._id}}{{object.label}}" data-object="{{json object}}" value="{{object.value}}">
 </div>

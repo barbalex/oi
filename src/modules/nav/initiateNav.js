@@ -33,6 +33,7 @@ module.exports = function () {
     syncPouch();
 
     // TODO: filter only the users documents
+    // when changes happen in DB, update model and when necessary ui
     db.changes({since: 'now', live: true, include_docs: true}).on('change', handleDbChanges);
 
     // get data from db

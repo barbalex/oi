@@ -13,6 +13,6 @@ var gulp       = require('gulp'),
 
 requireDir('../gulp-tasks', {recurse: true});
 
-return gulp.task('dev_src_when_watch', ['browserify'], function () {
-    gulp.start('dev_src');
+return gulp.task('dev_when_watch_1', ['templates'], function () {
+    gulp.start('dev_when_watch_2');
 });

@@ -22,8 +22,8 @@ module.exports = function (valueArray, fieldValueArray, type) {
 
     // add empty value in selects and optionGroups
     if (type === 'select' || type === 'optionGroup') {
-        if (typeof valueArray[0] === 'object') {
-            // prüfen, ob null schon enthalten
+        // Vorsicht: null ist auch ein Objekt!
+        if (typeof valueArray[0] === 'object' && valueArray[0] !== null) {
             valueList = _.pluck(valueArray, 'value');
             if (_.indexOf(valueList, null) === -1) {
                 valueArray.unshift(nullObject);

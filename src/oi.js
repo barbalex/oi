@@ -1,13 +1,10 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var initiateResizables          = require('./modules/initiateResizables'),
+var Handlebars                  = require('handlebars'),
+    initiateResizables          = require('./modules/initiateResizables'),
     setupEvents                 = require('./modules/setupEvents'),
     initiateNav                 = require('./modules/nav/initiateNav');
-    //clearLocalStorage         = require('./modules/clearLocalStorage'),
-    //waehleApliste             = require('./modules/waehleApliste'),
-    //oeffneUri                 = require('./modules/oeffneUri'),
-    //setupEvents               = require('./modules/setupEvents');
 
 // benötigte globale Variabeln initialisieren
 window.oi       = window.oi       || {};
@@ -19,21 +16,10 @@ window.oi.olMap = window.oi.olMap || {};
 // weil es die Quelle der Modularisierung ist
 window.oi.initiiereApp = function () {
 
-    // localStorage ausräumen
-    //clearLocalStorage();
-
-    /*$.when(waehleApliste('programmAlle')).then(function () {
-        // falls eine Unteradresse angewählt wurde, diese öffnen
-        oeffneUri();
-    });*/
-
     // für index.html bereitstellen
     // damit es garantiert nur ein mal ausgeführt wird
     window.oi.setupEvents = function () {
         setupEvents();
-    };
-    window.oi.setupJqueryUi = function () {
-        //setupJqueryUi();
     };
 
     window.oi.initiateResizables = function () {
@@ -43,6 +29,11 @@ window.oi.initiiereApp = function () {
     window.oi.initiateNav = function () {
         initiateNav();
     };
+
+    window.Handlebars = Handlebars;
+    window.Handlebars.registerHelper('json', function (context) {
+        return JSON.stringify(context);
+    });
 };
 
 // gleich ein mal ausführen

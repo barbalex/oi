@@ -1,4 +1,4 @@
 <div class="form-group">
-    <label for="{{objectId}}{{label}}">{{label}}</label>
-    <textarea  class="form-control" id="{{objectId}}{{label}}">{{value}}</textarea>
+    <label for="{{object._id}}{{object.label}}">{{object.label}}</label>
+    <textarea class="form-control" id="{{object._id}}{{object.label}}" data-object="{{json object}}">{{object.value}}</textarea>
 </div>

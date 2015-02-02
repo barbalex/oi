@@ -1,8 +1,8 @@
 <div class="form-group">
-    <label class="control-label">{{label}}</label>
+    <label class="control-label">{{object.label}}</label>
     <div class="controls">
-        <select id="{{objectId}}{{label}}" class="form-control">
-            {{#each valueList}}
+        <select id="{{object._id}}{{object.label}}" data-object="{{json object}}" class="form-control">
+            {{#each object.valueList}}
                 <option value="{{this.value}}" {{this.checked}}>{{this.label}}</option>
             {{/each}}
         </select>

@@ -7,27 +7,18 @@ var gulp     = require('gulp'),
 return gulp.task('watch', function () {
     gulp.watch(
         [
-            'images/*',
-            'src/**/*',
             'index.html',
             'server.js',
-            '-src/oi_browserified.js',
-            '-src/oi_built.js',
-            '-src/oi_built.js.map'
+            'images/*',
+            'src/oi.js',
+            'src/modules/**/*.js',
+            'src/templates/*.hdb'
         ],
-        ['dev_src_when_watch']
+        ['dev_when_watch_1']
     );
     gulp.watch(
-        [
-            'style/oi.css',
-            '-style/oi_built.css',
-            '-style/oi_built.css.map'
-        ],
+        [ 'style/oi.css' ],
         ['dev_style']
-    );
-    gulp.watch(
-        ['src/templates/*.hdb'],
-        ['templates_when_watch']
     );
     notifier.notify({
         'title': 'dev code built',
