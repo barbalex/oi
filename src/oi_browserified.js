@@ -37289,7 +37289,7 @@ module.exports = function () {
         }
     });
 
-    $('.scrollbar').perfectScrollbar({includePadding: true});
+    $('.scrollbar').perfectScrollbar();
 
 };
 
@@ -37616,10 +37616,19 @@ var $                    = (typeof window !== "undefined" ? window.$ : typeof gl
     saveObjectValue      = require('./form/saveObjectValue');
 
 module.exports = function () {
+    $('#nav')
+        .on('scroll', function () {
+            $('#navSeparator').css('height', $('#navContent').height() + 40);
+        });
 
     $('#navContent')
         .on('activate_node.jstree', function (e, data) {
             initiateForm(data.node.id);
+        });
+
+    $('#form')
+        .on('scroll', function () {
+            $('#formSeparator').css('height', $('#formContent').height() + 40);
         });
 
     $('#formContent')
@@ -37629,11 +37638,6 @@ module.exports = function () {
                 $that = $(this),
                 _id   = $that.data('object')._id,
                 field = $that.data('object').label;
-
-            //console.log('on change: typeof this.value: ', typeof this.value);
-            //console.log('on change: typeof $(this).val(): ', typeof $(this).val());
-            //console.log('on change: value: ', value);
-            //console.log('on change: typeof value: ', typeof value);
 
             saveObjectValue(_id, field, value);
         });

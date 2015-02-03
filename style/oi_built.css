@@ -7260,6 +7260,7 @@ body {
   height: 100%;
   width: 8px;
   right: 0;
+  bottom: 0;
   cursor: col-resize;
   background-image: linear-gradient(to left, #000 0%, rgba(84,84,84,0.8) 100%);
   z-index: 1;

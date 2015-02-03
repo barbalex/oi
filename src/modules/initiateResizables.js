@@ -60,6 +60,6 @@ module.exports = function () {
         }
     });
 
-    $('.scrollbar').perfectScrollbar({includePadding: true});
+    $('.scrollbar').perfectScrollbar();
 
 };
