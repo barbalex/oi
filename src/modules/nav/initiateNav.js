@@ -1,17 +1,18 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $                = require('jquery'),
-    _                = require('underscore'),
-    async            = require('async'),
-    PouchDB          = require('pouchdb'),
-    db               = new PouchDB('oi'),
-    syncPouch        = require('../syncPouch'),
-    createTree       = require('./createTree'),
-    handleDbChanges  = require('../handleDbChanges'),
-    createDatabaseId = require('./createDatabaseId'),
+var $                      = require('jquery'),
+    _                      = require('underscore'),
+    async                  = require('async'),
+    PouchDB                = require('pouchdb'),
+    db                     = new PouchDB('oi'),
+    syncPouch              = require('../syncPouch'),
+    createTree             = require('./createTree'),
+    handleDbObjectChanges  = require('../handleDbObjectChanges'),
+    createDatabaseId       = require('./createDatabaseId'),
     hierarchiesIndex,
-    objectsIndex;
+    objectsIndex,
+    foreignChangedObjectsIndex;
 
 // expose pouchdb to pouchdb-fauxton
 window.PouchDB = PouchDB;
@@ -44,6 +45,29 @@ objectsIndex = {
     }
 };
 
+foreignChangedObjectsIndex = {
+    _id: '_design/foreign_changed_objects',
+    views: {
+        'foreign_changed_objects': {
+            map: function (doc) {
+                if (doc.type === 'object') {
+                    if (doc.lastEdited) {
+                        if (doc.lastEdited.database) {
+                            if (doc.lastEdited.database !== window.oi.databaseId) {
+                                emit(doc._id);
+                            }
+                        } else {
+                            emit(doc._id);
+                        }
+                    } else {
+                        emit(doc._id);
+                    }
+                }
+            }.toString()
+        }
+    }
+};
+
 module.exports = function () {
 
     // every database gets a locally saved id
@@ -52,10 +76,6 @@ module.exports = function () {
     createDatabaseId();
 
     syncPouch();
-
-    // TODO: filter only the users documents created with local databaseId
-    // when changes happen in DB, update model and when necessary ui
-    db.changes({since: 'now', live: true, include_docs: true}).on('change', handleDbChanges);
 
     // get data from db
     async.parallel({
@@ -116,6 +136,35 @@ module.exports = function () {
                     callback(null, objects);
                 }
             });
+        },
+        foreignChangedObjects: function (callback) {
+            // TODO: get only the users data
+            db.query('foreign_changed_objects', {include_docs: true}, function (err, result) {
+                if (err) {
+                    if (err.status === 404) {
+                        // index doesnt exist yet > create it
+                        db.put(foreignChangedObjectsIndex).then(function () {
+                            // kick off an initial build, return immediately
+                            return db.query('foreign_changed_objects', {stale: 'update_after'});
+                        }).then(function () {
+                            // query the index (much faster now!)
+                            return db.query('foreign_changed_objects', {include_docs: true});
+                        }).then(function (result) {
+                            var foreignChangedObjects = _.map(result.rows, function (row) {
+                                return row.doc;
+                            });
+                            callback(null, foreignChangedObjects);
+                        });
+                    } else {
+                        return console.log('error querrying foreignChangedObjects: ', err);
+                    }
+                } else {
+                    var foreignChangedObjects = _.map(result.rows, function (row) {
+                        return row.doc;
+                    });
+                    callback(null, foreignChangedObjects);
+                }
+            });
         }
     }, function (err, results) {
         // results equals to: { hierarchies: hierarchies, objects: objects }
@@ -127,5 +176,9 @@ module.exports = function () {
         window.oi.objects     = results.objects;
 
         createTree();
+
+        // TODO: filter only the users documents created with local databaseId
+        // when changes happen in DB, update model and when necessary ui
+        db.changes({since: 'now', live: true, include_docs: true, filter: 'foreign_changed_objects'}).on('change', handleDbObjectChanges);
     });
 };

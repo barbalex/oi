@@ -37416,45 +37416,33 @@ module.exports = function (change) {
     var modelObject,
         correspondingHierarchy;
 
-    switch (change.doc.type) {
-    case 'object':
-        // update model of object
-        modelObject = _.find(window.oi.objects, function (object) {
-            return object._id === change.id;
-        });
+    console.log('change: ', change);
 
-        // nur weiterfahren, wenn ein model gefunden wurde und es anders ist
-        if (modelObject && JSON.stringify(modelObject.data) !== JSON.stringify(change.doc.data)) {
+    // update model of object
+    modelObject = _.find(window.oi.objects, function (object) {
+        return object._id === change.id;
+    });
 
-            /*_.each(modelObject, function (value, key) {
-                delete modelObject[key];
-            });
-            _.extend(modelObject, change.doc);*/
+    // nur weiterfahren, wenn ein model gefunden wurde und es anders ist
+    //if (modelObject && JSON.stringify(modelObject.data) !== JSON.stringify(change.doc.data)) {
+    if (modelObject) {
 
-            // replace existing object with new one
-            window.oi.objects[window.oi.objects.indexOf(modelObject)] = change.doc;
+        // replace existing object with new one
+        window.oi.objects[window.oi.objects.indexOf(modelObject)] = change.doc;
 
-            // refresh form if this object is shown
-            // cant update only changed field because it is unknown (?)
-            if ($('#formContent').html() !== "" && $('#formContent').data('id') === change.doc._id) {
-                // TODO: hier wird Fehler generiert, wenn ausserhalb App Daten verändert werden
-                initiateForm(change.doc._id);
-            }
-            // refresh tree
-            correspondingHierarchy = _.find(window.oi.hierarchies, function (hierarchy) {
-                return hierarchy._id === change.doc.hId;
-            });
-            if (change.doc.data && correspondingHierarchy && correspondingHierarchy.nameField) {
-                $('#navContent').jstree().rename_node('#' + change.doc._id, getLabelForObject(change.doc, correspondingHierarchy));
-            }
+        // refresh form if this object is shown
+        // cant update only changed field because it is unknown (?)
+        if ($('#formContent').html() !== "" && $('#formContent').data('id') === change.doc._id) {
+            // TODO: hier wird Fehler generiert, wenn ausserhalb App Daten verändert werden
+            initiateForm(change.doc._id);
         }
-        break;
-    case 'hierarchy':
-        modelObject = _.find(window.oi.hierarchies, function (hierarchy) {
-            return hierarchy._id === change.id;
+        // refresh tree
+        correspondingHierarchy = _.find(window.oi.hierarchies, function (hierarchy) {
+            return hierarchy._id === change.doc.hId;
         });
-        // TODO: update model of hierarchy
-        break;
+        if (change.doc.data && correspondingHierarchy && correspondingHierarchy.nameField) {
+            $('#navContent').jstree().rename_node('#' + change.doc._id, getLabelForObject(change.doc, correspondingHierarchy));
+        }
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
@@ -37751,17 +37739,18 @@ module.exports = function (object, correspondingHierarchy) {
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $                = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
-    _                = require('underscore'),
-    async            = require('async'),
-    PouchDB          = require('pouchdb'),
-    db               = new PouchDB('oi'),
-    syncPouch        = require('../syncPouch'),
-    createTree       = require('./createTree'),
-    handleDbChanges  = require('../handleDbChanges'),
-    createDatabaseId = require('./createDatabaseId'),
+var $                      = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+    _                      = require('underscore'),
+    async                  = require('async'),
+    PouchDB                = require('pouchdb'),
+    db                     = new PouchDB('oi'),
+    syncPouch              = require('../syncPouch'),
+    createTree             = require('./createTree'),
+    handleDbObjectChanges  = require('../handleDbObjectChanges'),
+    createDatabaseId       = require('./createDatabaseId'),
     hierarchiesIndex,
-    objectsIndex;
+    objectsIndex,
+    foreignChangedObjectsIndex;
 
 // expose pouchdb to pouchdb-fauxton
 window.PouchDB = PouchDB;
@@ -37794,6 +37783,29 @@ objectsIndex = {
     }
 };
 
+foreignChangedObjectsIndex = {
+    _id: '_design/foreign_changed_objects',
+    views: {
+        'foreign_changed_objects': {
+            map: function (doc) {
+                if (doc.type === 'object') {
+                    if (doc.lastEdited) {
+                        if (doc.lastEdited.database) {
+                            if (doc.lastEdited.database !== window.oi.databaseId) {
+                                emit(doc._id);
+                            }
+                        } else {
+                            emit(doc._id);
+                        }
+                    } else {
+                        emit(doc._id);
+                    }
+                }
+            }.toString()
+        }
+    }
+};
+
 module.exports = function () {
 
     // every database gets a locally saved id
@@ -37802,10 +37814,6 @@ module.exports = function () {
     createDatabaseId();
 
     syncPouch();
-
-    // TODO: filter only the users documents created with local databaseId
-    // when changes happen in DB, update model and when necessary ui
-    db.changes({since: 'now', live: true, include_docs: true}).on('change', handleDbChanges);
 
     // get data from db
     async.parallel({
@@ -37866,6 +37874,35 @@ module.exports = function () {
                     callback(null, objects);
                 }
             });
+        },
+        foreignChangedObjects: function (callback) {
+            // TODO: get only the users data
+            db.query('foreign_changed_objects', {include_docs: true}, function (err, result) {
+                if (err) {
+                    if (err.status === 404) {
+                        // index doesnt exist yet > create it
+                        db.put(foreignChangedObjectsIndex).then(function () {
+                            // kick off an initial build, return immediately
+                            return db.query('foreign_changed_objects', {stale: 'update_after'});
+                        }).then(function () {
+                            // query the index (much faster now!)
+                            return db.query('foreign_changed_objects', {include_docs: true});
+                        }).then(function (result) {
+                            var foreignChangedObjects = _.map(result.rows, function (row) {
+                                return row.doc;
+                            });
+                            callback(null, foreignChangedObjects);
+                        });
+                    } else {
+                        return console.log('error querrying foreignChangedObjects: ', err);
+                    }
+                } else {
+                    var foreignChangedObjects = _.map(result.rows, function (row) {
+                        return row.doc;
+                    });
+                    callback(null, foreignChangedObjects);
+                }
+            });
         }
     }, function (err, results) {
         // results equals to: { hierarchies: hierarchies, objects: objects }
@@ -37877,10 +37914,14 @@ module.exports = function () {
         window.oi.objects     = results.objects;
 
         createTree();
+
+        // TODO: filter only the users documents created with local databaseId
+        // when changes happen in DB, update model and when necessary ui
+        db.changes({since: 'now', live: true, include_docs: true, filter: 'foreign_changed_objects'}).on('change', handleDbObjectChanges);
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../handleDbChanges":109,"../syncPouch":119,"./createDatabaseId":111,"./createTree":112,"async":3,"pouchdb":56,"underscore":99}],116:[function(require,module,exports){
+},{"../handleDbObjectChanges":109,"../syncPouch":119,"./createDatabaseId":111,"./createTree":112,"async":3,"pouchdb":56,"underscore":99}],116:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus */
 'use strict';
