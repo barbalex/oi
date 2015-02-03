@@ -19677,7 +19677,7 @@ window.oi.initiiereApp = function () {
 
 // gleich ein mal ausführen
 window.oi.initiiereApp();
-},{"./modules/initiateResizables":110,"./modules/nav/initiateNav":118,"./modules/setupEvents":120,"handlebars":28}],2:[function(require,module,exports){
+},{"./modules/initiateResizables":110,"./modules/nav/initiateNav":119,"./modules/setupEvents":122,"handlebars":28}],2:[function(require,module,exports){
 module.exports={
     "user": "barbalex",
     "pass": "dLhdMg12"
@@ -56938,7 +56938,7 @@ module.exports = function (_id) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../../templates/checkbox":123,"../../../templates/checkboxGroup":124,"../../../templates/formButtonToolbar":125,"../../../templates/input":126,"../../../templates/optionGroup":127,"../../../templates/select":128,"../../../templates/textarea":129,"./addCheckedToValueList":102,"./fitTextareaToContent":104,"pouchdb":56,"underscore":99}],107:[function(require,module,exports){
+},{"../../../templates/checkbox":125,"../../../templates/checkboxGroup":126,"../../../templates/formButtonToolbar":127,"../../../templates/input":128,"../../../templates/optionGroup":129,"../../../templates/select":130,"../../../templates/textarea":131,"./addCheckedToValueList":102,"./fitTextareaToContent":104,"pouchdb":56,"underscore":99}],107:[function(require,module,exports){
 // Hilfsfunktion, die typeof ersetzt und ergänzt
 // typeof gibt bei input-Feldern immer String zurück!
 
@@ -57149,7 +57149,7 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./alsoResizeReverse":100,"./setWidthOfTabs":119,"./showTab":121}],111:[function(require,module,exports){
+},{"./alsoResizeReverse":100,"./setWidthOfTabs":121,"./showTab":123}],111:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -57179,7 +57179,7 @@ module.exports = function () {
     });
 
 };
-},{"./initiateForeignChangeQuery":117,"pouchdb":56}],112:[function(require,module,exports){
+},{"./initiateForeignChangeQuery":118,"pouchdb":56}],112:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -57401,6 +57401,25 @@ module.exports = function (object, correspondingHierarchy) {
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
+// TODO: get only the users data
+module.exports = function () {
+    return {
+    _id: '_design/hierarchies',
+    views: {
+            'hierarchies': {
+                map: function (doc) {
+                    if (doc.type === 'hierarchy') {
+                        emit(doc._id);
+                    }
+                }.toString()
+            }
+        }
+    };
+};
+},{}],117:[function(require,module,exports){
+/*jslint node: true, browser: true, nomen: true, todo: true */
+'use strict';
+
 var PouchDB               = require('pouchdb'),
     db                    = new PouchDB('oi'),
     handleDbObjectChanges = require('../handleDbObjectChanges'),
@@ -57408,6 +57427,7 @@ var PouchDB               = require('pouchdb'),
 
 module.exports = function () {
     // TODO: filter only the users documents created with local databaseId
+    // TODO: watch changes to hierarchies
     // when changes happen in DB, update model and when necessary ui
     db.changes({
         since: 'now',
@@ -57417,7 +57437,7 @@ module.exports = function () {
         key: 'object'
     }).on('change', handleDbObjectChanges);
 };
-},{"../handleDbObjectChanges":109,"./foreignChangedIndex":113,"pouchdb":56}],117:[function(require,module,exports){
+},{"../handleDbObjectChanges":109,"./foreignChangedIndex":113,"pouchdb":56}],118:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -57452,7 +57472,7 @@ module.exports = function () {
         }
     });
 };
-},{"./foreignChangedIndex":113,"./initiateChangeStream":116,"pouchdb":56,"underscore":99}],118:[function(require,module,exports){
+},{"./foreignChangedIndex":113,"./initiateChangeStream":117,"pouchdb":56,"underscore":99}],119:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -57465,45 +57485,18 @@ var $                     = (typeof window !== "undefined" ? window.$ : typeof g
     syncPouch             = require('../syncPouch'),
     createTree            = require('./createTree'),
     createDatabaseId      = require('./createDatabaseId'),
-    hierarchiesIndex,
-    objectsIndex;
+    hierarchiesIndex      = require('./hierarchiesIndex'),
+    objectsIndex          = require('./objectsIndex');
 
 // expose pouchdb to pouchdb-fauxton
 window.PouchDB = PouchDB;
-
-// TODO: get only the users data
-hierarchiesIndex = {
-    _id: '_design/hierarchies',
-    views: {
-        'hierarchies': {
-            map: function (doc) {
-                if (doc.type === 'hierarchy') {
-                    emit(doc._id);
-                }
-            }.toString()
-        }
-    }
-};
-
-// TODO: get only the users data
-objectsIndex = {
-    _id: '_design/objects',
-    views: {
-        'objects': {
-            map: function (doc) {
-                if (doc.type === 'object') {
-                    emit(doc._id);
-                }
-            }.toString()
-        }
-    }
-};
 
 module.exports = function () {
 
     // every database gets a locally saved id
     // this id is added to every document changed
     // with it the changes feed can ignore locally changed documents
+    // also starts the change-stream
     createDatabaseId();
 
     syncPouch();
@@ -57516,7 +57509,7 @@ module.exports = function () {
                 if (err) {
                     if (err.status === 404) {
                         // index doesnt exist yet
-                        db.put(hierarchiesIndex).then(function () {
+                        db.put(hierarchiesIndex()).then(function () {
                             // kick off an initial build, return immediately
                             return db.query('hierarchies', {stale: 'update_after'});
                         }).then(function () {
@@ -57545,7 +57538,7 @@ module.exports = function () {
                 if (err) {
                     if (err.status === 404) {
                         // index doesnt exist yet > create it
-                        db.put(objectsIndex).then(function () {
+                        db.put(objectsIndex()).then(function () {
                             // kick off an initial build, return immediately
                             return db.query('objects', {stale: 'update_after'});
                         }).then(function () {
@@ -57580,7 +57573,26 @@ module.exports = function () {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../syncPouch":122,"./createDatabaseId":111,"./createTree":112,"async":3,"pouchdb":56,"underscore":99}],119:[function(require,module,exports){
+},{"../syncPouch":124,"./createDatabaseId":111,"./createTree":112,"./hierarchiesIndex":116,"./objectsIndex":120,"async":3,"pouchdb":56,"underscore":99}],120:[function(require,module,exports){
+/*jslint node: true, browser: true, nomen: true, todo: true */
+'use strict';
+
+// TODO: get only the users data
+module.exports = function () {
+    return {
+        _id: '_design/objects',
+        views: {
+            'objects': {
+                map: function (doc) {
+                    if (doc.type === 'object') {
+                        emit(doc._id);
+                    }
+                }.toString()
+            }
+        }
+    };
+};
+},{}],121:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus */
 'use strict';
@@ -57624,7 +57636,7 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"underscore":99}],120:[function(require,module,exports){
+},{"underscore":99}],122:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -57682,7 +57694,7 @@ module.exports = function () {
 
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./form/fitTextareaToContent":104,"./form/getValueAfterChange":105,"./form/initiateForm":106,"./form/saveObjectValue":108,"underscore":99}],121:[function(require,module,exports){
+},{"./form/fitTextareaToContent":104,"./form/getValueAfterChange":105,"./form/initiateForm":106,"./form/saveObjectValue":108,"underscore":99}],123:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -57707,7 +57719,7 @@ module.exports = function (tab) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],122:[function(require,module,exports){
+},{}],124:[function(require,module,exports){
 /**
  * synchronisiert die Daten aus einer CouchDB in PouchDB
  */
@@ -57738,7 +57750,7 @@ module.exports = function () {
     if (remoteCouch) { sync(); }
 };
 
-},{"./configuration":101,"pouchdb":56}],123:[function(require,module,exports){
+},{"./configuration":101,"pouchdb":56}],125:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, helper, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing, functionType="function";
   return "<div class=\"form-group\">\r\n    <label class=\"control-label\">"
@@ -57752,7 +57764,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(((helper = (helper = helpers.checked || (depth0 != null ? depth0.checked : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"checked","hash":{},"data":data}) : helper)))
     + ">\r\n            </label>\r\n        </div>\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":28}],124:[function(require,module,exports){
+},{"handlebars":28}],126:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,depths) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "            <div class=\"checkbox\">\r\n                <label>\r\n                    <input type=\"checkbox\" id=\""
@@ -57779,11 +57791,11 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "    </div>\r\n</div>";
 },"useData":true,"useDepths":true});
-},{"handlebars":28}],125:[function(require,module,exports){
+},{"handlebars":28}],127:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  return "<div class=\"btn-toolbar\" role=\"toolbar\" aria-label=\"...\">\r\n    <div class=\"btn-group\" role=\"group\" aria-label=\"...\">\r\n        <input id=\"formNew\" class=\"btn btn-default\" type=\"button\" value=\"neu\">\r\n        <input id=\"formDelete\" class=\"btn btn-default\" type=\"button\" value=\"löschen\">\r\n    </div>\r\n</div>";
+  return "<div class=\"btn-toolbar pull-right\" role=\"toolbar\" aria-label=\"Daten Toolbar\">\r\n    <div class=\"btn-group pull-right\" role=\"group\" aria-label=\"Daten Button group\">\r\n        <input id=\"formNew\" class=\"btn btn-default\" type=\"button\" value=\"neu\">\r\n        <input id=\"formDelete\" class=\"btn btn-default\" type=\"button\" value=\"löschen\">\r\n    </div>\r\n</div>";
   },"useData":true});
-},{"handlebars":28}],126:[function(require,module,exports){
+},{"handlebars":28}],128:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "<div class=\"form-group\">\r\n    <label for=\""
@@ -57802,7 +57814,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.value : stack1), depth0))
     + "\">\r\n</div>";
 },"useData":true});
-},{"handlebars":28}],127:[function(require,module,exports){
+},{"handlebars":28}],129:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,depths) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "            <div class=\"radio\">\r\n                <label>\r\n                    <input type=\"radio\" name=\""
@@ -57829,7 +57841,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "    </div>\r\n</div>";
 },"useData":true,"useDepths":true});
-},{"handlebars":28}],128:[function(require,module,exports){
+},{"handlebars":28}],130:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, buffer = "                <option value=";
   stack1 = lambda((depth0 != null ? depth0.value : depth0), depth0);
@@ -57852,7 +57864,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "        </select>\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":28}],129:[function(require,module,exports){
+},{"handlebars":28}],131:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "<div class=\"form-group\">\r\n    <label for=\""

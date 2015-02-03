@@ -9,45 +9,18 @@ var $                     = require('jquery'),
     syncPouch             = require('../syncPouch'),
     createTree            = require('./createTree'),
     createDatabaseId      = require('./createDatabaseId'),
-    hierarchiesIndex,
-    objectsIndex;
+    hierarchiesIndex      = require('./hierarchiesIndex'),
+    objectsIndex          = require('./objectsIndex');
 
 // expose pouchdb to pouchdb-fauxton
 window.PouchDB = PouchDB;
-
-// TODO: get only the users data
-hierarchiesIndex = {
-    _id: '_design/hierarchies',
-    views: {
-        'hierarchies': {
-            map: function (doc) {
-                if (doc.type === 'hierarchy') {
-                    emit(doc._id);
-                }
-            }.toString()
-        }
-    }
-};
-
-// TODO: get only the users data
-objectsIndex = {
-    _id: '_design/objects',
-    views: {
-        'objects': {
-            map: function (doc) {
-                if (doc.type === 'object') {
-                    emit(doc._id);
-                }
-            }.toString()
-        }
-    }
-};
 
 module.exports = function () {
 
     // every database gets a locally saved id
     // this id is added to every document changed
     // with it the changes feed can ignore locally changed documents
+    // also starts the change-stream
     createDatabaseId();
 
     syncPouch();
@@ -60,7 +33,7 @@ module.exports = function () {
                 if (err) {
                     if (err.status === 404) {
                         // index doesnt exist yet
-                        db.put(hierarchiesIndex).then(function () {
+                        db.put(hierarchiesIndex()).then(function () {
                             // kick off an initial build, return immediately
                             return db.query('hierarchies', {stale: 'update_after'});
                         }).then(function () {
@@ -89,7 +62,7 @@ module.exports = function () {
                 if (err) {
                     if (err.status === 404) {
                         // index doesnt exist yet > create it
-                        db.put(objectsIndex).then(function () {
+                        db.put(objectsIndex()).then(function () {
                             // kick off an initial build, return immediately
                             return db.query('objects', {stale: 'update_after'});
                         }).then(function () {

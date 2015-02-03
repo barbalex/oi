@@ -7279,6 +7279,13 @@ body {
   width: 35vw;
   overflow: hidden;
 }
+#form .btn-toolbar {
+  position: fixed;
+}
+#form .btn-toolbar .btn-group {
+  /*position: fixed;*/
+  bottom: 5px;
+}
 #map {
   background-color: #008000;
   width: 45vw;
