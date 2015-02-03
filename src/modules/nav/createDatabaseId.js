@@ -1,8 +1,9 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var PouchDB = require('pouchdb'),
-    db      = new PouchDB('oi');
+var PouchDB                    = require('pouchdb'),
+    db                         = new PouchDB('oi'),
+    initiateForeignChangeQuery = require('./initiateForeignChangeQuery');
 
 module.exports = function () {
     var databaseId = {};
@@ -14,12 +15,14 @@ module.exports = function () {
                 db.put(databaseId, '_local/databaseId', function (err, response) {
                     if (err) { return console.log('error creating databaseId: ', err); }
                     window.oi.databaseId = databaseId.databaseId;
+                    initiateForeignChangeQuery();
                 });
             } else {
                 console.log('error retrieving databaseId: ', err);
             }
         } else {
             window.oi.databaseId = response.databaseId;
+            initiateForeignChangeQuery();
         }
     });
 

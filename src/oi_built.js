@@ -19677,7 +19677,7 @@ window.oi.initiiereApp = function () {
 
 // gleich ein mal ausführen
 window.oi.initiiereApp();
-},{"./modules/initiateResizables":110,"./modules/nav/initiateNav":115,"./modules/setupEvents":117,"handlebars":28}],2:[function(require,module,exports){
+},{"./modules/initiateResizables":110,"./modules/nav/initiateNav":118,"./modules/setupEvents":120,"handlebars":28}],2:[function(require,module,exports){
 module.exports={
     "user": "barbalex",
     "pass": "dLhdMg12"
@@ -56938,7 +56938,7 @@ module.exports = function (_id) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../../templates/checkbox":120,"../../../templates/checkboxGroup":121,"../../../templates/formButtonToolbar":122,"../../../templates/input":123,"../../../templates/optionGroup":124,"../../../templates/select":125,"../../../templates/textarea":126,"./addCheckedToValueList":102,"./fitTextareaToContent":104,"pouchdb":56,"underscore":99}],107:[function(require,module,exports){
+},{"../../../templates/checkbox":123,"../../../templates/checkboxGroup":124,"../../../templates/formButtonToolbar":125,"../../../templates/input":126,"../../../templates/optionGroup":127,"../../../templates/select":128,"../../../templates/textarea":129,"./addCheckedToValueList":102,"./fitTextareaToContent":104,"pouchdb":56,"underscore":99}],107:[function(require,module,exports){
 // Hilfsfunktion, die typeof ersetzt und ergänzt
 // typeof gibt bei input-Feldern immer String zurück!
 
@@ -57030,7 +57030,7 @@ module.exports = function (_id, field, value) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../nav/getLabelForObject":114,"dateformat":12,"pouchdb":56,"underscore":99}],109:[function(require,module,exports){
+},{"../nav/getLabelForObject":115,"dateformat":12,"pouchdb":56,"underscore":99}],109:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 /*
@@ -57054,17 +57054,13 @@ module.exports = function (change) {
     var modelObject,
         correspondingHierarchy;
 
-    console.log('change: ', change);
-
     // update model of object
     modelObject = _.find(window.oi.objects, function (object) {
         return object._id === change.id;
     });
 
-    // nur weiterfahren, wenn ein model gefunden wurde und es anders ist
-    //if (modelObject && JSON.stringify(modelObject.data) !== JSON.stringify(change.doc.data)) {
+    // nur weiterfahren, wenn ein model gefunden wurde
     if (modelObject) {
-
         // replace existing object with new one
         window.oi.objects[window.oi.objects.indexOf(modelObject)] = change.doc;
 
@@ -57084,7 +57080,7 @@ module.exports = function (change) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./form/initiateForm":106,"./nav/getLabelForObject":114,"underscore":99}],110:[function(require,module,exports){
+},{"./form/initiateForm":106,"./nav/getLabelForObject":115,"underscore":99}],110:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -57153,12 +57149,13 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./alsoResizeReverse":100,"./setWidthOfTabs":116,"./showTab":118}],111:[function(require,module,exports){
+},{"./alsoResizeReverse":100,"./setWidthOfTabs":119,"./showTab":121}],111:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var PouchDB = require('pouchdb'),
-    db      = new PouchDB('oi');
+var PouchDB                    = require('pouchdb'),
+    db                         = new PouchDB('oi'),
+    initiateForeignChangeQuery = require('./initiateForeignChangeQuery');
 
 module.exports = function () {
     var databaseId = {};
@@ -57170,17 +57167,19 @@ module.exports = function () {
                 db.put(databaseId, '_local/databaseId', function (err, response) {
                     if (err) { return console.log('error creating databaseId: ', err); }
                     window.oi.databaseId = databaseId.databaseId;
+                    initiateForeignChangeQuery();
                 });
             } else {
                 console.log('error retrieving databaseId: ', err);
             }
         } else {
             window.oi.databaseId = response.databaseId;
+            initiateForeignChangeQuery();
         }
     });
 
 };
-},{"pouchdb":56}],112:[function(require,module,exports){
+},{"./initiateForeignChangeQuery":117,"pouchdb":56}],112:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -57208,7 +57207,33 @@ module.exports = function () {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./generateDataForTree":113,"jstree":30}],113:[function(require,module,exports){
+},{"./generateDataForTree":114,"jstree":30}],113:[function(require,module,exports){
+/*jslint node: true, browser: true, nomen: true, todo: true */
+'use strict';
+
+module.exports = function () {
+    return {
+        _id: '_design/foreign_changed',
+        views: {
+            'foreign_changed': {
+                map: function (doc) {
+                    if (doc.lastEdited) {
+                        if (doc.lastEdited.database) {
+                            if (doc.lastEdited.database !== window.oi.databaseId) {
+                                emit(doc.type);
+                            }
+                        } else {
+                            emit(doc.type);
+                        }
+                    } else {
+                        emit(doc.type);
+                    }
+                }.toString()
+            }
+        }
+    };
+}
+},{}],114:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -57216,7 +57241,7 @@ var _                 = require('underscore'),
     getLabelForObject = require('./getLabelForObject');
 
 function createObjectsData(object, objectsData) {
-    if (object.parent !== null) {
+    if (object && object.parent && object.parent !== null) {
         var jstreeObject = {},
             correspondingHierarchy;
 
@@ -57344,7 +57369,7 @@ module.exports = function () {
 
     return _.union(objectsData, descendantHierarchiesData, topObjectsData);
 };
-},{"./getLabelForObject":114,"underscore":99}],114:[function(require,module,exports){
+},{"./getLabelForObject":115,"underscore":99}],115:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -57372,23 +57397,76 @@ module.exports = function (object, correspondingHierarchy) {
     }
     return label;
 };
-},{"underscore":99}],115:[function(require,module,exports){
+},{"underscore":99}],116:[function(require,module,exports){
+/*jslint node: true, browser: true, nomen: true, todo: true */
+'use strict';
+
+var PouchDB               = require('pouchdb'),
+    db                    = new PouchDB('oi'),
+    handleDbObjectChanges = require('../handleDbObjectChanges'),
+    foreignChangedIndex   = require('./foreignChangedIndex');
+
+module.exports = function () {
+    // TODO: filter only the users documents created with local databaseId
+    // when changes happen in DB, update model and when necessary ui
+    db.changes({
+        since: 'now',
+        live: true,
+        include_docs: true,
+        filter: foreignChangedIndex(),
+        key: 'object'
+    }).on('change', handleDbObjectChanges);
+};
+},{"../handleDbObjectChanges":109,"./foreignChangedIndex":113,"pouchdb":56}],117:[function(require,module,exports){
+/*jslint node: true, browser: true, nomen: true, todo: true */
+'use strict';
+
+var _                     = require('underscore'),
+    PouchDB               = require('pouchdb'),
+    db                    = new PouchDB('oi'),
+    initiateChangeStream  = require('./initiateChangeStream'),
+    foreignChangedIndex   = require('./foreignChangedIndex');
+
+module.exports = function () {
+    // TODO: get only the users data
+    db.query('foreign_changed', {include_docs: true}, function (err, result) {
+        if (err) {
+            if (err.status === 404) {
+                // index doesnt exist yet > create it
+                db.put(foreignChangedIndex()).then(function () {
+                    // kick off an initial build, return immediately
+                    return db.query('foreign_changed', {stale: 'update_after'});
+                }).then(function () {
+                    // query the index (much faster now!)
+                    return db.query('foreign_changed', {include_docs: true});
+                }).then(function (result) {
+                    initiateChangeStream();
+                }).catch(function (err) {
+                    console.log('error querrying foreignChanged: ', err);
+                });
+            } else {
+                console.log('error querrying foreignChanged: ', err);
+            }
+        } else {
+            initiateChangeStream();
+        }
+    });
+};
+},{"./foreignChangedIndex":113,"./initiateChangeStream":116,"pouchdb":56,"underscore":99}],118:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $                      = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
-    _                      = require('underscore'),
-    async                  = require('async'),
-    PouchDB                = require('pouchdb'),
-    db                     = new PouchDB('oi'),
-    syncPouch              = require('../syncPouch'),
-    createTree             = require('./createTree'),
-    handleDbObjectChanges  = require('../handleDbObjectChanges'),
-    createDatabaseId       = require('./createDatabaseId'),
+var $                     = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+    _                     = require('underscore'),
+    async                 = require('async'),
+    PouchDB               = require('pouchdb'),
+    db                    = new PouchDB('oi'),
+    syncPouch             = require('../syncPouch'),
+    createTree            = require('./createTree'),
+    createDatabaseId      = require('./createDatabaseId'),
     hierarchiesIndex,
-    objectsIndex,
-    foreignChangedObjectsIndex;
+    objectsIndex;
 
 // expose pouchdb to pouchdb-fauxton
 window.PouchDB = PouchDB;
@@ -57415,29 +57493,6 @@ objectsIndex = {
             map: function (doc) {
                 if (doc.type === 'object') {
                     emit(doc._id);
-                }
-            }.toString()
-        }
-    }
-};
-
-foreignChangedObjectsIndex = {
-    _id: '_design/foreign_changed_objects',
-    views: {
-        'foreign_changed_objects': {
-            map: function (doc) {
-                if (doc.type === 'object') {
-                    if (doc.lastEdited) {
-                        if (doc.lastEdited.database) {
-                            if (doc.lastEdited.database !== window.oi.databaseId) {
-                                emit(doc._id);
-                            }
-                        } else {
-                            emit(doc._id);
-                        }
-                    } else {
-                        emit(doc._id);
-                    }
                 }
             }.toString()
         }
@@ -57512,39 +57567,9 @@ module.exports = function () {
                     callback(null, objects);
                 }
             });
-        },
-        foreignChangedObjects: function (callback) {
-            // TODO: get only the users data
-            db.query('foreign_changed_objects', {include_docs: true}, function (err, result) {
-                if (err) {
-                    if (err.status === 404) {
-                        // index doesnt exist yet > create it
-                        db.put(foreignChangedObjectsIndex).then(function () {
-                            // kick off an initial build, return immediately
-                            return db.query('foreign_changed_objects', {stale: 'update_after'});
-                        }).then(function () {
-                            // query the index (much faster now!)
-                            return db.query('foreign_changed_objects', {include_docs: true});
-                        }).then(function (result) {
-                            var foreignChangedObjects = _.map(result.rows, function (row) {
-                                return row.doc;
-                            });
-                            callback(null, foreignChangedObjects);
-                        });
-                    } else {
-                        return console.log('error querrying foreignChangedObjects: ', err);
-                    }
-                } else {
-                    var foreignChangedObjects = _.map(result.rows, function (row) {
-                        return row.doc;
-                    });
-                    callback(null, foreignChangedObjects);
-                }
-            });
         }
     }, function (err, results) {
         // results equals to: { hierarchies: hierarchies, objects: objects }
-
         if (err) { return console.log('error: ', err); }
 
         // create globals for data (primitive self-built models)
@@ -57552,14 +57577,10 @@ module.exports = function () {
         window.oi.objects     = results.objects;
 
         createTree();
-
-        // TODO: filter only the users documents created with local databaseId
-        // when changes happen in DB, update model and when necessary ui
-        db.changes({since: 'now', live: true, include_docs: true, filter: 'foreign_changed_objects'}).on('change', handleDbObjectChanges);
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../handleDbObjectChanges":109,"../syncPouch":119,"./createDatabaseId":111,"./createTree":112,"async":3,"pouchdb":56,"underscore":99}],116:[function(require,module,exports){
+},{"../syncPouch":122,"./createDatabaseId":111,"./createTree":112,"async":3,"pouchdb":56,"underscore":99}],119:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus */
 'use strict';
@@ -57603,7 +57624,7 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"underscore":99}],117:[function(require,module,exports){
+},{"underscore":99}],120:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -57661,7 +57682,7 @@ module.exports = function () {
 
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./form/fitTextareaToContent":104,"./form/getValueAfterChange":105,"./form/initiateForm":106,"./form/saveObjectValue":108,"underscore":99}],118:[function(require,module,exports){
+},{"./form/fitTextareaToContent":104,"./form/getValueAfterChange":105,"./form/initiateForm":106,"./form/saveObjectValue":108,"underscore":99}],121:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -57686,7 +57707,7 @@ module.exports = function (tab) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],119:[function(require,module,exports){
+},{}],122:[function(require,module,exports){
 /**
  * synchronisiert die Daten aus einer CouchDB in PouchDB
  */
@@ -57717,7 +57738,7 @@ module.exports = function () {
     if (remoteCouch) { sync(); }
 };
 
-},{"./configuration":101,"pouchdb":56}],120:[function(require,module,exports){
+},{"./configuration":101,"pouchdb":56}],123:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, helper, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing, functionType="function";
   return "<div class=\"form-group\">\r\n    <label class=\"control-label\">"
@@ -57731,7 +57752,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(((helper = (helper = helpers.checked || (depth0 != null ? depth0.checked : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"checked","hash":{},"data":data}) : helper)))
     + ">\r\n            </label>\r\n        </div>\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":28}],121:[function(require,module,exports){
+},{"handlebars":28}],124:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,depths) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "            <div class=\"checkbox\">\r\n                <label>\r\n                    <input type=\"checkbox\" id=\""
@@ -57758,11 +57779,11 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "    </div>\r\n</div>";
 },"useData":true,"useDepths":true});
-},{"handlebars":28}],122:[function(require,module,exports){
+},{"handlebars":28}],125:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   return "<div class=\"btn-toolbar\" role=\"toolbar\" aria-label=\"...\">\r\n    <div class=\"btn-group\" role=\"group\" aria-label=\"...\">\r\n        <input id=\"formNew\" class=\"btn btn-default\" type=\"button\" value=\"neu\">\r\n        <input id=\"formDelete\" class=\"btn btn-default\" type=\"button\" value=\"löschen\">\r\n    </div>\r\n</div>";
   },"useData":true});
-},{"handlebars":28}],123:[function(require,module,exports){
+},{"handlebars":28}],126:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "<div class=\"form-group\">\r\n    <label for=\""
@@ -57781,7 +57802,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.value : stack1), depth0))
     + "\">\r\n</div>";
 },"useData":true});
-},{"handlebars":28}],124:[function(require,module,exports){
+},{"handlebars":28}],127:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,depths) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "            <div class=\"radio\">\r\n                <label>\r\n                    <input type=\"radio\" name=\""
@@ -57808,7 +57829,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "    </div>\r\n</div>";
 },"useData":true,"useDepths":true});
-},{"handlebars":28}],125:[function(require,module,exports){
+},{"handlebars":28}],128:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, buffer = "                <option value=";
   stack1 = lambda((depth0 != null ? depth0.value : depth0), depth0);
@@ -57831,7 +57852,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "        </select>\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":28}],126:[function(require,module,exports){
+},{"handlebars":28}],129:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "<div class=\"form-group\">\r\n    <label for=\""

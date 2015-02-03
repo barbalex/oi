@@ -20,17 +20,13 @@ module.exports = function (change) {
     var modelObject,
         correspondingHierarchy;
 
-    console.log('change: ', change);
-
     // update model of object
     modelObject = _.find(window.oi.objects, function (object) {
         return object._id === change.id;
     });
 
-    // nur weiterfahren, wenn ein model gefunden wurde und es anders ist
-    //if (modelObject && JSON.stringify(modelObject.data) !== JSON.stringify(change.doc.data)) {
+    // nur weiterfahren, wenn ein model gefunden wurde
     if (modelObject) {
-
         // replace existing object with new one
         window.oi.objects[window.oi.objects.indexOf(modelObject)] = change.doc;
 

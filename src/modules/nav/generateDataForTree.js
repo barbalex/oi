@@ -5,7 +5,7 @@ var _                 = require('underscore'),
     getLabelForObject = require('./getLabelForObject');
 
 function createObjectsData(object, objectsData) {
-    if (object.parent !== null) {
+    if (object && object.parent && object.parent !== null) {
         var jstreeObject = {},
             correspondingHierarchy;
 
