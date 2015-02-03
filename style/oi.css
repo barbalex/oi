@@ -36,12 +36,12 @@ body {
   right: 10px;
 }
 #nav {
-  background-color: #ff0;
+  background-color: #FFFFB5;
   width: 10vw;
   overflow: hidden;
 }
 #form {
-  background-color: #ffa500;
+  background-color: #FFCE75;
   width: 35vw;
   overflow: hidden;
 }
@@ -53,11 +53,11 @@ body {
   bottom: 5px;
 }
 #map {
-  background-color: #008000;
+  background-color: #E1FFE1;
   width: 45vw;
 }
 #utils {
-  background-color: #a52a2a;
+  background-color: #FFBCBC;
   width: calc(10vw - 1px);
 }
 
