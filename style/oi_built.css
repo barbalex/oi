@@ -7269,62 +7269,26 @@ body {
 .scrollbar .ps-scrollbar-y-rail {
   right: 10px;
 }
+
+/* nav */
+
 #nav {
   background-color: #FFFFB5;
   width: 10vw;
   overflow: hidden;
 }
-#form {
-  background-color: #FFCE75;
-  width: 35vw;
-  overflow: hidden;
-}
-#form .btn-toolbar {
-  position: relative;
-}
-#form .btn-group {
-  position: fixed;
-  bottom: 5px;
-}
-#map {
-  background-color: #E1FFE1;
-  width: 45vw;
-}
-#utils {
-  background-color: #FFBCBC;
-  width: calc(10vw - 1px);
-}
-
-/* form */
-#form .reducedMargin {
-  margin-top: -13px;
-}
-
-/* jstree */
-
 #navContent {
   width: calc(100% - 8px);
 }
-
-#formContent {
-  width: calc(100% - 8px);
-  max-width: calc(100% - 8px);
-  padding: 5px 14px 5px 10px;
-}
-
 #navContent ul {
-  /*color: red;*/
   width: 100%;
 }
-
 #navContent .jstree-icon {
   width: 20px;
 }
-
 #navContent .jstree-node {
   margin-left: 8px;
 }
-
 @media (max-width: 768px) {
    #navContent .jstree-icon {
     width: 40px;
@@ -7337,6 +7301,39 @@ body {
 
 #navContent .jstree-node[aria-level="1"] {
   margin-left: 0;
+}
+
+/* form */
+
+#form {
+  background-color: #FFCE75;
+  width: 35vw;
+  overflow: hidden;
+}
+#formContent {
+  width: calc(100% - 8px);
+  max-width: calc(100% - 8px);
+  padding: 5px 14px 5px 10px;
+}
+#form .reducedMargin {
+  margin-top: -13px;
+}
+#form .btn-toolbar {
+  position: relative;
+}
+#form .btn-group {
+  position: fixed;
+  bottom: 5px;
+}
+
+#map {
+  background-color: #E1FFE1;
+  width: 45vw;
+}
+
+#utils {
+  background-color: #FFBCBC;
+  width: calc(10vw - 1px);
 }
 
 /*# sourceMappingURL=oi_built.css.map */

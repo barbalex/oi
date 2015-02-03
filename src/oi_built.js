@@ -57116,7 +57116,10 @@ module.exports = function () {
     $('#nav').resizable({
         handles: { 'e': '#navSeparator' },
         alsoResizeReverse: '#form',
-        containment: '#content'
+        containment: '#content',
+        resize: function (event, ui) {
+            positionFormBtngroup();
+        }
     });
 
     $('#form').resizable({
@@ -57124,7 +57127,6 @@ module.exports = function () {
         alsoResizeReverse: '#map',
         containment: '#content',
         resize: function (event, ui) {
-            console.log('form resized');
             positionFormBtngroup();
         }
     });
