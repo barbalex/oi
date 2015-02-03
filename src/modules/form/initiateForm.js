@@ -11,6 +11,7 @@ var $                       = require('jquery'),
     optionGroup             = require('../../../templates/optionGroup'),
     checkboxGroup           = require('../../../templates/checkboxGroup'),
     select                  = require('../../../templates/select'),
+    formButtonToolbar       = require('../../../templates/formButtonToolbar'),
     fitTextareaToContent    = require('./fitTextareaToContent'),
     addCheckedToValueList   = require('./addCheckedToValueList');
 
@@ -79,6 +80,9 @@ module.exports = function (_id) {
                     break;
                 }
             });
+
+            // add button toolbar
+            html += formButtonToolbar();
 
             $('#formContent').html(html);
 

@@ -1,0 +1,3 @@
+var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  return "<div class=\"btn-toolbar\" role=\"toolbar\" aria-label=\"...\">\r\n    <div class=\"btn-group\" role=\"group\" aria-label=\"...\">\r\n        <input id=\"formNew\" class=\"btn btn-default\" type=\"button\" value=\"neu\">\r\n        <input id=\"formDelete\" class=\"btn btn-default\" type=\"button\" value=\"löschen\">\r\n    </div>\r\n</div>";
+  },"useData":true});

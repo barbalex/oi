@@ -2,27 +2,30 @@
 'use strict';
 
 var $                 = require('jquery'),
+    dateformat        = require('dateformat'),
     _                 = require('underscore'),
     PouchDB           = require('pouchdb'),
     db                = new PouchDB('oi'),
     getLabelForObject = require('../nav/getLabelForObject');
 
 module.exports = function (_id, field, value) {
-    var object;
-
-    /*console.log('_id: ', _id);
-    console.log('field: ', field);
-    console.log('value: ', value);
-    console.log('typeof value: ', typeof value);*/
+    var object,
+        lastEdited = {};
 
     // get data for object
     object = _.find(window.oi.objects, function (object) {
         return object._id === _id;
     });
 
+    lastEdited.date = dateformat(new Date(), 'isoDateTime');
+    // TODO: get real user
+    lastEdited.user = 'z@z.ch';
+    lastEdited.database = window.oi.databaseId;
+
     if (object) {
         // set new value
         object.data[field] = value || null;
+        object.lastEdited = lastEdited;
 
         // write to pouch
         db.put(object, function (err, response) {

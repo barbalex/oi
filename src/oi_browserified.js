@@ -39,7 +39,7 @@ window.oi.initiiereApp = function () {
 
 // gleich ein mal ausführen
 window.oi.initiiereApp();
-},{"./modules/initiateResizables":109,"./modules/nav/initiateNav":113,"./modules/setupEvents":115,"handlebars":27}],2:[function(require,module,exports){
+},{"./modules/initiateResizables":110,"./modules/nav/initiateNav":115,"./modules/setupEvents":117,"handlebars":28}],2:[function(require,module,exports){
 module.exports={
     "user": "barbalex",
     "pass": "dLhdMg12"
@@ -3103,6 +3103,232 @@ process.chdir = function (dir) {
 process.umask = function() { return 0; };
 
 },{}],12:[function(require,module,exports){
+/*
+ * Date Format 1.2.3
+ * (c) 2007-2009 Steven Levithan <stevenlevithan.com>
+ * MIT license
+ *
+ * Includes enhancements by Scott Trenda <scott.trenda.net>
+ * and Kris Kowal <cixar.com/~kris.kowal/>
+ *
+ * Accepts a date, a mask, or a date and a mask.
+ * Returns a formatted version of the given date.
+ * The date defaults to the current date/time.
+ * The mask defaults to dateFormat.masks.default.
+ */
+
+(function(global) {
+  'use strict';
+
+  var dateFormat = (function() {
+      var token = /d{1,4}|m{1,4}|yy(?:yy)?|([HhMsTt])\1?|[LloSZWN]|'[^']*'|'[^']*'/g;
+      var timezone = /\b(?:[PMCEA][SDP]T|(?:Pacific|Mountain|Central|Eastern|Atlantic) (?:Standard|Daylight|Prevailing) Time|(?:GMT|UTC)(?:[-+]\d{4})?)\b/g;
+      var timezoneClip = /[^-+\dA-Z]/g;
+  
+      // Regexes and supporting functions are cached through closure
+      return function (date, mask, utc, gmt) {
+  
+        // You can't provide utc if you skip other args (use the 'UTC:' mask prefix)
+        if (arguments.length === 1 && kindOf(date) === 'string' && !/\d/.test(date)) {
+          mask = date;
+          date = undefined;
+        }
+  
+        date = date || new Date;
+  
+        if(!(date instanceof Date)) {
+          date = new Date(date);
+        }
+  
+        if (isNaN(date)) {
+          throw TypeError('Invalid date');
+        }
+  
+        mask = String(dateFormat.masks[mask] || mask || dateFormat.masks['default']);
+  
+        // Allow setting the utc/gmt argument via the mask
+        var maskSlice = mask.slice(0, 4);
+        if (maskSlice === 'UTC:' || maskSlice === 'GMT:') {
+          mask = mask.slice(4);
+          utc = true;
+          if (maskSlice === 'GMT:') {
+            gmt = true;
+          }
+        }
+  
+        var _ = utc ? 'getUTC' : 'get';
+        var d = date[_ + 'Date']();
+        var D = date[_ + 'Day']();
+        var m = date[_ + 'Month']();
+        var y = date[_ + 'FullYear']();
+        var H = date[_ + 'Hours']();
+        var M = date[_ + 'Minutes']();
+        var s = date[_ + 'Seconds']();
+        var L = date[_ + 'Milliseconds']();
+        var o = utc ? 0 : date.getTimezoneOffset();
+        var W = getWeek(date);
+        var N = getDayOfWeek(date);
+        var flags = {
+          d:    d,
+          dd:   pad(d),
+          ddd:  dateFormat.i18n.dayNames[D],
+          dddd: dateFormat.i18n.dayNames[D + 7],
+          m:    m + 1,
+          mm:   pad(m + 1),
+          mmm:  dateFormat.i18n.monthNames[m],
+          mmmm: dateFormat.i18n.monthNames[m + 12],
+          yy:   String(y).slice(2),
+          yyyy: y,
+          h:    H % 12 || 12,
+          hh:   pad(H % 12 || 12),
+          H:    H,
+          HH:   pad(H),
+          M:    M,
+          MM:   pad(M),
+          s:    s,
+          ss:   pad(s),
+          l:    pad(L, 3),
+          L:    pad(Math.round(L / 10)),
+          t:    H < 12 ? 'a'  : 'p',
+          tt:   H < 12 ? 'am' : 'pm',
+          T:    H < 12 ? 'A'  : 'P',
+          TT:   H < 12 ? 'AM' : 'PM',
+          Z:    gmt ? 'GMT' : utc ? 'UTC' : (String(date).match(timezone) || ['']).pop().replace(timezoneClip, ''),
+          o:    (o > 0 ? '-' : '+') + pad(Math.floor(Math.abs(o) / 60) * 100 + Math.abs(o) % 60, 4),
+          S:    ['th', 'st', 'nd', 'rd'][d % 10 > 3 ? 0 : (d % 100 - d % 10 != 10) * d % 10],
+          W:    W,
+          N:    N
+        };
+  
+        return mask.replace(token, function (match) {
+          if (match in flags) {
+            return flags[match];
+          }
+          return match.slice(1, match.length - 1);
+        });
+      };
+    })();
+
+  dateFormat.masks = {
+    'default':               'ddd mmm dd yyyy HH:MM:ss',
+    'shortDate':             'm/d/yy',
+    'mediumDate':            'mmm d, yyyy',
+    'longDate':              'mmmm d, yyyy',
+    'fullDate':              'dddd, mmmm d, yyyy',
+    'shortTime':             'h:MM TT',
+    'mediumTime':            'h:MM:ss TT',
+    'longTime':              'h:MM:ss TT Z',
+    'isoDate':               'yyyy-mm-dd',
+    'isoTime':               'HH:MM:ss',
+    'isoDateTime':           'yyyy-mm-dd\'T\'HH:MM:sso',
+    'isoUtcDateTime':        'UTC:yyyy-mm-dd\'T\'HH:MM:ss\'Z\'',
+    'expiresHeaderFormat':   'ddd, dd mmm yyyy HH:MM:ss Z'
+  };
+
+  // Internationalization strings
+  dateFormat.i18n = {
+    dayNames: [
+      'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat',
+      'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
+    ],
+    monthNames: [
+      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+      'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
+    ]
+  };
+
+function pad(val, len) {
+  val = String(val);
+  len = len || 2;
+  while (val.length < len) {
+    val = '0' + val;
+  }
+  return val;
+}
+
+/**
+ * Get the ISO 8601 week number
+ * Based on comments from
+ * http://techblog.procurios.nl/k/n618/news/view/33796/14863/Calculate-ISO-8601-week-and-year-in-javascript.html
+ *
+ * @param  {Object} `date`
+ * @return {Number}
+ */
+function getWeek(date) {
+  // Remove time components of date
+  var targetThursday = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
+  // Change date to Thursday same week
+  targetThursday.setDate(targetThursday.getDate() - ((targetThursday.getDay() + 6) % 7) + 3);
+
+  // Take January 4th as it is always in week 1 (see ISO 8601)
+  var firstThursday = new Date(targetThursday.getFullYear(), 0, 4);
+
+  // Change date to Thursday same week
+  firstThursday.setDate(firstThursday.getDate() - ((firstThursday.getDay() + 6) % 7) + 3);
+
+  // Check if daylight-saving-time-switch occured and correct for it
+  var ds = targetThursday.getTimezoneOffset() - firstThursday.getTimezoneOffset();
+  targetThursday.setHours(targetThursday.getHours() - ds);
+
+  // Number of weeks between target Thursday and first Thursday
+  var weekDiff = (targetThursday - firstThursday) / (86400000*7);
+  return 1 + Math.floor(weekDiff);
+}
+
+/**
+ * Get ISO-8601 numeric representation of the day of the week
+ * 1 (for Monday) through 7 (for Sunday)
+ * 
+ * @param  {Object} `date`
+ * @return {Number}
+ */
+function getDayOfWeek(date) {
+  var dow = date.getDay();
+  if(dow === 0) {
+    dow = 7;
+  }
+  return dow;
+}
+
+/**
+ * kind-of shortcut
+ * @param  {*} val
+ * @return {String}
+ */
+function kindOf(val) {
+  if (val === null) {
+    return 'null';
+  }
+
+  if (val === undefined) {
+    return 'undefined';
+  }
+
+  if (typeof val !== 'object') {
+    return typeof val;
+  }
+
+  if (Array.isArray(val)) {
+    return 'array';
+  }
+
+  return {}.toString.call(val)
+    .slice(8, -1).toLowerCase();
+};
+
+
+
+  if (typeof define === 'function' && define.amd) {
+    define(dateFormat);
+  } else if (typeof exports === 'object') {
+    module.exports = dateFormat;
+  } else {
+    global.dateFormat = dateFormat;
+  }
+})(this);
+
+},{}],13:[function(require,module,exports){
 "use strict";
 /*globals Handlebars: true */
 var Handlebars = require("./handlebars.runtime")["default"];
@@ -3142,7 +3368,7 @@ Handlebars.create = create;
 Handlebars['default'] = Handlebars;
 
 exports["default"] = Handlebars;
-},{"./handlebars.runtime":13,"./handlebars/compiler/ast":15,"./handlebars/compiler/base":16,"./handlebars/compiler/compiler":17,"./handlebars/compiler/javascript-compiler":19}],13:[function(require,module,exports){
+},{"./handlebars.runtime":14,"./handlebars/compiler/ast":16,"./handlebars/compiler/base":17,"./handlebars/compiler/compiler":18,"./handlebars/compiler/javascript-compiler":20}],14:[function(require,module,exports){
 "use strict";
 /*globals Handlebars: true */
 var base = require("./handlebars/base");
@@ -3178,7 +3404,7 @@ Handlebars.create = create;
 Handlebars['default'] = Handlebars;
 
 exports["default"] = Handlebars;
-},{"./handlebars/base":14,"./handlebars/exception":23,"./handlebars/runtime":24,"./handlebars/safe-string":25,"./handlebars/utils":26}],14:[function(require,module,exports){
+},{"./handlebars/base":15,"./handlebars/exception":24,"./handlebars/runtime":25,"./handlebars/safe-string":26,"./handlebars/utils":27}],15:[function(require,module,exports){
 "use strict";
 var Utils = require("./utils");
 var Exception = require("./exception")["default"];
@@ -3410,7 +3636,7 @@ var createFrame = function(object) {
   return frame;
 };
 exports.createFrame = createFrame;
-},{"./exception":23,"./utils":26}],15:[function(require,module,exports){
+},{"./exception":24,"./utils":27}],16:[function(require,module,exports){
 "use strict";
 var Exception = require("../exception")["default"];
 
@@ -3625,7 +3851,7 @@ var AST = {
 // Must be exported as an object rather than the root of the module as the jison lexer
 // most modify the object to operate properly.
 exports["default"] = AST;
-},{"../exception":23}],16:[function(require,module,exports){
+},{"../exception":24}],17:[function(require,module,exports){
 "use strict";
 var parser = require("./parser")["default"];
 var AST = require("./ast")["default"];
@@ -3647,7 +3873,7 @@ function parse(input) {
 }
 
 exports.parse = parse;
-},{"../utils":26,"./ast":15,"./helpers":18,"./parser":20}],17:[function(require,module,exports){
+},{"../utils":27,"./ast":16,"./helpers":19,"./parser":21}],18:[function(require,module,exports){
 "use strict";
 var Exception = require("../exception")["default"];
 var isArray = require("../utils").isArray;
@@ -4100,7 +4326,7 @@ exports.compile = compile;function argEquals(a, b) {
     return true;
   }
 }
-},{"../exception":23,"../utils":26}],18:[function(require,module,exports){
+},{"../exception":24,"../utils":27}],19:[function(require,module,exports){
 "use strict";
 var Exception = require("../exception")["default"];
 
@@ -4288,7 +4514,7 @@ function omitLeft(statements, i, multiple) {
   current.leftStripped = current.string !== original;
   return current.leftStripped;
 }
-},{"../exception":23}],19:[function(require,module,exports){
+},{"../exception":24}],20:[function(require,module,exports){
 "use strict";
 var COMPILER_REVISION = require("../base").COMPILER_REVISION;
 var REVISION_CHANGES = require("../base").REVISION_CHANGES;
@@ -5253,7 +5479,7 @@ JavaScriptCompiler.isValidJavaScriptVariableName = function(name) {
 };
 
 exports["default"] = JavaScriptCompiler;
-},{"../base":14,"../exception":23}],20:[function(require,module,exports){
+},{"../base":15,"../exception":24}],21:[function(require,module,exports){
 "use strict";
 /* jshint ignore:start */
 /* istanbul ignore next */
@@ -5754,7 +5980,7 @@ function Parser () { this.yy = {}; }Parser.prototype = parser;parser.Parser = Pa
 return new Parser;
 })();exports["default"] = handlebars;
 /* jshint ignore:end */
-},{}],21:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 "use strict";
 var Visitor = require("./visitor")["default"];
 
@@ -5896,7 +6122,7 @@ PrintVisitor.prototype.content = function(content) {
 PrintVisitor.prototype.comment = function(comment) {
   return this.pad("{{! '" + comment.comment + "' }}");
 };
-},{"./visitor":22}],22:[function(require,module,exports){
+},{"./visitor":23}],23:[function(require,module,exports){
 "use strict";
 function Visitor() {}
 
@@ -5909,7 +6135,7 @@ Visitor.prototype = {
 };
 
 exports["default"] = Visitor;
-},{}],23:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 "use strict";
 
 var errorProps = ['description', 'fileName', 'lineNumber', 'message', 'name', 'number', 'stack'];
@@ -5938,7 +6164,7 @@ function Exception(message, node) {
 Exception.prototype = new Error();
 
 exports["default"] = Exception;
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 "use strict";
 var Utils = require("./utils");
 var Exception = require("./exception")["default"];
@@ -6132,7 +6358,7 @@ exports.noop = noop;function initData(context, data) {
   }
   return data;
 }
-},{"./base":14,"./exception":23,"./utils":26}],25:[function(require,module,exports){
+},{"./base":15,"./exception":24,"./utils":27}],26:[function(require,module,exports){
 "use strict";
 // Build out our basic SafeString type
 function SafeString(string) {
@@ -6144,7 +6370,7 @@ SafeString.prototype.toString = function() {
 };
 
 exports["default"] = SafeString;
-},{}],26:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 "use strict";
 /*jshint -W004 */
 var SafeString = require("./safe-string")["default"];
@@ -6233,7 +6459,7 @@ exports.isEmpty = isEmpty;function appendContextPath(contextPath, id) {
 }
 
 exports.appendContextPath = appendContextPath;
-},{"./safe-string":25}],27:[function(require,module,exports){
+},{"./safe-string":26}],28:[function(require,module,exports){
 // USAGE:
 // var handlebars = require('handlebars');
 
@@ -6261,7 +6487,7 @@ if (typeof require !== 'undefined' && require.extensions) {
   require.extensions[".hbs"] = extension;
 }
 
-},{"../dist/cjs/handlebars":12,"../dist/cjs/handlebars/compiler/printer":21,"../dist/cjs/handlebars/compiler/visitor":22,"fs":4}],28:[function(require,module,exports){
+},{"../dist/cjs/handlebars":13,"../dist/cjs/handlebars/compiler/printer":22,"../dist/cjs/handlebars/compiler/visitor":23,"fs":4}],29:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v2.1.3
  * http://jquery.com/
@@ -15468,7 +15694,7 @@ return jQuery;
 
 }));
 
-},{}],29:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 /*globals jQuery, define, exports, require, window, document, postMessage */
 (function (factory) {
 	"use strict";
@@ -22708,7 +22934,7 @@ return jQuery;
 	}
 }(jQuery));
 }));
-},{"jquery":28}],30:[function(require,module,exports){
+},{"jquery":29}],31:[function(require,module,exports){
 "use strict";
 
 var utils = require('./utils');
@@ -23516,7 +23742,7 @@ AbstractPouchDB.prototype.registerDependentDatabase =
   });
 });
 
-},{"./changes":41,"./deps/errors":47,"./deps/upsert":51,"./merge":56,"./utils":61,"events":10}],31:[function(require,module,exports){
+},{"./changes":42,"./deps/errors":48,"./deps/upsert":52,"./merge":57,"./utils":62,"events":10}],32:[function(require,module,exports){
 (function (process,Buffer){
 "use strict";
 
@@ -24584,7 +24810,7 @@ HttpPouch.valid = function () {
 module.exports = HttpPouch;
 
 }).call(this,require('_process'),require("buffer").Buffer)
-},{"../../deps/errors":47,"../../utils":61,"_process":11,"buffer":6,"debug":64}],32:[function(require,module,exports){
+},{"../../deps/errors":48,"../../utils":62,"_process":11,"buffer":6,"debug":65}],33:[function(require,module,exports){
 'use strict';
 
 var utils = require('../../utils');
@@ -24938,7 +25164,7 @@ function idbBulkDocs(req, opts, api, idb, Changes, callback) {
 }
 
 module.exports = idbBulkDocs;
-},{"../../deps/errors":47,"../../utils":61,"./idb-constants":33,"./idb-utils":34}],33:[function(require,module,exports){
+},{"../../deps/errors":48,"../../utils":62,"./idb-constants":34,"./idb-utils":35}],34:[function(require,module,exports){
 'use strict';
 
 // IndexedDB requires a versioned database structure, so we use the
@@ -24965,7 +25191,7 @@ exports.META_STORE = 'meta-store';
 exports.LOCAL_STORE = 'local-store';
 // Where we detect blob support
 exports.DETECT_BLOB_SUPPORT_STORE = 'detect-blob-support';
-},{}],34:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -25200,7 +25426,7 @@ exports.compactRevs = function (revs, docId, txn) {
 };
 
 }).call(this,require('_process'))
-},{"../../deps/errors":47,"../../utils":61,"./idb-constants":33,"_process":11}],35:[function(require,module,exports){
+},{"../../deps/errors":48,"../../utils":62,"./idb-constants":34,"_process":11}],36:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -26316,9 +26542,9 @@ IdbPouch.Changes = new utils.Changes();
 module.exports = IdbPouch;
 
 }).call(this,require('_process'))
-},{"../../deps/errors":47,"../../merge":56,"../../utils":61,"./idb-bulk-docs":32,"./idb-constants":33,"./idb-utils":34,"_process":11}],36:[function(require,module,exports){
+},{"../../deps/errors":48,"../../merge":57,"../../utils":62,"./idb-bulk-docs":33,"./idb-constants":34,"./idb-utils":35,"_process":11}],37:[function(require,module,exports){
 module.exports = ['idb', 'websql'];
-},{}],37:[function(require,module,exports){
+},{}],38:[function(require,module,exports){
 'use strict';
 
 var utils = require('../../utils');
@@ -26643,7 +26869,7 @@ function websqlBulkDocs(req, opts, api, db, Changes, callback) {
 }
 
 module.exports = websqlBulkDocs;
-},{"../../deps/errors":47,"../../utils":61,"./websql-constants":38,"./websql-utils":39}],38:[function(require,module,exports){
+},{"../../deps/errors":48,"../../utils":62,"./websql-constants":39,"./websql-utils":40}],39:[function(require,module,exports){
 'use strict';
 
 function quote(str) {
@@ -26667,7 +26893,7 @@ exports.META_STORE = quote('metadata-store');
 exports.ATTACH_AND_SEQ_STORE = quote('attach-seq-store');
 
 
-},{}],39:[function(require,module,exports){
+},{}],40:[function(require,module,exports){
 'use strict';
 
 var utils = require('../../utils');
@@ -26855,7 +27081,7 @@ module.exports = {
   unknownError: unknownError,
   getSize: getSize
 };
-},{"../../deps/errors":47,"../../utils":61,"./websql-constants":38}],40:[function(require,module,exports){
+},{"../../deps/errors":48,"../../utils":62,"./websql-constants":39}],41:[function(require,module,exports){
 'use strict';
 
 var utils = require('../../utils');
@@ -27877,7 +28103,7 @@ WebSqlPouch.Changes = new utils.Changes();
 
 module.exports = WebSqlPouch;
 
-},{"../../deps/errors":47,"../../deps/parse-hex":49,"../../merge":56,"../../utils":61,"./websql-bulk-docs":37,"./websql-constants":38,"./websql-utils":39}],41:[function(require,module,exports){
+},{"../../deps/errors":48,"../../deps/parse-hex":50,"../../merge":57,"../../utils":62,"./websql-bulk-docs":38,"./websql-constants":39,"./websql-utils":40}],42:[function(require,module,exports){
 'use strict';
 var utils = require('./utils');
 var merge = require('./merge');
@@ -28133,7 +28359,7 @@ Changes.prototype.filterChanges = function (opts) {
     });
   }
 };
-},{"./deps/errors":47,"./evalFilter":53,"./evalView":54,"./merge":56,"./utils":61,"events":10}],42:[function(require,module,exports){
+},{"./deps/errors":48,"./evalFilter":54,"./evalView":55,"./merge":57,"./utils":62,"events":10}],43:[function(require,module,exports){
 'use strict';
 
 var utils = require('./utils');
@@ -28229,7 +28455,7 @@ Checkpointer.prototype.getCheckpoint = function () {
 
 module.exports = Checkpointer;
 
-},{"./utils":61,"pouchdb-collate":86}],43:[function(require,module,exports){
+},{"./utils":62,"pouchdb-collate":87}],44:[function(require,module,exports){
 (function (process,global){
 /*globals cordova */
 "use strict";
@@ -28401,7 +28627,7 @@ PouchDB.debug = require('debug');
 module.exports = PouchDB;
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./adapter":30,"./taskqueue":60,"./utils":61,"_process":11,"debug":64}],44:[function(require,module,exports){
+},{"./adapter":31,"./taskqueue":61,"./utils":62,"_process":11,"debug":65}],45:[function(require,module,exports){
 "use strict";
 
 var createBlob = require('./blob.js');
@@ -28591,7 +28817,7 @@ function ajax(options, adapterCallback) {
 
 module.exports = ajax;
 
-},{"../utils":61,"./blob.js":45,"./errors":47}],45:[function(require,module,exports){
+},{"../utils":62,"./blob.js":46,"./errors":48}],46:[function(require,module,exports){
 (function (global){
 "use strict";
 
@@ -28623,7 +28849,7 @@ module.exports = createBlob;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],46:[function(require,module,exports){
+},{}],47:[function(require,module,exports){
 'use strict';
 exports.Map = LazyMap; // TODO: use ES6 map
 exports.Set = LazySet; // TODO: use ES6 set
@@ -28694,7 +28920,7 @@ LazySet.prototype.has = function (key) {
 LazySet.prototype["delete"] = function (key) {
   return this.store["delete"](key);
 };
-},{}],47:[function(require,module,exports){
+},{}],48:[function(require,module,exports){
 "use strict";
 
 function PouchError(opts) {
@@ -28954,7 +29180,7 @@ exports.generateErrorFromResponse = function (res) {
   return error;
 };
 
-},{}],48:[function(require,module,exports){
+},{}],49:[function(require,module,exports){
 (function (process,global){
 'use strict';
 
@@ -29072,7 +29298,7 @@ module.exports = function (data, callback) {
 };
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":11,"crypto":5,"spark-md5":96}],49:[function(require,module,exports){
+},{"_process":11,"crypto":5,"spark-md5":97}],50:[function(require,module,exports){
 'use strict';
 
 //
@@ -29140,7 +29366,7 @@ function parseHexString(str, encoding) {
 }
 
 module.exports = parseHexString;
-},{}],50:[function(require,module,exports){
+},{}],51:[function(require,module,exports){
 'use strict';
 
 // originally parseUri 1.2.2, now patched by us
@@ -29186,7 +29412,7 @@ function parseUri(str) {
 
 
 module.exports = parseUri;
-},{}],51:[function(require,module,exports){
+},{}],52:[function(require,module,exports){
 'use strict';
 var Promise = require('../utils').Promise;
 
@@ -29237,7 +29463,7 @@ module.exports = function (db, docId, diffFun, cb) {
   }
 };
 
-},{"../utils":61}],52:[function(require,module,exports){
+},{"../utils":62}],53:[function(require,module,exports){
 "use strict";
 
 // BEGIN Math.uuid.js
@@ -29322,7 +29548,7 @@ function uuid(len, radix) {
 module.exports = uuid;
 
 
-},{}],53:[function(require,module,exports){
+},{}],54:[function(require,module,exports){
 'use strict';
 
 module.exports = evalFilter;
@@ -29334,7 +29560,7 @@ function evalFilter(input) {
     ' })()'
   ].join(''));
 }
-},{}],54:[function(require,module,exports){
+},{}],55:[function(require,module,exports){
 'use strict';
 
 module.exports = evalView;
@@ -29356,7 +29582,7 @@ function evalView(input) {
     '})()'
   ].join('\n'));
 }
-},{}],55:[function(require,module,exports){
+},{}],56:[function(require,module,exports){
 (function (process){
 "use strict";
 
@@ -29386,7 +29612,7 @@ if (!process.browser) {
 }
 
 }).call(this,require('_process'))
-},{"./adapters/http/http":31,"./adapters/idb/idb":35,"./adapters/leveldb/leveldb":5,"./adapters/websql/websql":40,"./deps/ajax":44,"./deps/errors":47,"./replicate":57,"./setup":58,"./sync":59,"./utils":61,"./version":62,"_process":11,"pouchdb-extend":88,"pouchdb-mapreduce":91}],56:[function(require,module,exports){
+},{"./adapters/http/http":32,"./adapters/idb/idb":36,"./adapters/leveldb/leveldb":5,"./adapters/websql/websql":41,"./deps/ajax":45,"./deps/errors":48,"./replicate":58,"./setup":59,"./sync":60,"./utils":62,"./version":63,"_process":11,"pouchdb-extend":89,"pouchdb-mapreduce":92}],57:[function(require,module,exports){
 'use strict';
 var extend = require('pouchdb-extend');
 
@@ -29688,7 +29914,7 @@ PouchMerge.rootToLeaf = function (tree) {
 
 module.exports = PouchMerge;
 
-},{"pouchdb-extend":88}],57:[function(require,module,exports){
+},{"pouchdb-extend":89}],58:[function(require,module,exports){
 'use strict';
 
 var utils = require('./utils');
@@ -30287,7 +30513,7 @@ function replicateWrapper(src, target, opts, callback) {
   return replicateRet;
 }
 
-},{"./checkpointer":42,"./utils":61,"events":10}],58:[function(require,module,exports){
+},{"./checkpointer":43,"./utils":62,"events":10}],59:[function(require,module,exports){
 "use strict";
 
 var PouchDB = require("./constructor");
@@ -30485,7 +30711,7 @@ PouchDB.defaults = function (defaultOpts) {
 
 module.exports = PouchDB;
 
-},{"./adapters/preferredAdapters.js":36,"./constructor":43,"./utils":61,"events":10}],59:[function(require,module,exports){
+},{"./adapters/preferredAdapters.js":37,"./constructor":44,"./utils":62,"events":10}],60:[function(require,module,exports){
 'use strict';
 var utils = require('./utils');
 var replication = require('./replicate');
@@ -30664,7 +30890,7 @@ Sync.prototype.cancel = function () {
   }
 };
 
-},{"./replicate":57,"./utils":61,"events":10}],60:[function(require,module,exports){
+},{"./replicate":58,"./utils":62,"events":10}],61:[function(require,module,exports){
 'use strict';
 
 module.exports = TaskQueue;
@@ -30734,7 +30960,7 @@ TaskQueue.prototype.addTask = function (name, parameters) {
   }
 };
 
-},{}],61:[function(require,module,exports){
+},{}],62:[function(require,module,exports){
 (function (process,global){
 /*jshint strict: false */
 /*global chrome */
@@ -31686,10 +31912,10 @@ exports.safeJsonStringify = function safeJsonStringify(json) {
 };
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./deps/ajax":44,"./deps/blob":45,"./deps/buffer":5,"./deps/collections":46,"./deps/errors":47,"./deps/md5":48,"./deps/parse-uri":50,"./deps/uuid":52,"./merge":56,"_process":11,"argsarray":63,"bluebird":71,"debug":64,"events":10,"inherits":67,"pouchdb-extend":88,"vuvuzela":97}],62:[function(require,module,exports){
+},{"./deps/ajax":45,"./deps/blob":46,"./deps/buffer":5,"./deps/collections":47,"./deps/errors":48,"./deps/md5":49,"./deps/parse-uri":51,"./deps/uuid":53,"./merge":57,"_process":11,"argsarray":64,"bluebird":72,"debug":65,"events":10,"inherits":68,"pouchdb-extend":89,"vuvuzela":98}],63:[function(require,module,exports){
 module.exports = "3.2.1";
 
-},{}],63:[function(require,module,exports){
+},{}],64:[function(require,module,exports){
 'use strict';
 
 module.exports = argsArray;
@@ -31709,7 +31935,7 @@ function argsArray(fun) {
     }
   };
 }
-},{}],64:[function(require,module,exports){
+},{}],65:[function(require,module,exports){
 
 /**
  * This is the web browser implementation of `debug()`.
@@ -31869,7 +32095,7 @@ function load() {
 
 exports.enable(load());
 
-},{"./debug":65}],65:[function(require,module,exports){
+},{"./debug":66}],66:[function(require,module,exports){
 
 /**
  * This is the common logic for both the Node.js and web browser
@@ -32068,7 +32294,7 @@ function coerce(val) {
   return val;
 }
 
-},{"ms":66}],66:[function(require,module,exports){
+},{"ms":67}],67:[function(require,module,exports){
 /**
  * Helpers.
  */
@@ -32181,7 +32407,7 @@ function plural(ms, n, name) {
   return Math.ceil(ms / n) + ' ' + name + 's';
 }
 
-},{}],67:[function(require,module,exports){
+},{}],68:[function(require,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -32206,13 +32432,13 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],68:[function(require,module,exports){
+},{}],69:[function(require,module,exports){
 'use strict';
 
 module.exports = INTERNAL;
 
 function INTERNAL() {}
-},{}],69:[function(require,module,exports){
+},{}],70:[function(require,module,exports){
 'use strict';
 var Promise = require('./promise');
 var reject = require('./reject');
@@ -32256,7 +32482,7 @@ function all(iterable) {
     }
   }
 }
-},{"./INTERNAL":68,"./handlers":70,"./promise":72,"./reject":75,"./resolve":76}],70:[function(require,module,exports){
+},{"./INTERNAL":69,"./handlers":71,"./promise":73,"./reject":76,"./resolve":77}],71:[function(require,module,exports){
 'use strict';
 var tryCatch = require('./tryCatch');
 var resolveThenable = require('./resolveThenable');
@@ -32302,14 +32528,14 @@ function getThen(obj) {
     };
   }
 }
-},{"./resolveThenable":77,"./states":78,"./tryCatch":79}],71:[function(require,module,exports){
+},{"./resolveThenable":78,"./states":79,"./tryCatch":80}],72:[function(require,module,exports){
 module.exports = exports = require('./promise');
 
 exports.resolve = require('./resolve');
 exports.reject = require('./reject');
 exports.all = require('./all');
 exports.race = require('./race');
-},{"./all":69,"./promise":72,"./race":74,"./reject":75,"./resolve":76}],72:[function(require,module,exports){
+},{"./all":70,"./promise":73,"./race":75,"./reject":76,"./resolve":77}],73:[function(require,module,exports){
 'use strict';
 
 var unwrap = require('./unwrap');
@@ -32355,7 +32581,7 @@ Promise.prototype.then = function (onFulfilled, onRejected) {
   return promise;
 };
 
-},{"./INTERNAL":68,"./queueItem":73,"./resolveThenable":77,"./states":78,"./unwrap":80}],73:[function(require,module,exports){
+},{"./INTERNAL":69,"./queueItem":74,"./resolveThenable":78,"./states":79,"./unwrap":81}],74:[function(require,module,exports){
 'use strict';
 var handlers = require('./handlers');
 var unwrap = require('./unwrap');
@@ -32384,7 +32610,7 @@ QueueItem.prototype.callRejected = function (value) {
 QueueItem.prototype.otherCallRejected = function (value) {
   unwrap(this.promise, this.onRejected, value);
 };
-},{"./handlers":70,"./unwrap":80}],74:[function(require,module,exports){
+},{"./handlers":71,"./unwrap":81}],75:[function(require,module,exports){
 'use strict';
 var Promise = require('./promise');
 var reject = require('./reject');
@@ -32425,7 +32651,7 @@ function race(iterable) {
     });
   }
 }
-},{"./INTERNAL":68,"./handlers":70,"./promise":72,"./reject":75,"./resolve":76}],75:[function(require,module,exports){
+},{"./INTERNAL":69,"./handlers":71,"./promise":73,"./reject":76,"./resolve":77}],76:[function(require,module,exports){
 'use strict';
 
 var Promise = require('./promise');
@@ -32437,7 +32663,7 @@ function reject(reason) {
 	var promise = new Promise(INTERNAL);
 	return handlers.reject(promise, reason);
 }
-},{"./INTERNAL":68,"./handlers":70,"./promise":72}],76:[function(require,module,exports){
+},{"./INTERNAL":69,"./handlers":71,"./promise":73}],77:[function(require,module,exports){
 'use strict';
 
 var Promise = require('./promise');
@@ -32472,7 +32698,7 @@ function resolve(value) {
       return EMPTYSTRING;
   }
 }
-},{"./INTERNAL":68,"./handlers":70,"./promise":72}],77:[function(require,module,exports){
+},{"./INTERNAL":69,"./handlers":71,"./promise":73}],78:[function(require,module,exports){
 'use strict';
 var handlers = require('./handlers');
 var tryCatch = require('./tryCatch');
@@ -32505,13 +32731,13 @@ function safelyResolveThenable(self, thenable) {
   }
 }
 exports.safely = safelyResolveThenable;
-},{"./handlers":70,"./tryCatch":79}],78:[function(require,module,exports){
+},{"./handlers":71,"./tryCatch":80}],79:[function(require,module,exports){
 // Lazy man's symbols for states
 
 exports.REJECTED = ['REJECTED'];
 exports.FULFILLED = ['FULFILLED'];
 exports.PENDING = ['PENDING'];
-},{}],79:[function(require,module,exports){
+},{}],80:[function(require,module,exports){
 'use strict';
 
 module.exports = tryCatch;
@@ -32527,7 +32753,7 @@ function tryCatch(func, value) {
   }
   return out;
 }
-},{}],80:[function(require,module,exports){
+},{}],81:[function(require,module,exports){
 'use strict';
 
 var immediate = require('immediate');
@@ -32549,7 +32775,7 @@ function unwrap(promise, func, value) {
     }
   });
 }
-},{"./handlers":70,"immediate":81}],81:[function(require,module,exports){
+},{"./handlers":71,"immediate":82}],82:[function(require,module,exports){
 'use strict';
 var types = [
   require('./nextTick'),
@@ -32591,7 +32817,7 @@ function immediate(task) {
     scheduleDrain();
   }
 }
-},{"./messageChannel":82,"./mutation.js":83,"./nextTick":5,"./stateChange":84,"./timeout":85}],82:[function(require,module,exports){
+},{"./messageChannel":83,"./mutation.js":84,"./nextTick":5,"./stateChange":85,"./timeout":86}],83:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -32612,7 +32838,7 @@ exports.install = function (func) {
   };
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],83:[function(require,module,exports){
+},{}],84:[function(require,module,exports){
 (function (global){
 'use strict';
 //based off rsvp https://github.com/tildeio/rsvp.js
@@ -32637,7 +32863,7 @@ exports.install = function (handle) {
   };
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],84:[function(require,module,exports){
+},{}],85:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -32664,7 +32890,7 @@ exports.install = function (handle) {
   };
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],85:[function(require,module,exports){
+},{}],86:[function(require,module,exports){
 'use strict';
 exports.test = function () {
   return true;
@@ -32675,7 +32901,7 @@ exports.install = function (t) {
     setTimeout(t, 0);
   };
 };
-},{}],86:[function(require,module,exports){
+},{}],87:[function(require,module,exports){
 'use strict';
 
 var MIN_MAGNITUDE = -324; // verified by -Number.MIN_VALUE
@@ -33030,7 +33256,7 @@ function numToIndexableString(num) {
   return result;
 }
 
-},{"./utils":87}],87:[function(require,module,exports){
+},{"./utils":88}],88:[function(require,module,exports){
 'use strict';
 
 function pad(str, padWith, upToLength) {
@@ -33101,7 +33327,7 @@ exports.intToDecimalForm = function (int) {
 
   return result;
 };
-},{}],88:[function(require,module,exports){
+},{}],89:[function(require,module,exports){
 "use strict";
 
 // Extends method
@@ -33282,7 +33508,7 @@ module.exports = extend;
 
 
 
-},{}],89:[function(require,module,exports){
+},{}],90:[function(require,module,exports){
 'use strict';
 
 var upsert = require('./upsert');
@@ -33361,7 +33587,7 @@ module.exports = function (opts) {
   });
 };
 
-},{"./upsert":94,"./utils":95}],90:[function(require,module,exports){
+},{"./upsert":95,"./utils":96}],91:[function(require,module,exports){
 'use strict';
 
 module.exports = function (func, emit, sum, log, isArray, toJSON) {
@@ -33369,7 +33595,7 @@ module.exports = function (func, emit, sum, log, isArray, toJSON) {
   return eval("'use strict'; (" + func.replace(/;\s*$/, "") + ");");
 };
 
-},{}],91:[function(require,module,exports){
+},{}],92:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -34217,7 +34443,7 @@ function NotFoundError(message) {
 utils.inherits(NotFoundError, Error);
 
 }).call(this,require('_process'))
-},{"./create-view":89,"./evalfunc":90,"./taskqueue":93,"./utils":95,"_process":11,"pouchdb-collate":86}],92:[function(require,module,exports){
+},{"./create-view":90,"./evalfunc":91,"./taskqueue":94,"./utils":96,"_process":11,"pouchdb-collate":87}],93:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -34315,7 +34541,7 @@ if (typeof window !== 'undefined' && window.PouchDB) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"lie":71}],93:[function(require,module,exports){
+},{"lie":72}],94:[function(require,module,exports){
 'use strict';
 /*
  * Simple task queue to sequentialize actions. Assumes callbacks will eventually fire (once).
@@ -34340,7 +34566,7 @@ TaskQueue.prototype.finish = function () {
 
 module.exports = TaskQueue;
 
-},{"./utils":95}],94:[function(require,module,exports){
+},{"./utils":96}],95:[function(require,module,exports){
 'use strict';
 
 var upsert = require('pouchdb-upsert').upsert;
@@ -34348,7 +34574,7 @@ var upsert = require('pouchdb-upsert').upsert;
 module.exports = function (db, doc, diffFun) {
   return upsert.apply(db, [doc, diffFun]);
 };
-},{"pouchdb-upsert":92}],95:[function(require,module,exports){
+},{"pouchdb-upsert":93}],96:[function(require,module,exports){
 (function (process,global){
 'use strict';
 /* istanbul ignore if */
@@ -34457,7 +34683,7 @@ exports.MD5 = function (string) {
   }
 };
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":11,"argsarray":63,"crypto":5,"inherits":67,"lie":71,"pouchdb-extend":88,"spark-md5":96}],96:[function(require,module,exports){
+},{"_process":11,"argsarray":64,"crypto":5,"inherits":68,"lie":72,"pouchdb-extend":89,"spark-md5":97}],97:[function(require,module,exports){
 /*jshint bitwise:false*/
 /*global unescape*/
 
@@ -35058,7 +35284,7 @@ exports.MD5 = function (string) {
     return SparkMD5;
 }));
 
-},{}],97:[function(require,module,exports){
+},{}],98:[function(require,module,exports){
 'use strict';
 
 /**
@@ -35233,7 +35459,7 @@ exports.parse = function (str) {
   }
 };
 
-},{}],98:[function(require,module,exports){
+},{}],99:[function(require,module,exports){
 //     Underscore.js 1.7.0
 //     http://underscorejs.org
 //     (c) 2009-2014 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -36650,7 +36876,7 @@ exports.parse = function (str) {
   }
 }.call(this));
 
-},{}],99:[function(require,module,exports){
+},{}],100:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 /*global app, me, $*/
@@ -36741,7 +36967,7 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],100:[function(require,module,exports){
+},{}],101:[function(require,module,exports){
 /**
  * Hier werden zentral alle Konfigurationsparameter gesammelt
  */
@@ -36759,7 +36985,7 @@ config.couch.userName = couch_passfile.user;
 config.couch.passWord = couch_passfile.pass;
 
 module.exports = config;
-},{"../../couchpass.json":2}],101:[function(require,module,exports){
+},{"../../couchpass.json":2}],102:[function(require,module,exports){
 /*
  * erstellt aus einer possibleValues einen Array von Objekten
  * mit value und checked
@@ -36843,7 +37069,7 @@ module.exports = function (possibleValues, setValues, type) {
         return valueObject;
     });
 };
-},{"underscore":98}],102:[function(require,module,exports){
+},{"underscore":99}],103:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus: true, white: true*/
 'use strict';
 
@@ -36860,7 +37086,7 @@ module.exports = function (feldWert) {
     // object nicht umwandeln. Man muss beim Vergleichen unterscheiden können, ob es ein Object war
     return feldWert;
 };
-},{"./myTypeOf":106}],103:[function(require,module,exports){
+},{"./myTypeOf":107}],104:[function(require,module,exports){
 // setzt die Höhe von textareas so, dass der Text genau rein passt
 
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus: true*/
@@ -36912,7 +37138,7 @@ module.exports = function (id, maxHeight) {
         text.style.height = adjustedHeight + 'px';
     }
 };
-},{}],104:[function(require,module,exports){
+},{}],105:[function(require,module,exports){
 (function (global){
 /*
  * holt sich nach einer Änderung in einem Feld die Daten
@@ -36966,7 +37192,7 @@ module.exports = function (that) {
     return value;
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./convertToCorrectType":102,"underscore":98}],105:[function(require,module,exports){
+},{"./convertToCorrectType":103,"underscore":99}],106:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -36981,6 +37207,7 @@ var $                       = (typeof window !== "undefined" ? window.$ : typeof
     optionGroup             = require('../../../templates/optionGroup'),
     checkboxGroup           = require('../../../templates/checkboxGroup'),
     select                  = require('../../../templates/select'),
+    formButtonToolbar       = require('../../../templates/formButtonToolbar'),
     fitTextareaToContent    = require('./fitTextareaToContent'),
     addCheckedToValueList   = require('./addCheckedToValueList');
 
@@ -37050,6 +37277,9 @@ module.exports = function (_id) {
                 }
             });
 
+            // add button toolbar
+            html += formButtonToolbar();
+
             $('#formContent').html(html);
 
             // objekt als geladen markieren
@@ -37070,7 +37300,7 @@ module.exports = function (_id) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../../templates/checkbox":118,"../../../templates/checkboxGroup":119,"../../../templates/input":120,"../../../templates/optionGroup":121,"../../../templates/select":122,"../../../templates/textarea":123,"./addCheckedToValueList":101,"./fitTextareaToContent":103,"pouchdb":55,"underscore":98}],106:[function(require,module,exports){
+},{"../../../templates/checkbox":120,"../../../templates/checkboxGroup":121,"../../../templates/formButtonToolbar":122,"../../../templates/input":123,"../../../templates/optionGroup":124,"../../../templates/select":125,"../../../templates/textarea":126,"./addCheckedToValueList":102,"./fitTextareaToContent":104,"pouchdb":56,"underscore":99}],107:[function(require,module,exports){
 // Hilfsfunktion, die typeof ersetzt und ergänzt
 // typeof gibt bei input-Feldern immer String zurück!
 
@@ -37111,33 +37341,36 @@ module.exports = function (wert) {
     if (wert === undefined)          { return 'undefined'; }
     if (typeof wert === 'function')  { return 'function'; }
 };
-},{}],107:[function(require,module,exports){
+},{}],108:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
 var $                 = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+    dateformat        = require('dateformat'),
     _                 = require('underscore'),
     PouchDB           = require('pouchdb'),
     db                = new PouchDB('oi'),
     getLabelForObject = require('../nav/getLabelForObject');
 
 module.exports = function (_id, field, value) {
-    var object;
-
-    /*console.log('_id: ', _id);
-    console.log('field: ', field);
-    console.log('value: ', value);
-    console.log('typeof value: ', typeof value);*/
+    var object,
+        lastEdited = {};
 
     // get data for object
     object = _.find(window.oi.objects, function (object) {
         return object._id === _id;
     });
 
+    lastEdited.date = dateformat(new Date(), 'isoDateTime');
+    // TODO: get real user
+    lastEdited.user = 'z@z.ch';
+    lastEdited.database = window.oi.databaseId;
+
     if (object) {
         // set new value
         object.data[field] = value || null;
+        object.lastEdited = lastEdited;
 
         // write to pouch
         db.put(object, function (err, response) {
@@ -37159,7 +37392,7 @@ module.exports = function (_id, field, value) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../nav/getLabelForObject":112,"pouchdb":55,"underscore":98}],108:[function(require,module,exports){
+},{"../nav/getLabelForObject":114,"dateformat":12,"pouchdb":56,"underscore":99}],109:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 /*
@@ -37225,7 +37458,7 @@ module.exports = function (change) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./form/initiateForm":105,"./nav/getLabelForObject":112,"underscore":98}],109:[function(require,module,exports){
+},{"./form/initiateForm":106,"./nav/getLabelForObject":114,"underscore":99}],110:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -37294,7 +37527,34 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./alsoResizeReverse":99,"./setWidthOfTabs":114,"./showTab":116}],110:[function(require,module,exports){
+},{"./alsoResizeReverse":100,"./setWidthOfTabs":116,"./showTab":118}],111:[function(require,module,exports){
+/*jslint node: true, browser: true, nomen: true, todo: true */
+'use strict';
+
+var PouchDB = require('pouchdb'),
+    db      = new PouchDB('oi');
+
+module.exports = function () {
+    var databaseId = {};
+    db.get('_local/databaseId', function (err, response) {
+        if (err) {
+            if (err.status === 404) {
+                // document is missing > create new one and make it accessible as global variable
+                databaseId.databaseId = Math.random();
+                db.put(databaseId, '_local/databaseId', function (err, response) {
+                    if (err) { return console.log('error creating databaseId: ', err); }
+                    window.oi.databaseId = databaseId.databaseId;
+                });
+            } else {
+                console.log('error retrieving databaseId: ', err);
+            }
+        } else {
+            window.oi.databaseId = response.databaseId;
+        }
+    });
+
+};
+},{"pouchdb":56}],112:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -37322,7 +37582,7 @@ module.exports = function () {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./generateDataForTree":111,"jstree":29}],111:[function(require,module,exports){
+},{"./generateDataForTree":113,"jstree":30}],113:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -37458,7 +37718,7 @@ module.exports = function () {
 
     return _.union(objectsData, descendantHierarchiesData, topObjectsData);
 };
-},{"./getLabelForObject":112,"underscore":98}],112:[function(require,module,exports){
+},{"./getLabelForObject":114,"underscore":99}],114:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -37486,19 +37746,22 @@ module.exports = function (object, correspondingHierarchy) {
     }
     return label;
 };
-},{"underscore":98}],113:[function(require,module,exports){
+},{"underscore":99}],115:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $               = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
-    _               = require('underscore'),
-    async           = require('async'),
-    PouchDB         = require('pouchdb'),
-    db              = new PouchDB('oi'),
-    syncPouch       = require('../syncPouch'),
-    createTree      = require('./createTree'),
-    handleDbChanges = require('../handleDbChanges');
+var $                = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+    _                = require('underscore'),
+    async            = require('async'),
+    PouchDB          = require('pouchdb'),
+    db               = new PouchDB('oi'),
+    syncPouch        = require('../syncPouch'),
+    createTree       = require('./createTree'),
+    handleDbChanges  = require('../handleDbChanges'),
+    createDatabaseId = require('./createDatabaseId'),
+    hierarchiesIndex,
+    objectsIndex;
 
 // expose pouchdb to pouchdb-fauxton
 window.PouchDB = PouchDB;
@@ -37511,6 +37774,19 @@ function mapHierarchies(doc) {
     }
 }
 
+hierarchiesIndex = {
+    _id: '_design/hierarchies',
+    views: {
+        'hierarchies': {
+            map: function (doc) {
+                if (doc.type === 'hierarchy') {
+                    emit(doc._id);
+                }
+            }.toString()
+        }
+    }
+};
+
 // TODO: get only the users data
 function mapObjects(doc) {
     if (doc.type === 'object') {
@@ -37518,9 +37794,39 @@ function mapObjects(doc) {
     }
 }
 
+objectsIndex = {
+    _id: '_design/objects',
+    views: {
+        'objects': {
+            map: function (doc) {
+                if (doc.type === 'object') {
+                    emit(doc._id);
+                }
+            }.toString()
+        }
+    }
+};
+
 module.exports = function () {
 
+    // every database gets a locally saved id
+    // this id is added to every document changed
+    // with it the changes feed can ignore locally changed documents
+    createDatabaseId();
+
     syncPouch();
+
+    // create/update indexes
+    // save it
+    pouch.put(hierarchiesIndex).then(function () {
+        // kick off an initial build, return immediately
+        return pouch.query('hierarchiesIndex', {stale: 'update_after'});
+    }).then(function () {
+        // query the index (much faster now!)
+        return pouch.query('hierarchiesIndex', {key: 'foo'});
+    }).then(function (result) {
+        // found docs with name === 'foo'
+    });
 
     // TODO: filter only the users documents
     // when changes happen in DB, update model and when necessary ui
@@ -37559,7 +37865,7 @@ module.exports = function () {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../handleDbChanges":108,"../syncPouch":117,"./createTree":110,"async":3,"pouchdb":55,"underscore":98}],114:[function(require,module,exports){
+},{"../handleDbChanges":109,"../syncPouch":119,"./createDatabaseId":111,"./createTree":112,"async":3,"pouchdb":56,"underscore":99}],116:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus */
 'use strict';
@@ -37603,7 +37909,7 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"underscore":98}],115:[function(require,module,exports){
+},{"underscore":99}],117:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -37629,6 +37935,12 @@ module.exports = function () {
     $('#form')
         .on('scroll', function () {
             $('#formSeparator').css('height', $('#formContent').height() + 40);
+        })
+        .on('click', '#formNew', function () {
+            console.log('new form');
+        })
+        .on('click', '#formDelete', function () {
+            console.log('delete form');
         });
 
     $('#formContent')
@@ -37642,20 +37954,20 @@ module.exports = function () {
             saveObjectValue(_id, field, value);
         });
 
-    $(document).on('click.nav', '.navbar-collapse.in', function (e) {
+    $('body').on('click.nav', '.navbar-collapse.in', function (e) {
         if ($(e.target).is('a')) {
             $(this).collapse('hide');
         }
     });
 
     //man soll auch auf den Titel klicken können und das Menü schliesst
-    $(document).on('click.nav', '.navbar-brand', function () {
+    $('body').on('click.nav', '.navbar-brand', function () {
         $('.navbar .navbar-collapse').collapse('hide');
     });
 
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./form/fitTextareaToContent":103,"./form/getValueAfterChange":104,"./form/initiateForm":105,"./form/saveObjectValue":107,"underscore":98}],116:[function(require,module,exports){
+},{"./form/fitTextareaToContent":104,"./form/getValueAfterChange":105,"./form/initiateForm":106,"./form/saveObjectValue":108,"underscore":99}],118:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -37680,7 +37992,7 @@ module.exports = function (tab) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],117:[function(require,module,exports){
+},{}],119:[function(require,module,exports){
 /**
  * synchronisiert die Daten aus einer CouchDB in PouchDB
  */
@@ -37711,7 +38023,7 @@ module.exports = function () {
     if (remoteCouch) { sync(); }
 };
 
-},{"./configuration":100,"pouchdb":55}],118:[function(require,module,exports){
+},{"./configuration":101,"pouchdb":56}],120:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, helper, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing, functionType="function";
   return "<div class=\"form-group\">\r\n    <label class=\"control-label\">"
@@ -37725,7 +38037,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(((helper = (helper = helpers.checked || (depth0 != null ? depth0.checked : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"checked","hash":{},"data":data}) : helper)))
     + ">\r\n            </label>\r\n        </div>\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":27}],119:[function(require,module,exports){
+},{"handlebars":28}],121:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,depths) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "            <div class=\"checkbox\">\r\n                <label>\r\n                    <input type=\"checkbox\" id=\""
@@ -37752,7 +38064,11 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "    </div>\r\n</div>";
 },"useData":true,"useDepths":true});
-},{"handlebars":27}],120:[function(require,module,exports){
+},{"handlebars":28}],122:[function(require,module,exports){
+var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  return "<div class=\"btn-toolbar\" role=\"toolbar\" aria-label=\"...\">\r\n    <div class=\"btn-group\" role=\"group\" aria-label=\"...\">\r\n        <input id=\"formNew\" class=\"btn btn-default\" type=\"button\" value=\"neu\">\r\n        <input id=\"formDelete\" class=\"btn btn-default\" type=\"button\" value=\"löschen\">\r\n    </div>\r\n</div>";
+  },"useData":true});
+},{"handlebars":28}],123:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "<div class=\"form-group\">\r\n    <label for=\""
@@ -37771,7 +38087,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.value : stack1), depth0))
     + "\">\r\n</div>";
 },"useData":true});
-},{"handlebars":27}],121:[function(require,module,exports){
+},{"handlebars":28}],124:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,depths) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "            <div class=\"radio\">\r\n                <label>\r\n                    <input type=\"radio\" name=\""
@@ -37798,7 +38114,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "    </div>\r\n</div>";
 },"useData":true,"useDepths":true});
-},{"handlebars":27}],122:[function(require,module,exports){
+},{"handlebars":28}],125:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, buffer = "                <option value=";
   stack1 = lambda((depth0 != null ? depth0.value : depth0), depth0);
@@ -37821,7 +38137,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "        </select>\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":27}],123:[function(require,module,exports){
+},{"handlebars":28}],126:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "<div class=\"form-group\">\r\n    <label for=\""
@@ -37838,4 +38154,4 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.value : stack1), depth0))
     + "</textarea>\r\n</div>";
 },"useData":true});
-},{"handlebars":27}]},{},[1]);
+},{"handlebars":28}]},{},[1]);

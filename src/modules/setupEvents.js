@@ -22,6 +22,12 @@ module.exports = function () {
     $('#form')
         .on('scroll', function () {
             $('#formSeparator').css('height', $('#formContent').height() + 40);
+        })
+        .on('click', '#formNew', function () {
+            console.log('new form');
+        })
+        .on('click', '#formDelete', function () {
+            console.log('delete form');
         });
 
     $('#formContent')
@@ -35,14 +41,14 @@ module.exports = function () {
             saveObjectValue(_id, field, value);
         });
 
-    $(document).on('click.nav', '.navbar-collapse.in', function (e) {
+    $('body').on('click.nav', '.navbar-collapse.in', function (e) {
         if ($(e.target).is('a')) {
             $(this).collapse('hide');
         }
     });
 
     //man soll auch auf den Titel klicken können und das Menü schliesst
-    $(document).on('click.nav', '.navbar-brand', function () {
+    $('body').on('click.nav', '.navbar-brand', function () {
         $('.navbar .navbar-collapse').collapse('hide');
     });
 

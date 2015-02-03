@@ -1,0 +1,6 @@
+<div class="btn-toolbar" role="toolbar" aria-label="...">
+    <div class="btn-group" role="group" aria-label="...">
+        <input id="formNew" class="btn btn-default" type="button" value="neu">
+        <input id="formDelete" class="btn btn-default" type="button" value="löschen">
+    </div>
+</div>
