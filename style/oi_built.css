@@ -7254,7 +7254,8 @@ body {
 .tabTitleContainer {
   height: 30px;
   background-color: rgba(210,210,210,0.2);
-  padding: 10px;
+  padding: 6px 10px;
+  text-transform: uppercase;
 }
 .tabSeparator {
   height: 100%;

@@ -4,8 +4,12 @@
 		"selected_items":
 		[
 			[
+				"che",
+				"checkboxGroup"
+			],
+			[
 				"ob",
-				"object"
+				"objectType"
 			],
 			[
 				"hie",
@@ -343,23 +347,7 @@
 			"file": "index.html",
 			"settings":
 			{
-				"buffer_size": 4703,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "style/oi.css",
-			"settings":
-			{
-				"buffer_size": 1562,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "src/modules/nav/initiateNav.js",
-			"settings":
-			{
-				"buffer_size": 2162,
+				"buffer_size": 4723,
 				"line_ending": "Windows"
 			}
 		},
@@ -367,7 +355,15 @@
 			"file": "src/modules/form/initiateForm.js",
 			"settings":
 			{
-				"buffer_size": 4246,
+				"buffer_size": 4357,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "style/oi.css",
+			"settings":
+			{
+				"buffer_size": 1492,
 				"line_ending": "Windows"
 			}
 		},
@@ -375,47 +371,65 @@
 			"file": "src/modules/setupEvents.js",
 			"settings":
 			{
-				"buffer_size": 1015,
+				"buffer_size": 1634,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/modules/bindModelInput.js",
+			"file": "/C/Users/alex/Downloads/perfect-scrollbar-0.5.8/examples/always-visible.html",
 			"settings":
 			{
-				"buffer_size": 2533,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/modules/handleDbChanges.js",
-			"settings":
-			{
-				"buffer_size": 1697,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/modules/form/addCheckedToValueList.js",
-			"settings":
-			{
-				"buffer_size": 2108,
-				"line_ending": "Windows"
+				"buffer_size": 1331,
+				"line_ending": "Unix"
 			}
 		},
 		{
 			"file": "src/oi.js",
 			"settings":
 			{
-				"buffer_size": 1659,
+				"buffer_size": 1293,
 				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/modules/nav/initiateNav.js",
+			"settings":
+			{
+				"buffer_size": 2231,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "gulp-tasks/dev_style.js",
+			"settings":
+			{
+				"buffer_size": 564,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "gulp-tasks/dev_src.js",
+			"settings":
+			{
+				"buffer_size": 482,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "Searching 85 files for \"alsoResizeReverse\" (case sensitive, whole word)\n\nC:\\Users\\alex\\oi\\src\\modules\\alsoResizeReverse.js:\n    7  module.exports = function () {\n    8      // add plugin to resize folowing tab\n    9:     $.ui.plugin.add(\"resizable\", \"alsoResizeReverse\", {\n   10  \n   11          start: function (event, ui) {\n   ..\n   24                  };\n   25  \n   26:             if (typeof (o.alsoResizeReverse) == 'object' && !o.alsoResizeReverse.parentNode) {\n   27:                 if (o.alsoResizeReverse.length) {\n   28:                     o.alsoResize = o.alsoResizeReverse[0];\n   29:                     _store(o.alsoResizeReverse);\n   30                  } else {\n   31:                     $.each(o.alsoResizeReverse, function (exp, c) {\n   32                          _store(exp);\n   33                      });\n   34                  }\n   35              } else {\n   36:                 _store(o.alsoResizeReverse);\n   37              }\n   38          },\n   ..\n   70                  };\n   71  \n   72:             if (typeof (o.alsoResizeReverse) == 'object' && !o.alsoResizeReverse.nodeType) {\n   73:                 $.each(o.alsoResizeReverse, function (exp, c) {\n   74                      _alsoResizeReverse(exp, c);\n   75                  });\n   76              } else {\n   77:                 _alsoResizeReverse(o.alsoResizeReverse);\n   78              }\n   79          },\n\nC:\\Users\\alex\\oi\\src\\modules\\initiateResizables.js:\n    3  \n    4  var $                 = require('jquery'),\n    5:     alsoResizeReverse = require('./alsoResizeReverse'),\n    6      setWidthOfTabs    = require('./setWidthOfTabs'),\n    7      showTab           = require('./showTab');\n    .\n   13  \n   14      // add plugin to resize folowing tab\n   15:     alsoResizeReverse();\n   16  \n   17      $('#nav').resizable({\n   18          handles: { 'e': '#navSeparator' },\n   19:         alsoResizeReverse: '#form',\n   20          containment: '#content'\n   21      });\n   ..\n   23      $('#form').resizable({\n   24          handles: { 'e': '#formSeparator' },\n   25:         alsoResizeReverse: '#map',\n   26          containment: '#content'\n   27      });\n   ..\n   29      $('#map').resizable({\n   30          handles: { 'e': '#mapSeparator' },\n   31:         alsoResizeReverse: '#utils',\n   32          containment: '#content'\n   33      });\n\n18 matches across 2 files\n",
+			"settings":
+			{
+				"buffer_size": 2367,
+				"line_ending": "Windows",
+				"name": "Find Results",
+				"scratch": true
 			}
 		},
 		{
 			"file": "/C/Users/alex/oi_beispielsdaten_laden/index.js",
 			"settings":
 			{
-				"buffer_size": 14611,
+				"buffer_size": 14855,
 				"line_ending": "Windows"
 			}
 		}
@@ -467,51 +481,70 @@
 	"expanded_folders":
 	[
 		"/C/Users/alex/oi",
+		"/C/Users/alex/oi/gulp-tasks",
 		"/C/Users/alex/oi/src",
 		"/C/Users/alex/oi/src/modules",
+		"/C/Users/alex/oi/style",
 		"/C/Users/alex/oi/templates"
 	],
 	"file_history":
 	[
-		"/C/Users/alex/EvabMobile/_attachments/hArtEdit.html",
+		"/C/Users/alex/oi/src/modules/initiateResizables.js",
+		"/C/Users/alex/oi/src/modules/nav/createTree.js",
+		"/C/Users/alex/Downloads/perfect-scrollbar-0.5.8/examples/scrollbars-with-margin.html",
+		"/C/Users/alex/oi/src/modules/alsoResizeReverse.js",
+		"/C/Users/alex/oi/style/jquery-ui.theme.css",
+		"/C/Users/alex/oi/style/tinyscrollbar.css",
+		"/C/Users/alex/oi/src/oi_browserified.js",
+		"/C/Users/alex/oi/src/oi_built.js",
+		"/C/Users/alex/oi/gulp-tasks/dev_style.js",
+		"/C/Users/alex/oi/gulp-tasks/dev_src.js",
+		"/C/Users/alex/oi/src/modules/nav/getLabelForObject.js",
+		"/C/Users/alex/oi/src/modules/handleDbChanges.js",
+		"/C/Users/alex/oi/src/modules/form/addCheckedToValueList.js",
+		"/C/Users/alex/oi/src/modules/nav/generateDataForTree.js",
+		"/C/Users/alex/oi/src/modules/form/saveObjectValue.js",
+		"/C/Users/alex/oi/src/modules/setupEvents.js",
+		"/C/Users/alex/oi/src/modules/nav/initiateNav.js",
+		"/C/Users/alex/oi/src/modules/form/initiateForm.js",
+		"/C/Users/alex/oi/src/modules/form/convertToCorrectType.js",
+		"/C/Users/alex/oi/src/modules/form/myTypeOf.js",
+		"/C/Users/alex/oi/src/modules/form/getValueAfterChange.js",
 		"/C/Users/alex/oi/templates/input.hdb",
+		"/C/Users/alex/oi/templates/input.js",
+		"/C/Users/alex/oi/templates/select.hdb",
+		"/C/Users/alex/oi/templates/checkbox.js",
+		"/C/Users/alex/oi/src/modules/form/initiateForm_fromDb.js",
+		"/C/Users/alex/oi/src/modules/bindModelInput.js",
+		"/C/Users/alex/oi/gulp-tasks/watch.js",
+		"/C/Users/alex/oi/templates/textarea.hdb",
+		"/C/Users/alex/oi/templates/optionGroup.hdb",
+		"/C/Users/alex/oi/templates/checkboxGroup.hdb",
+		"/C/Users/alex/oi/templates/checkbox.hdb",
+		"/C/Users/alex/oi/gulp-tasks/dev_when_watch_2.js",
+		"/C/Users/alex/oi/gulp-tasks/dev_when_watch_1.js",
+		"/C/Users/alex/oi/package.json",
+		"/C/Users/alex/oi/src/oi.js",
+		"/C/Users/alex/oi/src/modules/createGlobals.js",
+		"/C/Users/alex/EvabMobile/_attachments/hArtEdit.html",
 		"/C/Users/alex/EvabMobile/vendor/couchapp/_attachments/evab.js",
 		"/C/Users/alex/EvabMobile/vendor/couchapp/_attachments/app.js",
-		"/C/Users/alex/oi/src/oi_browserified.js",
-		"/C/Users/alex/oi/src/modules/handleDbChanges.js",
-		"/C/Users/alex/oi/templates/select.hdb",
-		"/C/Users/alex/oi/templates/optionGroup.hdb",
 		"/C/Users/alex/oi/src/jquery.js",
-		"/C/Users/alex/oi/src/modules/createGlobals.js",
-		"/C/Users/alex/oi/package.json",
 		"/C/Users/alex/oi/server.js",
 		"/C/Users/alex/oi/src/modules/addCheckedToValueList.js",
-		"/C/Users/alex/oi/src/modules/nav/createTree.js",
 		"/C/Users/alex/oi/src/modules/bindModelInputForObject.js",
 		"/C/Users/alex/oi/src/modules/bindModelInputForObjects.js",
-		"/C/Users/alex/oi/src/modules/nav/generateDataForTree.js",
-		"/C/Users/alex/oi/src/modules/form/initiateForm.js",
-		"/C/Users/alex/oi/src/modules/setupEvents.js",
 		"/C/Users/alex/oi/src/modules/initiateForm.js",
 		"/C/Users/alex/oi/src/modules/generateDataForTree.js",
 		"/C/Users/alex/oi/src/modules/initiateNav.js",
 		"/C/Users/alex/oi/src/modules/createTree.js",
-		"/C/Users/alex/oi/templates/checkboxGroup.hdb",
-		"/C/Users/alex/oi/templates/checkbox.hdb",
 		"/C/Users/alex/oi_beispielsdaten_laden/index.js",
-		"/C/Users/alex/oi/templates/textarea.hdb",
 		"/C/Users/alex/oi/src/modules/makeValueObjectListFromValueList.js",
-		"/C/Users/alex/oi/templates/checkbox.js",
 		"/C/Users/alex/oi/src/modules/fitTextareaToContent.js",
 		"/C/Users/alex/oi/gulp-tasks/templates.js",
 		"/C/Users/alex/oi/.gitignore",
-		"/C/Users/alex/oi/gulp-tasks/watch.js",
-		"/C/Users/alex/oi/templates/input.js",
-		"/C/Users/alex/oi/gulp-tasks/dev_style.js",
-		"/C/Users/alex/oi/gulp-tasks/dev_src.js",
 		"/C/Users/alex/Downloads/vakata-jstree-2f630b4/dist/jstree.js",
 		"/C/Users/alex/oi/src/modules/syncPouch.js",
-		"/C/Users/alex/oi/src/modules/initiateResizables.js",
 		"/C/Users/alex/oi/src/modules/configuration.js",
 		"/C/Users/alex/oi_beispielsdaten_laden/package.json",
 		"/C/Users/alex/artendb_euring_update/index.js",
@@ -519,13 +552,11 @@
 		"/C/Users/alex/artendb_tww_felder_umbenennnen/index.js",
 		"/C/Users/alex/oi/client/views/main.js",
 		"/C/Users/alex/oi/src/modules/showTab.js",
-		"/C/Users/alex/oi/src/modules/alsoResizeReverse.js",
 		"/C/Users/alex/oi/src/modules/setWidthOfTabs.js",
 		"/C/Users/alex/oi/fakeApi.js",
 		"/C/Users/alex/oi/gulp-tasks/dev_3.js",
 		"/C/Users/alex/oi/gulp-tasks/dev_2.js",
 		"/C/Users/alex/oi/gulp-tasks/browserify.js",
-		"/C/Users/alex/oi/src/oi_built.js",
 		"/C/Users/alex/oi/style/oi.css",
 		"/C/Users/alex/oi/gulp-tasks/default.js",
 		"/C/Users/alex/oi/style/oi_built.css",
@@ -585,22 +616,7 @@
 		"/C/Users/alex/apflora/src/modules/events/forms/gMap/onClickOeffneBeob.js",
 		"/C/Users/alex/apflora/dist/style/apflora.css",
 		"/C/Users/alex/apflora/src/modules/events/onClickUndelete.js",
-		"/C/Users/alex/apflora/src/modules/frageObUndeleteDatensatz.js",
-		"/C/Users/alex/apflora/src/modules/undeleteDatensatz.js",
-		"/C/Users/alex/apflora/sql/ViewsGenerieren.sql",
-		"/C/Users/alex/apflora/src/modules/erstelleApliste.js",
-		"/C/Users/alex/apflora/src/modules/beschrifteTPopMitNrFuerKarte.js",
-		"/F/Google Drive/2014 FNS Arteigenschaften/euring.json",
-		"/C/Users/alex/apflora/sql/createEvabTblPersonen.sql",
-		"/C/Users/alex/apflora/src/modules/jstree/beurteileBeobAufOlmap.js",
-		"/C/Users/alex/apflora/src/modules/olMap/erstelleBeobLayer.js",
-		"/C/Users/alex/apflora/src/modules/olMap/initiiereOlmap.js",
-		"/C/Users/alex/apflora/src/modules/olMap/addShowFeatureInfoOnClick.js",
-		"/C/Users/alex/apflora/src/modules/olMap/zeigeFeatureInfo.js",
-		"/C/Users/alex/apflora/src/modules/olMap/createLayers.js",
-		"/C/Users/alex/apflora/src/modules/olMap/erstelleMarkerFuerTPopLayer.js",
-		"/C/Users/alex/apflora/src/jquery.qtip.js",
-		"/C/Users/alex/apflora/src/modules/olMap/initiiereLayertree.js"
+		"/C/Users/alex/apflora/src/modules/frageObUndeleteDatensatz.js"
 	],
 	"find":
 	{
@@ -611,6 +627,8 @@
 		"height": 147.0,
 		"where_history":
 		[
+			"C:\\Users\\alex\\oi, -oi_browserified.js, -oi_built.js, -bootstrap.js, -jquery-ui.js, -jquery.js, -jstree.js, -bootstrap.css, -oi_built.css, -jstree.css",
+			"C:\\Users\\alex\\oi, -oi_browserified.js, -oi_built.js, -bootstrap.js, -jquery-ui.js, -jquery.js, -jstree.js, -bootstrap.css",
 			"C:\\Users\\alex\\oi, -oi_browserified.js, -oi_built.js, -bootstrap.js, -jquery-ui.js, -jquery.js, -jstree.js",
 			"C:\\Users\\alex\\oi, -oi_browserified.js, -oi_built.js",
 			"C:\\Users\\alex\\oi -oi_browserified.js, -oi_built.js",
@@ -685,6 +703,49 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"mousewheelHandler",
+			"updateGeometry",
+			"height",
+			"formContent",
+			"alsoResizeReverse",
+			"images",
+			"formContent",
+			"constructor",
+			"$('#navContent').jstree().rename_node",
+			"'setValues:",
+			"\"inputType\": \"hierarchy\",",
+			"\"inputType\": \"object\"",
+			"dataType",
+			"\"dataType\":",
+			"type",
+			"bootstrap.css",
+			"type",
+			"\"type\"",
+			"getValueAfterChange",
+			"\"type\": \"number\"",
+			"h31",
+			"irgendwo",
+			"getValueAfterChange",
+			"constructor",
+			"saveObjectValue",
+			"fieldValueArray",
+			"valueArray",
+			"h11",
+			" === 'object'",
+			"o10o",
+			"templateObject.object.valueList = addCheckedToValueList(field.valueList, [object.data[field.label]], 'optionGroup');",
+			"valueList = _.pluck(valueArray, 'value');",
+			" templateObject.object          = {};\n                templateObject.object._id      = object._id;",
+			"hierarchy = _.find(window.oi.hierarchies, function (hierarchy) {\n            return hierarchy._id === object.hId;\n        });",
+			"handleDbChanges",
+			"initiateForm",
+			"addCheckedToValueList",
+			"valueList = _.pluck(valueArray, 'value');",
+			"bindModelInputForObject",
+			"this",
+			"$(this)",
+			"changed ",
+			"window.oi.setupEvents",
 			"window.em.holeFeldInfosVonElement",
 			"window.em.speichereBeob",
 			"window.em.handleBeobEditSpeichernChange",
@@ -769,50 +830,7 @@
 			"id",
 			"formSeparator",
 			"_",
-			"body",
-			"\"",
-			"favicon.ico",
-			"window.oi",
-			";\nvar ",
-			"$",
-			";\nvar ",
-			"idLength",
-			"tracking",
-			"container",
-			"projection",
-			"ga",
-			"getLayerNames",
-			"_.map",
-			"zhKartierungenLayerSource",
-			"zeigePopsAufOlmap",
-			"auf CH-Karten zeigen",
-			"View2D",
-			"checked",
-			"window.apf.googleKarteDetailplaene",
-			"gMapDetailplaeneCheckbox",
-			"gMapDetailplaeneDiv",
-			"gMap",
-			"rueteren",
-			".ico",
-			".jpg",
-			"exporte.png",
-			"exporte.jpg",
-			"bable4.jpg",
-			"m5.png",
-			"close1",
-			"table2.jpg",
-			"undelete",
-			"v_exportevab_alle",
-			"evab",
-			"apflora.ap.ApJahr",
-			"v_beob",
-			"beob",
-			"210",
-			"v_apber_a9lpop",
-			"v_apber_a8ltpop",
-			"a7lpop",
-			"v_apber_a7lpop",
-			"v_apber_a7ltpop"
+			"body"
 		],
 		"highlight": false,
 		"in_selection": false,
@@ -820,6 +838,17 @@
 		"regex": false,
 		"replace_history":
 		[
+			"tinyscrollbar_images",
+			"\"type\": \"hierarchy\",",
+			"\"type\": \"object\"",
+			"inputDataType",
+			"\"inputDataType\":",
+			"\"inputType\"",
+			"setValues",
+			"possibleValues",
+			"that",
+			"$that",
+			"",
 			"optionGroup",
 			"object",
 			"key",
@@ -936,18 +965,7 @@
 			"tpop",
 			"tpopmassnber",
 			"adb_eigenschaften",
-			"ap",
-			"adb_eigenschaften",
-			"pop",
-			"tpop",
-			"tpopmassn",
-			"ap",
-			"adb_eigenschaften",
-			"pop",
-			"tpop",
-			"tpopkontr",
-			"pop",
-			"tpopber"
+			"ap"
 		],
 		"reverse": false,
 		"show_context": true,
@@ -958,7 +976,7 @@
 	"groups":
 	[
 		{
-			"selected": 4,
+			"selected": 3,
 			"sheets":
 			[
 				{
@@ -967,15 +985,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 4703,
+						"buffer_size": 4723,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								4542,
-								4542
+								3397,
+								3409
 							]
 						],
 						"settings":
@@ -985,27 +1003,57 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1547.0,
+						"translation.y": 1557.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 3,
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "style/oi.css",
+					"file": "src/modules/form/initiateForm.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1562,
+						"buffer_size": 4357,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								655,
-								655
+								4171,
+								4074
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1769.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "style/oi.css",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1492,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								417,
+								417
 							]
 						],
 						"settings":
@@ -1015,147 +1063,27 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 800.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 10,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "src/modules/nav/initiateNav.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2162,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								333,
-								333
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 899.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 5,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "src/modules/form/initiateForm.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 4246,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1554,
-								1554
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 1102.0,
+						"translation.y": 280.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
 					"type": "text"
 				},
 				{
-					"buffer": 4,
+					"buffer": 3,
 					"file": "src/modules/setupEvents.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1015,
+						"buffer_size": 1634,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								637,
-								637
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "src/modules/bindModelInput.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2533,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1159,
-								1159
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 493.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 6,
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "src/modules/handleDbChanges.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1697,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								757,
-								757
+								562,
+								562
 							]
 						],
 						"settings":
@@ -1168,24 +1096,54 @@
 						"translation.y": 145.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 7,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
-					"buffer": 7,
-					"file": "src/modules/form/addCheckedToValueList.js",
+					"buffer": 4,
+					"file": "/C/Users/alex/Downloads/perfect-scrollbar-0.5.8/examples/always-visible.html",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2108,
+						"buffer_size": 1331,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								851,
-								851
+								251,
+								192
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "src/oi.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1293,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1235,
+								1235
 							]
 						],
 						"settings":
@@ -1198,24 +1156,54 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 9,
+					"stack_index": 7,
 					"type": "text"
 				},
 				{
-					"buffer": 8,
-					"file": "src/oi.js",
+					"buffer": 6,
+					"file": "src/modules/nav/initiateNav.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1659,
+						"buffer_size": 2231,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								981,
-								981
+								2207,
+								2217
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1421.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "gulp-tasks/dev_style.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 564,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								364,
+								364
 							]
 						],
 						"settings":
@@ -1232,20 +1220,20 @@
 					"type": "text"
 				},
 				{
-					"buffer": 9,
-					"file": "/C/Users/alex/oi_beispielsdaten_laden/index.js",
+					"buffer": 8,
+					"file": "gulp-tasks/dev_src.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 14611,
+						"buffer_size": 482,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								5846,
-								5846
+								399,
+								399
 							]
 						],
 						"settings":
@@ -1255,27 +1243,142 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 5713.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 6,
 					"type": "text"
 				},
 				{
 					"buffer": 9,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2367,
+						"regions":
+						{
+							"match":
+							{
+								"flags": 112,
+								"regions":
+								[
+									[
+										251,
+										268
+									],
+									[
+										399,
+										416
+									],
+									[
+										436,
+										453
+									],
+									[
+										497,
+										514
+									],
+									[
+										569,
+										586
+									],
+									[
+										627,
+										644
+									],
+									[
+										715,
+										732
+									],
+									[
+										914,
+										931
+									],
+									[
+										1046,
+										1063
+									],
+									[
+										1083,
+										1100
+									],
+									[
+										1145,
+										1162
+									],
+									[
+										1338,
+										1355
+									],
+									[
+										1519,
+										1536
+									],
+									[
+										1550,
+										1567
+									],
+									[
+										1757,
+										1774
+									],
+									[
+										1884,
+										1901
+									],
+									[
+										2072,
+										2089
+									],
+									[
+										2257,
+										2274
+									]
+								],
+								"scope": ""
+							}
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"detect_indentation": false,
+							"line_numbers": false,
+							"output_tag": 1,
+							"result_base_dir": "",
+							"result_file_regex": "^([A-Za-z\\\\/<].*):$",
+							"result_line_regex": "^ +([0-9]+):",
+							"scroll_past_end": true,
+							"syntax": "Packages/Default/Find Results.hidden-tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 783.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 9,
+					"type": "text"
+				},
+				{
+					"buffer": 10,
 					"file": "/C/Users/alex/oi_beispielsdaten_laden/index.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 14611,
+						"buffer_size": 14855,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								5394,
-								5402
+								4077,
+								4077
 							]
 						],
 						"settings":
@@ -1285,10 +1388,40 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 164.0,
+						"translation.y": 3751.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 11,
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "/C/Users/alex/oi_beispielsdaten_laden/index.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 14855,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								12744,
+								12753
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 11764.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 10,
 					"type": "text"
 				}
 			]
