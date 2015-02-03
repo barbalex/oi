@@ -59,4 +59,7 @@ module.exports = function () {
             }, 500);
         }
     });
+
+    $('.scrollbar').perfectScrollbar({includePadding: true});
+
 };

@@ -37059,6 +37059,9 @@ module.exports = function (_id) {
             _.each(textareaIds, function (textareaId) {
                 fitTextareaToContent(textareaId);
             });
+
+            // scrollbars aktualisieren
+            $('.scrollbar').perfectScrollbar('update');
         } else {
             console.log('error: found hierarchy for object with id ', _id);
         }
@@ -37285,6 +37288,9 @@ module.exports = function () {
             }, 500);
         }
     });
+
+    $('.scrollbar').perfectScrollbar({includePadding: true});
+
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
@@ -37310,6 +37316,9 @@ module.exports = function () {
             'check_callback': true,
             'multiple':       false
         }
+    }).on('ready.jstree', function (e, data) {
+        // scrollbars aktualisieren
+        $('.scrollbar').perfectScrollbar('update');
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})

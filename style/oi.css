@@ -30,17 +30,18 @@ body {
   background-image: linear-gradient(to left, #000 0%, rgba(84,84,84,0.8) 100%);
   z-index: 1;
 }
+.scrollbar .ps-scrollbar-y-rail {
+  right: 10px;
+}
 #nav {
   background-color: #ff0;
   width: 10vw;
-  overflow-y: auto;
-  overflow-x: auto;
+  overflow: hidden;
 }
 #form {
   background-color: #ffa500;
   width: 35vw;
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 #map {
   background-color: #008000;
@@ -65,20 +66,12 @@ body {
 #formContent {
   width: calc(100% - 8px);
   max-width: calc(100% - 8px);
-  padding: 5px 10px 5px 10px;
+  padding: 5px 14px 5px 10px;
 }
 
 #navContent ul {
   /*color: red;*/
   width: 100%;
-}
-
-#navContent ul ul {
-  /*color: blue;*/
-}
-
-#navContent ul ul ul {
-  /*color: green;*/
 }
 
 #navContent .jstree-icon {

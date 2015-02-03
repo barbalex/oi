@@ -89,6 +89,9 @@ module.exports = function (_id) {
             _.each(textareaIds, function (textareaId) {
                 fitTextareaToContent(textareaId);
             });
+
+            // scrollbars aktualisieren
+            $('.scrollbar').perfectScrollbar('update');
         } else {
             console.log('error: found hierarchy for object with id ', _id);
         }

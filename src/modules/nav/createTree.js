@@ -18,5 +18,8 @@ module.exports = function () {
             'check_callback': true,
             'multiple':       false
         }
+    }).on('ready.jstree', function (e, data) {
+        // scrollbars aktualisieren
+        $('.scrollbar').perfectScrollbar('update');
     });
 };
