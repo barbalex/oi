@@ -17,13 +17,6 @@ var $                = require('jquery'),
 window.PouchDB = PouchDB;
 
 // TODO: get only the users data
-// TODO: create real views
-function mapHierarchies(doc) {
-    if (doc.type === 'hierarchy') {
-        emit(doc._id);
-    }
-}
-
 hierarchiesIndex = {
     _id: '_design/hierarchies',
     views: {
@@ -38,12 +31,6 @@ hierarchiesIndex = {
 };
 
 // TODO: get only the users data
-function mapObjects(doc) {
-    if (doc.type === 'object') {
-        emit(doc._id);
-    }
-}
-
 objectsIndex = {
     _id: '_design/objects',
     views: {
@@ -66,19 +53,7 @@ module.exports = function () {
 
     syncPouch();
 
-    // create/update indexes
-    // save it
-    pouch.put(hierarchiesIndex).then(function () {
-        // kick off an initial build, return immediately
-        return pouch.query('hierarchiesIndex', {stale: 'update_after'});
-    }).then(function () {
-        // query the index (much faster now!)
-        return pouch.query('hierarchiesIndex', {key: 'foo'});
-    }).then(function (result) {
-        // found docs with name === 'foo'
-    });
-
-    // TODO: filter only the users documents
+    // TODO: filter only the users documents created with local databaseId
     // when changes happen in DB, update model and when necessary ui
     db.changes({since: 'now', live: true, include_docs: true}).on('change', handleDbChanges);
 
@@ -86,20 +61,60 @@ module.exports = function () {
     async.parallel({
         hierarchies: function (callback) {
             // TODO: get only the users data
-            db.query({map: mapHierarchies}, {reduce: false, include_docs: true}, function (err, response) {
-                var hierarchies = _.map(response.rows, function (row) {
-                    return row.doc;
-                });
-                callback(null, hierarchies);
+            db.query('hierarchies', {include_docs: true}, function (err, result) {
+                if (err) {
+                    if (err.status === 404) {
+                        // index doesnt exist yet
+                        db.put(hierarchiesIndex).then(function () {
+                            // kick off an initial build, return immediately
+                            return db.query('hierarchies', {stale: 'update_after'});
+                        }).then(function () {
+                            // query the index (much faster now!)
+                            return db.query('hierarchies', {include_docs: true});
+                        }).then(function (result) {
+                            var hierarchies = _.map(result.rows, function (row) {
+                                return row.doc;
+                            });
+                            callback(null, hierarchies);
+                        });
+                    } else {
+                        return console.log('error querrying hierarchies: ', err);
+                    }
+                } else {
+                    var hierarchies = _.map(result.rows, function (row) {
+                        return row.doc;
+                    });
+                    callback(null, hierarchies);
+                }
             });
         },
         objects: function (callback) {
             // TODO: get only the users data
-            db.query({map: mapObjects}, {reduce: false, include_docs: true}, function (err, response) {
-                var objects = _.map(response.rows, function (row) {
-                    return row.doc;
-                });
-                callback(null, objects);
+            db.query('objects', {include_docs: true}, function (err, result) {
+                if (err) {
+                    if (err.status === 404) {
+                        // index doesnt exist yet > create it
+                        db.put(objectsIndex).then(function () {
+                            // kick off an initial build, return immediately
+                            return db.query('objects', {stale: 'update_after'});
+                        }).then(function () {
+                            // query the index (much faster now!)
+                            return db.query('objects', {include_docs: true});
+                        }).then(function (result) {
+                            var objects = _.map(result.rows, function (row) {
+                                return row.doc;
+                            });
+                            callback(null, objects);
+                        });
+                    } else {
+                        return console.log('error querrying objects: ', err);
+                    }
+                } else {
+                    var objects = _.map(result.rows, function (row) {
+                        return row.doc;
+                    });
+                    callback(null, objects);
+                }
             });
         }
     }, function (err, results) {
