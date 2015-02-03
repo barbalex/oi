@@ -19677,7 +19677,7 @@ window.oi.initiiereApp = function () {
 
 // gleich ein mal ausführen
 window.oi.initiiereApp();
-},{"./modules/initiateResizables":110,"./modules/nav/initiateNav":119,"./modules/setupEvents":122,"handlebars":28}],2:[function(require,module,exports){
+},{"./modules/initiateResizables":111,"./modules/nav/initiateNav":120,"./modules/setupEvents":123,"handlebars":28}],2:[function(require,module,exports){
 module.exports={
     "user": "barbalex",
     "pass": "dLhdMg12"
@@ -56847,7 +56847,8 @@ var $                       = (typeof window !== "undefined" ? window.$ : typeof
     select                  = require('../../../templates/select'),
     formButtonToolbar       = require('../../../templates/formButtonToolbar'),
     fitTextareaToContent    = require('./fitTextareaToContent'),
-    addCheckedToValueList   = require('./addCheckedToValueList');
+    addCheckedToValueList   = require('./addCheckedToValueList'),
+    positionFormBtngroup    = require('./positionFormBtngroup');
 
 module.exports = function (_id) {
     var html        = '',
@@ -56920,6 +56921,8 @@ module.exports = function (_id) {
 
             $('#formContent').html(html);
 
+            positionFormBtngroup();
+
             // objekt als geladen markieren
             $('#formContent').data('id', object._id);
 
@@ -56938,7 +56941,7 @@ module.exports = function (_id) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../../templates/checkbox":125,"../../../templates/checkboxGroup":126,"../../../templates/formButtonToolbar":127,"../../../templates/input":128,"../../../templates/optionGroup":129,"../../../templates/select":130,"../../../templates/textarea":131,"./addCheckedToValueList":102,"./fitTextareaToContent":104,"pouchdb":56,"underscore":99}],107:[function(require,module,exports){
+},{"../../../templates/checkbox":126,"../../../templates/checkboxGroup":127,"../../../templates/formButtonToolbar":128,"../../../templates/input":129,"../../../templates/optionGroup":130,"../../../templates/select":131,"../../../templates/textarea":132,"./addCheckedToValueList":102,"./fitTextareaToContent":104,"./positionFormBtngroup":108,"pouchdb":56,"underscore":99}],107:[function(require,module,exports){
 // Hilfsfunktion, die typeof ersetzt und ergänzt
 // typeof gibt bei input-Feldern immer String zurück!
 
@@ -56980,6 +56983,17 @@ module.exports = function (wert) {
     if (typeof wert === 'function')  { return 'function'; }
 };
 },{}],108:[function(require,module,exports){
+(function (global){
+/*jslint node: true, browser: true, nomen: true, todo: true, plusplus: true, white: true*/
+'use strict';
+
+var $ = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null);
+
+module.exports = function (wert) {
+    $('#form').find('.btn-group').css('margin-left', $('#formContent').width() - 120);
+};
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],109:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -57030,7 +57044,7 @@ module.exports = function (_id, field, value) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../nav/getLabelForObject":115,"dateformat":12,"pouchdb":56,"underscore":99}],109:[function(require,module,exports){
+},{"../nav/getLabelForObject":116,"dateformat":12,"pouchdb":56,"underscore":99}],110:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 /*
@@ -57080,15 +57094,16 @@ module.exports = function (change) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./form/initiateForm":106,"./nav/getLabelForObject":115,"underscore":99}],110:[function(require,module,exports){
+},{"./form/initiateForm":106,"./nav/getLabelForObject":116,"underscore":99}],111:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $                 = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
-    alsoResizeReverse = require('./alsoResizeReverse'),
-    setWidthOfTabs    = require('./setWidthOfTabs'),
-    showTab           = require('./showTab');
+var $                    = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+    alsoResizeReverse    = require('./alsoResizeReverse'),
+    setWidthOfTabs       = require('./setWidthOfTabs'),
+    showTab              = require('./showTab'),
+    positionFormBtngroup = require('./form/positionFormBtngroup');
 
 module.exports = function () {
     var zaehler;
@@ -57107,7 +57122,11 @@ module.exports = function () {
     $('#form').resizable({
         handles: { 'e': '#formSeparator' },
         alsoResizeReverse: '#map',
-        containment: '#content'
+        containment: '#content',
+        resize: function (event, ui) {
+            console.log('form resized');
+            positionFormBtngroup();
+        }
     });
 
     $('#map').resizable({
@@ -57149,7 +57168,7 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./alsoResizeReverse":100,"./setWidthOfTabs":121,"./showTab":123}],111:[function(require,module,exports){
+},{"./alsoResizeReverse":100,"./form/positionFormBtngroup":108,"./setWidthOfTabs":122,"./showTab":124}],112:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -57179,7 +57198,7 @@ module.exports = function () {
     });
 
 };
-},{"./initiateForeignChangeQuery":118,"pouchdb":56}],112:[function(require,module,exports){
+},{"./initiateForeignChangeQuery":119,"pouchdb":56}],113:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -57207,7 +57226,7 @@ module.exports = function () {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./generateDataForTree":114,"jstree":30}],113:[function(require,module,exports){
+},{"./generateDataForTree":115,"jstree":30}],114:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -57233,7 +57252,7 @@ module.exports = function () {
         }
     };
 }
-},{}],114:[function(require,module,exports){
+},{}],115:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -57369,7 +57388,7 @@ module.exports = function () {
 
     return _.union(objectsData, descendantHierarchiesData, topObjectsData);
 };
-},{"./getLabelForObject":115,"underscore":99}],115:[function(require,module,exports){
+},{"./getLabelForObject":116,"underscore":99}],116:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -57397,7 +57416,7 @@ module.exports = function (object, correspondingHierarchy) {
     }
     return label;
 };
-},{"underscore":99}],116:[function(require,module,exports){
+},{"underscore":99}],117:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -57416,7 +57435,7 @@ module.exports = function () {
         }
     };
 };
-},{}],117:[function(require,module,exports){
+},{}],118:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -57437,7 +57456,7 @@ module.exports = function () {
         key: 'object'
     }).on('change', handleDbObjectChanges);
 };
-},{"../handleDbObjectChanges":109,"./foreignChangedIndex":113,"pouchdb":56}],118:[function(require,module,exports){
+},{"../handleDbObjectChanges":110,"./foreignChangedIndex":114,"pouchdb":56}],119:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -57472,7 +57491,7 @@ module.exports = function () {
         }
     });
 };
-},{"./foreignChangedIndex":113,"./initiateChangeStream":117,"pouchdb":56,"underscore":99}],119:[function(require,module,exports){
+},{"./foreignChangedIndex":114,"./initiateChangeStream":118,"pouchdb":56,"underscore":99}],120:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -57573,7 +57592,7 @@ module.exports = function () {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../syncPouch":124,"./createDatabaseId":111,"./createTree":112,"./hierarchiesIndex":116,"./objectsIndex":120,"async":3,"pouchdb":56,"underscore":99}],120:[function(require,module,exports){
+},{"../syncPouch":125,"./createDatabaseId":112,"./createTree":113,"./hierarchiesIndex":117,"./objectsIndex":121,"async":3,"pouchdb":56,"underscore":99}],121:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -57592,13 +57611,14 @@ module.exports = function () {
         }
     };
 };
-},{}],121:[function(require,module,exports){
+},{}],122:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus */
 'use strict';
 
-var _ = require('underscore'),
-    $ = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null);
+var _                    = require('underscore'),
+    $                    = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+    positionFormBtngroup = require('./form/positionFormBtngroup');
 
 module.exports = function () {
     var widths         = [],
@@ -57633,10 +57653,12 @@ module.exports = function () {
 
         $('#' + widthObject.id).css('width', widthAfter);
     });
+
+    positionFormBtngroup();
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"underscore":99}],122:[function(require,module,exports){
+},{"./form/positionFormBtngroup":108,"underscore":99}],123:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -57694,7 +57716,7 @@ module.exports = function () {
 
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./form/fitTextareaToContent":104,"./form/getValueAfterChange":105,"./form/initiateForm":106,"./form/saveObjectValue":108,"underscore":99}],123:[function(require,module,exports){
+},{"./form/fitTextareaToContent":104,"./form/getValueAfterChange":105,"./form/initiateForm":106,"./form/saveObjectValue":109,"underscore":99}],124:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -57719,7 +57741,7 @@ module.exports = function (tab) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],124:[function(require,module,exports){
+},{}],125:[function(require,module,exports){
 /**
  * synchronisiert die Daten aus einer CouchDB in PouchDB
  */
@@ -57750,7 +57772,7 @@ module.exports = function () {
     if (remoteCouch) { sync(); }
 };
 
-},{"./configuration":101,"pouchdb":56}],125:[function(require,module,exports){
+},{"./configuration":101,"pouchdb":56}],126:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, helper, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing, functionType="function";
   return "<div class=\"form-group\">\r\n    <label class=\"control-label\">"
@@ -57764,7 +57786,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(((helper = (helper = helpers.checked || (depth0 != null ? depth0.checked : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"checked","hash":{},"data":data}) : helper)))
     + ">\r\n            </label>\r\n        </div>\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":28}],126:[function(require,module,exports){
+},{"handlebars":28}],127:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,depths) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "            <div class=\"checkbox\">\r\n                <label>\r\n                    <input type=\"checkbox\" id=\""
@@ -57791,11 +57813,11 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "    </div>\r\n</div>";
 },"useData":true,"useDepths":true});
-},{"handlebars":28}],127:[function(require,module,exports){
-var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  return "<div class=\"btn-toolbar pull-right\" role=\"toolbar\" aria-label=\"Daten Toolbar\">\r\n    <div class=\"btn-group pull-right\" role=\"group\" aria-label=\"Daten Button group\">\r\n        <input id=\"formNew\" class=\"btn btn-default\" type=\"button\" value=\"neu\">\r\n        <input id=\"formDelete\" class=\"btn btn-default\" type=\"button\" value=\"löschen\">\r\n    </div>\r\n</div>";
-  },"useData":true});
 },{"handlebars":28}],128:[function(require,module,exports){
+var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  return "<div class=\"btn-toolbar\" role=\"toolbar\" aria-label=\"Daten Toolbar\">\r\n    <div class=\"btn-group pull-right\" role=\"group\" aria-label=\"Daten Button group\">\r\n        <button id=\"formNew\" class=\"btn btn-default\">neu</button>\r\n        <button id=\"formDelete\" class=\"btn btn-default\">löschen</button>\r\n    </div>\r\n</div>";
+  },"useData":true});
+},{"handlebars":28}],129:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "<div class=\"form-group\">\r\n    <label for=\""
@@ -57814,7 +57836,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.value : stack1), depth0))
     + "\">\r\n</div>";
 },"useData":true});
-},{"handlebars":28}],129:[function(require,module,exports){
+},{"handlebars":28}],130:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,depths) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "            <div class=\"radio\">\r\n                <label>\r\n                    <input type=\"radio\" name=\""
@@ -57841,7 +57863,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "    </div>\r\n</div>";
 },"useData":true,"useDepths":true});
-},{"handlebars":28}],130:[function(require,module,exports){
+},{"handlebars":28}],131:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, buffer = "                <option value=";
   stack1 = lambda((depth0 != null ? depth0.value : depth0), depth0);
@@ -57864,7 +57886,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "        </select>\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":28}],131:[function(require,module,exports){
+},{"handlebars":28}],132:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "<div class=\"form-group\">\r\n    <label for=\""

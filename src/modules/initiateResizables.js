@@ -1,10 +1,11 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $                 = require('jquery'),
-    alsoResizeReverse = require('./alsoResizeReverse'),
-    setWidthOfTabs    = require('./setWidthOfTabs'),
-    showTab           = require('./showTab');
+var $                    = require('jquery'),
+    alsoResizeReverse    = require('./alsoResizeReverse'),
+    setWidthOfTabs       = require('./setWidthOfTabs'),
+    showTab              = require('./showTab'),
+    positionFormBtngroup = require('./form/positionFormBtngroup');
 
 module.exports = function () {
     var zaehler;
@@ -23,7 +24,11 @@ module.exports = function () {
     $('#form').resizable({
         handles: { 'e': '#formSeparator' },
         alsoResizeReverse: '#map',
-        containment: '#content'
+        containment: '#content',
+        resize: function (event, ui) {
+            console.log('form resized');
+            positionFormBtngroup();
+        }
     });
 
     $('#map').resizable({

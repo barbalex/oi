@@ -1,6 +1,6 @@
 <div class="btn-toolbar" role="toolbar" aria-label="Daten Toolbar">
-    <div class="btn-group" role="group" aria-label="Daten Button group">
-        <input id="formNew" class="btn btn-default" type="button" value="neu">
-        <input id="formDelete" class="btn btn-default" type="button" value="löschen">
+    <div class="btn-group pull-right" role="group" aria-label="Daten Button group">
+        <button id="formNew" class="btn btn-default">neu</button>
+        <button id="formDelete" class="btn btn-default">löschen</button>
     </div>
 </div>

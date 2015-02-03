@@ -13,7 +13,8 @@ var $                       = require('jquery'),
     select                  = require('../../../templates/select'),
     formButtonToolbar       = require('../../../templates/formButtonToolbar'),
     fitTextareaToContent    = require('./fitTextareaToContent'),
-    addCheckedToValueList   = require('./addCheckedToValueList');
+    addCheckedToValueList   = require('./addCheckedToValueList'),
+    positionFormBtngroup    = require('./positionFormBtngroup');
 
 module.exports = function (_id) {
     var html        = '',
@@ -85,6 +86,8 @@ module.exports = function (_id) {
             html += formButtonToolbar();
 
             $('#formContent').html(html);
+
+            positionFormBtngroup();
 
             // objekt als geladen markieren
             $('#formContent').data('id', object._id);

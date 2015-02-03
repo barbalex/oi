@@ -1,8 +1,9 @@
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus */
 'use strict';
 
-var _ = require('underscore'),
-    $ = require('jquery');
+var _                    = require('underscore'),
+    $                    = require('jquery'),
+    positionFormBtngroup = require('./form/positionFormBtngroup');
 
 module.exports = function () {
     var widths         = [],
@@ -37,4 +38,6 @@ module.exports = function () {
 
         $('#' + widthObject.id).css('width', widthAfter);
     });
+
+    positionFormBtngroup();
 };

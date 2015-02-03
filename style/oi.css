@@ -46,10 +46,10 @@ body {
   overflow: hidden;
 }
 #form .btn-toolbar {
-  position: fixed;
+  position: relative;
 }
-#form .btn-toolbar .btn-group {
-  /*position: fixed;*/
+#form .btn-group {
+  position: fixed;
   bottom: 5px;
 }
 #map {
