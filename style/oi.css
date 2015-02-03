@@ -20,7 +20,7 @@ body {
 .tabTitleContainer {
   height: 30px;
   background-color: rgba(210,210,210,0.2);
-  padding: 5px;
+  padding: 10px;
 }
 .tabSeparator {
   height: 100%;
@@ -33,8 +33,8 @@ body {
 #nav {
   background-color: #ff0;
   width: 10vw;
-  /*overflow-x: auto;
-  overflow-y: hidden;*/
+  overflow-y: auto;
+  overflow-x: auto;
 }
 #form {
   background-color: #ffa500;
@@ -65,7 +65,7 @@ body {
 #formContent {
   width: calc(100% - 8px);
   max-width: calc(100% - 8px);
-  padding: 5px 5px 5px 5px;
+  padding: 5px 10px 5px 10px;
 }
 
 #navContent ul {
@@ -86,7 +86,7 @@ body {
 }
 
 #navContent .jstree-node {
-  margin-left: 16px;
+  margin-left: 8px;
 }
 
 @media (max-width: 768px) {
