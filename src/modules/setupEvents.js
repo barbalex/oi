@@ -6,7 +6,8 @@ var $                    = require('jquery'),
     initiateForm         = require('./form/initiateForm'),
     fitTextareaToContent = require('./form/fitTextareaToContent'),
     getValueAfterChange  = require('./form/getValueAfterChange'),
-    saveObjectValue      = require('./form/saveObjectValue');
+    saveObjectValue      = require('./form/saveObjectValue'),
+    getObjectWithId      = require('./getObjectWithId');
 
 module.exports = function () {
     $('#nav')
@@ -25,6 +26,19 @@ module.exports = function () {
         })
         .on('click', '#formNew', function () {
             console.log('new form');
+            // get id of doc
+            var id = $('#formContent').data('id');
+            // get object of id
+            var object = getObjectWithId(id);
+            if (object && object.hId) {
+                // get metadata for doc
+                var hierarchy = _.find(window.oi.hierarchies, function (hierarchy) {
+                    return hierarchy._id === object.hId;
+                });
+                console.log('hierarchy: ', hierarchy);
+            } else {
+                console.log('error: no hierarchy found for object with id = ' + id);
+            }
         })
         .on('click', '#formDelete', function () {
             console.log('delete form');

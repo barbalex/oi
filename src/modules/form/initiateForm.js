@@ -14,18 +14,17 @@ var $                       = require('jquery'),
     formButtonToolbar       = require('../../../templates/formButtonToolbar'),
     fitTextareaToContent    = require('./fitTextareaToContent'),
     addCheckedToValueList   = require('./addCheckedToValueList'),
-    positionFormBtngroup    = require('./positionFormBtngroup');
+    positionFormBtngroup    = require('./positionFormBtngroup'),
+    getObjectWithId         = require('../getObjectWithId');
 
-module.exports = function (_id) {
+module.exports = function (id) {
     var html        = '',
         textareaIds = [],
         object,
         hierarchy;
 
     // get data for object
-    object = _.find(window.oi.objects, function (object) {
-        return object._id === _id;
-    });
+    object = getObjectWithId(id);
 
     if (object && object.hId) {
         hierarchy = _.find(window.oi.hierarchies, function (hierarchy) {
@@ -100,9 +99,9 @@ module.exports = function (_id) {
             // scrollbars aktualisieren
             $('.scrollbar').perfectScrollbar('update');
         } else {
-            console.log('error: found hierarchy for object with id ', _id);
+            console.log('error: found hierarchy for object with id ', id);
         }
     } else {
-        console.log('error: found no object with id ', _id);
+        console.log('error: found no object with id ', id);
     }
 };
