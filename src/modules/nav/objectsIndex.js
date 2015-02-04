@@ -8,7 +8,7 @@ module.exports = function () {
         views: {
             'objects': {
                 map: function (doc) {
-                    if (doc.type === 'object') {
+                    if (doc.type && doc.type === 'object') {
                         emit(doc._id);
                     }
                 }.toString()
