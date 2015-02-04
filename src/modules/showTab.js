@@ -4,6 +4,9 @@
 var $ = require('jquery');
 
 module.exports = function (tab) {
+    
+    console.log('showTab');
+
     $('.tab').each(function () {
         if ($(this).attr('id') === tab) {
             if ($(this).is(':visible')) {

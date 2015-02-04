@@ -7274,7 +7274,7 @@ body {
 
 #nav {
   background-color: #FFFFB5;
-  width: 10vw;
+  width: 30vw;
   overflow: hidden;
 }
 #navContent {
@@ -7307,13 +7307,16 @@ body {
 
 #form {
   background-color: #FFCE75;
-  width: 35vw;
+  width: 70vw;
   overflow: hidden;
 }
 #formContent {
   width: calc(100% - 8px);
   max-width: calc(100% - 8px);
   padding: 5px 14px 5px 10px;
+}
+#formSeparator {
+  display: none;
 }
 #form .reducedMargin {
   margin-top: -13px;
@@ -7329,11 +7332,13 @@ body {
 #map {
   background-color: #E1FFE1;
   width: 45vw;
+  display: none;
 }
 
 #utils {
   background-color: #FFBCBC;
   width: calc(10vw - 1px);
+  display: none;
 }
 
 /*# sourceMappingURL=oi_built.css.map */

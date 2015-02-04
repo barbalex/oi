@@ -31,14 +31,14 @@ module.exports = function (id) {
         hierarchy = getHierarchyOfObject(object);
         if (hierarchy && hierarchy.fields) {
             _.each(hierarchy.fields, function (field) {
-                var templateObject      = {};
+                var templateObject                  = {};
 
-                templateObject.object          = {};
-                templateObject.object._id      = object._id;
-                templateObject.object.type     = object.type;
-                templateObject.object.label    = field.label;
-                templateObject.object.inputDataType = field.inputDataType || null;
-                templateObject.object.value    = object.data[field.label] || null;
+                templateObject.object               = {};
+                templateObject.object._id           = object._id;
+                templateObject.object.type          = object.type;
+                templateObject.object.label         = field.label;
+                templateObject.object.inputDataType = field.inputDataType      || null;
+                templateObject.object.value         = object.data[field.label] || null;
 
                 // Felder bauen
                 switch (field.inputType) {

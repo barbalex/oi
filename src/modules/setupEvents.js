@@ -8,7 +8,8 @@ var $                    = require('jquery'),
     getValueAfterChange  = require('./form/getValueAfterChange'),
     saveObjectValue      = require('./form/saveObjectValue'),
     getObjectWithId      = require('./getObjectWithId'),
-    getHierarchyOfObject = require('./getHierarchyOfObject');
+    getHierarchyOfObject = require('./getHierarchyOfObject'),
+    createNewObjectOfHierarchy = require('./createNewObjectOfHierarchy');
 
 module.exports = function () {
     $('#nav')
@@ -26,15 +27,21 @@ module.exports = function () {
             $('#formSeparator').css('height', $('#formContent').height() + 40);
         })
         .on('click', '#formNew', function () {
-            console.log('new form');
+            var id,
+                object,
+                hierarchy,
+                newObject;
+
             // get id of doc
-            var id = $('#formContent').data('id');
+            id = $('#formContent').data('id');
+
             // get object of id
-            var object = getObjectWithId(id);
+            object = getObjectWithId(id);
             if (object && object.hId) {
                 // get metadata for doc
-                var hierarchy = getHierarchyOfObject(object);
-                console.log('hierarchy: ', hierarchy);
+                hierarchy = getHierarchyOfObject(object);
+                newObject = createNewObjectOfHierarchy(object, hierarchy);
+                initiateForm(newObject._id);
             } else {
                 console.log('error: no hierarchy found for object with id = ' + id);
             }
@@ -54,6 +61,7 @@ module.exports = function () {
             saveObjectValue(_id, field, value);
         });
 
+    // wählt man in der Mobilansicht ein Menu, soll das Menu schliessen
     $('body').on('click.nav', '.navbar-collapse.in', function (e) {
         if ($(e.target).is('a')) {
             $(this).collapse('hide');

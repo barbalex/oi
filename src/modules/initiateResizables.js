@@ -10,8 +10,6 @@ var $                    = require('jquery'),
 module.exports = function () {
     var zaehler;
 
-    //console.log('$.ui: ', $.ui);
-
     // add plugin to resize folowing tab
     alsoResizeReverse();
 
@@ -32,6 +30,8 @@ module.exports = function () {
             positionFormBtngroup();
         }
     });
+    // obiger Code überschreibt display:none aus css
+    $('#formSeparator').hide();
 
     $('#map').resizable({
         handles: { 'e': '#mapSeparator' },
