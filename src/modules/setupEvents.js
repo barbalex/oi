@@ -3,7 +3,6 @@
 
 var $                    = require('jquery'),
     _                    = require('underscore'),
-    initiateForm         = require('./form/initiateForm'),
     fitTextareaToContent = require('./form/fitTextareaToContent'),
     getValueAfterChange  = require('./form/getValueAfterChange'),
     saveObjectValue      = require('./form/saveObjectValue'),
@@ -15,11 +14,6 @@ module.exports = function () {
     $('#nav')
         .on('scroll', function () {
             $('#navSeparator').css('height', $('#navContent').height() + 40);
-        });
-
-    $('#navContent')
-        .on('activate_node.jstree', function (e, data) {
-            initiateForm(data.node.id);
         });
 
     $('#form')
@@ -40,10 +34,13 @@ module.exports = function () {
             if (object && object.hId) {
                 // get metadata for doc
                 hierarchy = getHierarchyOfObject(object);
+                // erstellt neues Objekt, ergänzt model und tree und selected node
                 newObject = createNewObjectOfHierarchy(object, hierarchy);
-                initiateForm(newObject._id);
+                if (!newObject) {
+                    console.log('error: new object not created');
+                }
             } else {
-                console.log('error: no hierarchy found for object with id = ' + id);
+                console.log('error: no hierarchy found for object with id = ', id);
             }
         })
         .on('click', '#formDelete', function () {

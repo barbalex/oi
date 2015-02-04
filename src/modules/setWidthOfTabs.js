@@ -11,8 +11,6 @@ module.exports = function () {
         tabsTotalWidth = 0,
         totalWidthNew  = 0;
 
-    console.log('setWidthOfTabs');
-
     $('.tab:visible').each(function () {
         var width       = parseInt($(this).width(), 10),
             widthObject = {};

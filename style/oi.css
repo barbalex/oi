@@ -1,12 +1,12 @@
-.navbar-nav>.active>a {
-  border: 1px solid #333;
-}
 body {
   background-color: #222;
   margin: 0;
   padding-top: 50px;
 }
-.container {
+.navbar-nav>.active>a {
+  border: 1px solid #333;
+}
+.contentContainer {
   width: 100vw;
   padding: 0;
 }
@@ -36,7 +36,9 @@ body {
   right: 10px;
 }
 
-/* nav */
+/* 
+ * NAV 
+ */
 
 #nav {
   background-color: #FFFFB5;
@@ -69,7 +71,9 @@ body {
   margin-left: 0;
 }
 
-/* form */
+/* 
+ * FORM 
+ */
 
 #form {
   background-color: #FFCE75;
@@ -95,11 +99,19 @@ body {
   bottom: 5px;
 }
 
+/* 
+ * MAP 
+ */
+
 #map {
   background-color: #E1FFE1;
   width: 45vw;
   display: none;
 }
+
+/* 
+ * UTILS 
+ */
 
 #utils {
   background-color: #FFBCBC;

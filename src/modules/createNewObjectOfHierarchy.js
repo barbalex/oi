@@ -7,7 +7,7 @@
  * - users
  * erstellt ein neues Objekt dieser Hierarchie und den gemeinsamen Daten von object
  * fügt es zum Model
- * fügt es in die DB
+ * fügt es NICHT in die DB: es wird erst beim Speichern einer Eingabe in ein Feld in die DB geschrieben!
  * fügt es in den tree
  * retourniert es
  */
@@ -15,13 +15,22 @@
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus: true, white: true*/
 'use strict';
 
-var _           = require('underscore'),
-    dateformat  = require('dateformat'),
-    PouchDB     = require('pouchdb'),
-    db          = new PouchDB('oi');
+var _                    = require('underscore'),
+    $                    = require('jquery'),
+    dateformat           = require('dateformat'),
+    PouchDB              = require('pouchdb'),
+    db                   = new PouchDB('oi'),
+    guid                 = require('./guid'),
+    createTreeNodeObject = require('./nav/createTreeNodeObject');
 
 module.exports = function (object, hierarchy) {
-    var newObject                 = {};
+    var newObject,
+        parentNode,
+        newNode,
+        newNodeId;
+
+    newObject                     = {};
+    newObject._id                 = guid();
     newObject.hId                 = hierarchy._id;
     newObject.type                = object.type;
     newObject.parent              = object.parent;
@@ -40,16 +49,18 @@ module.exports = function (object, hierarchy) {
             }
         });
     }
-    db.post(newObject, function (err, response) {
-        if (err) { return console.log('error when posting new Object to the database: ', err); }
-        newObject._id  = response.id;
-        newObject._rev = response.rev;
 
-        console.log('newObject created: ', newObject);
+    // ergänze model
+    window.oi.objects.push(newObject);
 
-        window.oi.objects.push(newObject);
-        // füge dem node der hierarchy einen neuen node für newObject hinzu
-        
-    });
+    // aktualisiere id in UI
+    $('#formContent').data('id', newObject._id);
+
+    // füge dem node der hierarchy einen neuen node für newObject hinzu
+    parentNode = '#' + newObject.parent + newObject.hId;
+    newNode    = createTreeNodeObject(newObject);
+    $('#navContent').jstree().deselect_all();
+    $('#navContent').jstree().create_node(parentNode, newNode);
+
     return newObject;
 };

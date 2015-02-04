@@ -1,16 +1,13 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var Hapi            = require('hapi'),
-    server          = new Hapi.Server(
-        '0.0.0.0',
-        2000,
-        {
-            debug: {
-                request: ['error']
-            }
-        }
-    );
+var Hapi   = require('hapi'),
+    server = new Hapi.Server();
+
+server.connection({
+    host: '0.0.0.0',
+    port: 2000
+});
 
 // start the server:
 server.start(function (err) {

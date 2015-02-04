@@ -1,58 +1,39 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var _                 = require('underscore'),
-    getLabelForObject = require('./getLabelForObject');
-
-function createObjectsData(object, objectsData) {
-    if (object && object.parent && object.parent !== null) {
-        var jstreeObject = {},
-            correspondingHierarchy;
-
-        // _id wird id
-        jstreeObject.id = object._id;
-        // text is nameField
-        correspondingHierarchy = _.find(window.oi.hierarchies, function (hierarchy) {
-            return hierarchy._id == object.hId;
-        });
-        // beschrifte object
-        if (object.data && correspondingHierarchy && correspondingHierarchy.nameField) {
-            // suche nach den Metadaten des Felds
-            jstreeObject.text = getLabelForObject(object, correspondingHierarchy);
-            // parent ist ein descendant hierarchy, ausser in der obersten Ebene
-            jstreeObject.parent = object.parent + correspondingHierarchy._id;
-        } else {
-            jstreeObject.text   = '<strong>(?)</strong>';
-            jstreeObject.parent = object.parent;
-        }
-        jstreeObject.li_attr     = {};
-        jstreeObject.li_attr.typ = object.typ;
-        objectsData.push(jstreeObject);
-    }
-}
+var _                    = require('underscore'),
+    getLabelForObject    = require('./getLabelForObject'),
+    createTreeNodeObject = require('./createTreeNodeObject');
 
 // creates descendant hierarchical objects of single objects
 // adds them to an array
-function createDescendantHierarchiesOfObject(object, descendantHierarchiesData) {
+function createDescendantHierarchiesOfObject(object) {
+    var descendantHierarchies,
+        jstreeHierarchies = [],
+        jstreeHierarchy;
+
     // look for descendant hierarchies
-    var descendantHierarchies = _.filter(window.oi.hierarchies, function (hierarchy) {
+    descendantHierarchies = _.filter(window.oi.hierarchies, function (hierarchy) {
         return hierarchy.parent !== null && hierarchy.parent == object.hId && _.indexOf(hierarchy.projIds, object.projId) > -1;
     });
 
-    _.each(descendantHierarchies, function (hierarchy) {
-        var jstreeHierarchy         = {};
-        // _id wird id
-        jstreeHierarchy.id          = object._id + hierarchy._id;
-        // parent
-        jstreeHierarchy.parent      = object._id;
-        // text is name
-        jstreeHierarchy.text        = hierarchy.name || '(?)';
-        // typ mitgeben
-        jstreeHierarchy.li_attr     = {};
-        jstreeHierarchy.li_attr.typ = hierarchy.typ;
-        // add to array
-        descendantHierarchiesData.push(jstreeHierarchy);
-    });
+    if (descendantHierarchies.length > 0) {
+        _.each(descendantHierarchies, function (hierarchy) {
+            jstreeHierarchy             = {};
+            // _id wird id
+            jstreeHierarchy.id          = object._id + hierarchy._id;
+            // parent
+            jstreeHierarchy.parent      = object._id;
+            // text is name
+            jstreeHierarchy.text        = hierarchy.name || '(?)';
+            // typ mitgeben
+            jstreeHierarchy.li_attr     = {};
+            jstreeHierarchy.li_attr.typ = hierarchy.typ;
+            jstreeHierarchies.push(jstreeHierarchy);
+        });
+        return jstreeHierarchies;
+    }
+    return [];
 }
 
 function createTopObjectsData() {
@@ -119,14 +100,22 @@ module.exports = function () {
     // globals for data are: window.oi.hierarchies, window.oi.objects
     var objectsData = [],
         descendantHierarchiesData = [],
-        topObjectsData;
+        topObjectsData,
+        obj,
+        dat;
 
     _.each(window.oi.objects, function (object) {
-        createObjectsData(object, objectsData);
+        obj = createTreeNodeObject(object);
+        if (obj) {
+            objectsData.push(obj);
+        }
     });
 
     _.each(window.oi.objects, function (object) {
-        createDescendantHierarchiesOfObject(object, descendantHierarchiesData);
+        dat = createDescendantHierarchiesOfObject(object);
+        if (dat.length > 0) {
+            descendantHierarchiesData = _.union(descendantHierarchiesData, dat);
+        }
     });
 
     topObjectsData = createTopObjectsData();

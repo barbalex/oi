@@ -14,17 +14,17 @@ module.exports = function (id, field, value) {
         lastEdited = {};
 
     // get data for object
-    object = getObjectWithId(id);
-
-    lastEdited.date = dateformat(new Date(), 'isoDateTime');
+    object              = getObjectWithId(id);
+    // build lastEdited
+    lastEdited.date     = dateformat(new Date(), 'isoDateTime');
     // TODO: get real user
-    lastEdited.user = 'z@z.ch';
+    lastEdited.user     = 'z@z.ch';
     lastEdited.database = window.oi.databaseId;
 
     if (object) {
         // set new value
         object.data[field] = value || null;
-        object.lastEdited = lastEdited;
+        object.lastEdited  = lastEdited;
 
         // write to pouch
         db.put(object, function (err, response) {
