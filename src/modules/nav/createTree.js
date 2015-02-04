@@ -7,10 +7,12 @@ var $                   = require('jquery'),
     initiateForm        = require('../form/initiateForm');
 
 module.exports = function () {
+    var treeData = generateDataForTree();
+
     $('#navContent').jstree({
         'plugins': ['wholerow', 'state'],
         'core': {
-            'data': generateDataForTree(),
+            'data': treeData,
             'themes': {
                 'responsive': true,
                 'icons':      false,
