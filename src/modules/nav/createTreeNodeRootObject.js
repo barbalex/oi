@@ -1,8 +1,7 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var _                    = require('underscore'),
-    createTreeNodeObject = require('./createTreeNodeObject');
+var createTreeNodeObject = require('./createTreeNodeObject');
 
 module.exports = function (object) {
     var jstreeObject;

@@ -39,7 +39,7 @@ window.oi.initiiereApp = function () {
 
 // gleich ein mal ausführen
 window.oi.initiiereApp();
-},{"./modules/initiateResizables":115,"./modules/nav/initiateNav":126,"./modules/setupEvents":129,"handlebars":24}],2:[function(require,module,exports){
+},{"./modules/initiateResizables":115,"./modules/nav/initiateNav":127,"./modules/setupEvents":131,"handlebars":24}],2:[function(require,module,exports){
 module.exports={
     "user": "barbalex",
     "pass": "dLhdMg12"
@@ -35642,7 +35642,7 @@ module.exports = function (object, hierarchy) {
     return newObject;
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./guid":113,"./nav/createTreeNodeObject":118,"dateformat":8,"pouchdb":55,"underscore":99}],103:[function(require,module,exports){
+},{"./guid":113,"./nav/createTreeNodeObject":119,"dateformat":8,"pouchdb":55,"underscore":99}],103:[function(require,module,exports){
 /*
  * erstellt aus einer possibleValues einen Array von Objekten
  * mit value und checked
@@ -35957,7 +35957,7 @@ module.exports = function (id) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../../templates/checkbox":132,"../../../templates/checkboxGroup":133,"../../../templates/formButtonToolbar":134,"../../../templates/input":135,"../../../templates/optionGroup":136,"../../../templates/select":137,"../../../templates/textarea":138,"../getHierarchyOfObject":111,"../getObjectWithId":112,"./addCheckedToValueList":103,"./fitTextareaToContent":105,"./positionFormBtngroup":109,"pouchdb":55,"underscore":99}],108:[function(require,module,exports){
+},{"../../../templates/checkbox":134,"../../../templates/checkboxGroup":135,"../../../templates/formButtonToolbar":136,"../../../templates/input":137,"../../../templates/optionGroup":138,"../../../templates/select":139,"../../../templates/textarea":140,"../getHierarchyOfObject":111,"../getObjectWithId":112,"./addCheckedToValueList":103,"./fitTextareaToContent":105,"./positionFormBtngroup":109,"pouchdb":55,"underscore":99}],108:[function(require,module,exports){
 // Hilfsfunktion, die typeof ersetzt und ergänzt
 // typeof gibt bei input-Feldern immer String zurück!
 
@@ -36059,7 +36059,7 @@ module.exports = function (id, field, value) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../getObjectWithId":112,"../nav/getLabelForObject":122,"dateformat":8,"pouchdb":55,"underscore":99}],111:[function(require,module,exports){
+},{"../getObjectWithId":112,"../nav/getLabelForObject":123,"dateformat":8,"pouchdb":55,"underscore":99}],111:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -36160,7 +36160,7 @@ module.exports = function (change) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./form/initiateForm":107,"./nav/getLabelForObject":122,"underscore":99}],115:[function(require,module,exports){
+},{"./form/initiateForm":107,"./nav/getLabelForObject":123,"underscore":99}],115:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -36236,7 +36236,43 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./alsoResizeReverse":100,"./form/positionFormBtngroup":109,"./setWidthOfTabs":128,"./showTab":130}],116:[function(require,module,exports){
+},{"./alsoResizeReverse":100,"./form/positionFormBtngroup":109,"./setWidthOfTabs":130,"./showTab":132}],116:[function(require,module,exports){
+// creates descendant hierarchical objects of single objects
+// adds them to an array
+
+/*jslint node: true, browser: true, nomen: true, todo: true */
+'use strict';
+
+var _ = require('underscore');
+
+module.exports = function (object) {
+    var descendantHierarchies,
+        jstreeHierarchies = [],
+        jstreeHierarchy;
+
+    // look for descendant hierarchies desselben Projekts
+    descendantHierarchies = _.filter(window.oi.hierarchies, function (hierarchy) {
+        return hierarchy.parent !== null && hierarchy.parent === object.hId && _.indexOf(hierarchy.projIds, object.projId) > -1;
+    });
+
+    if (descendantHierarchies.length > 0) {
+        _.each(descendantHierarchies, function (hierarchy) {
+            jstreeHierarchy               = {};
+            jstreeHierarchy.id            = object._id + hierarchy._id;
+            jstreeHierarchy.parent        = object._id;
+            jstreeHierarchy.text          = hierarchy.name || '(?)';
+            // weitere Daten mitgeben
+            jstreeHierarchy.data          = {};
+            jstreeHierarchy.data.type     = hierarchy.type;
+            jstreeHierarchy.data.id       = hierarchy._id;
+            jstreeHierarchy.data.objectId = object._id;
+            jstreeHierarchies.push(jstreeHierarchy);
+        });
+        return jstreeHierarchies;
+    }
+    return [];
+};
+},{"underscore":99}],117:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -36266,30 +36302,36 @@ module.exports = function () {
     });
 
 };
-},{"./initiateForeignChangeQuery":125,"pouchdb":55}],117:[function(require,module,exports){
+},{"./initiateForeignChangeQuery":126,"pouchdb":55}],118:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $                   = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
-    jstree              = require('jstree'),
-    generateDataForTree = require('./generateDataForTree'),
-    initiateForm        = require('../form/initiateForm');
+var $                    = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+    jstree               = require('jstree'),
+    generateDataForTree  = require('./generateDataForTree'),
+    initiateForm         = require('../form/initiateForm'),
+    treeContextmenuItems = require('./treeContextmenuItems');
 
 module.exports = function () {
     var treeData = generateDataForTree();
 
     $('#navContent').jstree({
-        'plugins': ['wholerow', 'state'],
+        'plugins': ['wholerow', 'state', 'contextmenu'],
         'core': {
             'data': treeData,
             'themes': {
                 'responsive': true,
                 'icons':      false,
-                'dots':       true
+                'dots':       false
             },
             'check_callback': true,
             'multiple':       false
+        },
+        'contextmenu': {
+            'items': function ($node) {
+                return treeContextmenuItems($node);
+            }
         }
     }).on('ready.jstree', function (e, data) {
         // scrollbars aktualisieren
@@ -36298,10 +36340,12 @@ module.exports = function () {
         $('#navContent').jstree().select_node(data.node);
     }).on('select_node.jstree', function (e, data) {
         initiateForm(data.node.id);
+    }).on('delete_node.jstree', function (e, data) {
+        console.log('node was deleted, id: ', data.node.id)
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../form/initiateForm":107,"./generateDataForTree":121,"jstree":26}],118:[function(require,module,exports){
+},{"../form/initiateForm":107,"./generateDataForTree":122,"./treeContextmenuItems":129,"jstree":26}],119:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -36333,12 +36377,11 @@ module.exports = function (object) {
     }
     return jstreeObject;
 };
-},{"./getLabelForObject":122,"underscore":99}],119:[function(require,module,exports){
+},{"./getLabelForObject":123,"underscore":99}],120:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var _                    = require('underscore'),
-    createTreeNodeObject = require('./createTreeNodeObject');
+var createTreeNodeObject = require('./createTreeNodeObject');
 
 module.exports = function (object) {
     var jstreeObject;
@@ -36347,7 +36390,7 @@ module.exports = function (object) {
     jstreeObject.parent = '#';
     return jstreeObject;
 };
-},{"./createTreeNodeObject":118,"underscore":99}],120:[function(require,module,exports){
+},{"./createTreeNodeObject":119}],121:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -36373,49 +36416,19 @@ module.exports = function () {
         }
     };
 };
-},{}],121:[function(require,module,exports){
+},{}],122:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var _                        = require('underscore'),
-    getLabelForObject        = require('./getLabelForObject'),
-    createTreeNodeObject     = require('./createTreeNodeObject'),
-    createTreeNodeRootObject = require('./createTreeNodeRootObject');
-
-// creates descendant hierarchical objects of single objects
-// adds them to an array
-function createDescendantHierarchiesOfObject(object) {
-    var descendantHierarchies,
-        jstreeHierarchies = [],
-        jstreeHierarchy;
-
-    // look for descendant hierarchies
-    descendantHierarchies = _.filter(window.oi.hierarchies, function (hierarchy) {
-        return hierarchy.parent !== null && hierarchy.parent === object.hId && _.indexOf(hierarchy.projIds, object.projId) > -1;
-    });
-
-    if (descendantHierarchies.length > 0) {
-        _.each(descendantHierarchies, function (hierarchy) {
-            jstreeHierarchy                  = {};
-            jstreeHierarchy.id               = object._id + hierarchy._id;
-            jstreeHierarchy.parent           = object._id;
-            jstreeHierarchy.text             = hierarchy.name || '(?)';
-            // weitere Daten mitgeben
-            jstreeHierarchy.data             = {};
-            jstreeHierarchy.data.type        = hierarchy.type;
-            jstreeHierarchy.data.id          = hierarchy._id;
-            jstreeHierarchy.data.objectId    = object._id;
-            jstreeHierarchies.push(jstreeHierarchy);
-        });
-        return jstreeHierarchies;
-    }
-    return [];
-}
+var _                              = require('underscore'),
+    getLabelForObject              = require('./getLabelForObject'),
+    createTreeNodeObject           = require('./createTreeNodeObject'),
+    createTreeNodeRootObject       = require('./createTreeNodeRootObject'),
+    createChildHierarchiesOfObject = require('./createChildHierarchiesOfObject');
 
 module.exports = function () {
-    // globals for data are: window.oi.hierarchies, window.oi.objects
     var objectsData = [],
-        descendantHierarchiesData = [],
+        childHierarchiesData = [],
         obj,
         dat;
 
@@ -36429,15 +36442,15 @@ module.exports = function () {
     });
 
     _.each(window.oi.objects, function (object) {
-        dat = createDescendantHierarchiesOfObject(object);
+        dat = createChildHierarchiesOfObject(object);
         if (dat.length > 0) {
-            descendantHierarchiesData = _.union(descendantHierarchiesData, dat);
+            childHierarchiesData = _.union(childHierarchiesData, dat);
         }
     });
 
-    return _.union(objectsData, descendantHierarchiesData);
+    return _.union(objectsData, childHierarchiesData);
 };
-},{"./createTreeNodeObject":118,"./createTreeNodeRootObject":119,"./getLabelForObject":122,"underscore":99}],122:[function(require,module,exports){
+},{"./createChildHierarchiesOfObject":116,"./createTreeNodeObject":119,"./createTreeNodeRootObject":120,"./getLabelForObject":123,"underscore":99}],123:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -36465,7 +36478,7 @@ module.exports = function (object, correspondingHierarchy) {
     }
     return label;
 };
-},{"underscore":99}],123:[function(require,module,exports){
+},{"underscore":99}],124:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -36484,7 +36497,7 @@ module.exports = function () {
         }
     };
 };
-},{}],124:[function(require,module,exports){
+},{}],125:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -36505,7 +36518,7 @@ module.exports = function () {
         key: 'object'
     }).on('change', handleDbObjectChanges);
 };
-},{"../handleDbObjectChanges":114,"./foreignChangedIndex":120,"pouchdb":55}],125:[function(require,module,exports){
+},{"../handleDbObjectChanges":114,"./foreignChangedIndex":121,"pouchdb":55}],126:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -36540,7 +36553,7 @@ module.exports = function () {
         }
     });
 };
-},{"./foreignChangedIndex":120,"./initiateChangeStream":124,"pouchdb":55,"underscore":99}],126:[function(require,module,exports){
+},{"./foreignChangedIndex":121,"./initiateChangeStream":125,"pouchdb":55,"underscore":99}],127:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -36645,7 +36658,7 @@ module.exports = function () {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../syncPouch":131,"./createDatabaseId":116,"./createTree":117,"./hierarchiesIndex":123,"./objectsByTypeIndex":127,"async":3,"pouchdb":55,"underscore":99}],127:[function(require,module,exports){
+},{"../syncPouch":133,"./createDatabaseId":117,"./createTree":118,"./hierarchiesIndex":124,"./objectsByTypeIndex":128,"async":3,"pouchdb":55,"underscore":99}],128:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -36664,7 +36677,32 @@ module.exports = function () {
         }
     };
 };
-},{}],128:[function(require,module,exports){
+},{}],129:[function(require,module,exports){
+/*jslint node: true, browser: true, nomen: true, todo: true */
+'use strict';
+
+var _ = require('underscore');
+
+module.exports = function ($node) {
+    var tree = $('#navContent').jstree(true);
+    return {
+        'neu': {
+            'label': 'neu',
+            'action': function (obj) {
+                console.log('$node: ', $node);
+                $node = tree.create_node($node);
+                tree.edit($node);
+            }
+        },
+        'loeschen': {
+            'label': 'löschen',
+            'action': function (obj) {
+                tree.delete_node($node);
+            }
+        }
+    };
+};
+},{"underscore":99}],130:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus */
 'use strict';
@@ -36711,7 +36749,7 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./form/positionFormBtngroup":109,"underscore":99}],129:[function(require,module,exports){
+},{"./form/positionFormBtngroup":109,"underscore":99}],131:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -36787,7 +36825,7 @@ module.exports = function () {
 
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./createNewObjectOfHierarchy":102,"./form/fitTextareaToContent":105,"./form/getValueAfterChange":106,"./form/saveObjectValue":110,"./getHierarchyOfObject":111,"./getObjectWithId":112,"underscore":99}],130:[function(require,module,exports){
+},{"./createNewObjectOfHierarchy":102,"./form/fitTextareaToContent":105,"./form/getValueAfterChange":106,"./form/saveObjectValue":110,"./getHierarchyOfObject":111,"./getObjectWithId":112,"underscore":99}],132:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -36812,7 +36850,7 @@ module.exports = function (tab) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],131:[function(require,module,exports){
+},{}],133:[function(require,module,exports){
 /**
  * synchronisiert die Daten aus einer CouchDB in PouchDB
  */
@@ -36843,7 +36881,7 @@ module.exports = function () {
     if (remoteCouch) { sync(); }
 };
 
-},{"./configuration":101,"pouchdb":55}],132:[function(require,module,exports){
+},{"./configuration":101,"pouchdb":55}],134:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, helper, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing, functionType="function";
   return "<div class=\"form-group\">\r\n    <label class=\"control-label\">"
@@ -36857,7 +36895,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(((helper = (helper = helpers.checked || (depth0 != null ? depth0.checked : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"checked","hash":{},"data":data}) : helper)))
     + ">\r\n            </label>\r\n        </div>\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":24}],133:[function(require,module,exports){
+},{"handlebars":24}],135:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,depths) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "            <div class=\"checkbox\">\r\n                <label>\r\n                    <input type=\"checkbox\" id=\""
@@ -36884,11 +36922,11 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "    </div>\r\n</div>";
 },"useData":true,"useDepths":true});
-},{"handlebars":24}],134:[function(require,module,exports){
+},{"handlebars":24}],136:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   return "<div class=\"btn-toolbar\" role=\"toolbar\" aria-label=\"Daten Toolbar\">\r\n    <div class=\"btn-group pull-right\" role=\"group\" aria-label=\"Daten Button group\">\r\n        <button id=\"formNew\" class=\"btn btn-default\">neu</button>\r\n        <button id=\"formDelete\" class=\"btn btn-default\">löschen</button>\r\n    </div>\r\n</div>";
   },"useData":true});
-},{"handlebars":24}],135:[function(require,module,exports){
+},{"handlebars":24}],137:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "<div class=\"form-group\">\r\n    <label for=\""
@@ -36907,7 +36945,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.value : stack1), depth0))
     + "\">\r\n</div>";
 },"useData":true});
-},{"handlebars":24}],136:[function(require,module,exports){
+},{"handlebars":24}],138:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,depths) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "            <div class=\"radio\">\r\n                <label>\r\n                    <input type=\"radio\" name=\""
@@ -36934,7 +36972,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "    </div>\r\n</div>";
 },"useData":true,"useDepths":true});
-},{"handlebars":24}],137:[function(require,module,exports){
+},{"handlebars":24}],139:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, buffer = "                <option value=";
   stack1 = lambda((depth0 != null ? depth0.value : depth0), depth0);
@@ -36957,7 +36995,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "        </select>\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":24}],138:[function(require,module,exports){
+},{"handlebars":24}],140:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "<div class=\"form-group\">\r\n    <label for=\""

@@ -1,45 +1,15 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var _                        = require('underscore'),
-    getLabelForObject        = require('./getLabelForObject'),
-    createTreeNodeObject     = require('./createTreeNodeObject'),
-    createTreeNodeRootObject = require('./createTreeNodeRootObject');
-
-// creates descendant hierarchical objects of single objects
-// adds them to an array
-function createDescendantHierarchiesOfObject(object) {
-    var descendantHierarchies,
-        jstreeHierarchies = [],
-        jstreeHierarchy;
-
-    // look for descendant hierarchies
-    descendantHierarchies = _.filter(window.oi.hierarchies, function (hierarchy) {
-        return hierarchy.parent !== null && hierarchy.parent === object.hId && _.indexOf(hierarchy.projIds, object.projId) > -1;
-    });
-
-    if (descendantHierarchies.length > 0) {
-        _.each(descendantHierarchies, function (hierarchy) {
-            jstreeHierarchy                  = {};
-            jstreeHierarchy.id               = object._id + hierarchy._id;
-            jstreeHierarchy.parent           = object._id;
-            jstreeHierarchy.text             = hierarchy.name || '(?)';
-            // weitere Daten mitgeben
-            jstreeHierarchy.data             = {};
-            jstreeHierarchy.data.type        = hierarchy.type;
-            jstreeHierarchy.data.id          = hierarchy._id;
-            jstreeHierarchy.data.objectId    = object._id;
-            jstreeHierarchies.push(jstreeHierarchy);
-        });
-        return jstreeHierarchies;
-    }
-    return [];
-}
+var _                              = require('underscore'),
+    getLabelForObject              = require('./getLabelForObject'),
+    createTreeNodeObject           = require('./createTreeNodeObject'),
+    createTreeNodeRootObject       = require('./createTreeNodeRootObject'),
+    createChildHierarchiesOfObject = require('./createChildHierarchiesOfObject');
 
 module.exports = function () {
-    // globals for data are: window.oi.hierarchies, window.oi.objects
     var objectsData = [],
-        descendantHierarchiesData = [],
+        childHierarchiesData = [],
         obj,
         dat;
 
@@ -53,11 +23,11 @@ module.exports = function () {
     });
 
     _.each(window.oi.objects, function (object) {
-        dat = createDescendantHierarchiesOfObject(object);
+        dat = createChildHierarchiesOfObject(object);
         if (dat.length > 0) {
-            descendantHierarchiesData = _.union(descendantHierarchiesData, dat);
+            childHierarchiesData = _.union(childHierarchiesData, dat);
         }
     });
 
-    return _.union(objectsData, descendantHierarchiesData);
+    return _.union(objectsData, childHierarchiesData);
 };
