@@ -7,7 +7,8 @@ var $                    = require('jquery'),
     fitTextareaToContent = require('./form/fitTextareaToContent'),
     getValueAfterChange  = require('./form/getValueAfterChange'),
     saveObjectValue      = require('./form/saveObjectValue'),
-    getObjectWithId      = require('./getObjectWithId');
+    getObjectWithId      = require('./getObjectWithId'),
+    getHierarchyOfObject = require('./getHierarchyOfObject');
 
 module.exports = function () {
     $('#nav')
@@ -32,9 +33,7 @@ module.exports = function () {
             var object = getObjectWithId(id);
             if (object && object.hId) {
                 // get metadata for doc
-                var hierarchy = _.find(window.oi.hierarchies, function (hierarchy) {
-                    return hierarchy._id === object.hId;
-                });
+                var hierarchy = getHierarchyOfObject(object);
                 console.log('hierarchy: ', hierarchy);
             } else {
                 console.log('error: no hierarchy found for object with id = ' + id);

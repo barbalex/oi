@@ -6,16 +6,15 @@ var $                 = require('jquery'),
     _                 = require('underscore'),
     PouchDB           = require('pouchdb'),
     db                = new PouchDB('oi'),
-    getLabelForObject = require('../nav/getLabelForObject');
+    getLabelForObject = require('../nav/getLabelForObject'),
+    getObjectWithId   = require('../getObjectWithId');
 
-module.exports = function (_id, field, value) {
+module.exports = function (id, field, value) {
     var object,
         lastEdited = {};
 
     // get data for object
-    object = _.find(window.oi.objects, function (object) {
-        return object._id === _id;
-    });
+    object = getObjectWithId(id);
 
     lastEdited.date = dateformat(new Date(), 'isoDateTime');
     // TODO: get real user

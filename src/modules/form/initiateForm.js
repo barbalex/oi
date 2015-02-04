@@ -15,7 +15,8 @@ var $                       = require('jquery'),
     fitTextareaToContent    = require('./fitTextareaToContent'),
     addCheckedToValueList   = require('./addCheckedToValueList'),
     positionFormBtngroup    = require('./positionFormBtngroup'),
-    getObjectWithId         = require('../getObjectWithId');
+    getObjectWithId         = require('../getObjectWithId'),
+    getHierarchyOfObject    = require('../getHierarchyOfObject');
 
 module.exports = function (id) {
     var html        = '',
@@ -27,10 +28,7 @@ module.exports = function (id) {
     object = getObjectWithId(id);
 
     if (object && object.hId) {
-        hierarchy = _.find(window.oi.hierarchies, function (hierarchy) {
-            return hierarchy._id === object.hId;
-        });
-
+        hierarchy = getHierarchyOfObject(object);
         if (hierarchy && hierarchy.fields) {
             _.each(hierarchy.fields, function (field) {
                 var templateObject      = {};
