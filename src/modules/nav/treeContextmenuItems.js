@@ -4,7 +4,8 @@
 var $                              = require('jquery'),
     _                              = require('underscore'),
     createNewObjectFromObjectId    = require('../createNewObjectFromObjectId'),
-    createNewObjectFromHierarchyId = require('../createNewObjectFromHierarchyId');
+    createNewObjectFromHierarchyId = require('../createNewObjectFromHierarchyId'),
+    deleteObjectFromTreeNode       = require('../deleteObjectFromTreeNode');
 
 module.exports = function ($node) {
     var tree = $('#navContent').jstree(true);
@@ -26,7 +27,7 @@ module.exports = function ($node) {
         'loeschen': {
             'label': 'löschen',
             'action': function () {
-                tree.delete_node($node);
+                deleteObjectFromTreeNode($node);
             },
             'icon': 'fa fa-close'
         }

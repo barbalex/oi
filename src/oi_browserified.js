@@ -39,7 +39,7 @@ window.oi.initiiereApp = function () {
 
 // gleich ein mal ausführen
 window.oi.initiiereApp();
-},{"./modules/initiateResizables":117,"./modules/nav/initiateNav":129,"./modules/setupEvents":133,"handlebars":24}],2:[function(require,module,exports){
+},{"./modules/initiateResizables":119,"./modules/nav/initiateNav":130,"./modules/setupEvents":134,"handlebars":24}],2:[function(require,module,exports){
 module.exports={
     "user": "barbalex",
     "pass": "dLhdMg12"
@@ -35640,25 +35640,25 @@ module.exports = function (object, hierarchy) {
     // füge dem node der hierarchy einen neuen node für newObject hinzu
     parentNode    = newObject.parent ? '#' + newObject.parent + newObject.hId : '#';
     newObjectNode = createTreeNodeObject(newObject);
-    $('#navContent').jstree().deselect_all();
     $('#navContent').jstree().create_node(parentNode, newObjectNode);
-
-    console.log('newObject: ', newObject);
 
     // ergänze child hierarchies
     childHierarchies = createChildHierarchiesOfObject(newObject);
-
-    console.log('childHierarchies: ', childHierarchies);
-    console.log('newObject._id: ', newObject._id);
-
     _.each(childHierarchies, function (childHierarchy) {
         $('#navContent').jstree().create_node('#' + newObject._id, childHierarchy);
     });
 
+    // select newObject
+    $('#navContent').jstree().deselect_all();
+    $('#navContent').jstree().select_node('#' + newObject._id);
+
+    // Fokus in das erste Feld setzen
+    $('#formContent').find('.form-control').first().focus();
+
     return newObject;
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./guid":115,"./nav/createChildHierarchiesOfObject":118,"./nav/createTreeNodeObject":121,"dateformat":8,"pouchdb":55,"underscore":99}],103:[function(require,module,exports){
+},{"./guid":117,"./nav/createChildHierarchiesOfObject":120,"./nav/createTreeNodeObject":123,"dateformat":8,"pouchdb":55,"underscore":99}],103:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -35692,7 +35692,7 @@ module.exports = function (hierarchyId, parentId) {
         console.log('error: no parent hierarchy found for hierarchy with id = ', hierarchyId);
     }
 };
-},{"./createNewObject":102,"./getHierarchyWithId":113,"underscore":99}],104:[function(require,module,exports){
+},{"./createNewObject":102,"./getHierarchyWithId":115,"underscore":99}],104:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -35719,7 +35719,81 @@ module.exports = function (objectId) {
         console.log('error: no hierarchy found for object with id = ', objectId);
     }
 };
-},{"./createNewObject":102,"./getHierarchyWithId":113,"./getObjectWithId":114,"underscore":99}],105:[function(require,module,exports){
+},{"./createNewObject":102,"./getHierarchyWithId":115,"./getObjectWithId":116,"underscore":99}],105:[function(require,module,exports){
+/*jslint node: true, browser: true, nomen: true, todo: true */
+'use strict';
+
+var _ = require('underscore');
+
+module.exports = function (objectId) {
+    var object = _.find(window.oi.objects, function (object) {
+        return object._id === objectId;
+    });
+    if (object) {
+        window.oi.objects = _.without(window.oi.objects, object);
+    }
+};
+},{"underscore":99}],106:[function(require,module,exports){
+(function (global){
+/*
+ * gets a node from the tree
+ * deletes the node's object, all child objects
+ * from db, model and tree
+ * also removes child hierarchies in tree
+ */
+
+/*jslint node: true, browser: true, nomen: true, todo: true */
+'use strict';
+
+var $                         = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+    _                         = require('underscore'),
+    PouchDB                   = require('pouchdb'),
+    db                        = new PouchDB('oi'),
+    deleteObjectFromModelById = require('./deleteObjectFromModelById'),
+    getObjectWithId           = require('./getObjectWithId');
+
+module.exports = function ($node) {
+    var objectId = $node.id,
+        object,
+        nodeChildren = [],
+        tree = $('#navContent').jstree(true);
+
+    // remove all children objects and nodes
+    // reverse direction of children_d to delete from bottom to top
+    $node.children_d.reverse();
+    // children in anderen Array kopieren, sonst wird nur der erste verarbeitet
+    nodeChildren = _.union($node.children_d);
+
+    _.each(nodeChildren, function (childNodeId) {
+        var nodeJson = tree.get_node('#' + childNodeId);
+
+        if (nodeJson && nodeJson.data && nodeJson.data.type && nodeJson.data.type === 'object') {
+            // delete object from db and model
+            db.remove(getObjectWithId(nodeJson.id));
+            deleteObjectFromModelById(nodeJson.id);
+        }
+        // delete node (hierarchies and objects)
+        tree.delete_node('#' + childNodeId);
+    });
+
+    // get object
+    object = getObjectWithId(objectId);
+    if (object) {
+        // delete object in db
+        db.remove(object).then(function () {
+            // delete model
+            window.oi.objects = _.without(window.oi.objects, object);
+            // delete node
+            tree.delete_node('#' + objectId);
+        }).catch(function (error) {
+            console.log('The object was not deleted. Error: ', error);
+        });
+    } else {
+        console.log('error: the object was not deleted. It was not found in the model');
+    }
+};
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./deleteObjectFromModelById":105,"./getObjectWithId":116,"pouchdb":55,"underscore":99}],107:[function(require,module,exports){
 /*
  * erstellt aus einer possibleValues einen Array von Objekten
  * mit value und checked
@@ -35803,7 +35877,7 @@ module.exports = function (possibleValues, setValues, type) {
         return valueObject;
     });
 };
-},{"underscore":99}],106:[function(require,module,exports){
+},{"underscore":99}],108:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus: true, white: true*/
 'use strict';
 
@@ -35820,7 +35894,7 @@ module.exports = function (feldWert) {
     // object nicht umwandeln. Man muss beim Vergleichen unterscheiden können, ob es ein Object war
     return feldWert;
 };
-},{"./myTypeOf":110}],107:[function(require,module,exports){
+},{"./myTypeOf":112}],109:[function(require,module,exports){
 // setzt die Höhe von textareas so, dass der Text genau rein passt
 
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus: true*/
@@ -35872,7 +35946,7 @@ module.exports = function (id, maxHeight) {
         text.style.height = adjustedHeight + 'px';
     }
 };
-},{}],108:[function(require,module,exports){
+},{}],110:[function(require,module,exports){
 (function (global){
 /*
  * holt sich nach einer Änderung in einem Feld die Daten
@@ -35926,7 +36000,7 @@ module.exports = function (that) {
     return value;
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./convertToCorrectType":106,"underscore":99}],109:[function(require,module,exports){
+},{"./convertToCorrectType":108,"underscore":99}],111:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -36034,7 +36108,7 @@ module.exports = function (id) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../../templates/checkbox":136,"../../../templates/checkboxGroup":137,"../../../templates/formButtonToolbar":138,"../../../templates/input":139,"../../../templates/optionGroup":140,"../../../templates/select":141,"../../../templates/textarea":142,"../getHierarchyWithId":113,"../getObjectWithId":114,"./addCheckedToValueList":105,"./fitTextareaToContent":107,"./positionFormBtngroup":111,"pouchdb":55,"underscore":99}],110:[function(require,module,exports){
+},{"../../../templates/checkbox":137,"../../../templates/checkboxGroup":138,"../../../templates/formButtonToolbar":139,"../../../templates/input":140,"../../../templates/optionGroup":141,"../../../templates/select":142,"../../../templates/textarea":143,"../getHierarchyWithId":115,"../getObjectWithId":116,"./addCheckedToValueList":107,"./fitTextareaToContent":109,"./positionFormBtngroup":113,"pouchdb":55,"underscore":99}],112:[function(require,module,exports){
 // Hilfsfunktion, die typeof ersetzt und ergänzt
 // typeof gibt bei input-Feldern immer String zurück!
 
@@ -36075,7 +36149,7 @@ module.exports = function (wert) {
     if (wert === undefined)          { return 'undefined'; }
     if (typeof wert === 'function')  { return 'function'; }
 };
-},{}],111:[function(require,module,exports){
+},{}],113:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus: true, white: true*/
 'use strict';
@@ -36086,7 +36160,7 @@ module.exports = function (wert) {
     $('#form').find('.btn-group').css('margin-left', $('#formContent').width() - 120);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],112:[function(require,module,exports){
+},{}],114:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -36136,7 +36210,7 @@ module.exports = function (id, field, value) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../getObjectWithId":114,"../nav/getLabelForObject":125,"dateformat":8,"pouchdb":55,"underscore":99}],113:[function(require,module,exports){
+},{"../getObjectWithId":116,"../nav/getLabelForObject":127,"dateformat":8,"pouchdb":55,"underscore":99}],115:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -36152,7 +36226,7 @@ module.exports = function (hierarchyId) {
 
     return hierarchy || null;
 };
-},{"underscore":99}],114:[function(require,module,exports){
+},{"underscore":99}],116:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -36168,7 +36242,7 @@ module.exports = function (id) {
 
     return object || null;
 };
-},{"underscore":99}],115:[function(require,module,exports){
+},{"underscore":99}],117:[function(require,module,exports){
 /*
 * generiert eine uuid
 * Quelle: http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
@@ -36187,7 +36261,7 @@ module.exports = function () {
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
         s4() + '-' + s4() + s4() + s4();
 };
-},{}],116:[function(require,module,exports){
+},{}],118:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 /*
@@ -36237,7 +36311,7 @@ module.exports = function (change) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./form/initiateForm":109,"./nav/getLabelForObject":125,"underscore":99}],117:[function(require,module,exports){
+},{"./form/initiateForm":111,"./nav/getLabelForObject":127,"underscore":99}],119:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -36314,7 +36388,7 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./alsoResizeReverse":100,"./form/positionFormBtngroup":111,"./setWidthOfTabs":132,"./showTab":134}],118:[function(require,module,exports){
+},{"./alsoResizeReverse":100,"./form/positionFormBtngroup":113,"./setWidthOfTabs":133,"./showTab":135}],120:[function(require,module,exports){
 // creates descendant hierarchical objects of single objects
 // adds them to an array
 
@@ -36351,7 +36425,7 @@ module.exports = function (object) {
     }
     return [];
 };
-},{"underscore":99}],119:[function(require,module,exports){
+},{"underscore":99}],121:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -36381,7 +36455,7 @@ module.exports = function () {
     });
 
 };
-},{"./initiateForeignChangeQuery":128,"pouchdb":55}],120:[function(require,module,exports){
+},{"./initiateForeignChangeQuery":129,"pouchdb":55}],122:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -36426,7 +36500,7 @@ module.exports = function () {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../form/initiateForm":109,"./generateDataForTree":124,"./treeContextmenuItems":131,"jstree":26}],121:[function(require,module,exports){
+},{"../form/initiateForm":111,"./generateDataForTree":126,"./treeContextmenuItems":132,"jstree":26}],123:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -36459,7 +36533,7 @@ module.exports = function (object) {
 
     return jstreeObject;
 };
-},{"./getLabelForObject":125,"underscore":99}],122:[function(require,module,exports){
+},{"./getLabelForObject":127,"underscore":99}],124:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -36472,7 +36546,7 @@ module.exports = function (object) {
     jstreeObject.parent = '#';
     return jstreeObject;
 };
-},{"./createTreeNodeObject":121}],123:[function(require,module,exports){
+},{"./createTreeNodeObject":123}],125:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -36498,7 +36572,7 @@ module.exports = function () {
         }
     };
 };
-},{}],124:[function(require,module,exports){
+},{}],126:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -36532,7 +36606,7 @@ module.exports = function () {
 
     return _.union(objectsData, childHierarchiesData);
 };
-},{"./createChildHierarchiesOfObject":118,"./createTreeNodeObject":121,"./createTreeNodeRootObject":122,"./getLabelForObject":125,"underscore":99}],125:[function(require,module,exports){
+},{"./createChildHierarchiesOfObject":120,"./createTreeNodeObject":123,"./createTreeNodeRootObject":124,"./getLabelForObject":127,"underscore":99}],127:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -36563,26 +36637,7 @@ module.exports = function (object, correspondingHierarchy) {
     label = '<strong>' + labelValue + '</strong>';
     return label;
 };
-},{"underscore":99}],126:[function(require,module,exports){
-/*jslint node: true, browser: true, nomen: true, todo: true */
-'use strict';
-
-// TODO: get only the users data
-module.exports = function () {
-    return {
-    _id: '_design/hierarchies',
-    views: {
-            'hierarchies': {
-                map: function (doc) {
-                    if (doc.type && doc.type === 'hierarchy') {
-                        emit(doc._id);
-                    }
-                }.toString()
-            }
-        }
-    };
-};
-},{}],127:[function(require,module,exports){
+},{"underscore":99}],128:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -36603,7 +36658,7 @@ module.exports = function () {
         key: 'object'
     }).on('change', handleDbObjectChanges);
 };
-},{"../handleDbObjectChanges":116,"./foreignChangedIndex":123,"pouchdb":55}],128:[function(require,module,exports){
+},{"../handleDbObjectChanges":118,"./foreignChangedIndex":125,"pouchdb":55}],129:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -36638,7 +36693,7 @@ module.exports = function () {
         }
     });
 };
-},{"./foreignChangedIndex":123,"./initiateChangeStream":127,"pouchdb":55,"underscore":99}],129:[function(require,module,exports){
+},{"./foreignChangedIndex":125,"./initiateChangeStream":128,"pouchdb":55,"underscore":99}],130:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -36651,7 +36706,6 @@ var $                  = (typeof window !== "undefined" ? window.$ : typeof glob
     syncPouch          = require('../syncPouch'),
     createTree         = require('./createTree'),
     createDatabaseId   = require('./createDatabaseId'),
-    hierarchiesIndex   = require('./hierarchiesIndex'),
     objectsByTypeIndex = require('./objectsByTypeIndex');
 
 module.exports = function () {
@@ -36743,7 +36797,7 @@ module.exports = function () {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../syncPouch":135,"./createDatabaseId":119,"./createTree":120,"./hierarchiesIndex":126,"./objectsByTypeIndex":130,"async":3,"pouchdb":55,"underscore":99}],130:[function(require,module,exports){
+},{"../syncPouch":136,"./createDatabaseId":121,"./createTree":122,"./objectsByTypeIndex":131,"async":3,"pouchdb":55,"underscore":99}],131:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -36762,7 +36816,7 @@ module.exports = function () {
         }
     };
 };
-},{}],131:[function(require,module,exports){
+},{}],132:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -36770,7 +36824,8 @@ module.exports = function () {
 var $                              = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
     _                              = require('underscore'),
     createNewObjectFromObjectId    = require('../createNewObjectFromObjectId'),
-    createNewObjectFromHierarchyId = require('../createNewObjectFromHierarchyId');
+    createNewObjectFromHierarchyId = require('../createNewObjectFromHierarchyId'),
+    deleteObjectFromTreeNode       = require('../deleteObjectFromTreeNode');
 
 module.exports = function ($node) {
     var tree = $('#navContent').jstree(true);
@@ -36792,14 +36847,14 @@ module.exports = function ($node) {
         'loeschen': {
             'label': 'löschen',
             'action': function () {
-                tree.delete_node($node);
+                deleteObjectFromTreeNode($node);
             },
             'icon': 'fa fa-close'
         }
     };
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../createNewObjectFromHierarchyId":103,"../createNewObjectFromObjectId":104,"underscore":99}],132:[function(require,module,exports){
+},{"../createNewObjectFromHierarchyId":103,"../createNewObjectFromObjectId":104,"../deleteObjectFromTreeNode":106,"underscore":99}],133:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus */
 'use strict';
@@ -36846,7 +36901,7 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./form/positionFormBtngroup":111,"underscore":99}],133:[function(require,module,exports){
+},{"./form/positionFormBtngroup":113,"underscore":99}],134:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -36903,7 +36958,7 @@ module.exports = function () {
 
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./createNewObjectFromObjectId":104,"./form/fitTextareaToContent":107,"./form/getValueAfterChange":108,"./form/saveObjectValue":112,"underscore":99}],134:[function(require,module,exports){
+},{"./createNewObjectFromObjectId":104,"./form/fitTextareaToContent":109,"./form/getValueAfterChange":110,"./form/saveObjectValue":114,"underscore":99}],135:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -36928,7 +36983,7 @@ module.exports = function (tab) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],135:[function(require,module,exports){
+},{}],136:[function(require,module,exports){
 /**
  * synchronisiert die Daten aus einer CouchDB in PouchDB
  */
@@ -36959,7 +37014,7 @@ module.exports = function () {
     if (remoteCouch) { sync(); }
 };
 
-},{"./configuration":101,"pouchdb":55}],136:[function(require,module,exports){
+},{"./configuration":101,"pouchdb":55}],137:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, helper, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing, functionType="function";
   return "<div class=\"form-group\">\r\n    <label class=\"control-label\">"
@@ -36973,7 +37028,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(((helper = (helper = helpers.checked || (depth0 != null ? depth0.checked : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"checked","hash":{},"data":data}) : helper)))
     + ">\r\n            </label>\r\n        </div>\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":24}],137:[function(require,module,exports){
+},{"handlebars":24}],138:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,depths) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "            <div class=\"checkbox\">\r\n                <label>\r\n                    <input type=\"checkbox\" id=\""
@@ -37000,11 +37055,11 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "    </div>\r\n</div>";
 },"useData":true,"useDepths":true});
-},{"handlebars":24}],138:[function(require,module,exports){
+},{"handlebars":24}],139:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   return "<div class=\"btn-toolbar\" role=\"toolbar\" aria-label=\"Daten Toolbar\">\r\n    <div class=\"btn-group pull-right\" role=\"group\" aria-label=\"Daten Button group\">\r\n        <button id=\"formNew\" class=\"btn btn-default\">neu</button>\r\n        <button id=\"formDelete\" class=\"btn btn-default\">löschen</button>\r\n    </div>\r\n</div>";
   },"useData":true});
-},{"handlebars":24}],139:[function(require,module,exports){
+},{"handlebars":24}],140:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "<div class=\"form-group\">\r\n    <label for=\""
@@ -37023,7 +37078,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.value : stack1), depth0))
     + "\">\r\n</div>";
 },"useData":true});
-},{"handlebars":24}],140:[function(require,module,exports){
+},{"handlebars":24}],141:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,depths) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "            <div class=\"radio\">\r\n                <label>\r\n                    <input type=\"radio\" name=\""
@@ -37050,7 +37105,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "    </div>\r\n</div>";
 },"useData":true,"useDepths":true});
-},{"handlebars":24}],141:[function(require,module,exports){
+},{"handlebars":24}],142:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, buffer = "                <option value=";
   stack1 = lambda((depth0 != null ? depth0.value : depth0), depth0);
@@ -37073,7 +37128,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "        </select>\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":24}],142:[function(require,module,exports){
+},{"handlebars":24}],143:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "<div class=\"form-group\">\r\n    <label for=\""

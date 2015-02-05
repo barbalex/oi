@@ -5,20 +5,7 @@ var Hapi = require('hapi'),
     options,
     server;
 
-options = {
-    mime: {
-        override: {
-            'application/x-font-woff': {
-                source: 'fonts',
-                compressible: false,
-                extensions: ['eot', 'ttf', 'woff', 'woff2'],
-                type: 'application/x-font-woff'
-            }
-        }
-    }
-};
-
-server = new Hapi.Server(options);
+server = new Hapi.Server();
 
 server.connection({
     host: '0.0.0.0',

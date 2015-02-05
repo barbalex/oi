@@ -9,7 +9,6 @@ var $                  = require('jquery'),
     syncPouch          = require('../syncPouch'),
     createTree         = require('./createTree'),
     createDatabaseId   = require('./createDatabaseId'),
-    hierarchiesIndex   = require('./hierarchiesIndex'),
     objectsByTypeIndex = require('./objectsByTypeIndex');
 
 module.exports = function () {

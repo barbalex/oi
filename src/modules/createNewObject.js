@@ -63,20 +63,20 @@ module.exports = function (object, hierarchy) {
     // füge dem node der hierarchy einen neuen node für newObject hinzu
     parentNode    = newObject.parent ? '#' + newObject.parent + newObject.hId : '#';
     newObjectNode = createTreeNodeObject(newObject);
-    $('#navContent').jstree().deselect_all();
     $('#navContent').jstree().create_node(parentNode, newObjectNode);
-
-    console.log('newObject: ', newObject);
 
     // ergänze child hierarchies
     childHierarchies = createChildHierarchiesOfObject(newObject);
-
-    console.log('childHierarchies: ', childHierarchies);
-    console.log('newObject._id: ', newObject._id);
-
     _.each(childHierarchies, function (childHierarchy) {
         $('#navContent').jstree().create_node('#' + newObject._id, childHierarchy);
     });
+
+    // select newObject
+    $('#navContent').jstree().deselect_all();
+    $('#navContent').jstree().select_node('#' + newObject._id);
+
+    // Fokus in das erste Feld setzen
+    $('#formContent').find('.form-control').first().focus();
 
     return newObject;
 };
