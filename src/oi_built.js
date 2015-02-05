@@ -55238,19 +55238,22 @@ var _                    = require('underscore'),
     PouchDB              = require('pouchdb'),
     db                   = new PouchDB('oi'),
     guid                 = require('./guid'),
-    createTreeNodeObject = require('./nav/createTreeNodeObject');
+    createTreeNodeObject = require('./nav/createTreeNodeObject'),
+    createChildHierarchiesOfObject = require('./nav/createChildHierarchiesOfObject');
 
 module.exports = function (object, hierarchy) {
     var newObject,
         parentNode,
-        newNode;
+        newNode,
+        childHierarchies;
 
     newObject                     = {};
     newObject._id                 = guid();
     newObject.hId                 = hierarchy._id;
     newObject.type                = 'object';
     newObject.parent              = object.parent;
-    newObject.projId              = object.projId;
+    // wenn ein neues Projekt erfasst wird, muss eine neue projId vergeben werden
+    newObject.projId              = object.parent ? object.projId : guid();
     newObject.users               = object.users;
     newObject.lastEdited          = {};
     newObject.lastEdited.date     = dateformat(new Date(), 'isoDateTime');
@@ -55273,15 +55276,24 @@ module.exports = function (object, hierarchy) {
     $('#formContent').data('id', newObject._id);
 
     // füge dem node der hierarchy einen neuen node für newObject hinzu
-    parentNode = '#' + newObject.parent + newObject.hId;
+    parentNode = object.parent ? '#' + newObject.parent + newObject.hId : '#';
     newNode    = createTreeNodeObject(newObject);
     $('#navContent').jstree().deselect_all();
     $('#navContent').jstree().create_node(parentNode, newNode);
 
+    // ergänze child hierarchies
+    childHierarchies = createChildHierarchiesOfObject(newObject);
+
+    console.log('childHierarchies: ', childHierarchies);
+
+    _.each(childHierarchies, function (childHierarchy) {
+        $('#navContent').jstree().create_node('#' + newObject._id, childHierarchy);
+    });
+
     return newObject;
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./guid":115,"./nav/createTreeNodeObject":121,"dateformat":8,"pouchdb":55,"underscore":99}],103:[function(require,module,exports){
+},{"./guid":115,"./nav/createChildHierarchiesOfObject":118,"./nav/createTreeNodeObject":121,"dateformat":8,"pouchdb":55,"underscore":99}],103:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -55959,10 +55971,10 @@ module.exports = function (object) {
             jstreeHierarchy               = {};
             jstreeHierarchy.id            = object._id + hierarchy._id;
             jstreeHierarchy.parent        = object._id;
-            jstreeHierarchy.text          = hierarchy.name || '(?)';
+            jstreeHierarchy.text          = hierarchy.name || '(kein Wert)';
             // weitere Daten mitgeben
             jstreeHierarchy.data          = {};
-            jstreeHierarchy.data.type     = hierarchy.type;
+            jstreeHierarchy.data.type     = 'hierarchy';
             jstreeHierarchy.data.id       = hierarchy._id;
             jstreeHierarchy.data.objectId = object._id;
             jstreeHierarchies.push(jstreeHierarchy);
@@ -56038,7 +56050,9 @@ module.exports = function () {
     }).on('create_node.jstree', function (e, data) {
         $('#navContent').jstree().select_node(data.node);
     }).on('select_node.jstree', function (e, data) {
-        initiateForm(data.node.id);
+        if (data.node.data.type === 'object') {
+            initiateForm(data.node.id);
+        }
     }).on('delete_node.jstree', function (e, data) {
         console.log('node was deleted, id: ', data.node.id);
     });

@@ -23,19 +23,22 @@ var _                    = require('underscore'),
     PouchDB              = require('pouchdb'),
     db                   = new PouchDB('oi'),
     guid                 = require('./guid'),
-    createTreeNodeObject = require('./nav/createTreeNodeObject');
+    createTreeNodeObject = require('./nav/createTreeNodeObject'),
+    createChildHierarchiesOfObject = require('./nav/createChildHierarchiesOfObject');
 
 module.exports = function (object, hierarchy) {
     var newObject,
         parentNode,
-        newNode;
+        newNode,
+        childHierarchies;
 
     newObject                     = {};
     newObject._id                 = guid();
     newObject.hId                 = hierarchy._id;
     newObject.type                = 'object';
     newObject.parent              = object.parent;
-    newObject.projId              = object.projId;
+    // wenn ein neues Projekt erfasst wird, muss eine neue projId vergeben werden
+    newObject.projId              = object.parent ? object.projId : guid();
     newObject.users               = object.users;
     newObject.lastEdited          = {};
     newObject.lastEdited.date     = dateformat(new Date(), 'isoDateTime');
@@ -58,10 +61,19 @@ module.exports = function (object, hierarchy) {
     $('#formContent').data('id', newObject._id);
 
     // füge dem node der hierarchy einen neuen node für newObject hinzu
-    parentNode = '#' + newObject.parent + newObject.hId;
+    parentNode = object.parent ? '#' + newObject.parent + newObject.hId : '#';
     newNode    = createTreeNodeObject(newObject);
     $('#navContent').jstree().deselect_all();
     $('#navContent').jstree().create_node(parentNode, newNode);
+
+    // ergänze child hierarchies
+    childHierarchies = createChildHierarchiesOfObject(newObject);
+
+    console.log('childHierarchies: ', childHierarchies);
+
+    _.each(childHierarchies, function (childHierarchy) {
+        $('#navContent').jstree().create_node('#' + newObject._id, childHierarchy);
+    });
 
     return newObject;
 };

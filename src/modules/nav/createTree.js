@@ -33,7 +33,9 @@ module.exports = function () {
     }).on('create_node.jstree', function (e, data) {
         $('#navContent').jstree().select_node(data.node);
     }).on('select_node.jstree', function (e, data) {
-        initiateForm(data.node.id);
+        if (data.node.data.type === 'object') {
+            initiateForm(data.node.id);
+        }
     }).on('delete_node.jstree', function (e, data) {
         console.log('node was deleted, id: ', data.node.id);
     });

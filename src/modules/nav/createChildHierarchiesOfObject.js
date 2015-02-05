@@ -21,10 +21,10 @@ module.exports = function (object) {
             jstreeHierarchy               = {};
             jstreeHierarchy.id            = object._id + hierarchy._id;
             jstreeHierarchy.parent        = object._id;
-            jstreeHierarchy.text          = hierarchy.name || '(?)';
+            jstreeHierarchy.text          = hierarchy.name || '(kein Wert)';
             // weitere Daten mitgeben
             jstreeHierarchy.data          = {};
-            jstreeHierarchy.data.type     = hierarchy.type;
+            jstreeHierarchy.data.type     = 'hierarchy';
             jstreeHierarchy.data.id       = hierarchy._id;
             jstreeHierarchy.data.objectId = object._id;
             jstreeHierarchies.push(jstreeHierarchy);
