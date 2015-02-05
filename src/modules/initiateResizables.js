@@ -61,6 +61,7 @@ module.exports = function () {
                 if (zaehler === window.oi.resizeWindowZaehler) {
                     // in den letzten 400 Millisekunden hat sich nichts geändert > reagieren
                     setWidthOfTabs();
+                    $('.scrollbar').perfectScrollbar('update');
                     window.oi.resizeWindowZaehler = 0;
                 }
             }, 500);
