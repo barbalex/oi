@@ -21,7 +21,7 @@ module.exports = function ($node) {
                     break;
                 }
             },
-            'icon': 'glyphicon glyphicon-plus'
+            'icon': 'fa fa-plus'
         },
         'loeschen': {
             'label': 'löschen',

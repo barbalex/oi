@@ -9,6 +9,7 @@ gulp.task('dev_style', function () {
         './style/jquery-ui.css',
         './style/jquery-ui.structure.css',
         './style/bootstrap.css',
+        './style/font-awesome.css',
         './style/perfect-scrollbar.css',
         //'./style/jstree.css',/*  funktioniert nur, wenn direkt in index.html eingebunden*/
         './style/oi.css'
