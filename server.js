@@ -1,8 +1,24 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var Hapi   = require('hapi'),
-    server = new Hapi.Server();
+var Hapi = require('hapi'),
+    options,
+    server;
+
+options = {
+    mime: {
+        override: {
+            'application/x-font-woff': {
+                source: 'fonts',
+                compressible: false,
+                extensions: ['eot', 'ttf', 'woff', 'woff2'],
+                type: 'application/x-font-woff'
+            }
+        }
+    }
+};
+
+server = new Hapi.Server(options);
 
 server.connection({
     host: '0.0.0.0',
@@ -39,6 +55,43 @@ server.route({
     handler: {
         directory: {
             path: 'images'
+        }
+    }
+});
+
+server.route({
+    method: 'GET',
+    path: '/fonts/glyphicons-halflings-regular.woff',
+    handler: function (request, reply) {
+        reply('/fonts/glyphicons-halflings-regular.woff')
+            .type('application/x-font-woff');
+    }
+});
+
+server.route({
+    method: 'GET',
+    path: '/fonts/glyphicons-halflings-regular.woff2',
+    handler: function (request, reply) {
+        reply('/fonts/glyphicons-halflings-regular.woff2')
+            .type('application/x-font-woff');
+    }
+});
+
+server.route({
+    method: 'GET',
+    path: '/fonts/glyphicons-halflings-regular.ttf',
+    handler: function (request, reply) {
+        reply('/fonts/glyphicons-halflings-regular.ttf')
+            .type('application/x-font-ttf');
+    }
+});
+
+server.route({
+    method: 'GET',
+    path: '/fonts/{param*}',
+    handler: {
+        directory: {
+            path: 'fonts'
         }
     }
 });

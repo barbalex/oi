@@ -1,7 +1,8 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var _                              = require('underscore'),
+var $                              = require('jquery'),
+    _                              = require('underscore'),
     createNewObjectFromObjectId    = require('../createNewObjectFromObjectId'),
     createNewObjectFromHierarchyId = require('../createNewObjectFromHierarchyId');
 
@@ -19,13 +20,15 @@ module.exports = function ($node) {
                     createNewObjectFromHierarchyId($node.data.id);
                     break;
                 }
-            }
+            },
+            'icon': 'glyphicon glyphicon-plus'
         },
         'loeschen': {
             'label': 'löschen',
             'action': function () {
                 tree.delete_node($node);
-            }
+            },
+            'icon': 'glyphicon glyphicon-remove'
         }
     };
 };

@@ -56396,10 +56396,12 @@ module.exports = function () {
     };
 };
 },{}],131:[function(require,module,exports){
+(function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var _                              = require('underscore'),
+var $                              = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+    _                              = require('underscore'),
     createNewObjectFromObjectId    = require('../createNewObjectFromObjectId'),
     createNewObjectFromHierarchyId = require('../createNewObjectFromHierarchyId');
 
@@ -56417,16 +56419,19 @@ module.exports = function ($node) {
                     createNewObjectFromHierarchyId($node.data.id);
                     break;
                 }
-            }
+            },
+            'icon': 'glyphicon glyphicon-plus'
         },
         'loeschen': {
             'label': 'löschen',
             'action': function () {
                 tree.delete_node($node);
-            }
+            },
+            'icon': 'glyphicon glyphicon-remove'
         }
     };
 };
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../createNewObjectFromHierarchyId":103,"../createNewObjectFromObjectId":104,"underscore":99}],132:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus */
@@ -56649,7 +56654,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(((helpers.json || (depth0 && depth0.json) || helperMissing).call(depth0, (depth0 != null ? depth0.object : depth0), {"name":"json","hash":{},"data":data})))
     + "\" value=\""
     + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.value : stack1), depth0))
-    + "\">\r\n</div>";
+    + "\">\r\n    <span class=\"glyphicon glyphicon-plus\" aria-hidden=\"true\"></span>\r\n    <span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span>\r\n</div>";
 },"useData":true});
 },{"handlebars":24}],140:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,depths) {
