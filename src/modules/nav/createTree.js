@@ -35,6 +35,6 @@ module.exports = function () {
     }).on('select_node.jstree', function (e, data) {
         initiateForm(data.node.id);
     }).on('delete_node.jstree', function (e, data) {
-        console.log('node was deleted, id: ', data.node.id)
+        console.log('node was deleted, id: ', data.node.id);
     });
 };

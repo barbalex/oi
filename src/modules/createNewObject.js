@@ -6,6 +6,8 @@
  * - projId
  * - users
  * erstellt ein neues Objekt dieser Hierarchie und den gemeinsamen Daten von object
+ * (objekt kann auch einfach eine Hüllen sein, mit der diese Eigenschaften übergeben werden,
+ * z.B. wenn das neue Objekt von der Hierarchie aus geschaffen wird)
  * fügt es zum Model
  * fügt es NICHT in die DB: es wird erst beim Speichern einer Eingabe in ein Feld in die DB geschrieben!
  * fügt es in den tree
@@ -26,13 +28,12 @@ var _                    = require('underscore'),
 module.exports = function (object, hierarchy) {
     var newObject,
         parentNode,
-        newNode,
-        newNodeId;
+        newNode;
 
     newObject                     = {};
     newObject._id                 = guid();
     newObject.hId                 = hierarchy._id;
-    newObject.type                = object.type;
+    newObject.type                = 'object';
     newObject.parent              = object.parent;
     newObject.projId              = object.projId;
     newObject.users               = object.users;

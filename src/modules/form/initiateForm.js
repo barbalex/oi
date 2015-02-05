@@ -1,22 +1,22 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $                       = require('jquery'),
-    _                       = require('underscore'),
-    PouchDB                 = require('pouchdb'),
-    db                      = new PouchDB('oi'),
-    input                   = require('../../../templates/input'),
-    textarea                = require('../../../templates/textarea'),
-    checkbox                = require('../../../templates/checkbox'),
-    optionGroup             = require('../../../templates/optionGroup'),
-    checkboxGroup           = require('../../../templates/checkboxGroup'),
-    select                  = require('../../../templates/select'),
-    formButtonToolbar       = require('../../../templates/formButtonToolbar'),
-    fitTextareaToContent    = require('./fitTextareaToContent'),
-    addCheckedToValueList   = require('./addCheckedToValueList'),
-    positionFormBtngroup    = require('./positionFormBtngroup'),
-    getObjectWithId         = require('../getObjectWithId'),
-    getHierarchyOfObject    = require('../getHierarchyOfObject');
+var $                     = require('jquery'),
+    _                     = require('underscore'),
+    PouchDB               = require('pouchdb'),
+    db                    = new PouchDB('oi'),
+    input                 = require('../../../templates/input'),
+    textarea              = require('../../../templates/textarea'),
+    checkbox              = require('../../../templates/checkbox'),
+    optionGroup           = require('../../../templates/optionGroup'),
+    checkboxGroup         = require('../../../templates/checkboxGroup'),
+    select                = require('../../../templates/select'),
+    formButtonToolbar     = require('../../../templates/formButtonToolbar'),
+    fitTextareaToContent  = require('./fitTextareaToContent'),
+    addCheckedToValueList = require('./addCheckedToValueList'),
+    positionFormBtngroup  = require('./positionFormBtngroup'),
+    getObjectWithId       = require('../getObjectWithId'),
+    getHierarchyWithId    = require('../getHierarchyWithId');
 
 module.exports = function (id) {
     var html        = '',
@@ -28,7 +28,7 @@ module.exports = function (id) {
     object = getObjectWithId(id);
 
     if (object && object.hId) {
-        hierarchy = getHierarchyOfObject(object);
+        hierarchy = getHierarchyWithId(object.hId);
         if (hierarchy && hierarchy.fields) {
             _.each(hierarchy.fields, function (field) {
                 var templateObject                  = {};

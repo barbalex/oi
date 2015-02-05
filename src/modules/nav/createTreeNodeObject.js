@@ -24,8 +24,9 @@ module.exports = function (object) {
         // parent ist ein descendant hierarchy, ausser in der obersten Ebene
         jstreeObject.parent = object.parent + correspondingHierarchy._id;
     } else {
-        jstreeObject.text   = '<strong>(?)</strong>';
+        jstreeObject.text   = '<strong>(kein Wert)</strong>';
         jstreeObject.parent = object.parent;
     }
+
     return jstreeObject;
 };

@@ -4,16 +4,24 @@
 		"selected_items":
 		[
 			[
-				"d",
-				"databaseId"
+				"js",
+				"jstreeObject"
+			],
+			[
+				"des",
+				"descendantHierarchies"
 			],
 			[
 				"hi",
-				"hierarchies"
+				"hierarchy"
 			],
 			[
 				"hie",
-				"hierarchies"
+				"hierarchy"
+			],
+			[
+				"d",
+				"databaseId"
 			],
 			[
 				"che",
@@ -42,10 +50,6 @@
 			[
 				"temp",
 				"templateObject"
-			],
-			[
-				"js",
-				"jstreeHierarchy"
 			],
 			[
 				"re",
@@ -351,7 +355,7 @@
 			"file": "index.html",
 			"settings":
 			{
-				"buffer_size": 4750,
+				"buffer_size": 4727,
 				"line_ending": "Windows"
 			}
 		},
@@ -359,56 +363,55 @@
 			"file": "style/oi.css",
 			"settings":
 			{
-				"buffer_size": 1605,
+				"buffer_size": 1730,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/modules/form/initiateForm.js",
+			"file": "src/modules/nav/initiateNav.js",
 			"settings":
 			{
-				"buffer_size": 4614,
+				"buffer_size": 4562,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "templates/formButtonToolbar.hdb",
+			"file": "src/modules/nav/createTree.js",
 			"settings":
 			{
-				"buffer_size": 308,
-				"line_ending": "Windows",
-				"name": "<div class=\"btn-toolbar\" role=\"toolbar\" aria-label"
-			}
-		},
-		{
-			"file": "src/modules/setupEvents.js",
-			"settings":
-			{
-				"buffer_size": 1826,
+				"buffer_size": 1393,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/modules/setWidthOfTabs.js",
+			"file": "src/modules/nav/treeContextmenuItems.js",
 			"settings":
 			{
-				"buffer_size": 1419,
+				"buffer_size": 611,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/modules/initiateResizables.js",
+			"file": "src/oi_browserified.js",
 			"settings":
 			{
-				"buffer_size": 2193,
+				"buffer_size": 1127075,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "$('#navContent').jstree().get_node('#o1oh11').data = {\"mist\": true}\n$('#navContent').jstree().get_node('#o1oh11').data.mist\n\n$('#navContent').jstree().get_node('#o3oh31').data",
+			"settings":
+			{
+				"buffer_size": 175,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/modules/form/positionFormBtngroup.js",
+			"file": "src/modules/nav/generateDataForTree.js",
 			"settings":
 			{
-				"buffer_size": 258,
+				"buffer_size": 1158,
 				"line_ending": "Windows"
 			}
 		},
@@ -470,40 +473,53 @@
 		"/C/Users/alex/oi",
 		"/C/Users/alex/oi/src",
 		"/C/Users/alex/oi/src/modules",
-		"/C/Users/alex/oi/src/modules/form",
-		"/C/Users/alex/oi/src/modules/nav",
-		"/C/Users/alex/oi/templates"
+		"/C/Users/alex/oi/src/modules/nav"
 	],
 	"file_history":
 	[
-		"/C/Users/alex/oi_beispielsdaten_laden/index.js",
-		"/C/Users/alex/oi/src/modules/form/saveObjectValue.js",
-		"/C/Users/alex/oi/src/modules/nav/initiateNav.js",
-		"/C/Users/alex/oi/src/modules/nav/objectsIndex.js",
-		"/C/Users/alex/oi/src/modules/nav/createDatabaseId.js",
-		"/C/Users/alex/oi/src/modules/nav/generateDataForTree.js",
+		"/C/Users/alex/oi/src/modules/nav/createChildHierarchiesOfObject.js",
+		"/C/Users/alex/oi/src/modules/nav/createTreeNodeObject.js",
+		"/C/Users/alex/oi/src/modules/nav/createTreeNodeRootObject.js",
+		"/C/Users/alex/oi/src/oi_browserified.js",
+		"/C/Users/alex/oi/src/modules/nav/createTree.js",
 		"/C/Users/alex/oi/src/modules/nav/hierarchiesIndex.js",
+		"/C/Users/alex/oi/src/modules/nav/objectsByTypeIndex.js",
+		"/C/Users/alex/oi/src/modules/nav/foreignChangedIndex.js",
+		"/C/Users/alex/oi/src/modules/nav/objectsIndex.js",
+		"/C/Users/alex/oi/src/modules/setupEvents.js",
+		"/C/Users/alex/oi/src/modules/nav/initiateChangeStream.js",
+		"/C/Users/alex/oi/package.json",
+		"/C/Users/alex/oi/server.js",
+		"/C/Users/alex/oi/src/modules/form/saveObjectValue.js",
+		"/C/Users/alex/oi/src/modules/createNewObjectOfHierarchy.js",
+		"/C/Users/alex/oi/src/modules/form/initiateForm.js",
+		"/C/Users/alex/oi/src/modules/nav/generateDataForTree.js",
+		"/C/Users/alex/oi/src/modules/guid.js",
+		"/C/Users/alex/oi/src/modules/_draft.js",
+		"/C/Users/alex/oi/src/modules/setWidthOfTabs.js",
+		"/C/Users/alex/oi/src/modules/showTab.js",
+		"/C/Users/alex/oi/src/modules/initiateResizables.js",
+		"/C/Users/alex/oi/src/modules/nav/initiateNav.js",
+		"/C/Users/alex/oi/src/modules/form/positionFormBtngroup.js",
+		"/C/Users/alex/oi/src/modules/getHierarchyOfObject.js",
+		"/C/Users/alex/oi/src/modules/getObjectWithId.js",
+		"/C/Users/alex/oi/templates/formButtonToolbar.hdb",
+		"/C/Users/alex/oi_beispielsdaten_laden/index.js",
+		"/C/Users/alex/oi/src/modules/nav/createDatabaseId.js",
 		"/C/Users/alex/oi/src/modules/nav/initiateForeignChangeQuery.js",
 		"/C/Users/alex/oi/src/modules/handleDbObjectChanges.js",
-		"/C/Users/alex/oi/src/modules/nav/initiateChangeStream.js",
-		"/C/Users/alex/oi/src/modules/nav/foreignChangedIndex.js",
 		"/C/Users/alex/Downloads/perfect-scrollbar-0.5.8/examples/always-visible.html",
 		"/C/Users/alex/oi/src/oi.js",
 		"/C/Users/alex/oi/gulp-tasks/dev_src.js",
 		"/C/Users/alex/oi/gulp-tasks/dev_style.js",
-		"/C/Users/alex/oi/src/modules/initiateResizables.js",
-		"/C/Users/alex/oi/src/modules/nav/createTree.js",
 		"/C/Users/alex/Downloads/perfect-scrollbar-0.5.8/examples/scrollbars-with-margin.html",
 		"/C/Users/alex/oi/src/modules/alsoResizeReverse.js",
 		"/C/Users/alex/oi/style/jquery-ui.theme.css",
 		"/C/Users/alex/oi/style/tinyscrollbar.css",
-		"/C/Users/alex/oi/src/oi_browserified.js",
 		"/C/Users/alex/oi/src/oi_built.js",
 		"/C/Users/alex/oi/src/modules/nav/getLabelForObject.js",
 		"/C/Users/alex/oi/src/modules/handleDbChanges.js",
 		"/C/Users/alex/oi/src/modules/form/addCheckedToValueList.js",
-		"/C/Users/alex/oi/src/modules/setupEvents.js",
-		"/C/Users/alex/oi/src/modules/form/initiateForm.js",
 		"/C/Users/alex/oi/src/modules/form/convertToCorrectType.js",
 		"/C/Users/alex/oi/src/modules/form/myTypeOf.js",
 		"/C/Users/alex/oi/src/modules/form/getValueAfterChange.js",
@@ -520,13 +536,11 @@
 		"/C/Users/alex/oi/templates/checkbox.hdb",
 		"/C/Users/alex/oi/gulp-tasks/dev_when_watch_2.js",
 		"/C/Users/alex/oi/gulp-tasks/dev_when_watch_1.js",
-		"/C/Users/alex/oi/package.json",
 		"/C/Users/alex/oi/src/modules/createGlobals.js",
 		"/C/Users/alex/EvabMobile/_attachments/hArtEdit.html",
 		"/C/Users/alex/EvabMobile/vendor/couchapp/_attachments/evab.js",
 		"/C/Users/alex/EvabMobile/vendor/couchapp/_attachments/app.js",
 		"/C/Users/alex/oi/src/jquery.js",
-		"/C/Users/alex/oi/server.js",
 		"/C/Users/alex/oi/src/modules/addCheckedToValueList.js",
 		"/C/Users/alex/oi/src/modules/bindModelInputForObject.js",
 		"/C/Users/alex/oi/src/modules/bindModelInputForObjects.js",
@@ -546,8 +560,6 @@
 		"/C/Users/alex/artendb_euring_update/package.json",
 		"/C/Users/alex/artendb_tww_felder_umbenennnen/index.js",
 		"/C/Users/alex/oi/client/views/main.js",
-		"/C/Users/alex/oi/src/modules/showTab.js",
-		"/C/Users/alex/oi/src/modules/setWidthOfTabs.js",
 		"/C/Users/alex/oi/fakeApi.js",
 		"/C/Users/alex/oi/gulp-tasks/dev_3.js",
 		"/C/Users/alex/oi/gulp-tasks/dev_2.js",
@@ -592,18 +604,7 @@
 		"/C/Users/alex/apflora/src/modules/setzeWindowZielber.js",
 		"/C/Users/alex/oi/.npmignore",
 		"/C/Users/alex/apflora/src/modules/jstree/zeigePopsAufOlmap.js",
-		"/C/Users/alex/apflora/src/apflora_browserified.js",
-		"/C/Users/alex/apflora/package.json",
-		"/C/Users/alex/apflora/src/modules/olMap/getLayersWithTitle.js",
-		"/C/Users/alex/apflora/src/modules/olMap/getLayerNames.js",
-		"/C/Users/alex/apflora/src/modules/olMap/zeigePop.js",
-		"/C/Users/alex/apflora/src/modules/zeigeFormular.js",
-		"/C/Users/alex/apflora/src/modules/olMap/waehleAusschnittFuerUebergebenePop.js",
-		"/C/Users/alex/apflora/src/modules/jstree/treeKontextmenu.js",
-		"/C/Users/alex/apflora/src/modules/jstree/zeigePopAufOlmap.js",
-		"/C/Users/alex/apflora/src/modules/createGlobals.js",
-		"/C/Users/alex/apflora/gulp-tasks/prod_sftp_sftp.js",
-		"/C/Users/alex/apflora/gulp-tasks/prod_clean_dist.js"
+		"/C/Users/alex/apflora/src/apflora_browserified.js"
 	],
 	"find":
 	{
@@ -614,6 +615,8 @@
 		"height": 147.0,
 		"where_history":
 		[
+			"C:\\Users\\alex\\oi, -oi_browserified.js, -oi_built.js, -bootstrap.js, -jquery-ui.js, -jquery.js, -jstree.js, -bootstrap.css, -oi_built.css, -jstree.css, -perfect-scrollbar.css, -perfect-scrollbar.js",
+			"C:\\Users\\alex\\oi, -oi_browserified.js, -oi_built.js, -bootstrap.js, -jquery-ui.js, -jquery.js, -jstree.js, -bootstrap.css, -oi_built.css, -jstree.css, -perfect-scrollbar.css",
 			"C:\\Users\\alex\\oi, -oi_browserified.js, -oi_built.js, -bootstrap.js, -jquery-ui.js, -jquery.js, -jstree.js, -bootstrap.css, -oi_built.css, -jstree.css",
 			"C:\\Users\\alex\\oi, -oi_browserified.js, -oi_built.js, -bootstrap.js, -jquery-ui.js, -jquery.js, -jstree.js, -bootstrap.css",
 			"C:\\Users\\alex\\oi, -oi_browserified.js, -oi_built.js, -bootstrap.js, -jquery-ui.js, -jquery.js, -jstree.js",
@@ -690,6 +693,39 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"jstree",
+			"createChildHierarchiesOfObject",
+			"descendantHierarchiesData",
+			"createDescendantHierarchiesOfObject",
+			"treeData:",
+			"createTopObjectsData",
+			"createTreeNodeObject",
+			"jstree",
+			"objects gotten:",
+			"window.PouchDB",
+			"db.query('objects'",
+			"objectsIndex",
+			"key:",
+			"initiateForm",
+			"jstree",
+			"vorne links",
+			"createTreeNodeObject",
+			"createObjectsData",
+			"createDescendantHierarchiesOfObject",
+			"descendantHierarchiesData",
+			"createObjectsData",
+			"objectsData",
+			"jstree",
+			"$('#formContent').data",
+			"container",
+			"separator",
+			"formSeparator",
+			"showTab",
+			"h21",
+			"hierarchy = _.find(window.oi.hierarchies, function (",
+			"_id",
+			"object = _.find(window.oi.objects, function (",
+			"_id",
 			"if (object.parent !== null) {",
 			"foreignChangedIndex",
 			"handleDbObjectChanges",
@@ -784,40 +820,7 @@
 			"generateDataForTree",
 			"jstree",
 			"objects",
-			"hierarchies",
-			"h",
-			"$",
-			"createTopObjectsData",
-			"results",
-			"createTopObjectsData",
-			"createDescendantHierarchiesOfObject",
-			"createObjectsData",
-			"results.objects",
-			"           ",
-			"makeValueObjectListFromValueList",
-			"fieldValueList",
-			"valueList",
-			"console.log('_id:",
-			"body",
-			"\"name\": \"",
-			"jstreeObject.parent = object.parent + h._id;",
-			"\"projId\": [",
-			"parent",
-			"createDescendantHierarchiesOfObject",
-			"createTopHierarchies",
-			"createObjectsData",
-			"createTopObjectsData",
-			"mapObjectToJstreeData",
-			"createDescendantHierarchiesOfObject",
-			"h11",
-			"Programm",
-			"name",
-			"objectData",
-			"mapTopHierarchies",
-			"mapDescendantHierarchiesOfObject",
-			"null",
-			"mapHierarchyToJstreeData",
-			"jstreObject"
+			"hierarchies"
 		],
 		"highlight": false,
 		"in_selection": false,
@@ -825,6 +828,9 @@
 		"regex": false,
 		"replace_history":
 		[
+			"childHierarchiesData",
+			"createTreeNodeObject",
+			"id",
 			"\"lastEdited\": {\"date\": \"02.01.2015\", \"user\": \"z@z.ch\", \"database\": null},",
 			"\"lastEdited\": {\"date\": \"02.01.2015\", \"user\": \"z@z.ch\", \"databaseInstance\": null},",
 			"\"lastEditedBy\": {\"date\": \"02.01.2015\", \"user\": \"z@z.ch\", \"databaseInstance\": null},",
@@ -949,21 +955,18 @@
 			"zielber",
 			"adb_eigenschaften",
 			"ap",
-			"ziel",
-			"adb_eigenschaften",
-			"pop",
-			"tpop"
+			"ziel"
 		],
 		"reverse": false,
 		"show_context": true,
 		"use_buffer2": true,
-		"whole_word": false,
+		"whole_word": true,
 		"wrap": false
 	},
 	"groups":
 	[
 		{
-			"selected": 2,
+			"selected": 4,
 			"sheets":
 			[
 				{
@@ -972,15 +975,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 4750,
+						"buffer_size": 4727,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2079,
-								2079
+								2652,
+								2652
 							]
 						],
 						"settings":
@@ -990,10 +993,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 232.0,
+						"translation.y": 319.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 7,
+					"stack_index": 9,
 					"type": "text"
 				},
 				{
@@ -1002,15 +1005,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1605,
+						"buffer_size": 1730,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								208,
-								208
+								1158,
+								1158
 							]
 						],
 						"settings":
@@ -1020,27 +1023,57 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1183.0,
+						"translation.y": 1682.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 8,
 					"type": "text"
 				},
 				{
 					"buffer": 2,
-					"file": "src/modules/form/initiateForm.js",
+					"file": "src/modules/nav/initiateNav.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 4614,
+						"buffer_size": 4562,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1299,
-								1310
+								4401,
+								4401
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1810.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "src/modules/nav/createTree.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1393,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1381,
+								1381
 							]
 						],
 						"settings":
@@ -1053,53 +1086,109 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
-					"buffer": 3,
-					"file": "templates/formButtonToolbar.hdb",
+					"buffer": 4,
+					"file": "src/modules/nav/treeContextmenuItems.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 308,
+						"buffer_size": 611,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								308,
-								308
+								288,
+								288
 							]
 						],
 						"settings":
 						{
-							"auto_name": "<div class=\"btn-toolbar\" role=\"toolbar\" aria-label",
-							"syntax": "Packages/Handlebars/Handlebars.tmLanguage"
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 6,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
-					"buffer": 4,
-					"file": "src/modules/setupEvents.js",
+					"buffer": 5,
+					"file": "src/oi_browserified.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1826,
+						"buffer_size": 1127075,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								1093482,
+								1093482
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1064587.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 175,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								175,
+								175
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Default/Find Results.hidden-tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "src/modules/nav/generateDataForTree.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1158,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								468,
+								468
 							]
 						],
 						"settings":
@@ -1116,20 +1205,20 @@
 					"type": "text"
 				},
 				{
-					"buffer": 5,
-					"file": "src/modules/setWidthOfTabs.js",
+					"buffer": 8,
+					"file": "/C/Users/alex/oi_beispielsdaten_laden/index.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1419,
+						"buffer_size": 15097,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								720,
-								720
+								4043,
+								4039
 							]
 						],
 						"settings":
@@ -1139,70 +1228,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 3876.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "src/modules/initiateResizables.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2193,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1110,
-								1110
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 783.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 7,
-					"file": "src/modules/form/positionFormBtngroup.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 258,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								132,
-								132
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
+					"stack_index": 7,
 					"type": "text"
 				},
 				{
@@ -1218,8 +1247,8 @@
 						"selection":
 						[
 							[
-								9242,
-								9242
+								7480,
+								7483
 							]
 						],
 						"settings":
@@ -1229,10 +1258,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 8468.0,
+						"translation.y": 7704.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 8,
+					"stack_index": 6,
 					"type": "text"
 				}
 			]

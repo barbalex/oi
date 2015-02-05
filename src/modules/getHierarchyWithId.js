@@ -3,12 +3,12 @@
 
 var _ = require('underscore');
 
-module.exports = function (object) {
+module.exports = function (hierarchyId) {
     var hierarchy;
 
     // get data for object
     hierarchy = _.find(window.oi.hierarchies, function (hierarchy) {
-        return hierarchy._id === object.hId;
+        return hierarchy._id === hierarchyId;
     });
 
     return hierarchy || null;

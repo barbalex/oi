@@ -1,0 +1,32 @@
+/*jslint node: true, browser: true, nomen: true, todo: true */
+'use strict';
+
+var _                  = require('underscore'),
+    getHierarchyWithId = require('./getHierarchyWithId'),
+    createNewObject    = require('./createNewObject');
+
+module.exports = function (hierarchyId) {
+    var parentObject,
+        // object ist eine Hülle, welche parent, projId und users übermittelt
+        object,
+        hierarchy;
+
+    hierarchy = getHierarchyWithId(hierarchyId);
+    if (hierarchy && hierarchy.parent) {
+        // suche object der parent hierarchy
+        parentObject = _.find(window.oi.objects, function (object) {
+            return object.hId === hierarchy.parent;
+        });
+        if (parentObject) {
+            object        = {};
+            object.parent = parentObject._id;
+            object.projId = parentObject.projId;
+            object.users  = parentObject.users;
+            createNewObject(object, hierarchy);
+        } else {
+            console.log('error: no object found for parent hierarchy');
+        }
+    } else {
+        console.log('error: no parent hierarchy found for hierarchy with id = ', hierarchyId);
+    }
+};

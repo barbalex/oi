@@ -1,14 +1,12 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $                    = require('jquery'),
-    _                    = require('underscore'),
-    fitTextareaToContent = require('./form/fitTextareaToContent'),
-    getValueAfterChange  = require('./form/getValueAfterChange'),
-    saveObjectValue      = require('./form/saveObjectValue'),
-    getObjectWithId      = require('./getObjectWithId'),
-    getHierarchyOfObject = require('./getHierarchyOfObject'),
-    createNewObjectOfHierarchy = require('./createNewObjectOfHierarchy');
+var $                           = require('jquery'),
+    _                           = require('underscore'),
+    fitTextareaToContent        = require('./form/fitTextareaToContent'),
+    getValueAfterChange         = require('./form/getValueAfterChange'),
+    saveObjectValue             = require('./form/saveObjectValue'),
+    createNewObjectFromObjectId = require('./createNewObjectFromObjectId');
 
 module.exports = function () {
     $('#nav')
@@ -21,27 +19,10 @@ module.exports = function () {
             $('#formSeparator').css('height', $('#formContent').height() + 40);
         })
         .on('click', '#formNew', function () {
-            var id,
-                object,
-                hierarchy,
-                newObject;
+            var id;
 
-            // get id of doc
             id = $('#formContent').data('id');
-
-            // get object of id
-            object = getObjectWithId(id);
-            if (object && object.hId) {
-                // get metadata for doc
-                hierarchy = getHierarchyOfObject(object);
-                // erstellt neues Objekt, ergänzt model und tree und selected node
-                newObject = createNewObjectOfHierarchy(object, hierarchy);
-                if (!newObject) {
-                    console.log('error: new object not created');
-                }
-            } else {
-                console.log('error: no hierarchy found for object with id = ', id);
-            }
+            createNewObjectFromObjectId(id);
         })
         .on('click', '#formDelete', function () {
             console.log('delete form');
