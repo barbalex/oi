@@ -5,7 +5,7 @@ var _                  = require('underscore'),
     getHierarchyWithId = require('./getHierarchyWithId'),
     createNewObject    = require('./createNewObject');
 
-module.exports = function (hierarchyId) {
+module.exports = function (hierarchyId, parentId) {
     var parentObject,
         // object ist eine Hülle, welche parent, projId und users übermittelt
         object,
@@ -15,8 +15,9 @@ module.exports = function (hierarchyId) {
     if (hierarchy && hierarchy.parent) {
         // suche object der parent hierarchy
         parentObject = _.find(window.oi.objects, function (object) {
-            return object.hId === hierarchy.parent;
+            return object._id === parentId;
         });
+
         if (parentObject) {
             object        = {};
             object.parent = parentObject._id;

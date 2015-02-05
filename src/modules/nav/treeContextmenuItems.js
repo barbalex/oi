@@ -17,7 +17,7 @@ module.exports = function ($node) {
                     createNewObjectFromObjectId($node.id);
                     break;
                 case 'hierarchy':
-                    createNewObjectFromHierarchyId($node.data.id);
+                    createNewObjectFromHierarchyId($node.data.id, $node.parent);
                     break;
                 }
             },
@@ -28,7 +28,7 @@ module.exports = function ($node) {
             'action': function () {
                 tree.delete_node($node);
             },
-            'icon': 'glyphicon glyphicon-remove'
+            'icon': 'fa fa-close'
         }
     };
 };

@@ -27,6 +27,7 @@ module.exports = function (object) {
             jstreeHierarchy.data.type     = 'hierarchy';
             jstreeHierarchy.data.id       = hierarchy._id;
             jstreeHierarchy.data.objectId = object._id;
+            jstreeHierarchy.data.projId   = object.projId;
             jstreeHierarchies.push(jstreeHierarchy);
         });
         return jstreeHierarchies;

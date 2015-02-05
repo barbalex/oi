@@ -29,7 +29,7 @@ var _                    = require('underscore'),
 module.exports = function (object, hierarchy) {
     var newObject,
         parentNode,
-        newNode,
+        newObjectNode,
         childHierarchies;
 
     newObject                     = {};
@@ -61,15 +61,18 @@ module.exports = function (object, hierarchy) {
     $('#formContent').data('id', newObject._id);
 
     // füge dem node der hierarchy einen neuen node für newObject hinzu
-    parentNode = object.parent ? '#' + newObject.parent + newObject.hId : '#';
-    newNode    = createTreeNodeObject(newObject);
+    parentNode    = newObject.parent ? '#' + newObject.parent + newObject.hId : '#';
+    newObjectNode = createTreeNodeObject(newObject);
     $('#navContent').jstree().deselect_all();
-    $('#navContent').jstree().create_node(parentNode, newNode);
+    $('#navContent').jstree().create_node(parentNode, newObjectNode);
+
+    console.log('newObject: ', newObject);
 
     // ergänze child hierarchies
     childHierarchies = createChildHierarchiesOfObject(newObject);
 
     console.log('childHierarchies: ', childHierarchies);
+    console.log('newObject._id: ', newObject._id);
 
     _.each(childHierarchies, function (childHierarchy) {
         $('#navContent').jstree().create_node('#' + newObject._id, childHierarchy);

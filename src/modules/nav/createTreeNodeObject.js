@@ -12,7 +12,7 @@ module.exports = function (object) {
     jstreeObject.id        = object._id;
     // weitere Daten mitgeben
     jstreeObject.data      = {};
-    jstreeObject.data.type = object.type;
+    jstreeObject.data.type = 'object';
     // text is nameField
     correspondingHierarchy = _.find(window.oi.hierarchies, function (hierarchy) {
         return hierarchy._id === object.hId;

@@ -55244,7 +55244,7 @@ var _                    = require('underscore'),
 module.exports = function (object, hierarchy) {
     var newObject,
         parentNode,
-        newNode,
+        newObjectNode,
         childHierarchies;
 
     newObject                     = {};
@@ -55276,15 +55276,18 @@ module.exports = function (object, hierarchy) {
     $('#formContent').data('id', newObject._id);
 
     // füge dem node der hierarchy einen neuen node für newObject hinzu
-    parentNode = object.parent ? '#' + newObject.parent + newObject.hId : '#';
-    newNode    = createTreeNodeObject(newObject);
+    parentNode    = newObject.parent ? '#' + newObject.parent + newObject.hId : '#';
+    newObjectNode = createTreeNodeObject(newObject);
     $('#navContent').jstree().deselect_all();
-    $('#navContent').jstree().create_node(parentNode, newNode);
+    $('#navContent').jstree().create_node(parentNode, newObjectNode);
+
+    console.log('newObject: ', newObject);
 
     // ergänze child hierarchies
     childHierarchies = createChildHierarchiesOfObject(newObject);
 
     console.log('childHierarchies: ', childHierarchies);
+    console.log('newObject._id: ', newObject._id);
 
     _.each(childHierarchies, function (childHierarchy) {
         $('#navContent').jstree().create_node('#' + newObject._id, childHierarchy);
@@ -55301,7 +55304,7 @@ var _                  = require('underscore'),
     getHierarchyWithId = require('./getHierarchyWithId'),
     createNewObject    = require('./createNewObject');
 
-module.exports = function (hierarchyId) {
+module.exports = function (hierarchyId, parentId) {
     var parentObject,
         // object ist eine Hülle, welche parent, projId und users übermittelt
         object,
@@ -55311,8 +55314,9 @@ module.exports = function (hierarchyId) {
     if (hierarchy && hierarchy.parent) {
         // suche object der parent hierarchy
         parentObject = _.find(window.oi.objects, function (object) {
-            return object.hId === hierarchy.parent;
+            return object._id === parentId;
         });
+
         if (parentObject) {
             object        = {};
             object.parent = parentObject._id;
@@ -55978,6 +55982,7 @@ module.exports = function (object) {
             jstreeHierarchy.data.type     = 'hierarchy';
             jstreeHierarchy.data.id       = hierarchy._id;
             jstreeHierarchy.data.objectId = object._id;
+            jstreeHierarchy.data.projId   = object.projId;
             jstreeHierarchies.push(jstreeHierarchy);
         });
         return jstreeHierarchies;
@@ -56074,7 +56079,7 @@ module.exports = function (object) {
     jstreeObject.id        = object._id;
     // weitere Daten mitgeben
     jstreeObject.data      = {};
-    jstreeObject.data.type = object.type;
+    jstreeObject.data.type = 'object';
     // text is nameField
     correspondingHierarchy = _.find(window.oi.hierarchies, function (hierarchy) {
         return hierarchy._id === object.hId;
@@ -56416,7 +56421,7 @@ module.exports = function ($node) {
                     createNewObjectFromObjectId($node.id);
                     break;
                 case 'hierarchy':
-                    createNewObjectFromHierarchyId($node.data.id);
+                    createNewObjectFromHierarchyId($node.data.id, $node.parent);
                     break;
                 }
             },
@@ -56427,7 +56432,7 @@ module.exports = function ($node) {
             'action': function () {
                 tree.delete_node($node);
             },
-            'icon': 'glyphicon glyphicon-remove'
+            'icon': 'fa fa-close'
         }
     };
 };
@@ -56654,7 +56659,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(((helpers.json || (depth0 && depth0.json) || helperMissing).call(depth0, (depth0 != null ? depth0.object : depth0), {"name":"json","hash":{},"data":data})))
     + "\" value=\""
     + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.value : stack1), depth0))
-    + "\">\r\n    <span class=\"glyphicon glyphicon-plus\" aria-hidden=\"true\"></span>\r\n    <span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span>\r\n</div>";
+    + "\">\r\n</div>";
 },"useData":true});
 },{"handlebars":24}],140:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,depths) {
