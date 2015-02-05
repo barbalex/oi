@@ -34,7 +34,10 @@ module.exports = function () {
         $('#navContent').jstree().select_node(data.node);
     }).on('select_node.jstree', function (e, data) {
         if (data.node.data.type === 'object') {
-            initiateForm(data.node.id);
+            initiateForm(data.node.id, 'object');
+        } else {
+            // hierarchy-id übergeben
+            initiateForm(data.node.data.id, 'hierarchy');
         }
     }).on('delete_node.jstree', function (e, data) {
         console.log('node was deleted, id: ', data.node.id);

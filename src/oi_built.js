@@ -55643,110 +55643,123 @@ module.exports = function (that) {
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $                     = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
-    _                     = require('underscore'),
-    PouchDB               = require('pouchdb'),
-    db                    = new PouchDB('oi'),
-    input                 = require('../../../templates/input'),
-    textarea              = require('../../../templates/textarea'),
-    checkbox              = require('../../../templates/checkbox'),
-    optionGroup           = require('../../../templates/optionGroup'),
-    checkboxGroup         = require('../../../templates/checkboxGroup'),
-    select                = require('../../../templates/select'),
-    formButtonToolbar     = require('../../../templates/formButtonToolbar'),
-    fitTextareaToContent  = require('./fitTextareaToContent'),
-    addCheckedToValueList = require('./addCheckedToValueList'),
-    positionFormBtngroup  = require('./positionFormBtngroup'),
-    getObjectWithId       = require('../getObjectWithId'),
-    getHierarchyWithId    = require('../getHierarchyWithId');
+var $                            = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+    _                            = require('underscore'),
+    PouchDB                      = require('pouchdb'),
+    db                           = new PouchDB('oi'),
+    input                        = require('../../../templates/input'),
+    textarea                     = require('../../../templates/textarea'),
+    checkbox                     = require('../../../templates/checkbox'),
+    optionGroup                  = require('../../../templates/optionGroup'),
+    checkboxGroup                = require('../../../templates/checkboxGroup'),
+    select                       = require('../../../templates/select'),
+    formButtonToolbar            = require('../../../templates/formButtonToolbar'),
+    formHierarchiesButtonToolbar = require('../../../templates/formHierarchiesButtonToolbar'),
+    fitTextareaToContent         = require('./fitTextareaToContent'),
+    addCheckedToValueList        = require('./addCheckedToValueList'),
+    positionFormBtngroup         = require('./positionFormBtngroup'),
+    getObjectWithId              = require('../getObjectWithId'),
+    getHierarchyWithId           = require('../getHierarchyWithId');
 
-module.exports = function (id) {
+module.exports = function (id, type) {
     var html        = '',
         textareaIds = [],
         object,
         hierarchy;
 
-    // get data for object
-    object = getObjectWithId(id);
+    switch (type) {
+    case 'object':
+        // get data for object
+        object = getObjectWithId(id);
 
-    if (object && object.hId) {
-        hierarchy = getHierarchyWithId(object.hId);
-        if (hierarchy && hierarchy.fields) {
-            _.each(hierarchy.fields, function (field) {
-                var templateObject                  = {};
+        if (object && object.hId) {
+            hierarchy = getHierarchyWithId(object.hId);
+            if (hierarchy && hierarchy.fields) {
+                _.each(hierarchy.fields, function (field) {
+                    var templateObject                  = {};
 
-                templateObject.object               = {};
-                templateObject.object._id           = object._id;
-                templateObject.object.type          = object.type;
-                templateObject.object.label         = field.label;
-                templateObject.object.inputDataType = field.inputDataType      || null;
-                templateObject.object.value         = object.data[field.label] || null;
+                    templateObject.object               = {};
+                    templateObject.object._id           = id;
+                    templateObject.object.type          = type;
+                    templateObject.object.label         = field.label;
+                    templateObject.object.inputDataType = field.inputDataType      || null;
+                    templateObject.object.value         = object.data[field.label] || null;
 
-                // Felder bauen
-                switch (field.inputType) {
-                case 'textarea':
-                    html += textarea(templateObject);
-                    textareaIds.push(object._id + field.label);
-                    break;
-                case 'input':
-                    switch (field.inputDataType) {
-                    case 'checkbox':
-                        // es ist eine einzelne checkbox. Mitgeben, ob sie checked ist
-                        templateObject.checked = object.data[field.label] ? 'checked' : '';
-                        html += checkbox(templateObject);
+                    // Felder bauen
+                    switch (field.inputType) {
+                    case 'textarea':
+                        html += textarea(templateObject);
+                        textareaIds.push(id + field.label);
                         break;
-                    case 'checkboxGroup':
-                        // checkboxGroup erstellen
-                        templateObject.object.valueList = addCheckedToValueList(field.valueList, object.data[field.label], 'checkboxGroup');
-                        html += checkboxGroup(templateObject);
+                    case 'input':
+                        switch (field.inputDataType) {
+                        case 'checkbox':
+                            // es ist eine einzelne checkbox. Mitgeben, ob sie checked ist
+                            templateObject.checked = object.data[field.label] ? 'checked' : '';
+                            html += checkbox(templateObject);
+                            break;
+                        case 'checkboxGroup':
+                            // checkboxGroup erstellen
+                            templateObject.object.valueList = addCheckedToValueList(field.valueList, object.data[field.label], 'checkboxGroup');
+                            html += checkboxGroup(templateObject);
+                            break;
+                        case 'optionGroup':
+                            templateObject.object.valueList = addCheckedToValueList(field.valueList, object.data[field.label], 'optionGroup');
+                            html += optionGroup(templateObject);
+                            break;
+                        case 'text':
+                        default:
+                            html += input(templateObject);
+                            break;
+                        }
                         break;
-                    case 'optionGroup':
-                        templateObject.object.valueList = addCheckedToValueList(field.valueList, object.data[field.label], 'optionGroup');
-                        html += optionGroup(templateObject);
+                    case 'select':
+                        // object.data muss Array sein - ist bei select nicht so, weil eh nur ein Wert gesetzt werden kann > Wert in Array setzen
+                        templateObject.object.valueList = addCheckedToValueList(field.valueList, object.data[field.label], 'select');
+                        html += select(templateObject);
                         break;
-                    case 'text':
                     default:
                         html += input(templateObject);
                         break;
                     }
-                    break;
-                case 'select':
-                    // object.data muss Array sein - ist bei select nicht so, weil eh nur ein Wert gesetzt werden kann > Wert in Array setzen
-                    templateObject.object.valueList = addCheckedToValueList(field.valueList, object.data[field.label], 'select');
-                    html += select(templateObject);
-                    break;
-                default:
-                    html += input(templateObject);
-                    break;
-                }
-            });
+                });
 
-            // add button toolbar
-            html += formButtonToolbar();
+                // add button toolbar
+                html += formButtonToolbar();
 
-            $('#formContent').html(html);
+                $('#formContent').html(html);
 
-            positionFormBtngroup();
+                positionFormBtngroup();
 
-            // objekt als geladen markieren
-            $('#formContent').data('id', object._id);
+                // objekt als geladen markieren
+                $('#formContent').data('type', type);
+                $('#formContent').data('id', id);
 
-            // textareas: Grösse an Wert anpassen
-            _.each(textareaIds, function (textareaId) {
-                fitTextareaToContent(textareaId);
-            });
+                // textareas: Grösse an Wert anpassen
+                _.each(textareaIds, function (textareaId) {
+                    fitTextareaToContent(textareaId);
+                });
 
-            // scrollbars aktualisieren
-            $('.scrollbar').perfectScrollbar('update');
+                // scrollbars aktualisieren
+                $('.scrollbar').perfectScrollbar('update');
+            } else {
+                console.log('error: found hierarchy for object with id ', id);
+            }
         } else {
-            console.log('error: found hierarchy for object with id ', id);
+            console.log('error: found no object with id ', id);
         }
-    } else {
-        console.log('error: found no object with id ', id);
+        break;
+    case 'hierarchy':
+        html += formHierarchiesButtonToolbar();
+        $('#formContent').html(html);
+        positionFormBtngroup();
+        $('#formContent').data('type', type);
+        $('#formContent').data('id', id);
+        break;
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../../templates/checkbox":137,"../../../templates/checkboxGroup":138,"../../../templates/formButtonToolbar":139,"../../../templates/input":140,"../../../templates/optionGroup":141,"../../../templates/select":142,"../../../templates/textarea":143,"../getHierarchyWithId":115,"../getObjectWithId":116,"./addCheckedToValueList":107,"./fitTextareaToContent":109,"./positionFormBtngroup":113,"pouchdb":55,"underscore":99}],112:[function(require,module,exports){
+},{"../../../templates/checkbox":137,"../../../templates/checkboxGroup":138,"../../../templates/formButtonToolbar":139,"../../../templates/formHierarchiesButtonToolbar":140,"../../../templates/input":141,"../../../templates/optionGroup":142,"../../../templates/select":143,"../../../templates/textarea":144,"../getHierarchyWithId":115,"../getObjectWithId":116,"./addCheckedToValueList":107,"./fitTextareaToContent":109,"./positionFormBtngroup":113,"pouchdb":55,"underscore":99}],112:[function(require,module,exports){
 // Hilfsfunktion, die typeof ersetzt und ergänzt
 // typeof gibt bei input-Feldern immer String zurück!
 
@@ -55937,7 +55950,7 @@ module.exports = function (change) {
         // cant update only changed field because it is unknown (?)
         if ($('#formContent').html() !== "" && $('#formContent').data('id') === change.doc._id) {
             // TODO: hier wird Fehler generiert, wenn ausserhalb App Daten verändert werden
-            initiateForm(change.doc._id);
+            initiateForm(change.doc._id, 'object');
         }
         // refresh tree
         correspondingHierarchy = _.find(window.oi.hierarchies, function (hierarchy) {
@@ -56131,7 +56144,10 @@ module.exports = function () {
         $('#navContent').jstree().select_node(data.node);
     }).on('select_node.jstree', function (e, data) {
         if (data.node.data.type === 'object') {
-            initiateForm(data.node.id);
+            initiateForm(data.node.id, 'object');
+        } else {
+            // hierarchy-id übergeben
+            initiateForm(data.node.data.id, 'hierarchy');
         }
     }).on('delete_node.jstree', function (e, data) {
         console.log('node was deleted, id: ', data.node.id);
@@ -56544,12 +56560,14 @@ module.exports = function () {
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $                           = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
-    _                           = require('underscore'),
-    fitTextareaToContent        = require('./form/fitTextareaToContent'),
-    getValueAfterChange         = require('./form/getValueAfterChange'),
-    saveObjectValue             = require('./form/saveObjectValue'),
-    createNewObjectFromObjectId = require('./createNewObjectFromObjectId');
+var $                              = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+    _                              = require('underscore'),
+    fitTextareaToContent           = require('./form/fitTextareaToContent'),
+    getValueAfterChange            = require('./form/getValueAfterChange'),
+    saveObjectValue                = require('./form/saveObjectValue'),
+    createNewObjectFromObjectId    = require('./createNewObjectFromObjectId'),
+    createNewObjectFromHierarchyId = require('./createNewObjectFromHierarchyId'),
+    deleteObjectFromTreeNode       = require('./deleteObjectFromTreeNode');
 
 module.exports = function () {
     $('#nav')
@@ -56562,13 +56580,29 @@ module.exports = function () {
             $('#formSeparator').css('height', $('#formContent').height() + 40);
         })
         .on('click', '#formNew', function () {
-            var id;
+            var $formContent = $('#formContent'),
+                id   = $formContent.data('id'),
+                type = $formContent.data('type'),
+                parentOfSelectedNode,
+                parentId;
 
-            id = $('#formContent').data('id');
-            createNewObjectFromObjectId(id);
+            console.log('formNew, id: ', id);
+            console.log('formNew, type: ', type);
+
+            switch (type) {
+            case 'object':
+                createNewObjectFromObjectId(id);
+                break;
+            case 'hierarchy':
+                parentId = $('#navContent').jstree(true).get_selected(true)[0].parent;
+                createNewObjectFromHierarchyId(id, parentId);
+                break;
+            }
         })
         .on('click', '#formDelete', function () {
-            console.log('delete form');
+            var id   = $('#formContent').data('id'),
+                node = $('#navContent').jstree(true).get_node('#' + id);
+            deleteObjectFromTreeNode(node);
         });
 
     $('#formContent')
@@ -56596,7 +56630,7 @@ module.exports = function () {
 
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./createNewObjectFromObjectId":104,"./form/fitTextareaToContent":109,"./form/getValueAfterChange":110,"./form/saveObjectValue":114,"underscore":99}],135:[function(require,module,exports){
+},{"./createNewObjectFromHierarchyId":103,"./createNewObjectFromObjectId":104,"./deleteObjectFromTreeNode":106,"./form/fitTextareaToContent":109,"./form/getValueAfterChange":110,"./form/saveObjectValue":114,"underscore":99}],135:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -56699,6 +56733,10 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
   },"useData":true});
 },{"handlebars":24}],140:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  return "<div class=\"btn-toolbar\" role=\"toolbar\" aria-label=\"Daten Toolbar\">\r\n    <div class=\"btn-group pull-right\" role=\"group\" aria-label=\"Daten Button group\">\r\n        <button id=\"formNew\" class=\"btn btn-default\">neu</button>\r\n    </div>\r\n</div>";
+  },"useData":true});
+},{"handlebars":24}],141:[function(require,module,exports){
+var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "<div class=\"form-group\">\r\n    <label for=\""
     + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1._id : stack1), depth0))
@@ -56716,7 +56754,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.value : stack1), depth0))
     + "\">\r\n</div>";
 },"useData":true});
-},{"handlebars":24}],141:[function(require,module,exports){
+},{"handlebars":24}],142:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,depths) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "            <div class=\"radio\">\r\n                <label>\r\n                    <input type=\"radio\" name=\""
@@ -56743,7 +56781,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "    </div>\r\n</div>";
 },"useData":true,"useDepths":true});
-},{"handlebars":24}],142:[function(require,module,exports){
+},{"handlebars":24}],143:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, buffer = "                <option value=";
   stack1 = lambda((depth0 != null ? depth0.value : depth0), depth0);
@@ -56766,7 +56804,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "        </select>\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":24}],143:[function(require,module,exports){
+},{"handlebars":24}],144:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "<div class=\"form-group\">\r\n    <label for=\""

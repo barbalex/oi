@@ -34,7 +34,7 @@ module.exports = function (change) {
         // cant update only changed field because it is unknown (?)
         if ($('#formContent').html() !== "" && $('#formContent').data('id') === change.doc._id) {
             // TODO: hier wird Fehler generiert, wenn ausserhalb App Daten verändert werden
-            initiateForm(change.doc._id);
+            initiateForm(change.doc._id, 'object');
         }
         // refresh tree
         correspondingHierarchy = _.find(window.oi.hierarchies, function (hierarchy) {

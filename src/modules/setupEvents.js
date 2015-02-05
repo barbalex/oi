@@ -1,12 +1,14 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $                           = require('jquery'),
-    _                           = require('underscore'),
-    fitTextareaToContent        = require('./form/fitTextareaToContent'),
-    getValueAfterChange         = require('./form/getValueAfterChange'),
-    saveObjectValue             = require('./form/saveObjectValue'),
-    createNewObjectFromObjectId = require('./createNewObjectFromObjectId');
+var $                              = require('jquery'),
+    _                              = require('underscore'),
+    fitTextareaToContent           = require('./form/fitTextareaToContent'),
+    getValueAfterChange            = require('./form/getValueAfterChange'),
+    saveObjectValue                = require('./form/saveObjectValue'),
+    createNewObjectFromObjectId    = require('./createNewObjectFromObjectId'),
+    createNewObjectFromHierarchyId = require('./createNewObjectFromHierarchyId'),
+    deleteObjectFromTreeNode       = require('./deleteObjectFromTreeNode');
 
 module.exports = function () {
     $('#nav')
@@ -19,13 +21,29 @@ module.exports = function () {
             $('#formSeparator').css('height', $('#formContent').height() + 40);
         })
         .on('click', '#formNew', function () {
-            var id;
+            var $formContent = $('#formContent'),
+                id   = $formContent.data('id'),
+                type = $formContent.data('type'),
+                parentOfSelectedNode,
+                parentId;
 
-            id = $('#formContent').data('id');
-            createNewObjectFromObjectId(id);
+            console.log('formNew, id: ', id);
+            console.log('formNew, type: ', type);
+
+            switch (type) {
+            case 'object':
+                createNewObjectFromObjectId(id);
+                break;
+            case 'hierarchy':
+                parentId = $('#navContent').jstree(true).get_selected(true)[0].parent;
+                createNewObjectFromHierarchyId(id, parentId);
+                break;
+            }
         })
         .on('click', '#formDelete', function () {
-            console.log('delete form');
+            var id   = $('#formContent').data('id'),
+                node = $('#navContent').jstree(true).get_node('#' + id);
+            deleteObjectFromTreeNode(node);
         });
 
     $('#formContent')
