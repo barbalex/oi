@@ -8,7 +8,6 @@ var $                              = require('jquery'),
     deleteObjectFromTreeNode       = require('../deleteObjectFromTreeNode');
 
 module.exports = function ($node) {
-    var tree = $('#navContent').jstree(true);
     return {
         'neu': {
             'label': 'neu',

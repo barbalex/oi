@@ -21,14 +21,10 @@ module.exports = function () {
             $('#formSeparator').css('height', $('#formContent').height() + 40);
         })
         .on('click', '#formNew', function () {
-            var $formContent = $('#formContent'),
-                id   = $formContent.data('id'),
-                type = $formContent.data('type'),
-                parentOfSelectedNode,
+            var node = $('#navContent').jstree(true).get_selected(true)[0],
+                type = node.data.type,
+                id   = node.data.type === 'object' ? node.id : node.data.id,
                 parentId;
-
-            console.log('formNew, id: ', id);
-            console.log('formNew, type: ', type);
 
             switch (type) {
             case 'object':
@@ -41,8 +37,7 @@ module.exports = function () {
             }
         })
         .on('click', '#formDelete', function () {
-            var id   = $('#formContent').data('id'),
-                node = $('#navContent').jstree(true).get_node('#' + id);
+            var node = $('#navContent').jstree(true).get_selected(true)[0];
             deleteObjectFromTreeNode(node);
         });
 

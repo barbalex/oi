@@ -1,23 +1,22 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $                            = require('jquery'),
-    _                            = require('underscore'),
-    PouchDB                      = require('pouchdb'),
-    db                           = new PouchDB('oi'),
-    input                        = require('../../../templates/input'),
-    textarea                     = require('../../../templates/textarea'),
-    checkbox                     = require('../../../templates/checkbox'),
-    optionGroup                  = require('../../../templates/optionGroup'),
-    checkboxGroup                = require('../../../templates/checkboxGroup'),
-    select                       = require('../../../templates/select'),
-    formButtonToolbar            = require('../../../templates/formButtonToolbar'),
-    formHierarchiesButtonToolbar = require('../../../templates/formHierarchiesButtonToolbar'),
-    fitTextareaToContent         = require('./fitTextareaToContent'),
-    addCheckedToValueList        = require('./addCheckedToValueList'),
-    positionFormBtngroup         = require('./positionFormBtngroup'),
-    getObjectWithId              = require('../getObjectWithId'),
-    getHierarchyWithId           = require('../getHierarchyWithId');
+var $                     = require('jquery'),
+    _                     = require('underscore'),
+    PouchDB               = require('pouchdb'),
+    db                    = new PouchDB('oi'),
+    input                 = require('../../../templates/input'),
+    textarea              = require('../../../templates/textarea'),
+    checkbox              = require('../../../templates/checkbox'),
+    optionGroup           = require('../../../templates/optionGroup'),
+    checkboxGroup         = require('../../../templates/checkboxGroup'),
+    select                = require('../../../templates/select'),
+    formButtonToolbar     = require('../../../templates/formButtonToolbar'),
+    fitTextareaToContent  = require('./fitTextareaToContent'),
+    addCheckedToValueList = require('./addCheckedToValueList'),
+    positionFormBtngroup  = require('./positionFormBtngroup'),
+    getObjectWithId       = require('../getObjectWithId'),
+    getHierarchyWithId    = require('../getHierarchyWithId');
 
 module.exports = function (id, type) {
     var html        = '',
@@ -108,7 +107,7 @@ module.exports = function (id, type) {
         }
         break;
     case 'hierarchy':
-        html += formHierarchiesButtonToolbar();
+        html += formButtonToolbar();
         $('#formContent').html(html);
         positionFormBtngroup();
         $('#formContent').data('type', type);

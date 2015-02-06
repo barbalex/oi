@@ -39,7 +39,5 @@ module.exports = function () {
             // hierarchy-id übergeben
             initiateForm(data.node.data.id, 'hierarchy');
         }
-    }).on('delete_node.jstree', function (e, data) {
-        console.log('node was deleted, id: ', data.node.id);
     });
 };
