@@ -14,18 +14,18 @@ module.exports = function () {
     alsoResizeReverse();
 
     $('#nav').resizable({
-        handles: { 'e': '#navSeparator' },
+        handles:           { 'e': '#navSeparator' },
         alsoResizeReverse: '#form',
-        containment: '#content',
+        containment:       '#content',
         resize: function (event, ui) {
             positionFormBtngroup();
         }
     });
 
     $('#form').resizable({
-        handles: { 'e': '#formSeparator' },
+        handles:           { 'e': '#formSeparator' },
         alsoResizeReverse: '#map',
-        containment: '#content',
+        containment:       '#content',
         resize: function (event, ui) {
             positionFormBtngroup();
         }
@@ -34,9 +34,9 @@ module.exports = function () {
     $('#formSeparator').hide();
 
     $('#map').resizable({
-        handles: { 'e': '#mapSeparator' },
+        handles:           { 'e': '#mapSeparator' },
         alsoResizeReverse: '#utils',
-        containment: '#content'
+        containment:       '#content'
     });
 
     $('.nav').on('click', 'li', function (event) {
@@ -69,5 +69,4 @@ module.exports = function () {
     });
 
     $('.scrollbar').perfectScrollbar();
-
 };

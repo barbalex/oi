@@ -1,10 +1,10 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var PouchDB               = require('pouchdb'),
-    handleDbObjectChanges = require('../handleDbObjectChanges'),
-    foreignChangedIndex   = require('./foreignChangedIndex'),
-    pouchDbOptions        = require('../pouchDbOptions');
+var PouchDB                     = require('pouchdb'),
+    handleExternalObjectChanges = require('../handleExternalObjectChanges'),
+    foreignChangedIndex         = require('./foreignChangedIndex'),
+    pouchDbOptions              = require('../pouchDbOptions');
 
 module.exports = function () {
     var db = new PouchDB('oi', pouchDbOptions);
@@ -18,5 +18,5 @@ module.exports = function () {
         include_docs: true,
         filter: foreignChangedIndex(),
         key: 'object'
-    }).on('change', handleDbObjectChanges);
+    }).on('change', handleExternalObjectChanges);
 };

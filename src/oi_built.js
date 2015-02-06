@@ -19677,7 +19677,7 @@ window.oi.initiiereApp = function () {
 
 // gleich ein mal ausführen
 window.oi.initiiereApp();
-},{"./modules/initiateResizables":120,"./modules/nav/initiateNav":131,"./modules/setupEvents":136,"handlebars":24}],2:[function(require,module,exports){
+},{"./modules/initiateResizables":126,"./modules/nav/initiateNav":137,"./modules/setupEvents":142,"handlebars":24}],2:[function(require,module,exports){
 module.exports={
     "user": "barbalex",
     "pass": "dLhdMg12"
@@ -55327,13 +55327,13 @@ module.exports = function (object, hierarchy) {
     return newObject;
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./guid":118,"./nav/createChildHierarchiesOfObject":121,"./nav/createTreeNodeObject":124,"dateformat":8,"underscore":99}],104:[function(require,module,exports){
+},{"./guid":124,"./nav/createChildHierarchiesOfObject":127,"./nav/createTreeNodeObject":130,"dateformat":8,"underscore":99}],104:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var _                  = require('underscore'),
-    getHierarchyWithId = require('./getHierarchyWithId'),
-    createNewObject    = require('./createNewObject');
+var _               = require('underscore'),
+    getHierarchy    = require('./getHierarchy'),
+    createNewObject = require('./createNewObject');
 
 module.exports = function (hierarchyId, parentId) {
     var parentObject,
@@ -55341,7 +55341,7 @@ module.exports = function (hierarchyId, parentId) {
         object,
         hierarchy;
 
-    hierarchy = getHierarchyWithId(hierarchyId);
+    hierarchy = getHierarchy(hierarchyId);
     if (hierarchy && hierarchy.parent) {
         // suche object der parent hierarchy
         parentObject = _.find(window.oi.objects, function (object) {
@@ -55361,24 +55361,23 @@ module.exports = function (hierarchyId, parentId) {
         console.log('error: no parent hierarchy found for hierarchy with id = ', hierarchyId);
     }
 };
-},{"./createNewObject":103,"./getHierarchyWithId":116,"underscore":99}],105:[function(require,module,exports){
+},{"./createNewObject":103,"./getHierarchy":122,"underscore":99}],105:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var _                  = require('underscore'),
-    getObjectWithId    = require('./getObjectWithId'),
-    getHierarchyWithId = require('./getHierarchyWithId'),
-    createNewObject    = require('./createNewObject');
+var getObject       = require('./getObject'),
+    getHierarchy    = require('./getHierarchy'),
+    createNewObject = require('./createNewObject');
 
 module.exports = function (objectId) {
     var object,
         hierarchy,
         newObject;
 
-    object = getObjectWithId(objectId);
+    object = getObject(objectId);
     if (object && object.hId) {
         // get metadata for doc
-        hierarchy = getHierarchyWithId(object.hId);
+        hierarchy = getHierarchy(object.hId);
         // erstellt neues Objekt, ergänzt model und tree und selected node
         newObject = createNewObject(object, hierarchy);
         if (!newObject) {
@@ -55388,7 +55387,7 @@ module.exports = function (objectId) {
         console.log('error: no hierarchy found for object with id = ', objectId);
     }
 };
-},{"./createNewObject":103,"./getHierarchyWithId":116,"./getObjectWithId":117,"underscore":99}],106:[function(require,module,exports){
+},{"./createNewObject":103,"./getHierarchy":122,"./getObject":123}],106:[function(require,module,exports){
 (function (global){
 /*
  * gets a node from the tree
@@ -55401,26 +55400,26 @@ module.exports = function (objectId) {
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $                         = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
-    _                         = require('underscore'),
-    PouchDB                   = require('pouchdb'),
-    pouchDbOptions            = require('./pouchDbOptions'),
-    deleteObjectFromModelById = require('./deleteObjectFromModelById'),
-    getObjectWithId           = require('./getObjectWithId'),
-    askYesNoWithModal         = require('./askYesNoWithModal'),
-    tellWithModal             = require('./tellWithModal');
+var $                     = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+    _                     = require('underscore'),
+    PouchDB               = require('pouchdb'),
+    pouchDbOptions        = require('./pouchDbOptions'),
+    deleteObjectFromModel = require('./deleteObjectFromModel'),
+    getObject             = require('./getObject'),
+    askYesNoWithModal     = require('./askYesNoWithModal'),
+    tellWithModal         = require('./tellWithModal');
 
 module.exports = function ($node) {
-    var objectId = $node.id,
+    var objectId        = $node.id,
         object,
         // reverse direction of children_d to delete from bottom to top
         // children in anderen Array kopieren, sonst wird nur der erste verarbeitet
-        nodeChildren = _.union($node.children_d.reverse()),
-        tree = $('#navContent').jstree(true),
+        nodeChildren    = _.union($node.children_d.reverse()),
+        tree            = $('#navContent').jstree(true),
         parentNodeId,
         objectsToDelete = [],
         childrenToDelete,
-        db = new PouchDB('oi', pouchDbOptions);
+        db              = new PouchDB('oi', pouchDbOptions);
 
     // ermitteln, wieviele child-Objekte betroffen werden
     childrenToDelete = _.map(nodeChildren, function (child) {
@@ -55454,8 +55453,8 @@ module.exports = function ($node) {
 
             if (nodeJson && nodeJson.data && nodeJson.data.type && nodeJson.data.type === 'object') {
                 // delete object from db and model
-                db.remove(getObjectWithId(nodeJson.id));
-                deleteObjectFromModelById(nodeJson.id);
+                db.remove(getObject(nodeJson.id));
+                deleteObjectFromModel(nodeJson.id);
             }
             // delete node (hierarchies and objects)
             tree.delete_node('#' + childNodeId);
@@ -55463,7 +55462,7 @@ module.exports = function ($node) {
 
         // get object
         if (objectsToDelete.length > 0) {
-            object = getObjectWithId(objectId);
+            object = getObject(objectId);
             if (object) {
                 // delete object in db
                 db.remove(object).then(function () {
@@ -55492,7 +55491,7 @@ module.exports = function ($node) {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./askYesNoWithModal":101,"./deleteObjectFromModelById":107,"./getObjectWithId":117,"./pouchDbOptions":134,"./tellWithModal":139,"pouchdb":55,"underscore":99}],107:[function(require,module,exports){
+},{"./askYesNoWithModal":101,"./deleteObjectFromModel":107,"./getObject":123,"./pouchDbOptions":140,"./tellWithModal":145,"pouchdb":55,"underscore":99}],107:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -55507,6 +55506,110 @@ module.exports = function (objectId) {
     }
 };
 },{"underscore":99}],108:[function(require,module,exports){
+(function (global){
+/*jslint node: true, browser: true, nomen: true, todo: true */
+'use strict';
+
+var $                   = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+    getValueAfterChange = require('../form/getValueAfterChange'),
+    saveObjectValue     = require('../form/saveObjectValue');
+
+module.exports = function () {
+    var value = getValueAfterChange(this),
+        $that = $(this),
+        id    = $that.data('object').id,
+        field = $that.data('object').label;
+
+    saveObjectValue(id, field, value);
+};
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../form/getValueAfterChange":117,"../form/saveObjectValue":121}],109:[function(require,module,exports){
+(function (global){
+/*jslint node: true, browser: true, nomen: true, todo: true */
+'use strict';
+
+var $                       = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+    deleteObjectAndChildren = require('../deleteObjectAndChildren');
+
+module.exports = function () {
+    var node = $('#navContent').jstree(true).get_selected(true)[0];
+    deleteObjectAndChildren(node);
+};
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../deleteObjectAndChildren":106}],110:[function(require,module,exports){
+(function (global){
+/*jslint node: true, browser: true, nomen: true, todo: true */
+'use strict';
+
+var $                            = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+    createNewObjectFromObject    = require('../createNewObjectFromObject'),
+    createNewObjectFromHierarchy = require('../createNewObjectFromHierarchy');
+
+module.exports = function () {
+    var tree = $('#navContent').jstree(true),
+        node = tree.get_selected(true)[0],
+        type = node.data.type,
+        id   = node.data.type === 'object' ? node.id : node.data.id,
+        parentId;
+
+    switch (type) {
+    case 'object':
+        createNewObjectFromObject(id);
+        break;
+    case 'hierarchy':
+        parentId = tree.get_selected(true)[0].parent;
+        createNewObjectFromHierarchy(id, parentId);
+        break;
+    }
+};
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../createNewObjectFromHierarchy":104,"../createNewObjectFromObject":105}],111:[function(require,module,exports){
+(function (global){
+// klickt man in der Mobilansicht des Menus auf den Titel, soll es schliessen
+
+/*jslint node: true, browser: true, nomen: true, todo: true */
+'use strict';
+
+var $ = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null);
+
+module.exports = function () {
+    // verhindern, dass die Seite neu lädt
+    event.preventDefault();
+    $('.navbar').find('.navbar-collapse').collapse('hide');
+};
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],112:[function(require,module,exports){
+(function (global){
+// wählt man in der Mobilansicht einen Menu-Eintrag, soll das Menu schliessen
+
+/*jslint node: true, browser: true, nomen: true, todo: true */
+'use strict';
+
+var $ = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null);
+
+module.exports = function () {
+    if ($(event.target).is('a')) {
+        $(this).collapse('hide');
+    }
+};
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],113:[function(require,module,exports){
+(function (global){
+/*jslint node: true, browser: true, nomen: true, todo: true */
+'use strict';
+
+var $ = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null);
+
+module.exports = function () {
+    var $separator = $(this).find('.js-separator').first(),
+        $content   = $(this).find('.js-content').first();
+
+    console.log('scrolling tab');
+
+    $separator.css('height', $content.height() + 40);
+};
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],114:[function(require,module,exports){
 /*
  * erstellt aus einer possibleValues einen Array von Objekten
  * mit value und checked
@@ -55590,7 +55693,7 @@ module.exports = function (possibleValues, setValues, type) {
         return valueObject;
     });
 };
-},{"underscore":99}],109:[function(require,module,exports){
+},{"underscore":99}],115:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus: true, white: true*/
 'use strict';
 
@@ -55607,7 +55710,7 @@ module.exports = function (feldWert) {
     // object nicht umwandeln. Man muss beim Vergleichen unterscheiden können, ob es ein Object war
     return feldWert;
 };
-},{"./myTypeOf":113}],110:[function(require,module,exports){
+},{"./myTypeOf":119}],116:[function(require,module,exports){
 // setzt die Höhe von textareas so, dass der Text genau rein passt
 
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus: true*/
@@ -55659,7 +55762,7 @@ module.exports = function (id, maxHeight) {
         text.style.height = adjustedHeight + 'px';
     }
 };
-},{}],111:[function(require,module,exports){
+},{}],117:[function(require,module,exports){
 (function (global){
 /*
  * holt sich nach einer Änderung in einem Feld die Daten
@@ -55713,7 +55816,7 @@ module.exports = function (that) {
     return value;
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./convertToCorrectType":109,"underscore":99}],112:[function(require,module,exports){
+},{"./convertToCorrectType":115,"underscore":99}],118:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -55730,8 +55833,8 @@ var $                     = (typeof window !== "undefined" ? window.$ : typeof g
     fitTextareaToContent  = require('./fitTextareaToContent'),
     addCheckedToValueList = require('./addCheckedToValueList'),
     positionFormBtngroup  = require('./positionFormBtngroup'),
-    getObjectWithId       = require('../getObjectWithId'),
-    getHierarchyWithId    = require('../getHierarchyWithId');
+    getObject             = require('../getObject'),
+    getHierarchy          = require('../getHierarchy');
 
 module.exports = function (id, type) {
     var html        = '',
@@ -55742,10 +55845,10 @@ module.exports = function (id, type) {
     switch (type) {
     case 'object':
         // get data for object
-        object = getObjectWithId(id);
+        object = getObject(id);
 
         if (object && object.hId) {
-            hierarchy = getHierarchyWithId(object.hId);
+            hierarchy = getHierarchy(object.hId);
             if (hierarchy && hierarchy.fields) {
                 _.each(hierarchy.fields, function (field) {
                     var templateObject                  = {};
@@ -55830,7 +55933,7 @@ module.exports = function (id, type) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../../templates/checkbox":140,"../../../templates/checkboxGroup":141,"../../../templates/formButtonToolbar":142,"../../../templates/input":143,"../../../templates/optionGroup":144,"../../../templates/select":145,"../../../templates/textarea":146,"../getHierarchyWithId":116,"../getObjectWithId":117,"./addCheckedToValueList":108,"./fitTextareaToContent":110,"./positionFormBtngroup":114,"underscore":99}],113:[function(require,module,exports){
+},{"../../../templates/checkbox":146,"../../../templates/checkboxGroup":147,"../../../templates/formButtonToolbar":148,"../../../templates/input":149,"../../../templates/optionGroup":150,"../../../templates/select":151,"../../../templates/textarea":152,"../getHierarchy":122,"../getObject":123,"./addCheckedToValueList":114,"./fitTextareaToContent":116,"./positionFormBtngroup":120,"underscore":99}],119:[function(require,module,exports){
 // Hilfsfunktion, die typeof ersetzt und ergänzt
 // typeof gibt bei input-Feldern immer String zurück!
 
@@ -55871,7 +55974,7 @@ module.exports = function (wert) {
     if (wert === undefined)          { return 'undefined'; }
     if (typeof wert === 'function')  { return 'function'; }
 };
-},{}],114:[function(require,module,exports){
+},{}],120:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus: true, white: true*/
 'use strict';
@@ -55882,7 +55985,7 @@ module.exports = function (wert) {
     $('#form').find('.btn-group').css('margin-left', $('#formContent').width() - 120);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],115:[function(require,module,exports){
+},{}],121:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -55893,7 +55996,7 @@ var $                 = (typeof window !== "undefined" ? window.$ : typeof globa
     PouchDB           = require('pouchdb'),
     pouchDbOptions    = require('../pouchDbOptions'),
     getLabelForObject = require('../nav/getLabelForObject'),
-    getObjectWithId   = require('../getObjectWithId');
+    getObject         = require('../getObject');
 
 module.exports = function (id, field, value) {
     var object,
@@ -55901,7 +56004,7 @@ module.exports = function (id, field, value) {
         db = new PouchDB('oi', pouchDbOptions);
 
     // get data for object
-    object              = getObjectWithId(id);
+    object              = getObject(id);
     // build lastEdited
     lastEdited.date     = dateformat(new Date(), 'isoDateTime');
     // TODO: get real user
@@ -55933,23 +56036,21 @@ module.exports = function (id, field, value) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../getObjectWithId":117,"../nav/getLabelForObject":128,"../pouchDbOptions":134,"dateformat":8,"pouchdb":55,"underscore":99}],116:[function(require,module,exports){
+},{"../getObject":123,"../nav/getLabelForObject":134,"../pouchDbOptions":140,"dateformat":8,"pouchdb":55,"underscore":99}],122:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
 var _ = require('underscore');
 
 module.exports = function (hierarchyId) {
-    var hierarchy;
-
     // get data for object
-    hierarchy = _.find(window.oi.hierarchies, function (hierarchy) {
+    var hierarchy = _.find(window.oi.hierarchies, function (hierarchy) {
         return hierarchy._id === hierarchyId;
     });
 
     return hierarchy || null;
 };
-},{"underscore":99}],117:[function(require,module,exports){
+},{"underscore":99}],123:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -55965,7 +56066,7 @@ module.exports = function (id) {
 
     return object || null;
 };
-},{"underscore":99}],118:[function(require,module,exports){
+},{"underscore":99}],124:[function(require,module,exports){
 /*
 * generiert eine uuid
 * Quelle: http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
@@ -55984,19 +56085,14 @@ module.exports = function () {
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
         s4() + '-' + s4() + s4() + s4();
 };
-},{}],119:[function(require,module,exports){
+},{}],125:[function(require,module,exports){
 (function (global){
-/*jslint node: true, browser: true, nomen: true, todo: true */
 /*
- * Vorsicht: wenn mit saveObjectValue ein neuer Wert in die DB geschrieben wird,
- * löst das AUCH einen change aus
- * saveObjectValue passt nach dem put die rev des models an
- * diese function hier läuft aber VORHER!!!
- * Wurde also ein change aus dieser Anwendung ausgelöst, muss verglichen werden,
- * ob das Objekt im Model und das im change gleich sind
- * nur wenn sie ungleich sind, muss model und allenfalls ui aktualisiert werden
- * Beim Vergleich ist die rev zu ignorieren, weil diese ja noch nicht aktualisiert wurde!
+ * passt model und wenn nötig die ui an,
+ * wenn in einer anderen DB ein object verändert wurde
  */
+
+/*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
 var $                 = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
@@ -56006,7 +56102,8 @@ var $                 = (typeof window !== "undefined" ? window.$ : typeof globa
 
 module.exports = function (change) {
     var modelObject,
-        correspondingHierarchy;
+        correspondingHierarchy,
+        $formContent = $('#formContent');
 
     // update model of object
     modelObject = _.find(window.oi.objects, function (object) {
@@ -56020,7 +56117,7 @@ module.exports = function (change) {
 
         // refresh form if this object is shown
         // cant update only changed field because it is unknown (?)
-        if ($('#formContent').html() !== "" && $('#formContent').data('id') === change.doc._id) {
+        if ($formContent.html() !== "" && $formContent.data('id') === change.doc._id) {
             // TODO: hier wird Fehler generiert, wenn ausserhalb App Daten verändert werden
             initiateForm(change.doc._id, 'object');
         }
@@ -56034,7 +56131,7 @@ module.exports = function (change) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./form/initiateForm":112,"./nav/getLabelForObject":128,"underscore":99}],120:[function(require,module,exports){
+},{"./form/initiateForm":118,"./nav/getLabelForObject":134,"underscore":99}],126:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -56052,18 +56149,18 @@ module.exports = function () {
     alsoResizeReverse();
 
     $('#nav').resizable({
-        handles: { 'e': '#navSeparator' },
+        handles:           { 'e': '#navSeparator' },
         alsoResizeReverse: '#form',
-        containment: '#content',
+        containment:       '#content',
         resize: function (event, ui) {
             positionFormBtngroup();
         }
     });
 
     $('#form').resizable({
-        handles: { 'e': '#formSeparator' },
+        handles:           { 'e': '#formSeparator' },
         alsoResizeReverse: '#map',
-        containment: '#content',
+        containment:       '#content',
         resize: function (event, ui) {
             positionFormBtngroup();
         }
@@ -56072,9 +56169,9 @@ module.exports = function () {
     $('#formSeparator').hide();
 
     $('#map').resizable({
-        handles: { 'e': '#mapSeparator' },
+        handles:           { 'e': '#mapSeparator' },
         alsoResizeReverse: '#utils',
-        containment: '#content'
+        containment:       '#content'
     });
 
     $('.nav').on('click', 'li', function (event) {
@@ -56107,11 +56204,10 @@ module.exports = function () {
     });
 
     $('.scrollbar').perfectScrollbar();
-
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./alsoResizeReverse":100,"./form/positionFormBtngroup":114,"./setWidthOfTabs":135,"./showTab":137}],121:[function(require,module,exports){
+},{"./alsoResizeReverse":100,"./form/positionFormBtngroup":120,"./setWidthOfTabs":141,"./showTab":143}],127:[function(require,module,exports){
 // creates descendant hierarchical objects of single objects
 // adds them to an array
 
@@ -56148,7 +56244,7 @@ module.exports = function (object) {
     }
     return [];
 };
-},{"underscore":99}],122:[function(require,module,exports){
+},{"underscore":99}],128:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -56180,7 +56276,7 @@ module.exports = function () {
     });
 
 };
-},{"../pouchDbOptions":134,"./initiateForeignChangeQuery":130,"pouchdb":55}],123:[function(require,module,exports){
+},{"../pouchDbOptions":140,"./initiateForeignChangeQuery":136,"pouchdb":55}],129:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -56226,7 +56322,7 @@ module.exports = function () {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../form/initiateForm":112,"./generateDataForTree":127,"./treeContextmenuItems":133,"jstree":26}],124:[function(require,module,exports){
+},{"../form/initiateForm":118,"./generateDataForTree":133,"./treeContextmenuItems":139,"jstree":26}],130:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -56259,7 +56355,7 @@ module.exports = function (object) {
 
     return jstreeObject;
 };
-},{"./getLabelForObject":128,"underscore":99}],125:[function(require,module,exports){
+},{"./getLabelForObject":134,"underscore":99}],131:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -56272,7 +56368,7 @@ module.exports = function (object) {
     jstreeObject.parent = '#';
     return jstreeObject;
 };
-},{"./createTreeNodeObject":124}],126:[function(require,module,exports){
+},{"./createTreeNodeObject":130}],132:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -56298,7 +56394,7 @@ module.exports = function () {
         }
     };
 };
-},{}],127:[function(require,module,exports){
+},{}],133:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -56332,7 +56428,7 @@ module.exports = function () {
 
     return _.union(objectsData, childHierarchiesData);
 };
-},{"./createChildHierarchiesOfObject":121,"./createTreeNodeObject":124,"./createTreeNodeRootObject":125,"./getLabelForObject":128,"underscore":99}],128:[function(require,module,exports){
+},{"./createChildHierarchiesOfObject":127,"./createTreeNodeObject":130,"./createTreeNodeRootObject":131,"./getLabelForObject":134,"underscore":99}],134:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -56363,14 +56459,14 @@ module.exports = function (object, correspondingHierarchy) {
     label = '<strong>' + labelValue + '</strong>';
     return label;
 };
-},{"underscore":99}],129:[function(require,module,exports){
+},{"underscore":99}],135:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var PouchDB               = require('pouchdb'),
-    handleDbObjectChanges = require('../handleDbObjectChanges'),
-    foreignChangedIndex   = require('./foreignChangedIndex'),
-    pouchDbOptions        = require('../pouchDbOptions');
+var PouchDB                     = require('pouchdb'),
+    handleExternalObjectChanges = require('../handleExternalObjectChanges'),
+    foreignChangedIndex         = require('./foreignChangedIndex'),
+    pouchDbOptions              = require('../pouchDbOptions');
 
 module.exports = function () {
     var db = new PouchDB('oi', pouchDbOptions);
@@ -56384,9 +56480,9 @@ module.exports = function () {
         include_docs: true,
         filter: foreignChangedIndex(),
         key: 'object'
-    }).on('change', handleDbObjectChanges);
+    }).on('change', handleExternalObjectChanges);
 };
-},{"../handleDbObjectChanges":119,"../pouchDbOptions":134,"./foreignChangedIndex":126,"pouchdb":55}],130:[function(require,module,exports){
+},{"../handleExternalObjectChanges":125,"../pouchDbOptions":140,"./foreignChangedIndex":132,"pouchdb":55}],136:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -56421,7 +56517,7 @@ module.exports = function () {
         }
     });
 };
-},{"../pouchDbOptions":134,"./foreignChangedIndex":126,"./initiateChangeStream":129,"pouchdb":55,"underscore":99}],131:[function(require,module,exports){
+},{"../pouchDbOptions":140,"./foreignChangedIndex":132,"./initiateChangeStream":135,"pouchdb":55,"underscore":99}],137:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -56526,7 +56622,7 @@ module.exports = function () {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../pouchDbOptions":134,"../syncPouch":138,"./createDatabaseId":122,"./createTree":123,"./objectsByTypeIndex":132,"async":3,"pouchdb":55,"underscore":99}],132:[function(require,module,exports){
+},{"../pouchDbOptions":140,"../syncPouch":144,"./createDatabaseId":128,"./createTree":129,"./objectsByTypeIndex":138,"async":3,"pouchdb":55,"underscore":99}],138:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -56545,16 +56641,16 @@ module.exports = function () {
         }
     };
 };
-},{}],133:[function(require,module,exports){
+},{}],139:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $                              = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
-    _                              = require('underscore'),
-    createNewObjectFromObjectId    = require('../createNewObjectFromObjectId'),
-    createNewObjectFromHierarchyId = require('../createNewObjectFromHierarchyId'),
-    deleteObjectAndChildren        = require('../deleteObjectAndChildren');
+var $                            = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+    _                            = require('underscore'),
+    createNewObjectFromObject    = require('../createNewObjectFromObject'),
+    createNewObjectFromHierarchy = require('../createNewObjectFromHierarchy'),
+    deleteObjectAndChildren      = require('../deleteObjectAndChildren');
 
 module.exports = function ($node) {
     return {
@@ -56563,10 +56659,10 @@ module.exports = function ($node) {
             'action': function () {
                 switch ($node.data.type) {
                 case 'object':
-                    createNewObjectFromObjectId($node.id);
+                    createNewObjectFromObject($node.id);
                     break;
                 case 'hierarchy':
-                    createNewObjectFromHierarchyId($node.data.id, $node.parent);
+                    createNewObjectFromHierarchy($node.data.id, $node.parent);
                     break;
                 }
             },
@@ -56582,7 +56678,14 @@ module.exports = function ($node) {
     };
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../createNewObjectFromHierarchyId":104,"../createNewObjectFromObjectId":105,"../deleteObjectAndChildren":106,"underscore":99}],134:[function(require,module,exports){
+},{"../createNewObjectFromHierarchy":104,"../createNewObjectFromObject":105,"../deleteObjectAndChildren":106,"underscore":99}],140:[function(require,module,exports){
+/*
+ * hier können Optionen für die pouch gesetzt werden,
+ * so, dass sie nur an einem Ort erfasst sind
+ * ajax.cache scheint nicht zu wirken!
+ * es müsste die Anwendung im IE zum Laufen bringen
+ */
+
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -56591,7 +56694,7 @@ module.exports = function () {
         'ajax': {'cache': false}
     };
 };
-},{}],135:[function(require,module,exports){
+},{}],141:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus */
 'use strict';
@@ -56638,77 +56741,39 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./form/positionFormBtngroup":114,"underscore":99}],136:[function(require,module,exports){
+},{"./form/positionFormBtngroup":120,"underscore":99}],142:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $                              = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
-    _                              = require('underscore'),
-    fitTextareaToContent           = require('./form/fitTextareaToContent'),
-    getValueAfterChange            = require('./form/getValueAfterChange'),
-    saveObjectValue                = require('./form/saveObjectValue'),
-    createNewObjectFromObjectId    = require('./createNewObjectFromObjectId'),
-    createNewObjectFromHierarchyId = require('./createNewObjectFromHierarchyId'),
-    deleteObjectAndChildren        = require('./deleteObjectAndChildren');
+var $                            = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+    fitTextareaToContent         = require('./form/fitTextareaToContent'),
+    onScrollTab                  = require('./event/onScrollTab'),
+    onClickFormNew               = require('./event/onClickFormNew'),
+    onClickFormDelete            = require('./event/onClickFormDelete'),
+    onChangeElement              = require('./event/onChangeElement'),
+    onClickNavbarCollapse        = require('./event/onClickNavbarCollapse'),
+    onClickNavbarBrand           = require('./event/onClickNavbarBrand');
 
 module.exports = function () {
-    $('#nav')
-        .on('scroll', function () {
-            $('#navSeparator').css('height', $('#navContent').height() + 40);
-        });
+    // scroll event doesn't buble up, so it cant be delegated from # to .
+    $('.js-tab')
+        .on('scroll',                                 onScrollTab);
 
     $('#form')
-        .on('scroll', function () {
-            $('#formSeparator').css('height', $('#formContent').height() + 40);
-        })
-        .on('click', '#formNew', function () {
-            var node = $('#navContent').jstree(true).get_selected(true)[0],
-                type = node.data.type,
-                id   = node.data.type === 'object' ? node.id : node.data.id,
-                parentId;
-
-            switch (type) {
-            case 'object':
-                createNewObjectFromObjectId(id);
-                break;
-            case 'hierarchy':
-                parentId = $('#navContent').jstree(true).get_selected(true)[0].parent;
-                createNewObjectFromHierarchyId(id, parentId);
-                break;
-            }
-        })
-        .on('click', '#formDelete', function () {
-            var node = $('#navContent').jstree(true).get_selected(true)[0];
-            deleteObjectAndChildren(node);
-        });
+        .on('click',       '#formNew',                onClickFormNew)
+        .on('click',       '#formDelete',             onClickFormDelete);
 
     $('#formContent')
-        .on('keyup focus', 'textarea', fitTextareaToContent)
-        .on('change', 'input, textarea, select', function () {
-            var value = getValueAfterChange(this),
-                $that = $(this),
-                _id   = $that.data('object')._id,
-                field = $that.data('object').label;
+        .on('keyup focus', 'textarea',                fitTextareaToContent)
+        .on('change',      'input, textarea, select', onChangeElement);
 
-            saveObjectValue(_id, field, value);
-        });
-
-    // wählt man in der Mobilansicht ein Menu, soll das Menu schliessen
-    $('body').on('click.nav', '.navbar-collapse.in', function (e) {
-        if ($(e.target).is('a')) {
-            $(this).collapse('hide');
-        }
-    });
-
-    //man soll auch auf den Titel klicken können und das Menü schliesst
-    $('body').on('click.nav', '.navbar-brand', function () {
-        $('.navbar .navbar-collapse').collapse('hide');
-    });
-
+    $('body')
+        .on('click.nav',   '.navbar-collapse.in',     onClickNavbarCollapse)
+        .on('click.nav',   '.navbar-brand',           onClickNavbarBrand);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./createNewObjectFromHierarchyId":104,"./createNewObjectFromObjectId":105,"./deleteObjectAndChildren":106,"./form/fitTextareaToContent":110,"./form/getValueAfterChange":111,"./form/saveObjectValue":115,"underscore":99}],137:[function(require,module,exports){
+},{"./event/onChangeElement":108,"./event/onClickFormDelete":109,"./event/onClickFormNew":110,"./event/onClickNavbarBrand":111,"./event/onClickNavbarCollapse":112,"./event/onScrollTab":113,"./form/fitTextareaToContent":116}],143:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -56733,7 +56798,7 @@ module.exports = function (tab) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],138:[function(require,module,exports){
+},{}],144:[function(require,module,exports){
 /**
  * synchronisiert die Daten aus einer CouchDB in PouchDB
  */
@@ -56769,7 +56834,7 @@ module.exports = function () {
     if (remoteCouch) { sync(); }
 };
 
-},{"./configuration":102,"./pouchDbOptions":134,"pouchdb":55}],139:[function(require,module,exports){
+},{"./configuration":102,"./pouchDbOptions":140,"pouchdb":55}],145:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -56790,7 +56855,7 @@ module.exports = function (title, text) {
     $modal.find('.modal-body').find('p').html(text);
     $modal.modal(options);
 };
-},{"underscore":99}],140:[function(require,module,exports){
+},{"underscore":99}],146:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, helper, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing, functionType="function";
   return "<div class=\"form-group\">\r\n    <label class=\"control-label\">"
@@ -56804,7 +56869,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(((helper = (helper = helpers.checked || (depth0 != null ? depth0.checked : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"checked","hash":{},"data":data}) : helper)))
     + ">\r\n            </label>\r\n        </div>\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":24}],141:[function(require,module,exports){
+},{"handlebars":24}],147:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,depths) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "            <div class=\"checkbox\">\r\n                <label>\r\n                    <input type=\"checkbox\" id=\""
@@ -56831,11 +56896,11 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "    </div>\r\n</div>";
 },"useData":true,"useDepths":true});
-},{"handlebars":24}],142:[function(require,module,exports){
+},{"handlebars":24}],148:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   return "<div class=\"btn-toolbar\" role=\"toolbar\" aria-label=\"Daten Toolbar\">\r\n    <div class=\"btn-group pull-right\" role=\"group\" aria-label=\"Daten Button group\">\r\n        <button id=\"formNew\" class=\"btn btn-default\">neu</button>\r\n        <button id=\"formDelete\" class=\"btn btn-default\">löschen</button>\r\n    </div>\r\n</div>";
   },"useData":true});
-},{"handlebars":24}],143:[function(require,module,exports){
+},{"handlebars":24}],149:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "<div class=\"form-group\">\r\n    <label for=\""
@@ -56854,7 +56919,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.value : stack1), depth0))
     + "\">\r\n</div>";
 },"useData":true});
-},{"handlebars":24}],144:[function(require,module,exports){
+},{"handlebars":24}],150:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,depths) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "            <div class=\"radio\">\r\n                <label>\r\n                    <input type=\"radio\" name=\""
@@ -56881,7 +56946,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "    </div>\r\n</div>";
 },"useData":true,"useDepths":true});
-},{"handlebars":24}],145:[function(require,module,exports){
+},{"handlebars":24}],151:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, buffer = "                <option value=";
   stack1 = lambda((depth0 != null ? depth0.value : depth0), depth0);
@@ -56904,7 +56969,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "        </select>\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":24}],146:[function(require,module,exports){
+},{"handlebars":24}],152:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "<div class=\"form-group\">\r\n    <label for=\""

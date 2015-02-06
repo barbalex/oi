@@ -2,66 +2,28 @@
 'use strict';
 
 var $                            = require('jquery'),
-    _                            = require('underscore'),
     fitTextareaToContent         = require('./form/fitTextareaToContent'),
-    getValueAfterChange          = require('./form/getValueAfterChange'),
-    saveObjectValue              = require('./form/saveObjectValue'),
-    createNewObjectFromObject    = require('./createNewObjectFromObject'),
-    createNewObjectFromHierarchy = require('./createNewObjectFromHierarchy'),
-    deleteObjectAndChildren      = require('./deleteObjectAndChildren');
+    onScrollTab                  = require('./event/onScrollTab'),
+    onClickFormNew               = require('./event/onClickFormNew'),
+    onClickFormDelete            = require('./event/onClickFormDelete'),
+    onChangeElement              = require('./event/onChangeElement'),
+    onClickNavbarCollapse        = require('./event/onClickNavbarCollapse'),
+    onClickNavbarBrand           = require('./event/onClickNavbarBrand');
 
 module.exports = function () {
-    $('#nav')
-        .on('scroll', function () {
-            $('#navSeparator').css('height', $('#navContent').height() + 40);
-        });
+    // scroll event doesn't buble up, so it cant be delegated from # to .
+    $('.js-tab')
+        .on('scroll',                                 onScrollTab);
 
     $('#form')
-        .on('scroll', function () {
-            $('#formSeparator').css('height', $('#formContent').height() + 40);
-        })
-        .on('click', '#formNew', function () {
-            var node = $('#navContent').jstree(true).get_selected(true)[0],
-                type = node.data.type,
-                id   = node.data.type === 'object' ? node.id : node.data.id,
-                parentId;
-
-            switch (type) {
-            case 'object':
-                createNewObjectFromObject(id);
-                break;
-            case 'hierarchy':
-                parentId = $('#navContent').jstree(true).get_selected(true)[0].parent;
-                createNewObjectFromHierarchy(id, parentId);
-                break;
-            }
-        })
-        .on('click', '#formDelete', function () {
-            var node = $('#navContent').jstree(true).get_selected(true)[0];
-            deleteObjectAndChildren(node);
-        });
+        .on('click',       '#formNew',                onClickFormNew)
+        .on('click',       '#formDelete',             onClickFormDelete);
 
     $('#formContent')
-        .on('keyup focus', 'textarea', fitTextareaToContent)
-        .on('change', 'input, textarea, select', function () {
-            var value = getValueAfterChange(this),
-                $that = $(this),
-                _id   = $that.data('object')._id,
-                field = $that.data('object').label;
+        .on('keyup focus', 'textarea',                fitTextareaToContent)
+        .on('change',      'input, textarea, select', onChangeElement);
 
-            saveObjectValue(_id, field, value);
-        });
-
-    // wählt man in der Mobilansicht ein Menu, soll das Menu schliessen
-    $('body').on('click.nav', '.navbar-collapse.in', function (e) {
-        if ($(e.target).is('a')) {
-            $(this).collapse('hide');
-        }
-    });
-
-    //man soll auch auf den Titel klicken können und das Menü schliesst
-    $('body').on('click.nav', '.navbar-brand', function () {
-        $('.navbar .navbar-collapse').collapse('hide');
-    });
-
+    $('body')
+        .on('click.nav',   '.navbar-collapse.in',     onClickNavbarCollapse)
+        .on('click.nav',   '.navbar-brand',           onClickNavbarBrand);
 };

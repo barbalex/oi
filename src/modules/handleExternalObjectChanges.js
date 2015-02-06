@@ -1,5 +1,6 @@
 /*
- * passt model und wenn nötig di ui an, wenn in einer anderen DB ein object verändert wurde
+ * passt model und wenn nötig die ui an,
+ * wenn in einer anderen DB ein object verändert wurde
  */
 
 /*jslint node: true, browser: true, nomen: true, todo: true */
@@ -12,7 +13,8 @@ var $                 = require('jquery'),
 
 module.exports = function (change) {
     var modelObject,
-        correspondingHierarchy;
+        correspondingHierarchy,
+        $formContent = $('#formContent');
 
     // update model of object
     modelObject = _.find(window.oi.objects, function (object) {
@@ -26,7 +28,7 @@ module.exports = function (change) {
 
         // refresh form if this object is shown
         // cant update only changed field because it is unknown (?)
-        if ($('#formContent').html() !== "" && $('#formContent').data('id') === change.doc._id) {
+        if ($formContent.html() !== "" && $formContent.data('id') === change.doc._id) {
             // TODO: hier wird Fehler generiert, wenn ausserhalb App Daten verändert werden
             initiateForm(change.doc._id, 'object');
         }
