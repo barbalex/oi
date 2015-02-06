@@ -4,10 +4,8 @@
 var _ = require('underscore');
 
 module.exports = function (hierarchyId) {
-    var hierarchy;
-
     // get data for object
-    hierarchy = _.find(window.oi.hierarchies, function (hierarchy) {
+    var hierarchy = _.find(window.oi.hierarchies, function (hierarchy) {
         return hierarchy._id === hierarchyId;
     });
 

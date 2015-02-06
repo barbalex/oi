@@ -2,11 +2,13 @@
 'use strict';
 
 var PouchDB                    = require('pouchdb'),
-    db                         = new PouchDB('oi'),
-    initiateForeignChangeQuery = require('./initiateForeignChangeQuery');
+    initiateForeignChangeQuery = require('./initiateForeignChangeQuery'),
+    pouchDbOptions             = require('../pouchDbOptions');
 
 module.exports = function () {
-    var databaseId = {};
+    var databaseId = {},
+        db         = new PouchDB('oi', pouchDbOptions);
+
     db.get('_local/databaseId', function (err, response) {
         if (err) {
             if (err.status === 404) {

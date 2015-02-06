@@ -1,14 +1,8 @@
-/*jslint node: true, browser: true, nomen: true, todo: true */
 /*
- * Vorsicht: wenn mit saveObjectValue ein neuer Wert in die DB geschrieben wird,
- * löst das AUCH einen change aus
- * saveObjectValue passt nach dem put die rev des models an
- * diese function hier läuft aber VORHER!!!
- * Wurde also ein change aus dieser Anwendung ausgelöst, muss verglichen werden,
- * ob das Objekt im Model und das im change gleich sind
- * nur wenn sie ungleich sind, muss model und allenfalls ui aktualisiert werden
- * Beim Vergleich ist die rev zu ignorieren, weil diese ja noch nicht aktualisiert wurde!
+ * passt model und wenn nötig di ui an, wenn in einer anderen DB ein object verändert wurde
  */
+
+/*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
 var $                 = require('jquery'),

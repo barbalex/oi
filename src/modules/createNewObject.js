@@ -17,20 +17,20 @@
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus: true, white: true*/
 'use strict';
 
-var _                    = require('underscore'),
-    $                    = require('jquery'),
-    dateformat           = require('dateformat'),
-    PouchDB              = require('pouchdb'),
-    db                   = new PouchDB('oi'),
-    guid                 = require('./guid'),
-    createTreeNodeObject = require('./nav/createTreeNodeObject'),
+var _                              = require('underscore'),
+    $                              = require('jquery'),
+    dateformat                     = require('dateformat'),
+    guid                           = require('./guid'),
+    createTreeNodeObject           = require('./nav/createTreeNodeObject'),
     createChildHierarchiesOfObject = require('./nav/createChildHierarchiesOfObject');
 
 module.exports = function (object, hierarchy) {
     var newObject,
         parentNode,
         newObjectNode,
-        childHierarchies;
+        childHierarchies,
+        tree = $('#navContent').jstree(),
+        $formContent = $('#formContent');
 
     newObject                     = {};
     newObject._id                 = guid();
@@ -58,25 +58,25 @@ module.exports = function (object, hierarchy) {
     window.oi.objects.push(newObject);
 
     // aktualisiere id in UI
-    $('#formContent').data('id', newObject._id);
+    $formContent.data('id', newObject._id);
 
     // füge dem node der hierarchy einen neuen node für newObject hinzu
     parentNode    = newObject.parent ? '#' + newObject.parent + newObject.hId : '#';
     newObjectNode = createTreeNodeObject(newObject);
-    $('#navContent').jstree().create_node(parentNode, newObjectNode);
+    tree.create_node(parentNode, newObjectNode);
 
     // ergänze child hierarchies
     childHierarchies = createChildHierarchiesOfObject(newObject);
     _.each(childHierarchies, function (childHierarchy) {
-        $('#navContent').jstree().create_node('#' + newObject._id, childHierarchy);
+        tree.create_node('#' + newObject._id, childHierarchy);
     });
 
     // select newObject
-    $('#navContent').jstree().deselect_all();
-    $('#navContent').jstree().select_node('#' + newObject._id);
+    tree.deselect_all();
+    tree.select_node('#' + newObject._id);
 
     // Fokus in das erste Feld setzen
-    $('#formContent').find('.form-control').first().focus();
+    $formContent.find('.form-control').first().focus();
 
     return newObject;
 };

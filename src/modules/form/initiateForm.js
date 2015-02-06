@@ -3,8 +3,6 @@
 
 var $                     = require('jquery'),
     _                     = require('underscore'),
-    PouchDB               = require('pouchdb'),
-    db                    = new PouchDB('oi'),
     input                 = require('../../../templates/input'),
     textarea              = require('../../../templates/textarea'),
     checkbox              = require('../../../templates/checkbox'),
@@ -15,8 +13,8 @@ var $                     = require('jquery'),
     fitTextareaToContent  = require('./fitTextareaToContent'),
     addCheckedToValueList = require('./addCheckedToValueList'),
     positionFormBtngroup  = require('./positionFormBtngroup'),
-    getObjectWithId       = require('../getObjectWithId'),
-    getHierarchyWithId    = require('../getHierarchyWithId');
+    getObject             = require('../getObject'),
+    getHierarchy          = require('../getHierarchy');
 
 module.exports = function (id, type) {
     var html        = '',
@@ -27,14 +25,13 @@ module.exports = function (id, type) {
     switch (type) {
     case 'object':
         // get data for object
-        object = getObjectWithId(id);
+        object = getObject(id);
 
         if (object && object.hId) {
-            hierarchy = getHierarchyWithId(object.hId);
+            hierarchy = getHierarchy(object.hId);
             if (hierarchy && hierarchy.fields) {
                 _.each(hierarchy.fields, function (field) {
                     var templateObject                  = {};
-
                     templateObject.object               = {};
                     templateObject.object._id           = id;
                     templateObject.object.type          = type;

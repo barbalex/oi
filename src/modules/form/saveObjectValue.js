@@ -5,16 +5,17 @@ var $                 = require('jquery'),
     dateformat        = require('dateformat'),
     _                 = require('underscore'),
     PouchDB           = require('pouchdb'),
-    db                = new PouchDB('oi'),
+    pouchDbOptions    = require('../pouchDbOptions'),
     getLabelForObject = require('../nav/getLabelForObject'),
-    getObjectWithId   = require('../getObjectWithId');
+    getObject         = require('../getObject');
 
 module.exports = function (id, field, value) {
     var object,
-        lastEdited = {};
+        lastEdited = {},
+        db = new PouchDB('oi', pouchDbOptions);
 
     // get data for object
-    object              = getObjectWithId(id);
+    object              = getObject(id);
     // build lastEdited
     lastEdited.date     = dateformat(new Date(), 'isoDateTime');
     // TODO: get real user

@@ -1,14 +1,14 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $                              = require('jquery'),
-    _                              = require('underscore'),
-    fitTextareaToContent           = require('./form/fitTextareaToContent'),
-    getValueAfterChange            = require('./form/getValueAfterChange'),
-    saveObjectValue                = require('./form/saveObjectValue'),
-    createNewObjectFromObjectId    = require('./createNewObjectFromObjectId'),
-    createNewObjectFromHierarchyId = require('./createNewObjectFromHierarchyId'),
-    deleteObjectFromTreeNode       = require('./deleteObjectFromTreeNode');
+var $                            = require('jquery'),
+    _                            = require('underscore'),
+    fitTextareaToContent         = require('./form/fitTextareaToContent'),
+    getValueAfterChange          = require('./form/getValueAfterChange'),
+    saveObjectValue              = require('./form/saveObjectValue'),
+    createNewObjectFromObject    = require('./createNewObjectFromObject'),
+    createNewObjectFromHierarchy = require('./createNewObjectFromHierarchy'),
+    deleteObjectAndChildren      = require('./deleteObjectAndChildren');
 
 module.exports = function () {
     $('#nav')
@@ -28,17 +28,17 @@ module.exports = function () {
 
             switch (type) {
             case 'object':
-                createNewObjectFromObjectId(id);
+                createNewObjectFromObject(id);
                 break;
             case 'hierarchy':
                 parentId = $('#navContent').jstree(true).get_selected(true)[0].parent;
-                createNewObjectFromHierarchyId(id, parentId);
+                createNewObjectFromHierarchy(id, parentId);
                 break;
             }
         })
         .on('click', '#formDelete', function () {
             var node = $('#navContent').jstree(true).get_selected(true)[0];
-            deleteObjectFromTreeNode(node);
+            deleteObjectAndChildren(node);
         });
 
     $('#formContent')

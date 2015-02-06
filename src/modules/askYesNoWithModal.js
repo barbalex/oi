@@ -1,17 +1,20 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var _ = require('underscore');
+var $ = require('jquery'),
+    _ = require('underscore');
 
 module.exports = function (title, text, yesButtonText, noButtonText) {
     var $modal = $('#askYesNoWithModal'),
         options;
 
-    title = title || '';
-    text  = text  || '';
+    title         = title         || '';
+    text          = text          || '';
     yesButtonText = yesButtonText || 'ja';
     noButtonText  = noButtonText  || 'abbrechen';
 
+    // mit esc soll das modal geschlossen werden können
+    // funktioniert nicht
     options = {
         keyboard: true
     };

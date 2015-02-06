@@ -23,7 +23,7 @@ module.exports = function () {
                     });
                 };
 
-            if (typeof (o.alsoResizeReverse) == 'object' && !o.alsoResizeReverse.parentNode) {
+            if (typeof (o.alsoResizeReverse) === 'object' && !o.alsoResizeReverse.parentNode) {
                 if (o.alsoResizeReverse.length) {
                     o.alsoResize = o.alsoResizeReverse[0];
                     _store(o.alsoResizeReverse);
@@ -69,7 +69,7 @@ module.exports = function () {
                     });
                 };
 
-            if (typeof (o.alsoResizeReverse) == 'object' && !o.alsoResizeReverse.nodeType) {
+            if (typeof (o.alsoResizeReverse) === 'object' && !o.alsoResizeReverse.nodeType) {
                 $.each(o.alsoResizeReverse, function (exp, c) {
                     _alsoResizeReverse(exp, c);
                 });

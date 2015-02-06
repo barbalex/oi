@@ -1,17 +1,18 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $                  = require('jquery'),
-    _                  = require('underscore'),
-    async              = require('async'),
-    PouchDB            = require('pouchdb'),
-    db                 = new PouchDB('oi'),
-    syncPouch          = require('../syncPouch'),
-    createTree         = require('./createTree'),
-    createDatabaseId   = require('./createDatabaseId'),
-    objectsByTypeIndex = require('./objectsByTypeIndex');
+var $                   = require('jquery'),
+    _                   = require('underscore'),
+    async               = require('async'),
+    PouchDB             = require('pouchdb'),
+    pouchDbOptions      = require('../pouchDbOptions'),
+    syncPouch           = require('../syncPouch'),
+    createTree          = require('./createTree'),
+    createDatabaseId    = require('./createDatabaseId'),
+    objectsByTypeIndex  = require('./objectsByTypeIndex');
 
 module.exports = function () {
+    var db = new PouchDB('oi', pouchDbOptions);
 
     // expose pouchdb to pouchdb-fauxton
     window.PouchDB = PouchDB;

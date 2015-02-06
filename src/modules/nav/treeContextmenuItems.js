@@ -1,11 +1,11 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $                              = require('jquery'),
-    _                              = require('underscore'),
-    createNewObjectFromObjectId    = require('../createNewObjectFromObjectId'),
-    createNewObjectFromHierarchyId = require('../createNewObjectFromHierarchyId'),
-    deleteObjectFromTreeNode       = require('../deleteObjectFromTreeNode');
+var $                            = require('jquery'),
+    _                            = require('underscore'),
+    createNewObjectFromObject    = require('../createNewObjectFromObject'),
+    createNewObjectFromHierarchy = require('../createNewObjectFromHierarchy'),
+    deleteObjectAndChildren      = require('../deleteObjectAndChildren');
 
 module.exports = function ($node) {
     return {
@@ -14,10 +14,10 @@ module.exports = function ($node) {
             'action': function () {
                 switch ($node.data.type) {
                 case 'object':
-                    createNewObjectFromObjectId($node.id);
+                    createNewObjectFromObject($node.id);
                     break;
                 case 'hierarchy':
-                    createNewObjectFromHierarchyId($node.data.id, $node.parent);
+                    createNewObjectFromHierarchy($node.data.id, $node.parent);
                     break;
                 }
             },
@@ -26,7 +26,7 @@ module.exports = function ($node) {
         'loeschen': {
             'label': 'löschen',
             'action': function () {
-                deleteObjectFromTreeNode($node);
+                deleteObjectAndChildren($node);
             },
             'icon': 'fa fa-close'
         }

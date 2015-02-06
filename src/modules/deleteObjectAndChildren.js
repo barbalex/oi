@@ -9,32 +9,34 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $                         = require('jquery'),
-    _                         = require('underscore'),
-    PouchDB                   = require('pouchdb'),
-    db                        = new PouchDB('oi'),
-    deleteObjectFromModelById = require('./deleteObjectFromModelById'),
-    getObjectWithId           = require('./getObjectWithId'),
-    askYesNoWithModal         = require('./askYesNoWithModal'),
-    tellWithModal             = require('./tellWithModal');
+var $                     = require('jquery'),
+    _                     = require('underscore'),
+    PouchDB               = require('pouchdb'),
+    pouchDbOptions        = require('./pouchDbOptions'),
+    deleteObjectFromModel = require('./deleteObjectFromModel'),
+    getObject             = require('./getObject'),
+    askYesNoWithModal     = require('./askYesNoWithModal'),
+    tellWithModal         = require('./tellWithModal');
 
 module.exports = function ($node) {
-    var objectId = $node.id,
+    var objectId        = $node.id,
         object,
         // reverse direction of children_d to delete from bottom to top
         // children in anderen Array kopieren, sonst wird nur der erste verarbeitet
-        nodeChildren = _.union($node.children_d.reverse()),
-        tree = $('#navContent').jstree(true),
+        nodeChildren    = _.union($node.children_d.reverse()),
+        tree            = $('#navContent').jstree(true),
         parentNodeId,
         objectsToDelete = [],
-        childrenToDelete;
+        childrenToDelete,
+        db              = new PouchDB('oi', pouchDbOptions);
 
-    // ermitteln, wieviele Objekte betroffen werden
+    // ermitteln, wieviele child-Objekte betroffen werden
     childrenToDelete = _.map(nodeChildren, function (child) {
         if (child.data && child.data.type && child.data.type === 'object') {
             return child.id;
         }
     });
+    // wird ein Objekt direkt gelöscht?
     if ($node && $node.data && $node.data.type && $node.data.type === 'object') {
         objectsToDelete.push($node.id);
     }
@@ -48,7 +50,7 @@ module.exports = function ($node) {
     // wenn Objekte betroffen sind: mitteilen und event-listeners einrichten
     askYesNoWithModal('sicher?', 'es werden ' + objectsToDelete.length + ' Objekte direkt und ' + childrenToDelete.length + ' hierarchisch tiefer liegende Objekte gelöscht', 'ja, löschen', 'nein, abbrechen');
 
-    $('body').on('click', '#askYesNoWithModalYes', function (e) {
+    $('body').on('click', '#askYesNoWithModalYes', function () {
         // event-listeners entfernen
         $('body').off('click', '#askYesNoWithModalNo');
         $('body').off('click', '#askYesNoWithModalYes');
@@ -60,8 +62,8 @@ module.exports = function ($node) {
 
             if (nodeJson && nodeJson.data && nodeJson.data.type && nodeJson.data.type === 'object') {
                 // delete object from db and model
-                db.remove(getObjectWithId(nodeJson.id));
-                deleteObjectFromModelById(nodeJson.id);
+                db.remove(getObject(nodeJson.id));
+                deleteObjectFromModel(nodeJson.id);
             }
             // delete node (hierarchies and objects)
             tree.delete_node('#' + childNodeId);
@@ -69,7 +71,7 @@ module.exports = function ($node) {
 
         // get object
         if (objectsToDelete.length > 0) {
-            object = getObjectWithId(objectId);
+            object = getObject(objectId);
             if (object) {
                 // delete object in db
                 db.remove(object).then(function () {
@@ -91,10 +93,9 @@ module.exports = function ($node) {
         }
     });
 
-    $('body').on('click', '#askYesNoWithModalNo', function (e) {
+    $('body').on('click', '#askYesNoWithModalNo', function () {
         // event-listeners entfernen
         $('body').off('click', '#askYesNoWithModalNo');
         $('body').off('click', '#askYesNoWithModalYes');
-        return;
     });
 };

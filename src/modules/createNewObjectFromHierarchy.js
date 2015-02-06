@@ -1,9 +1,9 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var _                  = require('underscore'),
-    getHierarchyWithId = require('./getHierarchyWithId'),
-    createNewObject    = require('./createNewObject');
+var _               = require('underscore'),
+    getHierarchy    = require('./getHierarchy'),
+    createNewObject = require('./createNewObject');
 
 module.exports = function (hierarchyId, parentId) {
     var parentObject,
@@ -11,7 +11,7 @@ module.exports = function (hierarchyId, parentId) {
         object,
         hierarchy;
 
-    hierarchy = getHierarchyWithId(hierarchyId);
+    hierarchy = getHierarchy(hierarchyId);
     if (hierarchy && hierarchy.parent) {
         // suche object der parent hierarchy
         parentObject = _.find(window.oi.objects, function (object) {

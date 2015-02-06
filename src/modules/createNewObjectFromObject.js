@@ -1,20 +1,19 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var _                  = require('underscore'),
-    getObjectWithId    = require('./getObjectWithId'),
-    getHierarchyWithId = require('./getHierarchyWithId'),
-    createNewObject    = require('./createNewObject');
+var getObject       = require('./getObject'),
+    getHierarchy    = require('./getHierarchy'),
+    createNewObject = require('./createNewObject');
 
 module.exports = function (objectId) {
     var object,
         hierarchy,
         newObject;
 
-    object = getObjectWithId(objectId);
+    object = getObject(objectId);
     if (object && object.hId) {
         // get metadata for doc
-        hierarchy = getHierarchyWithId(object.hId);
+        hierarchy = getHierarchy(object.hId);
         // erstellt neues Objekt, ergänzt model und tree und selected node
         newObject = createNewObject(object, hierarchy);
         if (!newObject) {
