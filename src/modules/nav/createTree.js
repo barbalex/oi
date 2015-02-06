@@ -8,9 +8,10 @@ var $                    = require('jquery'),
     treeContextmenuItems = require('./treeContextmenuItems');
 
 module.exports = function () {
-    var treeData = generateDataForTree();
+    var treeData    = generateDataForTree(),
+        $navContent = $('#navContent');
 
-    $('#navContent').jstree({
+    $navContent.jstree({
         'plugins': ['wholerow', 'state', 'contextmenu'],
         'core': {
             'data': treeData,
@@ -31,7 +32,7 @@ module.exports = function () {
         // scrollbars aktualisieren
         $('.scrollbar').perfectScrollbar('update');
     }).on('create_node.jstree', function (e, data) {
-        $('#navContent').jstree().select_node(data.node);
+        $navContent.jstree().select_node(data.node);
     }).on('select_node.jstree', function (e, data) {
         if (data.node.data.type === 'object') {
             initiateForm(data.node.id, 'object');

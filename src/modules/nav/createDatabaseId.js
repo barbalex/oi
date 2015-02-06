@@ -9,22 +9,21 @@ module.exports = function () {
     var databaseId = {},
         db         = new PouchDB('oi', pouchDbOptions);
 
-    db.get('_local/databaseId', function (err, response) {
-        if (err) {
-            if (err.status === 404) {
-                // document is missing > create new one and make it accessible as global variable
-                databaseId.databaseId = Math.random();
-                db.put(databaseId, '_local/databaseId', function (err, response) {
-                    if (err) { return console.log('error creating databaseId: ', err); }
-                    window.oi.databaseId = databaseId.databaseId;
-                    initiateForeignChangeQuery();
-                });
-            } else {
-                console.log('error retrieving databaseId: ', err);
-            }
+    db.get('_local/databaseId').then(function (response) {
+        window.oi.databaseId = response.databaseId;
+        initiateForeignChangeQuery();
+    }).catch(function (err) {
+        if (err.status === 404) {
+            // document is missing > create new one and make it accessible as global variable
+            databaseId.databaseId = Math.random();
+            db.put(databaseId, '_local/databaseId').then(function () {
+                window.oi.databaseId = databaseId.databaseId;
+                initiateForeignChangeQuery();
+            }).catch(function (err) {
+                console.log('error creating databaseId: ', err);
+            });
         } else {
-            window.oi.databaseId = response.databaseId;
-            initiateForeignChangeQuery();
+            console.log('error retrieving databaseId: ', err);
         }
     });
 

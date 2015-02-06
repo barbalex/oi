@@ -15,15 +15,6 @@ module.exports = function (that) {
     var value,
         $that = $(that);
 
-    //console.log('changed');
-    //console.log('this: ', that);
-    //console.log('object: ', $that.data('object'));
-    //console.log('_id: ', $that.data('object')._id);
-    //console.log('type: ', that.type);
-    //console.log('inputDataType: ', $that.data('object').inputDataType);
-    //console.log('label: ', $that.data('object').label);
-    //console.log('value before: ', $that.data('object').value);
-
     switch (that.type) {
     case 'text':
     case 'number':

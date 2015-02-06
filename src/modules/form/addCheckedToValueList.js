@@ -12,10 +12,9 @@
 var _ = require('underscore');
 
 module.exports = function (possibleValues, setValues, type) {
-
-    var valueList = [],
+    var valueList         = [],
         selectedOrChecked = type === 'select' ? 'selected' : 'checked',
-        nullObject = {};
+        nullObject        = {};
 
     nullObject.value = null;
     nullObject.label = '(kein Wert)';
@@ -39,21 +38,14 @@ module.exports = function (possibleValues, setValues, type) {
         }
     }
 
-    //console.log('valueList: ', valueList);
-    //console.log('possibleValues: ', possibleValues);
-    //console.log('setValues: ', setValues);
-
     return _.map(possibleValues, function (value) {
         var valueObject = {};
 
-        // offenbar ist typeof null object!!!
+        // typeof null ist object!!!
         if (value && typeof value === 'object') {
             // valueList enthielt Objekte mit values und labels
             valueObject.value = value.value;
             valueObject.label = value.label;
-
-            //console.log('value.value: ', value.value);
-            //console.log('value.label: ', value.label);
 
             // setzen, ob checkbox checked ist
             if (setValues && setValues.constructor === Array) {
@@ -61,9 +53,6 @@ module.exports = function (possibleValues, setValues, type) {
             } else {
                 valueObject.checked = setValues == value.value ? selectedOrChecked : '';
             }
-
-            //console.log('valueObject.checked: ', valueObject.checked);
-
         } else {
             valueObject.value = value;
             if ((type === 'select' || type === 'optionGroup') && value === null) {

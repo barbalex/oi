@@ -8,7 +8,7 @@ var $                   = require('jquery'),
 module.exports = function () {
     var value = getValueAfterChange(this),
         $that = $(this),
-        id    = $that.data('object').id,
+        id    = $that.data('object')._id,
         field = $that.data('object').label;
 
     saveObjectValue(id, field, value);

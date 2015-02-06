@@ -14,7 +14,10 @@ var $                 = require('jquery'),
 module.exports = function (change) {
     var modelObject,
         correspondingHierarchy,
-        $formContent = $('#formContent');
+        $formContent = $('#formContent'),
+        tree         = $('#navContent').jstree(true),
+        activeNode   = tree.get_selected(true)[0],
+        activeId     = activeNode.data.type === 'object' ? activeNode.id : activeNode.data.id;
 
     // update model of object
     modelObject = _.find(window.oi.objects, function (object) {
@@ -28,8 +31,7 @@ module.exports = function (change) {
 
         // refresh form if this object is shown
         // cant update only changed field because it is unknown (?)
-        if ($formContent.html() !== "" && $formContent.data('id') === change.doc._id) {
-            // TODO: hier wird Fehler generiert, wenn ausserhalb App Daten verändert werden
+        if ($formContent.html() !== "" && activeId === change.doc._id) {
             initiateForm(change.doc._id, 'object');
         }
         // refresh tree

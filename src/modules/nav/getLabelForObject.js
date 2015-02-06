@@ -20,11 +20,11 @@ module.exports = function (object, correspondingHierarchy) {
             return valueObject.value === object.data[correspondingHierarchy.nameField];
         });
         objectFromValueList = objectFromValueList || {"label": "(kein Wert)"};
-        labelValue = objectFromValueList.label;
+        labelValue          = objectFromValueList.label;
     } else {
         labelValue = object.data[correspondingHierarchy.nameField];
     }
     labelValue = labelValue || '(kein Wert)';
-    label = '<strong>' + labelValue + '</strong>';
+    label      = '<strong>' + labelValue + '</strong>';
     return label;
 };

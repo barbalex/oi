@@ -1,7 +1,7 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var _ = require('underscore');
+var $ = require('jquery');
 
 module.exports = function (title, text) {
     var $modal = $('#tellWithModal'),

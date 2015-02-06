@@ -8,7 +8,7 @@ var _                              = require('underscore'),
     createChildHierarchiesOfObject = require('./createChildHierarchiesOfObject');
 
 module.exports = function () {
-    var objectsData = [],
+    var objectsData          = [],
         childHierarchiesData = [],
         obj,
         dat;

@@ -13,8 +13,8 @@ module.exports = function () {
     // TODO: get only the users data
     db.query('foreign_changed', {include_docs: true}).then(function () {
         initiateChangeStream();
-    }).catch(function (err) {
-        if (err.status === 404) {
+    }).catch(function (error) {
+        if (error.status === 404) {
             // index doesnt exist yet > create it
             db.put(foreignChangedIndex()).then(function () {
                 // kick off an initial build, return immediately
@@ -24,11 +24,11 @@ module.exports = function () {
                 return db.query('foreign_changed', {include_docs: true});
             }).then(function () {
                 initiateChangeStream();
-            }).catch(function (err) {
-                console.log('error querrying foreignChanged: ', err);
+            }).catch(function (error) {
+                console.log('error querrying foreignChanged: ', error);
             });
         } else {
-            console.log('error querrying foreignChanged: ', err);
+            console.log('error querrying foreignChanged: ', error);
         }
     });
 };

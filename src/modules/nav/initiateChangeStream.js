@@ -9,7 +9,7 @@ var PouchDB                     = require('pouchdb'),
 module.exports = function () {
     var db = new PouchDB('oi', pouchDbOptions);
 
-    // TODO: filter only the users documents created with local databaseId
+    // TODO: filter only the users documents
     // TODO: watch changes to hierarchies
     // when changes happen in DB, update model and when necessary ui
     db.changes({

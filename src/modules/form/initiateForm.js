@@ -85,10 +85,6 @@ module.exports = function (id, type) {
 
                 positionFormBtngroup();
 
-                // objekt als geladen markieren
-                $('#formContent').data('type', type);
-                $('#formContent').data('id', id);
-
                 // textareas: Grösse an Wert anpassen
                 _.each(textareaIds, function (textareaId) {
                     fitTextareaToContent(textareaId);
@@ -107,8 +103,6 @@ module.exports = function (id, type) {
         html += formButtonToolbar();
         $('#formContent').html(html);
         positionFormBtngroup();
-        $('#formContent').data('type', type);
-        $('#formContent').data('id', id);
         break;
     }
 };

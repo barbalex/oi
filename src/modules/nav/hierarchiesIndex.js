@@ -4,8 +4,8 @@
 // TODO: get only the users data
 module.exports = function () {
     return {
-    _id: '_design/hierarchies',
-    views: {
+        _id: '_design/hierarchies',
+        views: {
             'hierarchies': {
                 map: function (doc) {
                     if (doc.type && doc.type === 'hierarchy') {

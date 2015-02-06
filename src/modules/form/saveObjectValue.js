@@ -12,7 +12,7 @@ var $                 = require('jquery'),
 module.exports = function (id, field, value) {
     var object,
         lastEdited = {},
-        db = new PouchDB('oi', pouchDbOptions);
+        db         = new PouchDB('oi', pouchDbOptions);
 
     // get data for object
     object              = getObject(id);
@@ -28,20 +28,22 @@ module.exports = function (id, field, value) {
         object.lastEdited  = lastEdited;
 
         // write to pouch
-        db.put(object, function (err, response) {
-            if (err) { return console.log('error: ', err); }
+        db.put(object)
+            .then(function (response) {
+                // update rev in model object
+                object._rev = response.rev;
 
-            // update rev in model object
-            object._rev = response.rev;
-
-            // if field is nameField, update name in tree
-            var correspondingHierarchy = _.find(window.oi.hierarchies, function (hierarchy) {
-                return hierarchy._id === object.hId;
+                // if field is nameField, update name in tree
+                var correspondingHierarchy = _.find(window.oi.hierarchies, function (hierarchy) {
+                    return hierarchy._id === object.hId;
+                });
+                if (object.data && correspondingHierarchy && correspondingHierarchy.nameField && correspondingHierarchy.nameField === field) {
+                    $('#navContent').jstree().rename_node('#' + object._id, getLabelForObject(object, correspondingHierarchy));
+                }
+            })
+            .catch(function (err) {
+                console.log('error: ', err);
             });
-            if (object.data && correspondingHierarchy && correspondingHierarchy.nameField && correspondingHierarchy.nameField === field) {
-                $('#navContent').jstree().rename_node('#' + object._id, getLabelForObject(object, correspondingHierarchy));
-            }
-        });
     } else {
         console.log('Änderung wurde nicht gespeichert');
     }

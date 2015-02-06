@@ -4,7 +4,7 @@
 var $ = require('jquery');
 
 module.exports = function (tab) {
-    $('.tab').each(function () {
+    $('.js-tab').each(function () {
         if ($(this).attr('id') === tab) {
             if ($(this).is(':visible')) {
                 // navbar: Menu deaktivieren

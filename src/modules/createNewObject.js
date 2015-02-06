@@ -57,9 +57,6 @@ module.exports = function (object, hierarchy) {
     // ergänze model
     window.oi.objects.push(newObject);
 
-    // aktualisiere id in UI
-    $formContent.data('id', newObject._id);
-
     // füge dem node der hierarchy einen neuen node für newObject hinzu
     parentNode    = newObject.parent ? '#' + newObject.parent + newObject.hId : '#';
     newObjectNode = createTreeNodeObject(newObject);

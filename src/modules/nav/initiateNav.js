@@ -29,69 +29,65 @@ module.exports = function () {
     async.parallel({
         hierarchies: function (callback) {
             // TODO: get only the users data
-            db.query('objects_by_type', {include_docs: true, key: 'hierarchy'}, function (err, result) {
-                if (err) {
-                    if (err.status === 404) {
-                        // index doesnt exist yet
-                        db.put(objectsByTypeIndex()).then(function () {
-                            // kick off an initial build, return immediately
-                            return db.query('objects_by_type', {stale: 'update_after'});
-                        }).then(function () {
-                            // query the index (much faster now!)
-                            return db.query('objects_by_type', {include_docs: true, key: 'hierarchy'});
-                        }).then(function (result) {
-                            var hierarchies = _.map(result.rows, function (row) {
-                                return row.doc;
-                            });
-                            callback(null, hierarchies);
-                        }).catch(function (error) {
-                            console.log('error querrying hierarchies after putting objectsByTypeIndex: ', error);
+            db.query('objects_by_type', {include_docs: true, key: 'hierarchy'}).then(function (result) {
+                var hierarchies = _.map(result.rows, function (row) {
+                    return row.doc;
+                });
+                callback(null, hierarchies);
+            }).catch(function (error) {
+                if (error.status === 404) {
+                    // index doesnt exist yet
+                    db.put(objectsByTypeIndex()).then(function () {
+                        // kick off an initial build, return immediately
+                        return db.query('objects_by_type', {stale: 'update_after'});
+                    }).then(function () {
+                        // query the index (much faster now!)
+                        return db.query('objects_by_type', {include_docs: true, key: 'hierarchy'});
+                    }).then(function (result) {
+                        var hierarchies = _.map(result.rows, function (row) {
+                            return row.doc;
                         });
-                    } else {
-                        return console.log('error querrying hierarchies: ', err);
-                    }
-                } else {
-                    var hierarchies = _.map(result.rows, function (row) {
-                        return row.doc;
+                        callback(null, hierarchies);
+                    }).catch(function (error) {
+                        callback('error querrying hierarchies after putting objectsByTypeIndex: ' + error, null);
                     });
-                    callback(null, hierarchies);
+                } else {
+                    callback('error querrying hierarchies: ' + error, null);
                 }
             });
         },
         objects: function (callback) {
             // TODO: get only the users data
-            db.query('objects_by_type', {include_docs: true, key: 'object'}, function (err, result) {
-                if (err) {
-                    if (err.status === 404) {
-                        // index doesnt exist yet > create it
-                        db.put(objectsByTypeIndex()).then(function () {
-                            // kick off an initial build, return immediately
-                            return db.query('objects_by_type', {stale: 'update_after'});
-                        }).then(function () {
-                            // query the index (much faster now!)
-                            return db.query('objects_by_type', {include_docs: true, key: 'object'});
-                        }).then(function (result) {
-                            var objects = _.map(result.rows, function (row) {
-                                return row.doc;
-                            });
-                            callback(null, objects);
-                        }).catch(function (error) {
-                            console.log('error querrying objects after putting objectsByTypeIndex: ', error);
+            db.query('objects_by_type', {include_docs: true, key: 'object'}).then(function (result) {
+                var objects = _.map(result.rows, function (row) {
+                    return row.doc;
+                });
+                callback(null, objects);
+            }).catch(function (error) {
+                if (error.status === 404) {
+                    // index doesnt exist yet > create it
+                    db.put(objectsByTypeIndex()).then(function () {
+                        // kick off an initial build, return immediately
+                        return db.query('objects_by_type', {stale: 'update_after'});
+                    }).then(function () {
+                        // query the index (much faster now!)
+                        return db.query('objects_by_type', {include_docs: true, key: 'object'});
+                    }).then(function (result) {
+                        var objects = _.map(result.rows, function (row) {
+                            return row.doc;
                         });
-                    } else {
-                        return console.log('error querrying objects: ', err);
-                    }
-                } else {
-                    var objects = _.map(result.rows, function (row) {
-                        return row.doc;
+                        callback(null, objects);
+                    }).catch(function (error) {
+                        callback('error querrying objects after putting objectsByTypeIndex: ' + error, null);
                     });
-                    callback(null, objects);
+                } else {
+                    callback('error querrying objects: ' + error, null);
                 }
             });
         }
-    }, function (err, results) {
+    }, function (error, results) {
         // results equals to: { hierarchies: hierarchies, objects: objects }
-        if (err) { return console.log('error: ', err); }
+        if (error) { return console.log('error: ', error); }
 
         // create globals for data (primitive self-built models)
         window.oi.hierarchies = results.hierarchies;

@@ -55303,9 +55303,6 @@ module.exports = function (object, hierarchy) {
     // ergänze model
     window.oi.objects.push(newObject);
 
-    // aktualisiere id in UI
-    $formContent.data('id', newObject._id);
-
     // füge dem node der hierarchy einen neuen node für newObject hinzu
     parentNode    = newObject.parent ? '#' + newObject.parent + newObject.hId : '#';
     newObjectNode = createTreeNodeObject(newObject);
@@ -55517,7 +55514,7 @@ var $                   = (typeof window !== "undefined" ? window.$ : typeof glo
 module.exports = function () {
     var value = getValueAfterChange(this),
         $that = $(this),
-        id    = $that.data('object').id,
+        id    = $that.data('object')._id,
         field = $that.data('object').label;
 
     saveObjectValue(id, field, value);
@@ -55624,10 +55621,9 @@ module.exports = function () {
 var _ = require('underscore');
 
 module.exports = function (possibleValues, setValues, type) {
-
-    var valueList = [],
+    var valueList         = [],
         selectedOrChecked = type === 'select' ? 'selected' : 'checked',
-        nullObject = {};
+        nullObject        = {};
 
     nullObject.value = null;
     nullObject.label = '(kein Wert)';
@@ -55651,21 +55647,14 @@ module.exports = function (possibleValues, setValues, type) {
         }
     }
 
-    //console.log('valueList: ', valueList);
-    //console.log('possibleValues: ', possibleValues);
-    //console.log('setValues: ', setValues);
-
     return _.map(possibleValues, function (value) {
         var valueObject = {};
 
-        // offenbar ist typeof null object!!!
+        // typeof null ist object!!!
         if (value && typeof value === 'object') {
             // valueList enthielt Objekte mit values und labels
             valueObject.value = value.value;
             valueObject.label = value.label;
-
-            //console.log('value.value: ', value.value);
-            //console.log('value.label: ', value.label);
 
             // setzen, ob checkbox checked ist
             if (setValues && setValues.constructor === Array) {
@@ -55673,9 +55662,6 @@ module.exports = function (possibleValues, setValues, type) {
             } else {
                 valueObject.checked = setValues == value.value ? selectedOrChecked : '';
             }
-
-            //console.log('valueObject.checked: ', valueObject.checked);
-
         } else {
             valueObject.value = value;
             if ((type === 'select' || type === 'optionGroup') && value === null) {
@@ -55705,7 +55691,7 @@ module.exports = function (feldWert) {
     if (type === 'boolean') { return Boolean(feldWert); }
     if (type === 'float')   { return parseFloat(feldWert); }
     if (type === 'integer') { return parseInt(feldWert, 10); }
-    if (type === 'number') { return parseInt(feldWert, 10); }
+    if (type === 'number')  { return parseInt(feldWert, 10); }
 
     // object nicht umwandeln. Man muss beim Vergleichen unterscheiden können, ob es ein Object war
     return feldWert;
@@ -55780,15 +55766,6 @@ var $                    = (typeof window !== "undefined" ? window.$ : typeof gl
 module.exports = function (that) {
     var value,
         $that = $(that);
-
-    //console.log('changed');
-    //console.log('this: ', that);
-    //console.log('object: ', $that.data('object'));
-    //console.log('_id: ', $that.data('object')._id);
-    //console.log('type: ', that.type);
-    //console.log('inputDataType: ', $that.data('object').inputDataType);
-    //console.log('label: ', $that.data('object').label);
-    //console.log('value before: ', $that.data('object').value);
 
     switch (that.type) {
     case 'text':
@@ -55905,10 +55882,6 @@ module.exports = function (id, type) {
 
                 positionFormBtngroup();
 
-                // objekt als geladen markieren
-                $('#formContent').data('type', type);
-                $('#formContent').data('id', id);
-
                 // textareas: Grösse an Wert anpassen
                 _.each(textareaIds, function (textareaId) {
                     fitTextareaToContent(textareaId);
@@ -55927,8 +55900,6 @@ module.exports = function (id, type) {
         html += formButtonToolbar();
         $('#formContent').html(html);
         positionFormBtngroup();
-        $('#formContent').data('type', type);
-        $('#formContent').data('id', id);
         break;
     }
 };
@@ -55981,7 +55952,7 @@ module.exports = function (wert) {
 
 var $ = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null);
 
-module.exports = function (wert) {
+module.exports = function () {
     $('#form').find('.btn-group').css('margin-left', $('#formContent').width() - 120);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
@@ -56001,7 +55972,7 @@ var $                 = (typeof window !== "undefined" ? window.$ : typeof globa
 module.exports = function (id, field, value) {
     var object,
         lastEdited = {},
-        db = new PouchDB('oi', pouchDbOptions);
+        db         = new PouchDB('oi', pouchDbOptions);
 
     // get data for object
     object              = getObject(id);
@@ -56017,20 +55988,22 @@ module.exports = function (id, field, value) {
         object.lastEdited  = lastEdited;
 
         // write to pouch
-        db.put(object, function (err, response) {
-            if (err) { return console.log('error: ', err); }
+        db.put(object)
+            .then(function (response) {
+                // update rev in model object
+                object._rev = response.rev;
 
-            // update rev in model object
-            object._rev = response.rev;
-
-            // if field is nameField, update name in tree
-            var correspondingHierarchy = _.find(window.oi.hierarchies, function (hierarchy) {
-                return hierarchy._id === object.hId;
+                // if field is nameField, update name in tree
+                var correspondingHierarchy = _.find(window.oi.hierarchies, function (hierarchy) {
+                    return hierarchy._id === object.hId;
+                });
+                if (object.data && correspondingHierarchy && correspondingHierarchy.nameField && correspondingHierarchy.nameField === field) {
+                    $('#navContent').jstree().rename_node('#' + object._id, getLabelForObject(object, correspondingHierarchy));
+                }
+            })
+            .catch(function (err) {
+                console.log('error: ', err);
             });
-            if (object.data && correspondingHierarchy && correspondingHierarchy.nameField && correspondingHierarchy.nameField === field) {
-                $('#navContent').jstree().rename_node('#' + object._id, getLabelForObject(object, correspondingHierarchy));
-            }
-        });
     } else {
         console.log('Änderung wurde nicht gespeichert');
     }
@@ -56057,10 +56030,8 @@ module.exports = function (hierarchyId) {
 var _ = require('underscore');
 
 module.exports = function (id) {
-    var object;
-
     // get data for object
-    object = _.find(window.oi.objects, function (object) {
+    var object = _.find(window.oi.objects, function (object) {
         return object._id === id;
     });
 
@@ -56103,7 +56074,10 @@ var $                 = (typeof window !== "undefined" ? window.$ : typeof globa
 module.exports = function (change) {
     var modelObject,
         correspondingHierarchy,
-        $formContent = $('#formContent');
+        $formContent = $('#formContent'),
+        tree         = $('#navContent').jstree(true),
+        activeNode   = tree.get_selected(true)[0],
+        activeId     = activeNode.data.type === 'object' ? activeNode.id : activeNode.data.id;
 
     // update model of object
     modelObject = _.find(window.oi.objects, function (object) {
@@ -56117,8 +56091,7 @@ module.exports = function (change) {
 
         // refresh form if this object is shown
         // cant update only changed field because it is unknown (?)
-        if ($formContent.html() !== "" && $formContent.data('id') === change.doc._id) {
-            // TODO: hier wird Fehler generiert, wenn ausserhalb App Daten verändert werden
+        if ($formContent.html() !== "" && activeId === change.doc._id) {
             initiateForm(change.doc._id, 'object');
         }
         // refresh tree
@@ -56256,22 +56229,21 @@ module.exports = function () {
     var databaseId = {},
         db         = new PouchDB('oi', pouchDbOptions);
 
-    db.get('_local/databaseId', function (err, response) {
-        if (err) {
-            if (err.status === 404) {
-                // document is missing > create new one and make it accessible as global variable
-                databaseId.databaseId = Math.random();
-                db.put(databaseId, '_local/databaseId', function (err, response) {
-                    if (err) { return console.log('error creating databaseId: ', err); }
-                    window.oi.databaseId = databaseId.databaseId;
-                    initiateForeignChangeQuery();
-                });
-            } else {
-                console.log('error retrieving databaseId: ', err);
-            }
+    db.get('_local/databaseId').then(function (response) {
+        window.oi.databaseId = response.databaseId;
+        initiateForeignChangeQuery();
+    }).catch(function (err) {
+        if (err.status === 404) {
+            // document is missing > create new one and make it accessible as global variable
+            databaseId.databaseId = Math.random();
+            db.put(databaseId, '_local/databaseId').then(function () {
+                window.oi.databaseId = databaseId.databaseId;
+                initiateForeignChangeQuery();
+            }).catch(function (err) {
+                console.log('error creating databaseId: ', err);
+            });
         } else {
-            window.oi.databaseId = response.databaseId;
-            initiateForeignChangeQuery();
+            console.log('error retrieving databaseId: ', err);
         }
     });
 
@@ -56288,9 +56260,10 @@ var $                    = (typeof window !== "undefined" ? window.$ : typeof gl
     treeContextmenuItems = require('./treeContextmenuItems');
 
 module.exports = function () {
-    var treeData = generateDataForTree();
+    var treeData    = generateDataForTree(),
+        $navContent = $('#navContent');
 
-    $('#navContent').jstree({
+    $navContent.jstree({
         'plugins': ['wholerow', 'state', 'contextmenu'],
         'core': {
             'data': treeData,
@@ -56311,7 +56284,7 @@ module.exports = function () {
         // scrollbars aktualisieren
         $('.scrollbar').perfectScrollbar('update');
     }).on('create_node.jstree', function (e, data) {
-        $('#navContent').jstree().select_node(data.node);
+        $navContent.jstree().select_node(data.node);
     }).on('select_node.jstree', function (e, data) {
         if (data.node.data.type === 'object') {
             initiateForm(data.node.id, 'object');
@@ -56405,7 +56378,7 @@ var _                              = require('underscore'),
     createChildHierarchiesOfObject = require('./createChildHierarchiesOfObject');
 
 module.exports = function () {
-    var objectsData = [],
+    var objectsData          = [],
         childHierarchiesData = [],
         obj,
         dat;
@@ -56451,12 +56424,12 @@ module.exports = function (object, correspondingHierarchy) {
             return valueObject.value === object.data[correspondingHierarchy.nameField];
         });
         objectFromValueList = objectFromValueList || {"label": "(kein Wert)"};
-        labelValue = objectFromValueList.label;
+        labelValue          = objectFromValueList.label;
     } else {
         labelValue = object.data[correspondingHierarchy.nameField];
     }
     labelValue = labelValue || '(kein Wert)';
-    label = '<strong>' + labelValue + '</strong>';
+    label      = '<strong>' + labelValue + '</strong>';
     return label;
 };
 },{"underscore":99}],135:[function(require,module,exports){
@@ -56471,7 +56444,7 @@ var PouchDB                     = require('pouchdb'),
 module.exports = function () {
     var db = new PouchDB('oi', pouchDbOptions);
 
-    // TODO: filter only the users documents created with local databaseId
+    // TODO: filter only the users documents
     // TODO: watch changes to hierarchies
     // when changes happen in DB, update model and when necessary ui
     db.changes({
@@ -56498,8 +56471,8 @@ module.exports = function () {
     // TODO: get only the users data
     db.query('foreign_changed', {include_docs: true}).then(function () {
         initiateChangeStream();
-    }).catch(function (err) {
-        if (err.status === 404) {
+    }).catch(function (error) {
+        if (error.status === 404) {
             // index doesnt exist yet > create it
             db.put(foreignChangedIndex()).then(function () {
                 // kick off an initial build, return immediately
@@ -56509,11 +56482,11 @@ module.exports = function () {
                 return db.query('foreign_changed', {include_docs: true});
             }).then(function () {
                 initiateChangeStream();
-            }).catch(function (err) {
-                console.log('error querrying foreignChanged: ', err);
+            }).catch(function (error) {
+                console.log('error querrying foreignChanged: ', error);
             });
         } else {
-            console.log('error querrying foreignChanged: ', err);
+            console.log('error querrying foreignChanged: ', error);
         }
     });
 };
@@ -56550,69 +56523,65 @@ module.exports = function () {
     async.parallel({
         hierarchies: function (callback) {
             // TODO: get only the users data
-            db.query('objects_by_type', {include_docs: true, key: 'hierarchy'}, function (err, result) {
-                if (err) {
-                    if (err.status === 404) {
-                        // index doesnt exist yet
-                        db.put(objectsByTypeIndex()).then(function () {
-                            // kick off an initial build, return immediately
-                            return db.query('objects_by_type', {stale: 'update_after'});
-                        }).then(function () {
-                            // query the index (much faster now!)
-                            return db.query('objects_by_type', {include_docs: true, key: 'hierarchy'});
-                        }).then(function (result) {
-                            var hierarchies = _.map(result.rows, function (row) {
-                                return row.doc;
-                            });
-                            callback(null, hierarchies);
-                        }).catch(function (error) {
-                            console.log('error querrying hierarchies after putting objectsByTypeIndex: ', error);
+            db.query('objects_by_type', {include_docs: true, key: 'hierarchy'}).then(function (result) {
+                var hierarchies = _.map(result.rows, function (row) {
+                    return row.doc;
+                });
+                callback(null, hierarchies);
+            }).catch(function (error) {
+                if (error.status === 404) {
+                    // index doesnt exist yet
+                    db.put(objectsByTypeIndex()).then(function () {
+                        // kick off an initial build, return immediately
+                        return db.query('objects_by_type', {stale: 'update_after'});
+                    }).then(function () {
+                        // query the index (much faster now!)
+                        return db.query('objects_by_type', {include_docs: true, key: 'hierarchy'});
+                    }).then(function (result) {
+                        var hierarchies = _.map(result.rows, function (row) {
+                            return row.doc;
                         });
-                    } else {
-                        return console.log('error querrying hierarchies: ', err);
-                    }
-                } else {
-                    var hierarchies = _.map(result.rows, function (row) {
-                        return row.doc;
+                        callback(null, hierarchies);
+                    }).catch(function (error) {
+                        callback('error querrying hierarchies after putting objectsByTypeIndex: ' + error, null);
                     });
-                    callback(null, hierarchies);
+                } else {
+                    callback('error querrying hierarchies: ' + error, null);
                 }
             });
         },
         objects: function (callback) {
             // TODO: get only the users data
-            db.query('objects_by_type', {include_docs: true, key: 'object'}, function (err, result) {
-                if (err) {
-                    if (err.status === 404) {
-                        // index doesnt exist yet > create it
-                        db.put(objectsByTypeIndex()).then(function () {
-                            // kick off an initial build, return immediately
-                            return db.query('objects_by_type', {stale: 'update_after'});
-                        }).then(function () {
-                            // query the index (much faster now!)
-                            return db.query('objects_by_type', {include_docs: true, key: 'object'});
-                        }).then(function (result) {
-                            var objects = _.map(result.rows, function (row) {
-                                return row.doc;
-                            });
-                            callback(null, objects);
-                        }).catch(function (error) {
-                            console.log('error querrying objects after putting objectsByTypeIndex: ', error);
+            db.query('objects_by_type', {include_docs: true, key: 'object'}).then(function (result) {
+                var objects = _.map(result.rows, function (row) {
+                    return row.doc;
+                });
+                callback(null, objects);
+            }).catch(function (error) {
+                if (error.status === 404) {
+                    // index doesnt exist yet > create it
+                    db.put(objectsByTypeIndex()).then(function () {
+                        // kick off an initial build, return immediately
+                        return db.query('objects_by_type', {stale: 'update_after'});
+                    }).then(function () {
+                        // query the index (much faster now!)
+                        return db.query('objects_by_type', {include_docs: true, key: 'object'});
+                    }).then(function (result) {
+                        var objects = _.map(result.rows, function (row) {
+                            return row.doc;
                         });
-                    } else {
-                        return console.log('error querrying objects: ', err);
-                    }
-                } else {
-                    var objects = _.map(result.rows, function (row) {
-                        return row.doc;
+                        callback(null, objects);
+                    }).catch(function (error) {
+                        callback('error querrying objects after putting objectsByTypeIndex: ' + error, null);
                     });
-                    callback(null, objects);
+                } else {
+                    callback('error querrying objects: ' + error, null);
                 }
             });
         }
-    }, function (err, results) {
+    }, function (error, results) {
         // results equals to: { hierarchies: hierarchies, objects: objects }
-        if (err) { return console.log('error: ', err); }
+        if (error) { return console.log('error: ', error); }
 
         // create globals for data (primitive self-built models)
         window.oi.hierarchies = results.hierarchies;
@@ -56746,14 +56715,14 @@ module.exports = function () {
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $                            = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
-    fitTextareaToContent         = require('./form/fitTextareaToContent'),
-    onScrollTab                  = require('./event/onScrollTab'),
-    onClickFormNew               = require('./event/onClickFormNew'),
-    onClickFormDelete            = require('./event/onClickFormDelete'),
-    onChangeElement              = require('./event/onChangeElement'),
-    onClickNavbarCollapse        = require('./event/onClickNavbarCollapse'),
-    onClickNavbarBrand           = require('./event/onClickNavbarBrand');
+var $                     = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+    fitTextareaToContent  = require('./form/fitTextareaToContent'),
+    onScrollTab           = require('./event/onScrollTab'),
+    onClickFormNew        = require('./event/onClickFormNew'),
+    onClickFormDelete     = require('./event/onClickFormDelete'),
+    onChangeElement       = require('./event/onChangeElement'),
+    onClickNavbarCollapse = require('./event/onClickNavbarCollapse'),
+    onClickNavbarBrand    = require('./event/onClickNavbarBrand');
 
 module.exports = function () {
     // scroll event doesn't buble up, so it cant be delegated from # to .
@@ -56781,7 +56750,7 @@ module.exports = function () {
 var $ = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null);
 
 module.exports = function (tab) {
-    $('.tab').each(function () {
+    $('.js-tab').each(function () {
         if ($(this).attr('id') === tab) {
             if ($(this).is(':visible')) {
                 // navbar: Menu deaktivieren
@@ -56835,10 +56804,11 @@ module.exports = function () {
 };
 
 },{"./configuration":102,"./pouchDbOptions":140,"pouchdb":55}],145:[function(require,module,exports){
+(function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var _ = require('underscore');
+var $ = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null);
 
 module.exports = function (title, text) {
     var $modal = $('#tellWithModal'),
@@ -56855,7 +56825,8 @@ module.exports = function (title, text) {
     $modal.find('.modal-body').find('p').html(text);
     $modal.modal(options);
 };
-},{"underscore":99}],146:[function(require,module,exports){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],146:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, helper, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing, functionType="function";
   return "<div class=\"form-group\">\r\n    <label class=\"control-label\">"
