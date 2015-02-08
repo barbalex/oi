@@ -119,40 +119,39 @@
             <div id="login-overlay" class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
-                        <h4 class="modal-title" id="myModalLabel">Login to site.com</h4>
+                        <h4 class="modal-title" id="myModalLabel">Bei ortinfo anmelden</h4>
                     </div>
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-xs-12">
                                 <div class="well">
                                     <div class="form-group">
-                                        <label for="signinWithModalEmail" class="control-label">Username</label>
-                                        <input type="email" class="form-control" id="signinWithModalEmail" value="" required="" title="Please enter you email" placeholder="example@mail.com">
-                                        <span class="help-block"></span>
+                                        <label for="signinWithModalEmail" class="control-label">Email</label>
+                                        <input type="email" class="form-control" id="signinWithModalEmail" value="" required placeholder="beispiel@mail.com" autofocus>
+                                        <div class="help-block with-errors"></div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="signinWithModalPassword" class="control-label">Password</label>
-                                        <input type="password" class="form-control" id="signinWithModalPassword" value="" required="" title="Please enter your password">
-                                        <span class="help-block"></span>
+                                        <label for="signinWithModalPassword" class="control-label">Passwort</label>
+                                        <input type="password" class="form-control" id="signinWithModalPassword" value="" required>
+                                        <div class="help-block with-errors"></div>
                                     </div>
                                     <div class="form-group" style="display:none;">
-                                        <label for="signinWithModalPassword2" class="control-label">Password</label>
-                                        <input type="password" class="form-control" id="signinWithModalPassword2" value="" required="" title="Please enter your password">
-                                        <span class="help-block"></span>
+                                        <label for="signinWithModalPassword2" class="control-label">Passwort wiederholen</label>
+                                        <input type="password" class="form-control" id="signinWithModalPassword2" value="" required data-match="#signinWithModalPassword">
+                                        <div class="help-block with-errors"></div>
                                     </div>
                                     <div id="signinWithModalErrorMsg" class="alert alert-error hide">Wrong email or password</div>
                                     <div class="checkbox">
                                         <label>
-                                            <input type="checkbox" name="remember" id="signinWithModalRemember"> Remember login
+                                            <input type="checkbox" id="signinWithModalRemember" checked> Anmeldung speichern
                                         </label>
                                     </div>
                                     <div class="checkbox">
                                         <label>
-                                            <input type="checkbox" name="remember" id="signinWithModalSignup"> Neues Konto erstellen
+                                            <input type="checkbox" id="signinWithModalSignupCheckbox"> Neues Konto erstellen
                                         </label>
                                     </div>
-                                    <button id="signinWithModalLogin" class="btn btn-default btn-block">Login</button>
+                                    <button id="signinWithModalSigninButton" class="btn btn-default btn-block">anmelden</button>
                                 </div>
                             </div>
                         </div>
@@ -169,7 +168,7 @@
                 //window.oi.pruefeObAngemeldet();
                 window.oi.setupEvents();
                 window.oi.initiateResizables();
-                window.oi.initiateNav();
+                window.oi.getLogin();
                 // query $.hook('xx') instead of $('[data-hook="xx"]')
                 $.extend({hook:function (h) { return $('[data-hook'+(!h||h=='*'?'':'~="'+h+'"')+']'); }});
             });

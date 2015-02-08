@@ -4,7 +4,10 @@
 var Handlebars                  = require('handlebars'),
     initiateResizables          = require('./modules/initiateResizables'),
     setupEvents                 = require('./modules/setupEvents'),
-    initiateNav                 = require('./modules/nav/initiateNav');
+    initiateNav                 = require('./modules/nav/initiateNav'),
+    getLogin                    = require('./modules/nav/getLogin');
+
+require('bootstrap-validator');
 
 // benötigte globale Variabeln initialisieren
 window.oi       = window.oi       || {};
@@ -26,8 +29,8 @@ window.oi.initiiereApp = function () {
         initiateResizables();
     };
 
-    window.oi.initiateNav = function () {
-        initiateNav();
+    window.oi.getLogin = function () {
+        getLogin();
     };
 
     window.Handlebars = Handlebars;

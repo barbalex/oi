@@ -28,7 +28,7 @@ module.exports = function ($node) {
         parentNodeId,
         objectsToDelete = [],
         childrenToDelete,
-        db              = new PouchDB('oi', pouchDbOptions);
+        db              = new PouchDB('http://localhost:5984/oi', pouchDbOptions);
 
     // ermitteln, wieviele child-Objekte betroffen werden
     childrenToDelete = _.map(nodeChildren, function (child) {

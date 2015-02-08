@@ -7,7 +7,7 @@ var PouchDB                     = require('pouchdb'),
     pouchDbOptions              = require('../pouchDbOptions');
 
 module.exports = function () {
-    var db = new PouchDB('oi', pouchDbOptions);
+    var db = new PouchDB('http://localhost:5984/oi', pouchDbOptions);
 
     // TODO: filter only the users documents
     // TODO: watch changes to hierarchies

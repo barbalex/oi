@@ -12,7 +12,7 @@ var $                   = require('jquery'),
     objectsByTypeIndex  = require('./objectsByTypeIndex');
 
 module.exports = function () {
-    var db = new PouchDB('oi', pouchDbOptions);
+    var db = new PouchDB('http://localhost:5984/oi', pouchDbOptions);
 
     // expose pouchdb to pouchdb-fauxton
     window.PouchDB = PouchDB;

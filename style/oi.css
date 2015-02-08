@@ -36,6 +36,10 @@ body {
   right: 10px;
 }
 
+#signinWithModal .well {
+  background-color: #D7E8D3;
+}
+
 /* 
  * NAV 
  */

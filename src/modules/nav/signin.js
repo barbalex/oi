@@ -3,41 +3,43 @@
 
 var $              = require('jquery'),
     PouchDB        = require('pouchdb'),
-    pouchDbOptions = require('../pouchDbOptions');
+    pouchDbOptions = require('../pouchDbOptions'),
+    tellWithModal  = require('../tellWithModal'),
+    initiateNav    = require('./initiateNav');
 
-module.exports = function () {
-    var db = new PouchDB('oi', pouchDbOptions);
-    // modal öffnen
-    $('#signinWithModal').modal();
+module.exports = function (signindata) {
+    var db = new PouchDB('http://localhost:5984/oi', pouchDbOptions);
 
-    // event-handler erzeugen
-    $('body').on('click', '#signinWithModalLogin', function () {
-        // signin oder signup?
+    PouchDB.plugin(require('pouchdb-authentication'));
 
-        // Eingaben verifizieren
+    // expose pouchdb to pouchdb-fauxton
+    window.PouchDB = PouchDB;
 
-        // event-listener entfernen
-        $('body').off('click', '#signinWithModalLogin');
+    console.log('signindata: ', signindata);
 
-        // wenn signup: zuerst signup
-        db.signup('test@test.ch', 'myPassword', {
-            metadata: {
-                Nachname: 'Tester',
-                Vorname: 'Test',
-                Strasse: 'x-str 40',
-                PLZ: 8000,
-                Ort: 'ort'
-            }
-        }, function (err, response) {
-            // etc.
-        });
+    // signin
+    db.login(signindata.name, signindata.password).then(function (response) {
 
-        // login in DB speichern
-        db.put(login, '_local/login').then(function () {
-            window.oi.login = login.name;
-            goOn();
-        }).catch(function (err) {
-            console.log('error creating login: ', err);
-        });
+        console.log('response of db.login: ', response);
+
+        window.oi.loginName = signindata.name;
+        // name in DB speichern
+        // nachher auslagern, da auch nach signup
+        if (signindata.remember) {
+            db.put(signindata.name, '_local/login_name');
+        }
+        initiateNav();
+        $('#signinWithModal').modal('hide');
+    }).catch(function (error) {
+
+        console.log('error: ', error);
+
+        if (error.name === 'unauthorized') {
+            // name or password incorrect
+            tellWithModal('Anmeldung gescheitert', 'Sie haben Email und/oder Passwort falsch eingegeben. Oder müssen Sie ein Konto erstellen?');
+        } else {
+            // cosmic rays, a meteor, etc.
+            tellWithModal('Anmeldung gescheitert', 'Oh je. Die Anwendung ist offenbar schlecht gelaunt. Bitte versuchen Sie es nochmals. Gemeldeter Fehler: ' + JSON.stringify(error));
+        }
     });
 };

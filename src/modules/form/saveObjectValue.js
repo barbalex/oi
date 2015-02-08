@@ -12,7 +12,7 @@ var $                 = require('jquery'),
 module.exports = function (id, field, value) {
     var object,
         lastEdited = {},
-        db         = new PouchDB('oi', pouchDbOptions);
+        db         = new PouchDB('http://localhost:5984/oi', pouchDbOptions);
 
     // get data for object
     object              = getObject(id);

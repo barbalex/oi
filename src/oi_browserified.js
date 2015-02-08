@@ -5,7 +5,10 @@
 var Handlebars                  = require('handlebars'),
     initiateResizables          = require('./modules/initiateResizables'),
     setupEvents                 = require('./modules/setupEvents'),
-    initiateNav                 = require('./modules/nav/initiateNav');
+    initiateNav                 = require('./modules/nav/initiateNav'),
+    getLogin                    = require('./modules/nav/getLogin');
+
+require('bootstrap-validator');
 
 // benötigte globale Variabeln initialisieren
 window.oi       = window.oi       || {};
@@ -27,8 +30,8 @@ window.oi.initiiereApp = function () {
         initiateResizables();
     };
 
-    window.oi.initiateNav = function () {
-        initiateNav();
+    window.oi.getLogin = function () {
+        getLogin();
     };
 
     window.Handlebars = Handlebars;
@@ -39,7 +42,7 @@ window.oi.initiiereApp = function () {
 
 // gleich ein mal ausführen
 window.oi.initiiereApp();
-},{"./modules/initiateResizables":126,"./modules/nav/initiateNav":137,"./modules/setupEvents":142,"handlebars":24}],2:[function(require,module,exports){
+},{"./modules/initiateResizables":153,"./modules/nav/getLogin":162,"./modules/nav/initiateNav":165,"./modules/setupEvents":174,"bootstrap-validator":4,"handlebars":25}],2:[function(require,module,exports){
 module.exports={
     "user": "barbalex",
     "pass": "dLhdMg12"
@@ -1171,11 +1174,309 @@ module.exports={
 }());
 
 }).call(this,require('_process'))
-},{"_process":7}],4:[function(require,module,exports){
+},{"_process":8}],4:[function(require,module,exports){
+/* ========================================================================
+ * Bootstrap (plugin): validator.js v0.7.2
+ * ========================================================================
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2013 Cina Saffary.
+ * Made by @1000hz in the style of Bootstrap 3 era @fat
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // VALIDATOR CLASS DEFINITION
+  // ==========================
+
+  var Validator = function (element, options) {
+    this.$element = $(element)
+    this.options  = options
+
+    this.$element.attr('novalidate', true) // disable automatic native validation
+    this.toggleSubmit()
+
+    this.$element.on('input.bs.validator change.bs.validator focusout.bs.validator', $.proxy(this.validateInput, this))
+    this.$element.on('submit.bs.validator', $.proxy(this.onSubmit, this))
+
+    this.$element.find('[data-match]').each(function () {
+      var $this  = $(this)
+      var target = $this.data('match')
+
+      $(target).on('input.bs.validator', function (e) {
+        $this.val() && $this.trigger('input.bs.validator')
+      })
+    })
+  }
+
+  Validator.DEFAULTS = {
+    delay: 500,
+    html: false,
+    disable: true,
+    errors: {
+      match: 'Does not match',
+      minlength: 'Not long enough'
+    }
+  }
+
+  Validator.VALIDATORS = {
+    native: function ($el) {
+      var el = $el[0]
+      return el.checkValidity ? el.checkValidity() : true
+    },
+    match: function ($el) {
+      var target = $el.data('match')
+      return !$el.val() || $el.val() === $(target).val()
+    },
+    minlength: function ($el) {
+      var minlength = $el.data('minlength')
+      return !$el.val() || $el.val().length >= minlength
+    }
+  }
+
+  Validator.prototype.validateInput = function (e) {
+    var $el        = $(e.target)
+    var prevErrors = $el.data('bs.validator.errors')
+    var errors
+
+    if ($el.is('[type="radio"]')) $el = this.$element.find('input[name="' + $el.attr('name') + '"]')
+
+    this.$element.trigger(e = $.Event('validate.bs.validator', {relatedTarget: $el[0]}))
+
+    if (e.isDefaultPrevented()) return
+
+    var self = this
+
+    this.runValidators($el).done(function (errors) {
+      $el.data('bs.validator.errors', errors)
+
+      errors.length ? self.showErrors($el) : self.clearErrors($el)
+
+      if (!prevErrors || errors.toString() !== prevErrors.toString()) {
+        e = errors.length
+          ? $.Event('invalid.bs.validator', {relatedTarget: $el[0], detail: errors})
+          : $.Event('valid.bs.validator', {relatedTarget: $el[0], detail: prevErrors})
+
+        self.$element.trigger(e)
+      }
+
+      self.toggleSubmit()
+
+      self.$element.trigger($.Event('validated.bs.validator', {relatedTarget: $el[0]}))
+    })
+  }
+
+
+  Validator.prototype.runValidators = function ($el) {
+    var errors     = []
+    var validators = [Validator.VALIDATORS.native]
+    var deferred   = $.Deferred()
+    var options    = this.options
+
+    $el.data('bs.validator.deferred') && $el.data('bs.validator.deferred').reject()
+    $el.data('bs.validator.deferred', deferred)
+
+    function getErrorMessage(key) {
+      return $el.data(key + '-error')
+        || $el.data('error')
+        || key == 'native' && $el[0].validationMessage
+        || options.errors[key]
+    }
+
+    $.each(Validator.VALIDATORS, $.proxy(function (key, validator) {
+      if (($el.data(key) || key == 'native') && !validator.call(this, $el)) {
+        var error = getErrorMessage(key)
+        !~errors.indexOf(error) && errors.push(error)
+      }
+    }, this))
+
+    if (!errors.length && $el.val() && $el.data('remote')) {
+      this.defer($el, function () {
+        var data = {}
+        data[$el.attr('name')] = $el.val()
+        $.get($el.data('remote'), data)
+          .fail(function (jqXHR, textStatus, error) { errors.push(getErrorMessage('remote') || error) })
+          .always(function () { deferred.resolve(errors)})
+      })
+    } else deferred.resolve(errors)
+
+    return deferred.promise()
+  }
+
+  Validator.prototype.validate = function () {
+    var delay = this.options.delay
+
+    this.options.delay = 0
+    this.$element.find(':input').trigger('input.bs.validator')
+    this.options.delay = delay
+
+    return this
+  }
+
+  Validator.prototype.showErrors = function ($el) {
+    var method = this.options.html ? 'html' : 'text'
+
+    this.defer($el, function () {
+      var $group = $el.closest('.form-group')
+      var $block = $group.find('.help-block.with-errors')
+      var errors = $el.data('bs.validator.errors')
+
+      if (!errors.length) return
+
+      errors = $('<ul/>')
+        .addClass('list-unstyled')
+        .append($.map(errors, function (error) { return $('<li/>')[method](error) }))
+
+      $block.data('bs.validator.originalContent') === undefined && $block.data('bs.validator.originalContent', $block.html())
+      $block.empty().append(errors)
+
+      $group.addClass('has-error')
+    })
+  }
+
+  Validator.prototype.clearErrors = function ($el) {
+    var $group = $el.closest('.form-group')
+    var $block = $group.find('.help-block.with-errors')
+
+    $block.html($block.data('bs.validator.originalContent'))
+    $group.removeClass('has-error')
+  }
+
+  Validator.prototype.hasErrors = function () {
+    function fieldErrors() {
+      return !!($(this).data('bs.validator.errors') || []).length
+    }
+
+    return !!this.$element.find(':input:enabled').filter(fieldErrors).length
+  }
+
+  Validator.prototype.isIncomplete = function () {
+    function fieldIncomplete() {
+      return this.type === 'checkbox' ? !this.checked                                   :
+             this.type === 'radio'    ? !$('[name="' + this.name + '"]:checked').length :
+                                        $.trim(this.value) === ''
+    }
+
+    return !!this.$element.find(':input[required]:enabled').filter(fieldIncomplete).length
+  }
+
+  Validator.prototype.onSubmit = function (e) {
+    this.validate()
+    if (this.isIncomplete() || this.hasErrors()) e.preventDefault()
+  }
+
+  Validator.prototype.toggleSubmit = function () {
+    if(!this.options.disable) return
+    var $btn = this.$element.find('input[type="submit"], button[type="submit"]')
+    $btn.toggleClass('disabled', this.isIncomplete() || this.hasErrors())
+      .css({'pointer-events': 'all', 'cursor': 'pointer'})
+  }
+
+  Validator.prototype.defer = function ($el, callback) {
+    if (!this.options.delay) return callback()
+    window.clearTimeout($el.data('bs.validator.timeout'))
+    $el.data('bs.validator.timeout', window.setTimeout(callback, this.options.delay))
+  }
+
+  Validator.prototype.destroy = function () {
+    this.$element
+      .removeAttr('novalidate')
+      .removeData('bs.validator')
+      .off('.bs.validator')
+
+    this.$element.find(':input')
+      .off('.bs.validator')
+      .removeData(['bs.validator.errors', 'bs.validator.deferred'])
+      .each(function () {
+        var $this = $(this)
+        var timeout = $this.data('bs.validator.timeout')
+        window.clearTimeout(timeout) && $this.removeData('bs.validator.timeout')
+      })
+
+    this.$element.find('.help-block.with-errors').each(function () {
+      var $this = $(this)
+      var originalContent = $this.data('bs.validator.originalContent')
+
+      $this
+        .removeData('bs.validator.originalContent')
+        .html(originalContent)
+    })
+
+    this.$element.find('input[type="submit"], button[type="submit"]').removeClass('disabled')
+
+    this.$element.find('.has-error').removeClass('has-error')
+
+    return this
+  }
+
+  // VALIDATOR PLUGIN DEFINITION
+  // ===========================
+
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this   = $(this)
+      var options = $.extend({}, Validator.DEFAULTS, $this.data(), typeof option == 'object' && option)
+      var data    = $this.data('bs.validator')
+
+      if (!data && option == 'destroy') return
+      if (!data) $this.data('bs.validator', (data = new Validator(this, options)))
+      if (typeof option == 'string') data[option]()
+    })
+  }
+
+  var old = $.fn.validator
+
+  $.fn.validator             = Plugin
+  $.fn.validator.Constructor = Validator
+
+
+  // VALIDATOR NO CONFLICT
+  // =====================
+
+  $.fn.validator.noConflict = function () {
+    $.fn.validator = old
+    return this
+  }
+
+
+  // VALIDATOR DATA-API
+  // ==================
+
+  $(window).on('load', function () {
+    $('form[data-toggle="validator"]').each(function () {
+      var $form = $(this)
+      Plugin.call($form, $form.data())
+    })
+  })
+
+}(jQuery);
 
 },{}],5:[function(require,module,exports){
-arguments[4][4][0].apply(exports,arguments)
-},{"dup":4}],6:[function(require,module,exports){
+
+},{}],6:[function(require,module,exports){
+arguments[4][5][0].apply(exports,arguments)
+},{"dup":5}],7:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -1478,7 +1779,7 @@ function isUndefined(arg) {
   return arg === void 0;
 }
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -1537,7 +1838,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 /*
  * Date Format 1.2.3
  * (c) 2007-2009 Steven Levithan <stevenlevithan.com>
@@ -1763,7 +2064,7 @@ function kindOf(val) {
   }
 })(this);
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 "use strict";
 /*globals Handlebars: true */
 var Handlebars = require("./handlebars.runtime")["default"];
@@ -1803,7 +2104,7 @@ Handlebars.create = create;
 Handlebars['default'] = Handlebars;
 
 exports["default"] = Handlebars;
-},{"./handlebars.runtime":10,"./handlebars/compiler/ast":12,"./handlebars/compiler/base":13,"./handlebars/compiler/compiler":14,"./handlebars/compiler/javascript-compiler":16}],10:[function(require,module,exports){
+},{"./handlebars.runtime":11,"./handlebars/compiler/ast":13,"./handlebars/compiler/base":14,"./handlebars/compiler/compiler":15,"./handlebars/compiler/javascript-compiler":17}],11:[function(require,module,exports){
 "use strict";
 /*globals Handlebars: true */
 var base = require("./handlebars/base");
@@ -1839,7 +2140,7 @@ Handlebars.create = create;
 Handlebars['default'] = Handlebars;
 
 exports["default"] = Handlebars;
-},{"./handlebars/base":11,"./handlebars/exception":20,"./handlebars/runtime":21,"./handlebars/safe-string":22,"./handlebars/utils":23}],11:[function(require,module,exports){
+},{"./handlebars/base":12,"./handlebars/exception":21,"./handlebars/runtime":22,"./handlebars/safe-string":23,"./handlebars/utils":24}],12:[function(require,module,exports){
 "use strict";
 var Utils = require("./utils");
 var Exception = require("./exception")["default"];
@@ -2071,7 +2372,7 @@ var createFrame = function(object) {
   return frame;
 };
 exports.createFrame = createFrame;
-},{"./exception":20,"./utils":23}],12:[function(require,module,exports){
+},{"./exception":21,"./utils":24}],13:[function(require,module,exports){
 "use strict";
 var Exception = require("../exception")["default"];
 
@@ -2286,7 +2587,7 @@ var AST = {
 // Must be exported as an object rather than the root of the module as the jison lexer
 // most modify the object to operate properly.
 exports["default"] = AST;
-},{"../exception":20}],13:[function(require,module,exports){
+},{"../exception":21}],14:[function(require,module,exports){
 "use strict";
 var parser = require("./parser")["default"];
 var AST = require("./ast")["default"];
@@ -2308,7 +2609,7 @@ function parse(input) {
 }
 
 exports.parse = parse;
-},{"../utils":23,"./ast":12,"./helpers":15,"./parser":17}],14:[function(require,module,exports){
+},{"../utils":24,"./ast":13,"./helpers":16,"./parser":18}],15:[function(require,module,exports){
 "use strict";
 var Exception = require("../exception")["default"];
 var isArray = require("../utils").isArray;
@@ -2761,7 +3062,7 @@ exports.compile = compile;function argEquals(a, b) {
     return true;
   }
 }
-},{"../exception":20,"../utils":23}],15:[function(require,module,exports){
+},{"../exception":21,"../utils":24}],16:[function(require,module,exports){
 "use strict";
 var Exception = require("../exception")["default"];
 
@@ -2949,7 +3250,7 @@ function omitLeft(statements, i, multiple) {
   current.leftStripped = current.string !== original;
   return current.leftStripped;
 }
-},{"../exception":20}],16:[function(require,module,exports){
+},{"../exception":21}],17:[function(require,module,exports){
 "use strict";
 var COMPILER_REVISION = require("../base").COMPILER_REVISION;
 var REVISION_CHANGES = require("../base").REVISION_CHANGES;
@@ -3914,7 +4215,7 @@ JavaScriptCompiler.isValidJavaScriptVariableName = function(name) {
 };
 
 exports["default"] = JavaScriptCompiler;
-},{"../base":11,"../exception":20}],17:[function(require,module,exports){
+},{"../base":12,"../exception":21}],18:[function(require,module,exports){
 "use strict";
 /* jshint ignore:start */
 /* istanbul ignore next */
@@ -4415,7 +4716,7 @@ function Parser () { this.yy = {}; }Parser.prototype = parser;parser.Parser = Pa
 return new Parser;
 })();exports["default"] = handlebars;
 /* jshint ignore:end */
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 "use strict";
 var Visitor = require("./visitor")["default"];
 
@@ -4557,7 +4858,7 @@ PrintVisitor.prototype.content = function(content) {
 PrintVisitor.prototype.comment = function(comment) {
   return this.pad("{{! '" + comment.comment + "' }}");
 };
-},{"./visitor":19}],19:[function(require,module,exports){
+},{"./visitor":20}],20:[function(require,module,exports){
 "use strict";
 function Visitor() {}
 
@@ -4570,7 +4871,7 @@ Visitor.prototype = {
 };
 
 exports["default"] = Visitor;
-},{}],20:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 "use strict";
 
 var errorProps = ['description', 'fileName', 'lineNumber', 'message', 'name', 'number', 'stack'];
@@ -4599,7 +4900,7 @@ function Exception(message, node) {
 Exception.prototype = new Error();
 
 exports["default"] = Exception;
-},{}],21:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 "use strict";
 var Utils = require("./utils");
 var Exception = require("./exception")["default"];
@@ -4793,7 +5094,7 @@ exports.noop = noop;function initData(context, data) {
   }
   return data;
 }
-},{"./base":11,"./exception":20,"./utils":23}],22:[function(require,module,exports){
+},{"./base":12,"./exception":21,"./utils":24}],23:[function(require,module,exports){
 "use strict";
 // Build out our basic SafeString type
 function SafeString(string) {
@@ -4805,7 +5106,7 @@ SafeString.prototype.toString = function() {
 };
 
 exports["default"] = SafeString;
-},{}],23:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 "use strict";
 /*jshint -W004 */
 var SafeString = require("./safe-string")["default"];
@@ -4894,7 +5195,7 @@ exports.isEmpty = isEmpty;function appendContextPath(contextPath, id) {
 }
 
 exports.appendContextPath = appendContextPath;
-},{"./safe-string":22}],24:[function(require,module,exports){
+},{"./safe-string":23}],25:[function(require,module,exports){
 // USAGE:
 // var handlebars = require('handlebars');
 
@@ -4922,7 +5223,7 @@ if (typeof require !== 'undefined' && require.extensions) {
   require.extensions[".hbs"] = extension;
 }
 
-},{"../dist/cjs/handlebars":9,"../dist/cjs/handlebars/compiler/printer":18,"../dist/cjs/handlebars/compiler/visitor":19,"fs":4}],25:[function(require,module,exports){
+},{"../dist/cjs/handlebars":10,"../dist/cjs/handlebars/compiler/printer":19,"../dist/cjs/handlebars/compiler/visitor":20,"fs":5}],26:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v2.1.3
  * http://jquery.com/
@@ -14129,7 +14430,7 @@ return jQuery;
 
 }));
 
-},{}],26:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 /*globals jQuery, define, exports, require, window, document, postMessage */
 (function (factory) {
 	"use strict";
@@ -21369,7 +21670,1428 @@ return jQuery;
 	}
 }(jQuery));
 }));
-},{"jquery":25}],27:[function(require,module,exports){
+},{"jquery":26}],28:[function(require,module,exports){
+// taken from pouchdb
+"use strict";
+
+var createBlob = require('./blob.js');
+var errors = require('./errors');
+var utils = require("./utils");
+var hasUpload;
+
+function ajax(options, adapterCallback) {
+
+  var requestCompleted = false;
+  var callback = utils.getArguments(function (args) {
+    if (requestCompleted) {
+      return;
+    }
+    adapterCallback.apply(this, args);
+    requestCompleted = true;
+  });
+
+  if (typeof options === "function") {
+    callback = options;
+    options = {};
+  }
+
+  options = utils.clone(options);
+
+  var defaultOptions = {
+    method : "GET",
+    headers: {},
+    json: true,
+    processData: true,
+    timeout: 10000,
+    cache: false
+  };
+
+  options = utils.extend(true, defaultOptions, options);
+
+  // cache-buster, specifically designed to work around IE's aggressive caching
+  // see http://www.dashbay.com/2011/05/internet-explorer-caches-ajax/
+  if (options.method === 'GET' && !options.cache) {
+    var hasArgs = options.url.indexOf('?') !== -1;
+    options.url += (hasArgs ? '&' : '?') + '_nonce=' + utils.uuid(16);
+  }
+
+  function onSuccess(obj, resp, cb) {
+    if (!options.binary && !options.json && options.processData &&
+      typeof obj !== 'string') {
+      obj = JSON.stringify(obj);
+    } else if (!options.binary && options.json && typeof obj === 'string') {
+      try {
+        obj = JSON.parse(obj);
+      } catch (e) {
+        // Probably a malformed JSON from server
+        return cb(e);
+      }
+    }
+    if (Array.isArray(obj)) {
+      obj = obj.map(function (v) {
+        var obj;
+        if (v.ok) {
+          return v;
+        } else if (v.error && v.error === 'conflict') {
+          obj = errors.REV_CONFLICT;
+          obj.id = v.id;
+          return obj;
+        } else if (v.error && v.error === 'forbidden') {
+          obj = errors.FORBIDDEN;
+          obj.id = v.id;
+          obj.reason = v.reason;
+          return obj;
+        } else if (v.missing) {
+          obj = errors.MISSING_DOC;
+          obj.missing = v.missing;
+          return obj;
+        } else {
+          return v;
+        }
+      });
+    }
+    cb(null, obj, resp);
+  }
+
+  function onError(err, cb) {
+    var errParsed, errObj, errType, key;
+    try {
+      errParsed = JSON.parse(err.responseText);
+      //would prefer not to have a try/catch clause
+      for (key in errors) {
+        if (errors.hasOwnProperty(key) &&
+            errors[key].name === errParsed.error) {
+          errType = errors[key];
+          break;
+        }
+      }
+      if (!errType) {
+        errType = errors.UNKNOWN_ERROR;
+        if (err.status) {
+          errType.status = err.status;
+        }
+        if (err.statusText) {
+          err.name = err.statusText;
+        }
+      }
+      errObj = errors.error(errType, errParsed.reason);
+    } catch (e) {
+      for (var key in errors) {
+        if (errors.hasOwnProperty(key) && errors[key].status === err.status) {
+          errType = errors[key];
+          break;
+        }
+      }
+      if (!errType) {
+        errType = errors.UNKNOWN_ERROR;
+        if (err.status) {
+          errType.status = err.status;
+        }
+        if (err.statusText) {
+          err.name = err.statusText;
+        }
+      }
+      errObj = errors.error(errType);
+    }
+    cb(errObj);
+  }
+
+  var timer;
+  var xhr;
+  if (options.xhr) {
+    xhr = new options.xhr();
+  } else {
+    xhr = new XMLHttpRequest();
+  }
+  xhr.open(options.method, options.url);
+  xhr.withCredentials = true;
+
+  if (options.json) {
+    options.headers.Accept = 'application/json';
+    options.headers['Content-Type'] = options.headers['Content-Type'] ||
+      'application/json';
+    if (options.body &&
+        options.processData &&
+        typeof options.body !== "string") {
+      options.body = JSON.stringify(options.body);
+    }
+  }
+
+  if (options.binary) {
+    xhr.responseType = 'arraybuffer';
+  }
+
+  var createCookie = function (name, value, days) {
+    var expires = "";
+    if (days) {
+      var date = new Date();
+      date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+      expires = "; expires=" + date.toGMTString();
+    }
+    document.cookie = name + "=" + value + expires + "; path=/";
+  };
+
+  for (var key in options.headers) {
+    if (key === 'Cookie') {
+      var cookie = options.headers[key].split('=');
+      createCookie(cookie[0], cookie[1], 10);
+    } else {
+      xhr.setRequestHeader(key, options.headers[key]);
+    }
+  }
+
+  if (!("body" in options)) {
+    options.body = null;
+  }
+
+  var abortReq = function () {
+    if (requestCompleted) {
+      return;
+    }
+    xhr.abort();
+    onError(xhr, callback);
+  };
+
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState !== 4 || requestCompleted) {
+      return;
+    }
+    clearTimeout(timer);
+    if (xhr.status >= 200 && xhr.status < 300) {
+      var data;
+      if (options.binary) {
+        data = createBlob([xhr.response || ''], {
+          type: xhr.getResponseHeader('Content-Type')
+        });
+      } else {
+        data = xhr.responseText;
+      }
+      onSuccess(data, xhr, callback);
+    } else {
+      onError(xhr, callback);
+    }
+  };
+
+  if (options.timeout > 0) {
+    timer = setTimeout(abortReq, options.timeout);
+    xhr.onprogress = function () {
+      clearTimeout(timer);
+      timer = setTimeout(abortReq, options.timeout);
+    };
+    if (typeof hasUpload === 'undefined') {
+      // IE throws an error if you try to access it directly
+      hasUpload = Object.keys(xhr).indexOf('upload') !== -1;
+    }
+    if (hasUpload) { // does not exist in ie9
+      xhr.upload.onprogress = xhr.onprogress;
+    }
+  }
+  if (options.body && (options.body instanceof Blob)) {
+    var reader = new FileReader();
+    reader.onloadend = function (e) {
+
+      var binary = "";
+      var bytes = new Uint8Array(this.result);
+      var length = bytes.byteLength;
+
+      for (var i = 0; i < length; i++) {
+        binary += String.fromCharCode(bytes[i]);
+      }
+
+      binary = utils.fixBinary(binary);
+      xhr.send(binary);
+    };
+    reader.readAsArrayBuffer(options.body);
+  } else {
+    xhr.send(options.body);
+  }
+  return {abort: abortReq};
+}
+
+module.exports = ajax;
+
+},{"./blob.js":29,"./errors":30,"./utils":32}],29:[function(require,module,exports){
+(function (global){
+// taken from pouchdb
+"use strict";
+
+//Abstracts constructing a Blob object, so it also works in older
+//browsers that don't support the native Blob constructor. (i.e.
+//old QtWebKit versions, at least).
+function createBlob(parts, properties) {
+  parts = parts || [];
+  properties = properties || {};
+  try {
+    return new Blob(parts, properties);
+  } catch (e) {
+    if (e.name !== "TypeError") {
+      throw e;
+    }
+    var BlobBuilder = global.BlobBuilder ||
+                      global.MSBlobBuilder ||
+                      global.MozBlobBuilder ||
+                      global.WebKitBlobBuilder;
+    var builder = new BlobBuilder();
+    for (var i = 0; i < parts.length; i += 1) {
+      builder.append(parts[i]);
+    }
+    return builder.getBlob(properties.type);
+  }
+}
+
+module.exports = createBlob;
+
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],30:[function(require,module,exports){
+// taken from pouchdb
+"use strict";
+
+function PouchError(opts) {
+  this.status = opts.status;
+  this.name = opts.error;
+  this.message = opts.reason;
+  this.error = true;
+}
+
+PouchError.prototype__proto__ = Error.prototype;
+
+PouchError.prototype.toString = function () {
+  return JSON.stringify({
+    status: this.status,
+    name: this.name,
+    message: this.message
+  });
+};
+
+exports.UNAUTHORIZED = new PouchError({
+  status: 401,
+  error: 'unauthorized',
+  reason: "Name or password is incorrect."
+});
+exports.MISSING_BULK_DOCS = new PouchError({
+  status: 400,
+  error: 'bad_request',
+  reason: "Missing JSON list of 'docs'"
+});
+exports.MISSING_DOC = new PouchError({
+  status: 404,
+  error: 'not_found',
+  reason: 'missing'
+});
+exports.REV_CONFLICT = new PouchError({
+  status: 409,
+  error: 'conflict',
+  reason: 'Document update conflict'
+});
+exports.INVALID_ID = new PouchError({
+  status: 400,
+  error: 'invalid_id',
+  reason: '_id field must contain a string'
+});
+exports.MISSING_ID = new PouchError({
+  status: 412,
+  error: 'missing_id',
+  reason: '_id is required for puts'
+});
+exports.RESERVED_ID = new PouchError({
+  status: 400,
+  error: 'bad_request',
+  reason: 'Only reserved document ids may start with underscore.'
+});
+exports.NOT_OPEN = new PouchError({
+  status: 412,
+  error: 'precondition_failed',
+  reason: 'Database not open'
+});
+exports.UNKNOWN_ERROR = new PouchError({
+  status: 500,
+  error: 'unknown_error',
+  reason: 'Database encountered an unknown error'
+});
+exports.BAD_ARG = new PouchError({
+  status: 500,
+  error: 'badarg',
+  reason: 'Some query argument is invalid'
+});
+exports.INVALID_REQUEST = new PouchError({
+  status: 400,
+  error: 'invalid_request',
+  reason: 'Request was invalid'
+});
+exports.QUERY_PARSE_ERROR = new PouchError({
+  status: 400,
+  error: 'query_parse_error',
+  reason: 'Some query parameter is invalid'
+});
+exports.DOC_VALIDATION = new PouchError({
+  status: 500,
+  error: 'doc_validation',
+  reason: 'Bad special document member'
+});
+exports.BAD_REQUEST = new PouchError({
+  status: 400,
+  error: 'bad_request',
+  reason: 'Something wrong with the request'
+});
+exports.NOT_AN_OBJECT = new PouchError({
+  status: 400,
+  error: 'bad_request',
+  reason: 'Document must be a JSON object'
+});
+exports.DB_MISSING = new PouchError({
+  status: 404,
+  error: 'not_found',
+  reason: 'Database not found'
+});
+exports.IDB_ERROR = new PouchError({
+  status: 500,
+  error: 'indexed_db_went_bad',
+  reason: 'unknown'
+});
+exports.WSQ_ERROR = new PouchError({
+  status: 500,
+  error: 'web_sql_went_bad',
+  reason: 'unknown'
+});
+exports.LDB_ERROR = new PouchError({
+  status: 500,
+  error: 'levelDB_went_went_bad',
+  reason: 'unknown'
+});
+exports.FORBIDDEN = new PouchError({
+  status: 403,
+  error: 'forbidden',
+  reason: 'Forbidden by design doc validate_doc_update function'
+});
+exports.error = function (error, reason, name) {
+  function CustomPouchError(msg) {
+    this.message = reason;
+    if (name) {
+      this.name = name;
+    }
+  }
+  CustomPouchError.prototype = error;
+  return new CustomPouchError(reason);
+};
+
+},{}],31:[function(require,module,exports){
+'use strict';
+
+var utils = require('./utils');
+
+function wrapError(callback) {
+  // provide more helpful error message
+  return function (err, res) {
+    if (err) {
+      if (err.name === 'unknown_error') {
+        err.message = (err.message || '') +
+          ' Unknown error!  Did you remember to enable CORS?';
+      }
+    }
+    return callback(err, res);
+  };
+}
+
+exports.signup = utils.toPromise(function (username, password, opts, callback) {
+  var db = this;
+  if (typeof callback === 'undefined') {
+    callback = typeof opts === 'undefined' ? (typeof password === 'undefined' ?
+      username : password) : opts;
+    opts = {};
+  }
+  if (['http', 'https'].indexOf(db.type()) === -1) {
+    return callback(new AuthError('This plugin only works for the http/https adapter. ' + 
+      'So you should use new PouchDB("http://mysite.com:5984/mydb") instead.'));
+  } else if (!username) {
+    return callback(new AuthError('You must provide a username'));
+  } else if (!password) {
+    return callback(new AuthError('You must provide a password'));
+  }
+
+  var userId = 'org.couchdb.user:' + username;
+  var user = {
+    name     : username,
+    password : password,
+    roles    : opts.roles || [],
+    type     : 'user',
+    _id      : userId
+  };
+
+  var reservedWords = ['name', 'password', 'roles', 'type'];
+  if (opts.metadata) {
+    for (var key in opts.metadata) {
+      if (opts.hasOwnProperty(key)) {
+        if (reservedWords.indexOf(key) !== -1 || key.startsWith('_')) {
+          return callback(new AuthError('cannot use reserved word in metadata: "' + key + '"'));
+        }
+      }
+    }
+    user = utils.extend(true, user, opts.metadata);
+  }
+
+  var url = utils.getUsersUrl(db) + '/' + encodeURIComponent(userId);
+  var ajaxOpts = utils.extend(true, {
+    method : 'PUT',
+    url : url,
+    body : user
+  }, opts.ajax || {});
+  utils.ajax(ajaxOpts, wrapError(callback));
+});
+
+exports.signUp = exports.signup;
+
+exports.login = utils.toPromise(function (username, password, opts, callback) {
+  var db = this;
+  if (typeof callback === 'undefined') {
+    callback = opts;
+    opts = {};
+  }
+  if (['http', 'https'].indexOf(db.type()) === -1) {
+    return callback(new AuthError('this plugin only works for the http/https adapter'));
+  }
+
+  if (!username) {
+    return callback(new AuthError('you must provide a username'));
+  } else if (!password) {
+    return callback(new AuthError('you must provide a password'));
+  }
+
+  var ajaxOpts = utils.extend(true, {
+    method : 'POST',
+    url : utils.getSessionUrl(db),
+    body : {name : username, password : password}
+  }, opts.ajax || {});
+  utils.ajax(ajaxOpts, wrapError(callback));
+});
+
+exports.logIn = exports.login;
+
+exports.logout = utils.toPromise(function (opts, callback) {
+  var db = this;
+  if (typeof callback === 'undefined') {
+    callback = opts;
+    opts = {};
+  }
+  var ajaxOpts = utils.extend(true, {
+    method : 'DELETE',
+    url : utils.getSessionUrl(db)
+  }, opts.ajax || {});
+  utils.ajax(ajaxOpts, wrapError(callback));
+});
+
+exports.logOut = exports.logout;
+
+exports.getSession = utils.toPromise(function (opts, callback) {
+  var db = this;
+  if (typeof callback === 'undefined') {
+    callback = opts;
+    opts = {};
+  }
+  var url = utils.getSessionUrl(db);
+
+  var ajaxOpts = utils.extend(true, {
+    method : 'GET',
+    url : url
+  }, opts.ajax || {});
+  utils.ajax(ajaxOpts, wrapError(callback));
+});
+
+exports.getUser = utils.toPromise(function (username, opts, callback) {
+  var db = this;
+  if (typeof callback === 'undefined') {
+    callback = typeof opts === 'undefined' ? username : opts;
+    opts = {};
+  }
+  if (!username) {
+    return callback(new AuthError('you must provide a username'));
+  }
+
+  var url = utils.getUsersUrl(db);
+  var ajaxOpts = utils.extend(true, {
+    method : 'GET',
+    url : url + '/' + encodeURIComponent('org.couchdb.user:' + username)
+  }, opts.ajax || {});
+  utils.ajax(ajaxOpts, wrapError(callback));
+});
+
+
+function AuthError(message) {
+  this.status = 400;
+  this.name = 'authentication_error';
+  this.message = message;
+  this.error = true;
+  try {
+    Error.captureStackTrace(this, AuthError);
+  } catch (e) {}
+}
+
+utils.inherits(AuthError, Error);
+
+if (typeof window !== 'undefined' && window.PouchDB) {
+  window.PouchDB.plugin(exports);
+}
+
+},{"./utils":32}],32:[function(require,module,exports){
+(function (process,global){
+'use strict';
+
+var Promise;
+if (typeof window !== 'undefined' && window.PouchDB) {
+  Promise = window.PouchDB.utils.Promise;
+} else {
+  Promise = typeof global.Promise === 'function' ? global.Promise : require('lie');
+}
+
+function getBaseUrl(db) {
+  return db.getUrl().replace(/\/[^\/]+\/?$/, '');
+}
+exports.getUsersUrl = function (db) {
+  return getBaseUrl(db) + '/_users';
+};
+exports.getSessionUrl = function (db) {
+  return getBaseUrl(db) + '/_session';
+};
+exports.once = function (fun) {
+  var called = false;
+  return exports.getArguments(function (args) {
+    if (called) {
+      console.trace();
+      throw new Error('once called  more than once');
+    } else {
+      called = true;
+      fun.apply(this, args);
+    }
+  });
+};
+exports.getArguments = function (fun) {
+  return function () {
+    var len = arguments.length;
+    var args = new Array(len);
+    var i = -1;
+    while (++i < len) {
+      args[i] = arguments[i];
+    }
+    return fun.call(this, args);
+  };
+};
+exports.toPromise = function (func) {
+  //create the function we will be returning
+  return exports.getArguments(function (args) {
+    var self = this;
+    var tempCB = (typeof args[args.length - 1] === 'function') ? args.pop() : false;
+    // if the last argument is a function, assume its a callback
+    var usedCB;
+    if (tempCB) {
+      // if it was a callback, create a new callback which calls it,
+      // but do so async so we don't trap any errors
+      usedCB = function (err, resp) {
+        process.nextTick(function () {
+          tempCB(err, resp);
+        });
+      };
+    }
+    var promise = new Promise(function (fulfill, reject) {
+      try {
+        var callback = exports.once(function (err, mesg) {
+          if (err) {
+            reject(err);
+          } else {
+            fulfill(mesg);
+          }
+        });
+        // create a callback for this invocation
+        // apply the function in the orig context
+        args.push(callback);
+        func.apply(self, args);
+      } catch (e) {
+        reject(e);
+      }
+    });
+    // if there is a callback, call it back
+    if (usedCB) {
+      promise.then(function (result) {
+        usedCB(null, result);
+      }, usedCB);
+    }
+    promise.cancel = function () {
+      return this;
+    };
+    return promise;
+  });
+};
+
+exports.inherits = require('inherits');
+exports.extend = require('pouchdb-extend');
+exports.ajax = require('./ajax-browser');
+exports.clone = function (obj) {
+  return exports.extend(true, {}, obj);
+};
+exports.uuid = require('./uuid');
+exports.Promise = Promise;
+
+}).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./ajax-browser":28,"./uuid":33,"_process":8,"inherits":34,"lie":38,"pouchdb-extend":53}],33:[function(require,module,exports){
+"use strict";
+
+// BEGIN Math.uuid.js
+
+/*!
+Math.uuid.js (v1.4)
+http://www.broofa.com
+mailto:robert@broofa.com
+
+Copyright (c) 2010 Robert Kieffer
+Dual licensed under the MIT and GPL licenses.
+*/
+
+/*
+ * Generate a random uuid.
+ *
+ * USAGE: Math.uuid(length, radix)
+ *   length - the desired number of characters
+ *   radix  - the number of allowable values for each character.
+ *
+ * EXAMPLES:
+ *   // No arguments  - returns RFC4122, version 4 ID
+ *   >>> Math.uuid()
+ *   "92329D39-6F5C-4520-ABFC-AAB64544E172"
+ *
+ *   // One argument - returns ID of the specified length
+ *   >>> Math.uuid(15)     // 15 character ID (default base=62)
+ *   "VcydxgltxrVZSTV"
+ *
+ *   // Two arguments - returns ID of the specified length, and radix. 
+ *   // (Radix must be <= 62)
+ *   >>> Math.uuid(8, 2)  // 8 character ID (base=2)
+ *   "01001010"
+ *   >>> Math.uuid(8, 10) // 8 character ID (base=10)
+ *   "47473046"
+ *   >>> Math.uuid(8, 16) // 8 character ID (base=16)
+ *   "098F4D35"
+ */
+var chars = (
+  '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ' +
+  'abcdefghijklmnopqrstuvwxyz'
+).split('');
+function getValue(radix) {
+  return 0 | Math.random() * radix;
+}
+function uuid(len, radix) {
+  radix = radix || chars.length;
+  var out = '';
+  var i = -1;
+
+  if (len) {
+    // Compact form
+    while (++i < len) {
+      out += chars[getValue(radix)];
+    }
+    return out;
+  }
+    // rfc4122, version 4 form
+    // Fill in random data.  At i==19 set the high bits of clock sequence as
+    // per rfc4122, sec. 4.1.5
+  while (++i < 36) {
+    switch (i) {
+      case 8:
+      case 13:
+      case 18:
+      case 23:
+        out += '-';
+        break;
+      case 19:
+        out += chars[(getValue(16) & 0x3) | 0x8];
+        break;
+      default:
+        out += chars[getValue(16)];
+    }
+  }
+
+  return out;
+}
+
+
+
+module.exports = uuid;
+
+
+},{}],34:[function(require,module,exports){
+if (typeof Object.create === 'function') {
+  // implementation from standard node.js 'util' module
+  module.exports = function inherits(ctor, superCtor) {
+    ctor.super_ = superCtor
+    ctor.prototype = Object.create(superCtor.prototype, {
+      constructor: {
+        value: ctor,
+        enumerable: false,
+        writable: true,
+        configurable: true
+      }
+    });
+  };
+} else {
+  // old school shim for old browsers
+  module.exports = function inherits(ctor, superCtor) {
+    ctor.super_ = superCtor
+    var TempCtor = function () {}
+    TempCtor.prototype = superCtor.prototype
+    ctor.prototype = new TempCtor()
+    ctor.prototype.constructor = ctor
+  }
+}
+
+},{}],35:[function(require,module,exports){
+'use strict';
+
+module.exports = INTERNAL;
+
+function INTERNAL() {}
+},{}],36:[function(require,module,exports){
+'use strict';
+var Promise = require('./promise');
+var reject = require('./reject');
+var resolve = require('./resolve');
+var INTERNAL = require('./INTERNAL');
+var handlers = require('./handlers');
+module.exports = all;
+function all(iterable) {
+  if (Object.prototype.toString.call(iterable) !== '[object Array]') {
+    return reject(new TypeError('must be an array'));
+  }
+
+  var len = iterable.length;
+  var called = false;
+  if (!len) {
+    return resolve([]);
+  }
+
+  var values = new Array(len);
+  var resolved = 0;
+  var i = -1;
+  var promise = new Promise(INTERNAL);
+  
+  while (++i < len) {
+    allResolver(iterable[i], i);
+  }
+  return promise;
+  function allResolver(value, i) {
+    resolve(value).then(resolveFromAll, function (error) {
+      if (!called) {
+        called = true;
+        handlers.reject(promise, error);
+      }
+    });
+    function resolveFromAll(outValue) {
+      values[i] = outValue;
+      if (++resolved === len & !called) {
+        called = true;
+        handlers.resolve(promise, values);
+      }
+    }
+  }
+}
+},{"./INTERNAL":35,"./handlers":37,"./promise":39,"./reject":42,"./resolve":43}],37:[function(require,module,exports){
+'use strict';
+var tryCatch = require('./tryCatch');
+var resolveThenable = require('./resolveThenable');
+var states = require('./states');
+
+exports.resolve = function (self, value) {
+  var result = tryCatch(getThen, value);
+  if (result.status === 'error') {
+    return exports.reject(self, result.value);
+  }
+  var thenable = result.value;
+
+  if (thenable) {
+    resolveThenable.safely(self, thenable);
+  } else {
+    self.state = states.FULFILLED;
+    self.outcome = value;
+    var i = -1;
+    var len = self.queue.length;
+    while (++i < len) {
+      self.queue[i].callFulfilled(value);
+    }
+  }
+  return self;
+};
+exports.reject = function (self, error) {
+  self.state = states.REJECTED;
+  self.outcome = error;
+  var i = -1;
+  var len = self.queue.length;
+  while (++i < len) {
+    self.queue[i].callRejected(error);
+  }
+  return self;
+};
+
+function getThen(obj) {
+  // Make sure we only access the accessor once as required by the spec
+  var then = obj && obj.then;
+  if (obj && typeof obj === 'object' && typeof then === 'function') {
+    return function appyThen() {
+      then.apply(obj, arguments);
+    };
+  }
+}
+},{"./resolveThenable":44,"./states":45,"./tryCatch":46}],38:[function(require,module,exports){
+module.exports = exports = require('./promise');
+
+exports.resolve = require('./resolve');
+exports.reject = require('./reject');
+exports.all = require('./all');
+exports.race = require('./race');
+},{"./all":36,"./promise":39,"./race":41,"./reject":42,"./resolve":43}],39:[function(require,module,exports){
+'use strict';
+
+var unwrap = require('./unwrap');
+var INTERNAL = require('./INTERNAL');
+var resolveThenable = require('./resolveThenable');
+var states = require('./states');
+var QueueItem = require('./queueItem');
+
+module.exports = Promise;
+function Promise(resolver) {
+  if (!(this instanceof Promise)) {
+    return new Promise(resolver);
+  }
+  if (typeof resolver !== 'function') {
+    throw new TypeError('resolver must be a function');
+  }
+  this.state = states.PENDING;
+  this.queue = [];
+  this.outcome = void 0;
+  if (resolver !== INTERNAL) {
+    resolveThenable.safely(this, resolver);
+  }
+}
+
+Promise.prototype['catch'] = function (onRejected) {
+  return this.then(null, onRejected);
+};
+Promise.prototype.then = function (onFulfilled, onRejected) {
+  if (typeof onFulfilled !== 'function' && this.state === states.FULFILLED ||
+    typeof onRejected !== 'function' && this.state === states.REJECTED) {
+    return this;
+  }
+  var promise = new Promise(INTERNAL);
+
+  
+  if (this.state !== states.PENDING) {
+    var resolver = this.state === states.FULFILLED ? onFulfilled: onRejected;
+    unwrap(promise, resolver, this.outcome);
+  } else {
+    this.queue.push(new QueueItem(promise, onFulfilled, onRejected));
+  }
+
+  return promise;
+};
+
+},{"./INTERNAL":35,"./queueItem":40,"./resolveThenable":44,"./states":45,"./unwrap":47}],40:[function(require,module,exports){
+'use strict';
+var handlers = require('./handlers');
+var unwrap = require('./unwrap');
+
+module.exports = QueueItem;
+function QueueItem(promise, onFulfilled, onRejected) {
+  this.promise = promise;
+  if (typeof onFulfilled === 'function') {
+    this.onFulfilled = onFulfilled;
+    this.callFulfilled = this.otherCallFulfilled;
+  }
+  if (typeof onRejected === 'function') {
+    this.onRejected = onRejected;
+    this.callRejected = this.otherCallRejected;
+  }
+}
+QueueItem.prototype.callFulfilled = function (value) {
+  handlers.resolve(this.promise, value);
+};
+QueueItem.prototype.otherCallFulfilled = function (value) {
+  unwrap(this.promise, this.onFulfilled, value);
+};
+QueueItem.prototype.callRejected = function (value) {
+  handlers.reject(this.promise, value);
+};
+QueueItem.prototype.otherCallRejected = function (value) {
+  unwrap(this.promise, this.onRejected, value);
+};
+},{"./handlers":37,"./unwrap":47}],41:[function(require,module,exports){
+'use strict';
+var Promise = require('./promise');
+var reject = require('./reject');
+var resolve = require('./resolve');
+var INTERNAL = require('./INTERNAL');
+var handlers = require('./handlers');
+module.exports = race;
+function race(iterable) {
+  if (Object.prototype.toString.call(iterable) !== '[object Array]') {
+    return reject(new TypeError('must be an array'));
+  }
+
+  var len = iterable.length;
+  var called = false;
+  if (!len) {
+    return resolve([]);
+  }
+
+  var resolved = 0;
+  var i = -1;
+  var promise = new Promise(INTERNAL);
+  
+  while (++i < len) {
+    resolver(iterable[i]);
+  }
+  return promise;
+  function resolver(value) {
+    resolve(value).then(function (response) {
+      if (!called) {
+        called = true;
+        handlers.resolve(promise, response);
+      }
+    }, function (error) {
+      if (!called) {
+        called = true;
+        handlers.reject(promise, error);
+      }
+    });
+  }
+}
+},{"./INTERNAL":35,"./handlers":37,"./promise":39,"./reject":42,"./resolve":43}],42:[function(require,module,exports){
+'use strict';
+
+var Promise = require('./promise');
+var INTERNAL = require('./INTERNAL');
+var handlers = require('./handlers');
+module.exports = reject;
+
+function reject(reason) {
+	var promise = new Promise(INTERNAL);
+	return handlers.reject(promise, reason);
+}
+},{"./INTERNAL":35,"./handlers":37,"./promise":39}],43:[function(require,module,exports){
+'use strict';
+
+var Promise = require('./promise');
+var INTERNAL = require('./INTERNAL');
+var handlers = require('./handlers');
+module.exports = resolve;
+
+var FALSE = handlers.resolve(new Promise(INTERNAL), false);
+var NULL = handlers.resolve(new Promise(INTERNAL), null);
+var UNDEFINED = handlers.resolve(new Promise(INTERNAL), void 0);
+var ZERO = handlers.resolve(new Promise(INTERNAL), 0);
+var EMPTYSTRING = handlers.resolve(new Promise(INTERNAL), '');
+
+function resolve(value) {
+  if (value) {
+    if (value instanceof Promise) {
+      return value;
+    }
+    return handlers.resolve(new Promise(INTERNAL), value);
+  }
+  var valueType = typeof value;
+  switch (valueType) {
+    case 'boolean':
+      return FALSE;
+    case 'undefined':
+      return UNDEFINED;
+    case 'object':
+      return NULL;
+    case 'number':
+      return ZERO;
+    case 'string':
+      return EMPTYSTRING;
+  }
+}
+},{"./INTERNAL":35,"./handlers":37,"./promise":39}],44:[function(require,module,exports){
+'use strict';
+var handlers = require('./handlers');
+var tryCatch = require('./tryCatch');
+function safelyResolveThenable(self, thenable) {
+  // Either fulfill, reject or reject with error
+  var called = false;
+  function onError(value) {
+    if (called) {
+      return;
+    }
+    called = true;
+    handlers.reject(self, value);
+  }
+
+  function onSuccess(value) {
+    if (called) {
+      return;
+    }
+    called = true;
+    handlers.resolve(self, value);
+  }
+
+  function tryToUnwrap() {
+    thenable(onSuccess, onError);
+  }
+  
+  var result = tryCatch(tryToUnwrap);
+  if (result.status === 'error') {
+    onError(result.value);
+  }
+}
+exports.safely = safelyResolveThenable;
+},{"./handlers":37,"./tryCatch":46}],45:[function(require,module,exports){
+// Lazy man's symbols for states
+
+exports.REJECTED = ['REJECTED'];
+exports.FULFILLED = ['FULFILLED'];
+exports.PENDING = ['PENDING'];
+},{}],46:[function(require,module,exports){
+'use strict';
+
+module.exports = tryCatch;
+
+function tryCatch(func, value) {
+  var out = {};
+  try {
+    out.value = func(value);
+    out.status = 'success';
+  } catch (e) {
+    out.status = 'error';
+    out.value = e;
+  }
+  return out;
+}
+},{}],47:[function(require,module,exports){
+'use strict';
+
+var immediate = require('immediate');
+var handlers = require('./handlers');
+module.exports = unwrap;
+
+function unwrap(promise, func, value) {
+  immediate(function () {
+    var returnValue;
+    try {
+      returnValue = func(value);
+    } catch (e) {
+      return handlers.reject(promise, e);
+    }
+    if (returnValue === promise) {
+      handlers.reject(promise, new TypeError('Cannot resolve promise with itself'));
+    } else {
+      handlers.resolve(promise, returnValue);
+    }
+  });
+}
+},{"./handlers":37,"immediate":48}],48:[function(require,module,exports){
+'use strict';
+var types = [
+  require('./nextTick'),
+  require('./mutation.js'),
+  require('./messageChannel'),
+  require('./stateChange'),
+  require('./timeout')
+];
+var draining;
+var queue = [];
+//named nextTick for less confusing stack traces
+function nextTick() {
+  draining = true;
+  var i, oldQueue;
+  var len = queue.length;
+  while (len) {
+    oldQueue = queue;
+    queue = [];
+    i = -1;
+    while (++i < len) {
+      oldQueue[i]();
+    }
+    len = queue.length;
+  }
+  draining = false;
+}
+var scheduleDrain;
+var i = -1;
+var len = types.length;
+while (++ i < len) {
+  if (types[i] && types[i].test && types[i].test()) {
+    scheduleDrain = types[i].install(nextTick);
+    break;
+  }
+}
+module.exports = immediate;
+function immediate(task) {
+  if (queue.push(task) === 1 && !draining) {
+    scheduleDrain();
+  }
+}
+},{"./messageChannel":49,"./mutation.js":50,"./nextTick":6,"./stateChange":51,"./timeout":52}],49:[function(require,module,exports){
+(function (global){
+'use strict';
+
+exports.test = function () {
+  if (global.setImmediate) {
+    // we can only get here in IE10
+    // which doesn't handel postMessage well
+    return false;
+  }
+  return typeof global.MessageChannel !== 'undefined';
+};
+
+exports.install = function (func) {
+  var channel = new global.MessageChannel();
+  channel.port1.onmessage = func;
+  return function () {
+    channel.port2.postMessage(0);
+  };
+};
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],50:[function(require,module,exports){
+(function (global){
+'use strict';
+//based off rsvp https://github.com/tildeio/rsvp.js
+//license https://github.com/tildeio/rsvp.js/blob/master/LICENSE
+//https://github.com/tildeio/rsvp.js/blob/master/lib/rsvp/asap.js
+
+var Mutation = global.MutationObserver || global.WebKitMutationObserver;
+
+exports.test = function () {
+  return Mutation;
+};
+
+exports.install = function (handle) {
+  var called = 0;
+  var observer = new Mutation(handle);
+  var element = global.document.createTextNode('');
+  observer.observe(element, {
+    characterData: true
+  });
+  return function () {
+    element.data = (called = ++called % 2);
+  };
+};
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],51:[function(require,module,exports){
+(function (global){
+'use strict';
+
+exports.test = function () {
+  return 'document' in global && 'onreadystatechange' in global.document.createElement('script');
+};
+
+exports.install = function (handle) {
+  return function () {
+
+    // Create a <script> element; its readystatechange event will be fired asynchronously once it is inserted
+    // into the document. Do so, thus queuing up the task. Remember to clean up once it's been called.
+    var scriptEl = global.document.createElement('script');
+    scriptEl.onreadystatechange = function () {
+      handle();
+
+      scriptEl.onreadystatechange = null;
+      scriptEl.parentNode.removeChild(scriptEl);
+      scriptEl = null;
+    };
+    global.document.documentElement.appendChild(scriptEl);
+
+    return handle;
+  };
+};
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],52:[function(require,module,exports){
+'use strict';
+exports.test = function () {
+  return true;
+};
+
+exports.install = function (t) {
+  return function () {
+    setTimeout(t, 0);
+  };
+};
+},{}],53:[function(require,module,exports){
+"use strict";
+
+// Extends method
+// (taken from http://code.jquery.com/jquery-1.9.0.js)
+// Populate the class2type map
+var class2type = {};
+
+var types = [
+  "Boolean", "Number", "String", "Function", "Array",
+  "Date", "RegExp", "Object", "Error"
+];
+for (var i = 0; i < types.length; i++) {
+  var typename = types[i];
+  class2type["[object " + typename + "]"] = typename.toLowerCase();
+}
+
+var core_toString = class2type.toString;
+var core_hasOwn = class2type.hasOwnProperty;
+
+function type(obj) {
+  if (obj === null) {
+    return String(obj);
+  }
+  return typeof obj === "object" || typeof obj === "function" ?
+    class2type[core_toString.call(obj)] || "object" :
+    typeof obj;
+}
+
+function isWindow(obj) {
+  return obj !== null && obj === obj.window;
+}
+
+function isPlainObject(obj) {
+  // Must be an Object.
+  // Because of IE, we also have to check the presence of
+  // the constructor property.
+  // Make sure that DOM nodes and window objects don't pass through, as well
+  if (!obj || type(obj) !== "object" || obj.nodeType || isWindow(obj)) {
+    return false;
+  }
+
+  try {
+    // Not own constructor property must be Object
+    if (obj.constructor &&
+      !core_hasOwn.call(obj, "constructor") &&
+      !core_hasOwn.call(obj.constructor.prototype, "isPrototypeOf")) {
+      return false;
+    }
+  } catch ( e ) {
+    // IE8,9 Will throw exceptions on certain host objects #9897
+    return false;
+  }
+
+  // Own properties are enumerated firstly, so to speed up,
+  // if last one is own, then all properties are own.
+  var key;
+  for (key in obj) {}
+
+  return key === undefined || core_hasOwn.call(obj, key);
+}
+
+
+function isFunction(obj) {
+  return type(obj) === "function";
+}
+
+var isArray = Array.isArray || function (obj) {
+  return type(obj) === "array";
+};
+
+function extend() {
+  // originally extend() was recursive, but this ended up giving us
+  // "call stack exceeded", so it's been unrolled to use a literal stack
+  // (see https://github.com/pouchdb/pouchdb/issues/2543)
+  var stack = [];
+  var i = -1;
+  var len = arguments.length;
+  var args = new Array(len);
+  while (++i < len) {
+    args[i] = arguments[i];
+  }
+  var container = {};
+  stack.push({args: args, result: {container: container, key: 'key'}});
+  var next;
+  while ((next = stack.pop())) {
+    extendInner(stack, next.args, next.result);
+  }
+  return container.key;
+}
+
+function extendInner(stack, args, result) {
+  var options, name, src, copy, copyIsArray, clone,
+    target = args[0] || {},
+    i = 1,
+    length = args.length,
+    deep = false,
+    numericStringRegex = /\d+/,
+    optionsIsArray;
+
+  // Handle a deep copy situation
+  if (typeof target === "boolean") {
+    deep = target;
+    target = args[1] || {};
+    // skip the boolean and the target
+    i = 2;
+  }
+
+  // Handle case when target is a string or something (possible in deep copy)
+  if (typeof target !== "object" && !isFunction(target)) {
+    target = {};
+  }
+
+  // extend jQuery itself if only one argument is passed
+  if (length === i) {
+    /* jshint validthis: true */
+    target = this;
+    --i;
+  }
+
+  for (; i < length; i++) {
+    // Only deal with non-null/undefined values
+    if ((options = args[i]) != null) {
+      optionsIsArray = isArray(options);
+      // Extend the base object
+      for (name in options) {
+        //if (options.hasOwnProperty(name)) {
+        if (!(name in Object.prototype)) {
+          if (optionsIsArray && !numericStringRegex.test(name)) {
+            continue;
+          }
+
+          src = target[name];
+          copy = options[name];
+
+          // Prevent never-ending loop
+          if (target === copy) {
+            continue;
+          }
+
+          // Recurse if we're merging plain objects or arrays
+          if (deep && copy && (isPlainObject(copy) ||
+              (copyIsArray = isArray(copy)))) {
+            if (copyIsArray) {
+              copyIsArray = false;
+              clone = src && isArray(src) ? src : [];
+
+            } else {
+              clone = src && isPlainObject(src) ? src : {};
+            }
+
+            // Never move original objects, clone them
+            stack.push({
+              args: [deep, clone, copy],
+              result: {
+                container: target,
+                key: name
+              }
+            });
+
+          // Don't bring in undefined values
+          } else if (copy !== undefined) {
+            if (!(isArray(options) && isFunction(copy))) {
+              target[name] = copy;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // "Return" the modified object by setting the key
+  // on the given container
+  result.container[result.key] = target;
+}
+
+
+module.exports = extend;
+
+
+
+},{}],54:[function(require,module,exports){
 "use strict";
 
 var utils = require('./utils');
@@ -22165,7 +23887,7 @@ AbstractPouchDB.prototype.registerDependentDatabase =
   });
 });
 
-},{"./changes":39,"./deps/errors":45,"./deps/upsert":51,"./merge":56,"./utils":61,"events":6}],28:[function(require,module,exports){
+},{"./changes":66,"./deps/errors":72,"./deps/upsert":78,"./merge":83,"./utils":88,"events":7}],55:[function(require,module,exports){
 (function (process){
 "use strict";
 
@@ -23231,7 +24953,7 @@ HttpPouch.valid = function () {
 module.exports = HttpPouch;
 
 }).call(this,require('_process'))
-},{"../../deps/buffer":44,"../../deps/errors":45,"../../utils":61,"_process":7,"debug":64}],29:[function(require,module,exports){
+},{"../../deps/buffer":71,"../../deps/errors":72,"../../utils":88,"_process":8,"debug":91}],56:[function(require,module,exports){
 'use strict';
 
 var utils = require('../../utils');
@@ -23295,7 +25017,7 @@ function checkBlobSupport(txn, idb) {
 }
 
 module.exports = checkBlobSupport;
-},{"../../utils":61,"./idb-constants":31}],30:[function(require,module,exports){
+},{"../../utils":88,"./idb-constants":58}],57:[function(require,module,exports){
 'use strict';
 
 var utils = require('../../utils');
@@ -23654,7 +25376,7 @@ function idbBulkDocs(req, opts, api, idb, Changes, callback) {
 }
 
 module.exports = idbBulkDocs;
-},{"../../deps/errors":45,"../../utils":61,"./idb-constants":31,"./idb-utils":32}],31:[function(require,module,exports){
+},{"../../deps/errors":72,"../../utils":88,"./idb-constants":58,"./idb-utils":59}],58:[function(require,module,exports){
 'use strict';
 
 // IndexedDB requires a versioned database structure, so we use the
@@ -23681,7 +25403,7 @@ exports.META_STORE = 'meta-store';
 exports.LOCAL_STORE = 'local-store';
 // Where we detect blob support
 exports.DETECT_BLOB_SUPPORT_STORE = 'detect-blob-support';
-},{}],32:[function(require,module,exports){
+},{}],59:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -23927,7 +25649,7 @@ exports.openTransactionSafely = function (idb, stores, mode) {
   }
 };
 }).call(this,require('_process'))
-},{"../../deps/errors":45,"../../utils":61,"./idb-constants":31,"_process":7}],33:[function(require,module,exports){
+},{"../../deps/errors":72,"../../utils":88,"./idb-constants":58,"_process":8}],60:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -25047,9 +26769,9 @@ IdbPouch.Changes = new utils.Changes();
 module.exports = IdbPouch;
 
 }).call(this,require('_process'))
-},{"../../deps/errors":45,"../../merge":56,"../../utils":61,"./idb-blob-support":29,"./idb-bulk-docs":30,"./idb-constants":31,"./idb-utils":32,"_process":7}],34:[function(require,module,exports){
+},{"../../deps/errors":72,"../../merge":83,"../../utils":88,"./idb-blob-support":56,"./idb-bulk-docs":57,"./idb-constants":58,"./idb-utils":59,"_process":8}],61:[function(require,module,exports){
 module.exports = ['idb', 'websql'];
-},{}],35:[function(require,module,exports){
+},{}],62:[function(require,module,exports){
 'use strict';
 
 var utils = require('../../utils');
@@ -25375,7 +27097,7 @@ function websqlBulkDocs(req, opts, api, db, Changes, callback) {
 
 module.exports = websqlBulkDocs;
 
-},{"../../deps/errors":45,"../../utils":61,"./websql-constants":36,"./websql-utils":37}],36:[function(require,module,exports){
+},{"../../deps/errors":72,"../../utils":88,"./websql-constants":63,"./websql-utils":64}],63:[function(require,module,exports){
 'use strict';
 
 function quote(str) {
@@ -25399,7 +27121,7 @@ exports.META_STORE = quote('metadata-store');
 exports.ATTACH_AND_SEQ_STORE = quote('attach-seq-store');
 
 
-},{}],37:[function(require,module,exports){
+},{}],64:[function(require,module,exports){
 'use strict';
 
 var utils = require('../../utils');
@@ -25587,7 +27309,7 @@ module.exports = {
   unknownError: unknownError,
   getSize: getSize
 };
-},{"../../deps/errors":45,"../../utils":61,"./websql-constants":36}],38:[function(require,module,exports){
+},{"../../deps/errors":72,"../../utils":88,"./websql-constants":63}],65:[function(require,module,exports){
 'use strict';
 
 var utils = require('../../utils');
@@ -26609,7 +28331,7 @@ WebSqlPouch.Changes = new utils.Changes();
 
 module.exports = WebSqlPouch;
 
-},{"../../deps/errors":45,"../../deps/parse-hex":48,"../../merge":56,"../../utils":61,"./websql-bulk-docs":35,"./websql-constants":36,"./websql-utils":37}],39:[function(require,module,exports){
+},{"../../deps/errors":72,"../../deps/parse-hex":75,"../../merge":83,"../../utils":88,"./websql-bulk-docs":62,"./websql-constants":63,"./websql-utils":64}],66:[function(require,module,exports){
 'use strict';
 var utils = require('./utils');
 var merge = require('./merge');
@@ -26865,7 +28587,7 @@ Changes.prototype.filterChanges = function (opts) {
     });
   }
 };
-},{"./deps/errors":45,"./evalFilter":53,"./evalView":54,"./merge":56,"./utils":61,"events":6}],40:[function(require,module,exports){
+},{"./deps/errors":72,"./evalFilter":80,"./evalView":81,"./merge":83,"./utils":88,"events":7}],67:[function(require,module,exports){
 'use strict';
 
 var utils = require('./utils');
@@ -26961,7 +28683,7 @@ Checkpointer.prototype.getCheckpoint = function () {
 
 module.exports = Checkpointer;
 
-},{"./utils":61,"pouchdb-collate":86}],41:[function(require,module,exports){
+},{"./utils":88,"pouchdb-collate":113}],68:[function(require,module,exports){
 (function (process,global){
 /*globals cordova */
 "use strict";
@@ -27134,7 +28856,7 @@ PouchDB.debug = require('debug');
 module.exports = PouchDB;
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./adapter":27,"./taskqueue":60,"./utils":61,"_process":7,"debug":64}],42:[function(require,module,exports){
+},{"./adapter":54,"./taskqueue":87,"./utils":88,"_process":8,"debug":91}],69:[function(require,module,exports){
 (function (process){
 "use strict";
 
@@ -27275,7 +28997,7 @@ function ajax(options, adapterCallback) {
 module.exports = ajax;
 
 }).call(this,require('_process'))
-},{"../utils":61,"./buffer":44,"./errors":45,"_process":7,"request":50}],43:[function(require,module,exports){
+},{"../utils":88,"./buffer":71,"./errors":72,"_process":8,"request":77}],70:[function(require,module,exports){
 (function (global){
 "use strict";
 
@@ -27307,10 +29029,10 @@ module.exports = createBlob;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],44:[function(require,module,exports){
+},{}],71:[function(require,module,exports){
 // hey guess what, we don't need this in the browser
 module.exports = {};
-},{}],45:[function(require,module,exports){
+},{}],72:[function(require,module,exports){
 "use strict";
 
 var inherits = require('inherits');
@@ -27572,7 +29294,7 @@ exports.generateErrorFromResponse = function (res) {
   return error;
 };
 
-},{"inherits":67}],46:[function(require,module,exports){
+},{"inherits":94}],73:[function(require,module,exports){
 (function (process,global){
 'use strict';
 
@@ -27687,7 +29409,7 @@ module.exports = function (data, callback) {
 };
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":7,"crypto":5,"spark-md5":97}],47:[function(require,module,exports){
+},{"_process":8,"crypto":6,"spark-md5":124}],74:[function(require,module,exports){
 'use strict';
 
 var errors = require('./errors');
@@ -27855,7 +29577,7 @@ exports.parseDoc = function (doc, newEdits) {
   }
   return result;
 };
-},{"./errors":45,"./uuid":52}],48:[function(require,module,exports){
+},{"./errors":72,"./uuid":79}],75:[function(require,module,exports){
 'use strict';
 
 //
@@ -27923,7 +29645,7 @@ function parseHexString(str, encoding) {
 }
 
 module.exports = parseHexString;
-},{}],49:[function(require,module,exports){
+},{}],76:[function(require,module,exports){
 'use strict';
 
 // originally parseUri 1.2.2, now patched by us
@@ -27969,7 +29691,7 @@ function parseUri(str) {
 
 
 module.exports = parseUri;
-},{}],50:[function(require,module,exports){
+},{}],77:[function(require,module,exports){
 'use strict';
 
 var createBlob = require('./blob.js');
@@ -28078,7 +29800,7 @@ module.exports = function(options, callback) {
   return {abort: abortReq};
 };
 
-},{"../utils":61,"./blob.js":43}],51:[function(require,module,exports){
+},{"../utils":88,"./blob.js":70}],78:[function(require,module,exports){
 'use strict';
 
 var upsert = require('pouchdb-upsert').upsert;
@@ -28087,92 +29809,9 @@ module.exports = function (db, doc, diffFun, cb) {
   return upsert.call(db, doc, diffFun, cb);
 };
 
-},{"pouchdb-upsert":96}],52:[function(require,module,exports){
-"use strict";
-
-// BEGIN Math.uuid.js
-
-/*!
-Math.uuid.js (v1.4)
-http://www.broofa.com
-mailto:robert@broofa.com
-
-Copyright (c) 2010 Robert Kieffer
-Dual licensed under the MIT and GPL licenses.
-*/
-
-/*
- * Generate a random uuid.
- *
- * USAGE: Math.uuid(length, radix)
- *   length - the desired number of characters
- *   radix  - the number of allowable values for each character.
- *
- * EXAMPLES:
- *   // No arguments  - returns RFC4122, version 4 ID
- *   >>> Math.uuid()
- *   "92329D39-6F5C-4520-ABFC-AAB64544E172"
- *
- *   // One argument - returns ID of the specified length
- *   >>> Math.uuid(15)     // 15 character ID (default base=62)
- *   "VcydxgltxrVZSTV"
- *
- *   // Two arguments - returns ID of the specified length, and radix. 
- *   // (Radix must be <= 62)
- *   >>> Math.uuid(8, 2)  // 8 character ID (base=2)
- *   "01001010"
- *   >>> Math.uuid(8, 10) // 8 character ID (base=10)
- *   "47473046"
- *   >>> Math.uuid(8, 16) // 8 character ID (base=16)
- *   "098F4D35"
- */
-var chars = (
-  '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ' +
-  'abcdefghijklmnopqrstuvwxyz'
-).split('');
-function getValue(radix) {
-  return 0 | Math.random() * radix;
-}
-function uuid(len, radix) {
-  radix = radix || chars.length;
-  var out = '';
-  var i = -1;
-
-  if (len) {
-    // Compact form
-    while (++i < len) {
-      out += chars[getValue(radix)];
-    }
-    return out;
-  }
-    // rfc4122, version 4 form
-    // Fill in random data.  At i==19 set the high bits of clock sequence as
-    // per rfc4122, sec. 4.1.5
-  while (++i < 36) {
-    switch (i) {
-      case 8:
-      case 13:
-      case 18:
-      case 23:
-        out += '-';
-        break;
-      case 19:
-        out += chars[(getValue(16) & 0x3) | 0x8];
-        break;
-      default:
-        out += chars[getValue(16)];
-    }
-  }
-
-  return out;
-}
-
-
-
-module.exports = uuid;
-
-
-},{}],53:[function(require,module,exports){
+},{"pouchdb-upsert":123}],79:[function(require,module,exports){
+arguments[4][33][0].apply(exports,arguments)
+},{"dup":33}],80:[function(require,module,exports){
 'use strict';
 
 module.exports = evalFilter;
@@ -28184,7 +29823,7 @@ function evalFilter(input) {
     ' })()'
   ].join(''));
 }
-},{}],54:[function(require,module,exports){
+},{}],81:[function(require,module,exports){
 'use strict';
 
 module.exports = evalView;
@@ -28206,7 +29845,7 @@ function evalView(input) {
     '})()'
   ].join('\n'));
 }
-},{}],55:[function(require,module,exports){
+},{}],82:[function(require,module,exports){
 (function (process){
 "use strict";
 
@@ -28235,7 +29874,7 @@ if (!process.browser) {
 }
 
 }).call(this,require('_process'))
-},{"./adapters/http/http":28,"./adapters/idb/idb":33,"./adapters/leveldb/leveldb":5,"./adapters/websql/websql":38,"./deps/ajax":42,"./deps/errors":45,"./replicate":57,"./setup":58,"./sync":59,"./utils":61,"./version":62,"_process":7,"pouchdb-mapreduce":92}],56:[function(require,module,exports){
+},{"./adapters/http/http":55,"./adapters/idb/idb":60,"./adapters/leveldb/leveldb":6,"./adapters/websql/websql":65,"./deps/ajax":69,"./deps/errors":72,"./replicate":84,"./setup":85,"./sync":86,"./utils":88,"./version":89,"_process":8,"pouchdb-mapreduce":119}],83:[function(require,module,exports){
 'use strict';
 var extend = require('pouchdb-extend');
 
@@ -28537,7 +30176,7 @@ PouchMerge.rootToLeaf = function (tree) {
 
 module.exports = PouchMerge;
 
-},{"pouchdb-extend":89}],57:[function(require,module,exports){
+},{"pouchdb-extend":116}],84:[function(require,module,exports){
 'use strict';
 
 var utils = require('./utils');
@@ -29155,7 +30794,7 @@ function replicateWrapper(src, target, opts, callback) {
   return replicateRet;
 }
 
-},{"./checkpointer":40,"./utils":61,"events":6}],58:[function(require,module,exports){
+},{"./checkpointer":67,"./utils":88,"events":7}],85:[function(require,module,exports){
 "use strict";
 
 var PouchDB = require("./constructor");
@@ -29354,7 +30993,7 @@ PouchDB.defaults = function (defaultOpts) {
 
 module.exports = PouchDB;
 
-},{"./adapters/preferredAdapters.js":34,"./constructor":41,"./utils":61,"events":6}],59:[function(require,module,exports){
+},{"./adapters/preferredAdapters.js":61,"./constructor":68,"./utils":88,"events":7}],86:[function(require,module,exports){
 'use strict';
 
 var utils = require('./utils');
@@ -29540,7 +31179,7 @@ Sync.prototype.cancel = function () {
   }
 };
 
-},{"./replicate":57,"./utils":61,"events":6}],60:[function(require,module,exports){
+},{"./replicate":84,"./utils":88,"events":7}],87:[function(require,module,exports){
 'use strict';
 
 module.exports = TaskQueue;
@@ -29610,7 +31249,7 @@ TaskQueue.prototype.addTask = function (name, parameters) {
   }
 };
 
-},{}],61:[function(require,module,exports){
+},{}],88:[function(require,module,exports){
 (function (process,global){
 /*jshint strict: false */
 /*global chrome */
@@ -30428,10 +32067,10 @@ exports.safeJsonStringify = function safeJsonStringify(json) {
 };
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./deps/ajax":42,"./deps/blob":43,"./deps/buffer":44,"./deps/errors":45,"./deps/md5":46,"./deps/parse-doc":47,"./deps/parse-uri":49,"./deps/uuid":52,"./merge":56,"_process":7,"argsarray":63,"bluebird":71,"debug":64,"events":6,"inherits":67,"pouchdb-collections":88,"pouchdb-extend":89,"vuvuzela":98}],62:[function(require,module,exports){
+},{"./deps/ajax":69,"./deps/blob":70,"./deps/buffer":71,"./deps/errors":72,"./deps/md5":73,"./deps/parse-doc":74,"./deps/parse-uri":76,"./deps/uuid":79,"./merge":83,"_process":8,"argsarray":90,"bluebird":98,"debug":91,"events":7,"inherits":94,"pouchdb-collections":115,"pouchdb-extend":116,"vuvuzela":125}],89:[function(require,module,exports){
 module.exports = "3.3.0";
 
-},{}],63:[function(require,module,exports){
+},{}],90:[function(require,module,exports){
 'use strict';
 
 module.exports = argsArray;
@@ -30451,7 +32090,7 @@ function argsArray(fun) {
     }
   };
 }
-},{}],64:[function(require,module,exports){
+},{}],91:[function(require,module,exports){
 
 /**
  * This is the web browser implementation of `debug()`.
@@ -30611,7 +32250,7 @@ function load() {
 
 exports.enable(load());
 
-},{"./debug":65}],65:[function(require,module,exports){
+},{"./debug":92}],92:[function(require,module,exports){
 
 /**
  * This is the common logic for both the Node.js and web browser
@@ -30810,7 +32449,7 @@ function coerce(val) {
   return val;
 }
 
-},{"ms":66}],66:[function(require,module,exports){
+},{"ms":93}],93:[function(require,module,exports){
 /**
  * Helpers.
  */
@@ -30923,501 +32562,45 @@ function plural(ms, n, name) {
   return Math.ceil(ms / n) + ' ' + name + 's';
 }
 
-},{}],67:[function(require,module,exports){
-if (typeof Object.create === 'function') {
-  // implementation from standard node.js 'util' module
-  module.exports = function inherits(ctor, superCtor) {
-    ctor.super_ = superCtor
-    ctor.prototype = Object.create(superCtor.prototype, {
-      constructor: {
-        value: ctor,
-        enumerable: false,
-        writable: true,
-        configurable: true
-      }
-    });
-  };
-} else {
-  // old school shim for old browsers
-  module.exports = function inherits(ctor, superCtor) {
-    ctor.super_ = superCtor
-    var TempCtor = function () {}
-    TempCtor.prototype = superCtor.prototype
-    ctor.prototype = new TempCtor()
-    ctor.prototype.constructor = ctor
-  }
-}
-
-},{}],68:[function(require,module,exports){
-'use strict';
-
-module.exports = INTERNAL;
-
-function INTERNAL() {}
-},{}],69:[function(require,module,exports){
-'use strict';
-var Promise = require('./promise');
-var reject = require('./reject');
-var resolve = require('./resolve');
-var INTERNAL = require('./INTERNAL');
-var handlers = require('./handlers');
-module.exports = all;
-function all(iterable) {
-  if (Object.prototype.toString.call(iterable) !== '[object Array]') {
-    return reject(new TypeError('must be an array'));
-  }
-
-  var len = iterable.length;
-  var called = false;
-  if (!len) {
-    return resolve([]);
-  }
-
-  var values = new Array(len);
-  var resolved = 0;
-  var i = -1;
-  var promise = new Promise(INTERNAL);
-  
-  while (++i < len) {
-    allResolver(iterable[i], i);
-  }
-  return promise;
-  function allResolver(value, i) {
-    resolve(value).then(resolveFromAll, function (error) {
-      if (!called) {
-        called = true;
-        handlers.reject(promise, error);
-      }
-    });
-    function resolveFromAll(outValue) {
-      values[i] = outValue;
-      if (++resolved === len & !called) {
-        called = true;
-        handlers.resolve(promise, values);
-      }
-    }
-  }
-}
-},{"./INTERNAL":68,"./handlers":70,"./promise":72,"./reject":75,"./resolve":76}],70:[function(require,module,exports){
-'use strict';
-var tryCatch = require('./tryCatch');
-var resolveThenable = require('./resolveThenable');
-var states = require('./states');
-
-exports.resolve = function (self, value) {
-  var result = tryCatch(getThen, value);
-  if (result.status === 'error') {
-    return exports.reject(self, result.value);
-  }
-  var thenable = result.value;
-
-  if (thenable) {
-    resolveThenable.safely(self, thenable);
-  } else {
-    self.state = states.FULFILLED;
-    self.outcome = value;
-    var i = -1;
-    var len = self.queue.length;
-    while (++i < len) {
-      self.queue[i].callFulfilled(value);
-    }
-  }
-  return self;
-};
-exports.reject = function (self, error) {
-  self.state = states.REJECTED;
-  self.outcome = error;
-  var i = -1;
-  var len = self.queue.length;
-  while (++i < len) {
-    self.queue[i].callRejected(error);
-  }
-  return self;
-};
-
-function getThen(obj) {
-  // Make sure we only access the accessor once as required by the spec
-  var then = obj && obj.then;
-  if (obj && typeof obj === 'object' && typeof then === 'function') {
-    return function appyThen() {
-      then.apply(obj, arguments);
-    };
-  }
-}
-},{"./resolveThenable":77,"./states":78,"./tryCatch":79}],71:[function(require,module,exports){
-module.exports = exports = require('./promise');
-
-exports.resolve = require('./resolve');
-exports.reject = require('./reject');
-exports.all = require('./all');
-exports.race = require('./race');
-},{"./all":69,"./promise":72,"./race":74,"./reject":75,"./resolve":76}],72:[function(require,module,exports){
-'use strict';
-
-var unwrap = require('./unwrap');
-var INTERNAL = require('./INTERNAL');
-var resolveThenable = require('./resolveThenable');
-var states = require('./states');
-var QueueItem = require('./queueItem');
-
-module.exports = Promise;
-function Promise(resolver) {
-  if (!(this instanceof Promise)) {
-    return new Promise(resolver);
-  }
-  if (typeof resolver !== 'function') {
-    throw new TypeError('resolver must be a function');
-  }
-  this.state = states.PENDING;
-  this.queue = [];
-  this.outcome = void 0;
-  if (resolver !== INTERNAL) {
-    resolveThenable.safely(this, resolver);
-  }
-}
-
-Promise.prototype['catch'] = function (onRejected) {
-  return this.then(null, onRejected);
-};
-Promise.prototype.then = function (onFulfilled, onRejected) {
-  if (typeof onFulfilled !== 'function' && this.state === states.FULFILLED ||
-    typeof onRejected !== 'function' && this.state === states.REJECTED) {
-    return this;
-  }
-  var promise = new Promise(INTERNAL);
-
-  
-  if (this.state !== states.PENDING) {
-    var resolver = this.state === states.FULFILLED ? onFulfilled: onRejected;
-    unwrap(promise, resolver, this.outcome);
-  } else {
-    this.queue.push(new QueueItem(promise, onFulfilled, onRejected));
-  }
-
-  return promise;
-};
-
-},{"./INTERNAL":68,"./queueItem":73,"./resolveThenable":77,"./states":78,"./unwrap":80}],73:[function(require,module,exports){
-'use strict';
-var handlers = require('./handlers');
-var unwrap = require('./unwrap');
-
-module.exports = QueueItem;
-function QueueItem(promise, onFulfilled, onRejected) {
-  this.promise = promise;
-  if (typeof onFulfilled === 'function') {
-    this.onFulfilled = onFulfilled;
-    this.callFulfilled = this.otherCallFulfilled;
-  }
-  if (typeof onRejected === 'function') {
-    this.onRejected = onRejected;
-    this.callRejected = this.otherCallRejected;
-  }
-}
-QueueItem.prototype.callFulfilled = function (value) {
-  handlers.resolve(this.promise, value);
-};
-QueueItem.prototype.otherCallFulfilled = function (value) {
-  unwrap(this.promise, this.onFulfilled, value);
-};
-QueueItem.prototype.callRejected = function (value) {
-  handlers.reject(this.promise, value);
-};
-QueueItem.prototype.otherCallRejected = function (value) {
-  unwrap(this.promise, this.onRejected, value);
-};
-},{"./handlers":70,"./unwrap":80}],74:[function(require,module,exports){
-'use strict';
-var Promise = require('./promise');
-var reject = require('./reject');
-var resolve = require('./resolve');
-var INTERNAL = require('./INTERNAL');
-var handlers = require('./handlers');
-module.exports = race;
-function race(iterable) {
-  if (Object.prototype.toString.call(iterable) !== '[object Array]') {
-    return reject(new TypeError('must be an array'));
-  }
-
-  var len = iterable.length;
-  var called = false;
-  if (!len) {
-    return resolve([]);
-  }
-
-  var resolved = 0;
-  var i = -1;
-  var promise = new Promise(INTERNAL);
-  
-  while (++i < len) {
-    resolver(iterable[i]);
-  }
-  return promise;
-  function resolver(value) {
-    resolve(value).then(function (response) {
-      if (!called) {
-        called = true;
-        handlers.resolve(promise, response);
-      }
-    }, function (error) {
-      if (!called) {
-        called = true;
-        handlers.reject(promise, error);
-      }
-    });
-  }
-}
-},{"./INTERNAL":68,"./handlers":70,"./promise":72,"./reject":75,"./resolve":76}],75:[function(require,module,exports){
-'use strict';
-
-var Promise = require('./promise');
-var INTERNAL = require('./INTERNAL');
-var handlers = require('./handlers');
-module.exports = reject;
-
-function reject(reason) {
-	var promise = new Promise(INTERNAL);
-	return handlers.reject(promise, reason);
-}
-},{"./INTERNAL":68,"./handlers":70,"./promise":72}],76:[function(require,module,exports){
-'use strict';
-
-var Promise = require('./promise');
-var INTERNAL = require('./INTERNAL');
-var handlers = require('./handlers');
-module.exports = resolve;
-
-var FALSE = handlers.resolve(new Promise(INTERNAL), false);
-var NULL = handlers.resolve(new Promise(INTERNAL), null);
-var UNDEFINED = handlers.resolve(new Promise(INTERNAL), void 0);
-var ZERO = handlers.resolve(new Promise(INTERNAL), 0);
-var EMPTYSTRING = handlers.resolve(new Promise(INTERNAL), '');
-
-function resolve(value) {
-  if (value) {
-    if (value instanceof Promise) {
-      return value;
-    }
-    return handlers.resolve(new Promise(INTERNAL), value);
-  }
-  var valueType = typeof value;
-  switch (valueType) {
-    case 'boolean':
-      return FALSE;
-    case 'undefined':
-      return UNDEFINED;
-    case 'object':
-      return NULL;
-    case 'number':
-      return ZERO;
-    case 'string':
-      return EMPTYSTRING;
-  }
-}
-},{"./INTERNAL":68,"./handlers":70,"./promise":72}],77:[function(require,module,exports){
-'use strict';
-var handlers = require('./handlers');
-var tryCatch = require('./tryCatch');
-function safelyResolveThenable(self, thenable) {
-  // Either fulfill, reject or reject with error
-  var called = false;
-  function onError(value) {
-    if (called) {
-      return;
-    }
-    called = true;
-    handlers.reject(self, value);
-  }
-
-  function onSuccess(value) {
-    if (called) {
-      return;
-    }
-    called = true;
-    handlers.resolve(self, value);
-  }
-
-  function tryToUnwrap() {
-    thenable(onSuccess, onError);
-  }
-  
-  var result = tryCatch(tryToUnwrap);
-  if (result.status === 'error') {
-    onError(result.value);
-  }
-}
-exports.safely = safelyResolveThenable;
-},{"./handlers":70,"./tryCatch":79}],78:[function(require,module,exports){
-// Lazy man's symbols for states
-
-exports.REJECTED = ['REJECTED'];
-exports.FULFILLED = ['FULFILLED'];
-exports.PENDING = ['PENDING'];
-},{}],79:[function(require,module,exports){
-'use strict';
-
-module.exports = tryCatch;
-
-function tryCatch(func, value) {
-  var out = {};
-  try {
-    out.value = func(value);
-    out.status = 'success';
-  } catch (e) {
-    out.status = 'error';
-    out.value = e;
-  }
-  return out;
-}
-},{}],80:[function(require,module,exports){
-'use strict';
-
-var immediate = require('immediate');
-var handlers = require('./handlers');
-module.exports = unwrap;
-
-function unwrap(promise, func, value) {
-  immediate(function () {
-    var returnValue;
-    try {
-      returnValue = func(value);
-    } catch (e) {
-      return handlers.reject(promise, e);
-    }
-    if (returnValue === promise) {
-      handlers.reject(promise, new TypeError('Cannot resolve promise with itself'));
-    } else {
-      handlers.resolve(promise, returnValue);
-    }
-  });
-}
-},{"./handlers":70,"immediate":81}],81:[function(require,module,exports){
-'use strict';
-var types = [
-  require('./nextTick'),
-  require('./mutation.js'),
-  require('./messageChannel'),
-  require('./stateChange'),
-  require('./timeout')
-];
-var draining;
-var queue = [];
-//named nextTick for less confusing stack traces
-function nextTick() {
-  draining = true;
-  var i, oldQueue;
-  var len = queue.length;
-  while (len) {
-    oldQueue = queue;
-    queue = [];
-    i = -1;
-    while (++i < len) {
-      oldQueue[i]();
-    }
-    len = queue.length;
-  }
-  draining = false;
-}
-var scheduleDrain;
-var i = -1;
-var len = types.length;
-while (++ i < len) {
-  if (types[i] && types[i].test && types[i].test()) {
-    scheduleDrain = types[i].install(nextTick);
-    break;
-  }
-}
-module.exports = immediate;
-function immediate(task) {
-  if (queue.push(task) === 1 && !draining) {
-    scheduleDrain();
-  }
-}
-},{"./messageChannel":82,"./mutation.js":83,"./nextTick":5,"./stateChange":84,"./timeout":85}],82:[function(require,module,exports){
-(function (global){
-'use strict';
-
-exports.test = function () {
-  if (global.setImmediate) {
-    // we can only get here in IE10
-    // which doesn't handel postMessage well
-    return false;
-  }
-  return typeof global.MessageChannel !== 'undefined';
-};
-
-exports.install = function (func) {
-  var channel = new global.MessageChannel();
-  channel.port1.onmessage = func;
-  return function () {
-    channel.port2.postMessage(0);
-  };
-};
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],83:[function(require,module,exports){
-(function (global){
-'use strict';
-//based off rsvp https://github.com/tildeio/rsvp.js
-//license https://github.com/tildeio/rsvp.js/blob/master/LICENSE
-//https://github.com/tildeio/rsvp.js/blob/master/lib/rsvp/asap.js
-
-var Mutation = global.MutationObserver || global.WebKitMutationObserver;
-
-exports.test = function () {
-  return Mutation;
-};
-
-exports.install = function (handle) {
-  var called = 0;
-  var observer = new Mutation(handle);
-  var element = global.document.createTextNode('');
-  observer.observe(element, {
-    characterData: true
-  });
-  return function () {
-    element.data = (called = ++called % 2);
-  };
-};
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],84:[function(require,module,exports){
-(function (global){
-'use strict';
-
-exports.test = function () {
-  return 'document' in global && 'onreadystatechange' in global.document.createElement('script');
-};
-
-exports.install = function (handle) {
-  return function () {
-
-    // Create a <script> element; its readystatechange event will be fired asynchronously once it is inserted
-    // into the document. Do so, thus queuing up the task. Remember to clean up once it's been called.
-    var scriptEl = global.document.createElement('script');
-    scriptEl.onreadystatechange = function () {
-      handle();
-
-      scriptEl.onreadystatechange = null;
-      scriptEl.parentNode.removeChild(scriptEl);
-      scriptEl = null;
-    };
-    global.document.documentElement.appendChild(scriptEl);
-
-    return handle;
-  };
-};
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],85:[function(require,module,exports){
-'use strict';
-exports.test = function () {
-  return true;
-};
-
-exports.install = function (t) {
-  return function () {
-    setTimeout(t, 0);
-  };
-};
-},{}],86:[function(require,module,exports){
+},{}],94:[function(require,module,exports){
+arguments[4][34][0].apply(exports,arguments)
+},{"dup":34}],95:[function(require,module,exports){
+arguments[4][35][0].apply(exports,arguments)
+},{"dup":35}],96:[function(require,module,exports){
+arguments[4][36][0].apply(exports,arguments)
+},{"./INTERNAL":95,"./handlers":97,"./promise":99,"./reject":102,"./resolve":103,"dup":36}],97:[function(require,module,exports){
+arguments[4][37][0].apply(exports,arguments)
+},{"./resolveThenable":104,"./states":105,"./tryCatch":106,"dup":37}],98:[function(require,module,exports){
+arguments[4][38][0].apply(exports,arguments)
+},{"./all":96,"./promise":99,"./race":101,"./reject":102,"./resolve":103,"dup":38}],99:[function(require,module,exports){
+arguments[4][39][0].apply(exports,arguments)
+},{"./INTERNAL":95,"./queueItem":100,"./resolveThenable":104,"./states":105,"./unwrap":107,"dup":39}],100:[function(require,module,exports){
+arguments[4][40][0].apply(exports,arguments)
+},{"./handlers":97,"./unwrap":107,"dup":40}],101:[function(require,module,exports){
+arguments[4][41][0].apply(exports,arguments)
+},{"./INTERNAL":95,"./handlers":97,"./promise":99,"./reject":102,"./resolve":103,"dup":41}],102:[function(require,module,exports){
+arguments[4][42][0].apply(exports,arguments)
+},{"./INTERNAL":95,"./handlers":97,"./promise":99,"dup":42}],103:[function(require,module,exports){
+arguments[4][43][0].apply(exports,arguments)
+},{"./INTERNAL":95,"./handlers":97,"./promise":99,"dup":43}],104:[function(require,module,exports){
+arguments[4][44][0].apply(exports,arguments)
+},{"./handlers":97,"./tryCatch":106,"dup":44}],105:[function(require,module,exports){
+arguments[4][45][0].apply(exports,arguments)
+},{"dup":45}],106:[function(require,module,exports){
+arguments[4][46][0].apply(exports,arguments)
+},{"dup":46}],107:[function(require,module,exports){
+arguments[4][47][0].apply(exports,arguments)
+},{"./handlers":97,"dup":47,"immediate":108}],108:[function(require,module,exports){
+arguments[4][48][0].apply(exports,arguments)
+},{"./messageChannel":109,"./mutation.js":110,"./nextTick":6,"./stateChange":111,"./timeout":112,"dup":48}],109:[function(require,module,exports){
+arguments[4][49][0].apply(exports,arguments)
+},{"dup":49}],110:[function(require,module,exports){
+arguments[4][50][0].apply(exports,arguments)
+},{"dup":50}],111:[function(require,module,exports){
+arguments[4][51][0].apply(exports,arguments)
+},{"dup":51}],112:[function(require,module,exports){
+arguments[4][52][0].apply(exports,arguments)
+},{"dup":52}],113:[function(require,module,exports){
 'use strict';
 
 var MIN_MAGNITUDE = -324; // verified by -Number.MIN_VALUE
@@ -31772,7 +32955,7 @@ function numToIndexableString(num) {
   return result;
 }
 
-},{"./utils":87}],87:[function(require,module,exports){
+},{"./utils":114}],114:[function(require,module,exports){
 'use strict';
 
 function pad(str, padWith, upToLength) {
@@ -31843,7 +33026,7 @@ exports.intToDecimalForm = function (int) {
 
   return result;
 };
-},{}],88:[function(require,module,exports){
+},{}],115:[function(require,module,exports){
 'use strict';
 exports.Map = LazyMap; // TODO: use ES6 map
 exports.Set = LazySet; // TODO: use ES6 set
@@ -31915,188 +33098,9 @@ LazySet.prototype.delete = function (key) {
   return this.store.delete(key);
 };
 
-},{}],89:[function(require,module,exports){
-"use strict";
-
-// Extends method
-// (taken from http://code.jquery.com/jquery-1.9.0.js)
-// Populate the class2type map
-var class2type = {};
-
-var types = [
-  "Boolean", "Number", "String", "Function", "Array",
-  "Date", "RegExp", "Object", "Error"
-];
-for (var i = 0; i < types.length; i++) {
-  var typename = types[i];
-  class2type["[object " + typename + "]"] = typename.toLowerCase();
-}
-
-var core_toString = class2type.toString;
-var core_hasOwn = class2type.hasOwnProperty;
-
-function type(obj) {
-  if (obj === null) {
-    return String(obj);
-  }
-  return typeof obj === "object" || typeof obj === "function" ?
-    class2type[core_toString.call(obj)] || "object" :
-    typeof obj;
-}
-
-function isWindow(obj) {
-  return obj !== null && obj === obj.window;
-}
-
-function isPlainObject(obj) {
-  // Must be an Object.
-  // Because of IE, we also have to check the presence of
-  // the constructor property.
-  // Make sure that DOM nodes and window objects don't pass through, as well
-  if (!obj || type(obj) !== "object" || obj.nodeType || isWindow(obj)) {
-    return false;
-  }
-
-  try {
-    // Not own constructor property must be Object
-    if (obj.constructor &&
-      !core_hasOwn.call(obj, "constructor") &&
-      !core_hasOwn.call(obj.constructor.prototype, "isPrototypeOf")) {
-      return false;
-    }
-  } catch ( e ) {
-    // IE8,9 Will throw exceptions on certain host objects #9897
-    return false;
-  }
-
-  // Own properties are enumerated firstly, so to speed up,
-  // if last one is own, then all properties are own.
-  var key;
-  for (key in obj) {}
-
-  return key === undefined || core_hasOwn.call(obj, key);
-}
-
-
-function isFunction(obj) {
-  return type(obj) === "function";
-}
-
-var isArray = Array.isArray || function (obj) {
-  return type(obj) === "array";
-};
-
-function extend() {
-  // originally extend() was recursive, but this ended up giving us
-  // "call stack exceeded", so it's been unrolled to use a literal stack
-  // (see https://github.com/pouchdb/pouchdb/issues/2543)
-  var stack = [];
-  var i = -1;
-  var len = arguments.length;
-  var args = new Array(len);
-  while (++i < len) {
-    args[i] = arguments[i];
-  }
-  var container = {};
-  stack.push({args: args, result: {container: container, key: 'key'}});
-  var next;
-  while ((next = stack.pop())) {
-    extendInner(stack, next.args, next.result);
-  }
-  return container.key;
-}
-
-function extendInner(stack, args, result) {
-  var options, name, src, copy, copyIsArray, clone,
-    target = args[0] || {},
-    i = 1,
-    length = args.length,
-    deep = false,
-    numericStringRegex = /\d+/,
-    optionsIsArray;
-
-  // Handle a deep copy situation
-  if (typeof target === "boolean") {
-    deep = target;
-    target = args[1] || {};
-    // skip the boolean and the target
-    i = 2;
-  }
-
-  // Handle case when target is a string or something (possible in deep copy)
-  if (typeof target !== "object" && !isFunction(target)) {
-    target = {};
-  }
-
-  // extend jQuery itself if only one argument is passed
-  if (length === i) {
-    /* jshint validthis: true */
-    target = this;
-    --i;
-  }
-
-  for (; i < length; i++) {
-    // Only deal with non-null/undefined values
-    if ((options = args[i]) != null) {
-      optionsIsArray = isArray(options);
-      // Extend the base object
-      for (name in options) {
-        //if (options.hasOwnProperty(name)) {
-        if (!(name in Object.prototype)) {
-          if (optionsIsArray && !numericStringRegex.test(name)) {
-            continue;
-          }
-
-          src = target[name];
-          copy = options[name];
-
-          // Prevent never-ending loop
-          if (target === copy) {
-            continue;
-          }
-
-          // Recurse if we're merging plain objects or arrays
-          if (deep && copy && (isPlainObject(copy) ||
-              (copyIsArray = isArray(copy)))) {
-            if (copyIsArray) {
-              copyIsArray = false;
-              clone = src && isArray(src) ? src : [];
-
-            } else {
-              clone = src && isPlainObject(src) ? src : {};
-            }
-
-            // Never move original objects, clone them
-            stack.push({
-              args: [deep, clone, copy],
-              result: {
-                container: target,
-                key: name
-              }
-            });
-
-          // Don't bring in undefined values
-          } else if (copy !== undefined) {
-            if (!(isArray(options) && isFunction(copy))) {
-              target[name] = copy;
-            }
-          }
-        }
-      }
-    }
-  }
-
-  // "Return" the modified object by setting the key
-  // on the given container
-  result.container[result.key] = target;
-}
-
-
-module.exports = extend;
-
-
-
-},{}],90:[function(require,module,exports){
+},{}],116:[function(require,module,exports){
+arguments[4][53][0].apply(exports,arguments)
+},{"dup":53}],117:[function(require,module,exports){
 'use strict';
 
 var upsert = require('./upsert');
@@ -32175,7 +33179,7 @@ module.exports = function (opts) {
   });
 };
 
-},{"./upsert":94,"./utils":95}],91:[function(require,module,exports){
+},{"./upsert":121,"./utils":122}],118:[function(require,module,exports){
 'use strict';
 
 module.exports = function (func, emit, sum, log, isArray, toJSON) {
@@ -32183,7 +33187,7 @@ module.exports = function (func, emit, sum, log, isArray, toJSON) {
   return eval("'use strict'; (" + func.replace(/;\s*$/, "") + ");");
 };
 
-},{}],92:[function(require,module,exports){
+},{}],119:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -33031,7 +34035,7 @@ function NotFoundError(message) {
 utils.inherits(NotFoundError, Error);
 
 }).call(this,require('_process'))
-},{"./create-view":90,"./evalfunc":91,"./taskqueue":93,"./utils":95,"_process":7,"pouchdb-collate":86}],93:[function(require,module,exports){
+},{"./create-view":117,"./evalfunc":118,"./taskqueue":120,"./utils":122,"_process":8,"pouchdb-collate":113}],120:[function(require,module,exports){
 'use strict';
 /*
  * Simple task queue to sequentialize actions. Assumes callbacks will eventually fire (once).
@@ -33056,7 +34060,7 @@ TaskQueue.prototype.finish = function () {
 
 module.exports = TaskQueue;
 
-},{"./utils":95}],94:[function(require,module,exports){
+},{"./utils":122}],121:[function(require,module,exports){
 'use strict';
 
 var upsert = require('pouchdb-upsert').upsert;
@@ -33064,7 +34068,7 @@ var upsert = require('pouchdb-upsert').upsert;
 module.exports = function (db, doc, diffFun) {
   return upsert.apply(db, [doc, diffFun]);
 };
-},{"pouchdb-upsert":96}],95:[function(require,module,exports){
+},{"pouchdb-upsert":123}],122:[function(require,module,exports){
 (function (process,global){
 'use strict';
 /* istanbul ignore if */
@@ -33173,7 +34177,7 @@ exports.MD5 = function (string) {
   }
 };
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":7,"argsarray":63,"crypto":5,"inherits":67,"lie":71,"pouchdb-extend":89,"spark-md5":97}],96:[function(require,module,exports){
+},{"_process":8,"argsarray":90,"crypto":6,"inherits":94,"lie":98,"pouchdb-extend":116,"spark-md5":124}],123:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -33271,7 +34275,7 @@ if (typeof window !== 'undefined' && window.PouchDB) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"lie":71}],97:[function(require,module,exports){
+},{"lie":98}],124:[function(require,module,exports){
 /*jshint bitwise:false*/
 /*global unescape*/
 
@@ -33872,7 +34876,7 @@ if (typeof window !== 'undefined' && window.PouchDB) {
     return SparkMD5;
 }));
 
-},{}],98:[function(require,module,exports){
+},{}],125:[function(require,module,exports){
 'use strict';
 
 /**
@@ -34047,7 +35051,7 @@ exports.parse = function (str) {
   }
 };
 
-},{}],99:[function(require,module,exports){
+},{}],126:[function(require,module,exports){
 //     Underscore.js 1.7.0
 //     http://underscorejs.org
 //     (c) 2009-2014 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -35464,7 +36468,7 @@ exports.parse = function (str) {
   }
 }.call(this));
 
-},{}],100:[function(require,module,exports){
+},{}],127:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 /*global app, me, $*/
@@ -35555,7 +36559,7 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],101:[function(require,module,exports){
+},{}],128:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -35586,7 +36590,7 @@ module.exports = function (title, text, yesButtonText, noButtonText) {
     $modal.modal(options);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"underscore":99}],102:[function(require,module,exports){
+},{"underscore":126}],129:[function(require,module,exports){
 /**
  * Hier werden zentral alle Konfigurationsparameter gesammelt
  */
@@ -35604,7 +36608,7 @@ config.couch.userName = couch_passfile.user;
 config.couch.passWord = couch_passfile.pass;
 
 module.exports = config;
-},{"../../couchpass.json":2}],103:[function(require,module,exports){
+},{"../../couchpass.json":2}],130:[function(require,module,exports){
 (function (global){
 /*
  * erhält eine Hierarchie
@@ -35686,7 +36690,7 @@ module.exports = function (object, hierarchy) {
     return newObject;
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./guid":124,"./nav/createChildHierarchiesOfObject":127,"./nav/createTreeNodeObject":130,"dateformat":8,"underscore":99}],104:[function(require,module,exports){
+},{"./guid":151,"./nav/createChildHierarchiesOfObject":154,"./nav/createTreeNodeObject":157,"dateformat":9,"underscore":126}],131:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -35720,7 +36724,7 @@ module.exports = function (hierarchyId, parentId) {
         console.log('error: no parent hierarchy found for hierarchy with id = ', hierarchyId);
     }
 };
-},{"./createNewObject":103,"./getHierarchy":122,"underscore":99}],105:[function(require,module,exports){
+},{"./createNewObject":130,"./getHierarchy":149,"underscore":126}],132:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -35746,7 +36750,7 @@ module.exports = function (objectId) {
         console.log('error: no hierarchy found for object with id = ', objectId);
     }
 };
-},{"./createNewObject":103,"./getHierarchy":122,"./getObject":123}],106:[function(require,module,exports){
+},{"./createNewObject":130,"./getHierarchy":149,"./getObject":150}],133:[function(require,module,exports){
 (function (global){
 /*
  * gets a node from the tree
@@ -35778,7 +36782,7 @@ module.exports = function ($node) {
         parentNodeId,
         objectsToDelete = [],
         childrenToDelete,
-        db              = new PouchDB('oi', pouchDbOptions);
+        db              = new PouchDB('http://localhost:5984/oi', pouchDbOptions);
 
     // ermitteln, wieviele child-Objekte betroffen werden
     childrenToDelete = _.map(nodeChildren, function (child) {
@@ -35850,7 +36854,7 @@ module.exports = function ($node) {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./askYesNoWithModal":101,"./deleteObjectFromModel":107,"./getObject":123,"./pouchDbOptions":140,"./tellWithModal":145,"pouchdb":55,"underscore":99}],107:[function(require,module,exports){
+},{"./askYesNoWithModal":128,"./deleteObjectFromModel":134,"./getObject":150,"./pouchDbOptions":172,"./tellWithModal":177,"pouchdb":82,"underscore":126}],134:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -35864,7 +36868,7 @@ module.exports = function (objectId) {
         window.oi.objects = _.without(window.oi.objects, object);
     }
 };
-},{"underscore":99}],108:[function(require,module,exports){
+},{"underscore":126}],135:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -35882,7 +36886,7 @@ module.exports = function () {
     saveObjectValue(id, field, value);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../form/getValueAfterChange":117,"../form/saveObjectValue":121}],109:[function(require,module,exports){
+},{"../form/getValueAfterChange":144,"../form/saveObjectValue":148}],136:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -35895,7 +36899,7 @@ module.exports = function () {
     deleteObjectAndChildren(node);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../deleteObjectAndChildren":106}],110:[function(require,module,exports){
+},{"../deleteObjectAndChildren":133}],137:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -35922,7 +36926,7 @@ module.exports = function () {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../createNewObjectFromHierarchy":104,"../createNewObjectFromObject":105}],111:[function(require,module,exports){
+},{"../createNewObjectFromHierarchy":131,"../createNewObjectFromObject":132}],138:[function(require,module,exports){
 (function (global){
 // klickt man in der Mobilansicht des Menus auf den Titel, soll es schliessen
 
@@ -35937,7 +36941,7 @@ module.exports = function () {
     $('.navbar').find('.navbar-collapse').collapse('hide');
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],112:[function(require,module,exports){
+},{}],139:[function(require,module,exports){
 (function (global){
 // wählt man in der Mobilansicht einen Menu-Eintrag, soll das Menu schliessen
 
@@ -35952,7 +36956,7 @@ module.exports = function () {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],113:[function(require,module,exports){
+},{}],140:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -35968,7 +36972,7 @@ module.exports = function () {
     $separator.css('height', $content.height() + 40);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],114:[function(require,module,exports){
+},{}],141:[function(require,module,exports){
 /*
  * erstellt aus einer possibleValues einen Array von Objekten
  * mit value und checked
@@ -36041,7 +37045,7 @@ module.exports = function (possibleValues, setValues, type) {
         return valueObject;
     });
 };
-},{"underscore":99}],115:[function(require,module,exports){
+},{"underscore":126}],142:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus: true, white: true*/
 'use strict';
 
@@ -36058,7 +37062,7 @@ module.exports = function (feldWert) {
     // object nicht umwandeln. Man muss beim Vergleichen unterscheiden können, ob es ein Object war
     return feldWert;
 };
-},{"./myTypeOf":119}],116:[function(require,module,exports){
+},{"./myTypeOf":146}],143:[function(require,module,exports){
 // setzt die Höhe von textareas so, dass der Text genau rein passt
 
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus: true*/
@@ -36110,7 +37114,7 @@ module.exports = function (id, maxHeight) {
         text.style.height = adjustedHeight + 'px';
     }
 };
-},{}],117:[function(require,module,exports){
+},{}],144:[function(require,module,exports){
 (function (global){
 /*
  * holt sich nach einer Änderung in einem Feld die Daten
@@ -36155,7 +37159,7 @@ module.exports = function (that) {
     return value;
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./convertToCorrectType":115,"underscore":99}],118:[function(require,module,exports){
+},{"./convertToCorrectType":142,"underscore":126}],145:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -36266,7 +37270,7 @@ module.exports = function (id, type) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../../templates/checkbox":146,"../../../templates/checkboxGroup":147,"../../../templates/formButtonToolbar":148,"../../../templates/input":149,"../../../templates/optionGroup":150,"../../../templates/select":151,"../../../templates/textarea":152,"../getHierarchy":122,"../getObject":123,"./addCheckedToValueList":114,"./fitTextareaToContent":116,"./positionFormBtngroup":120,"underscore":99}],119:[function(require,module,exports){
+},{"../../../templates/checkbox":179,"../../../templates/checkboxGroup":180,"../../../templates/formButtonToolbar":181,"../../../templates/input":182,"../../../templates/optionGroup":183,"../../../templates/select":184,"../../../templates/textarea":185,"../getHierarchy":149,"../getObject":150,"./addCheckedToValueList":141,"./fitTextareaToContent":143,"./positionFormBtngroup":147,"underscore":126}],146:[function(require,module,exports){
 // Hilfsfunktion, die typeof ersetzt und ergänzt
 // typeof gibt bei input-Feldern immer String zurück!
 
@@ -36307,7 +37311,7 @@ module.exports = function (wert) {
     if (wert === undefined)          { return 'undefined'; }
     if (typeof wert === 'function')  { return 'function'; }
 };
-},{}],120:[function(require,module,exports){
+},{}],147:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus: true, white: true*/
 'use strict';
@@ -36318,7 +37322,7 @@ module.exports = function () {
     $('#form').find('.btn-group').css('margin-left', $('#formContent').width() - 120);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],121:[function(require,module,exports){
+},{}],148:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -36334,7 +37338,7 @@ var $                 = (typeof window !== "undefined" ? window.$ : typeof globa
 module.exports = function (id, field, value) {
     var object,
         lastEdited = {},
-        db         = new PouchDB('oi', pouchDbOptions);
+        db         = new PouchDB('http://localhost:5984/oi', pouchDbOptions);
 
     // get data for object
     object              = getObject(id);
@@ -36371,7 +37375,7 @@ module.exports = function (id, field, value) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../getObject":123,"../nav/getLabelForObject":134,"../pouchDbOptions":140,"dateformat":8,"pouchdb":55,"underscore":99}],122:[function(require,module,exports){
+},{"../getObject":150,"../nav/getLabelForObject":161,"../pouchDbOptions":172,"dateformat":9,"pouchdb":82,"underscore":126}],149:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -36385,7 +37389,7 @@ module.exports = function (hierarchyId) {
 
     return hierarchy || null;
 };
-},{"underscore":99}],123:[function(require,module,exports){
+},{"underscore":126}],150:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -36399,7 +37403,7 @@ module.exports = function (id) {
 
     return object || null;
 };
-},{"underscore":99}],124:[function(require,module,exports){
+},{"underscore":126}],151:[function(require,module,exports){
 /*
 * generiert eine uuid
 * Quelle: http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
@@ -36418,7 +37422,7 @@ module.exports = function () {
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
         s4() + '-' + s4() + s4() + s4();
 };
-},{}],125:[function(require,module,exports){
+},{}],152:[function(require,module,exports){
 (function (global){
 /*
  * passt model und wenn nötig die ui an,
@@ -36466,7 +37470,7 @@ module.exports = function (change) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./form/initiateForm":118,"./nav/getLabelForObject":134,"underscore":99}],126:[function(require,module,exports){
+},{"./form/initiateForm":145,"./nav/getLabelForObject":161,"underscore":126}],153:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -36542,7 +37546,7 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./alsoResizeReverse":100,"./form/positionFormBtngroup":120,"./setWidthOfTabs":141,"./showTab":143}],127:[function(require,module,exports){
+},{"./alsoResizeReverse":127,"./form/positionFormBtngroup":147,"./setWidthOfTabs":173,"./showTab":175}],154:[function(require,module,exports){
 // creates descendant hierarchical objects of single objects
 // adds them to an array
 
@@ -36579,7 +37583,7 @@ module.exports = function (object) {
     }
     return [];
 };
-},{"underscore":99}],128:[function(require,module,exports){
+},{"underscore":126}],155:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -36589,7 +37593,7 @@ var PouchDB                    = require('pouchdb'),
 
 module.exports = function () {
     var databaseId = {},
-        db         = new PouchDB('oi', pouchDbOptions);
+        db         = new PouchDB('http://localhost:5984/oi', pouchDbOptions);
 
     db.get('_local/databaseId').then(function (response) {
         window.oi.databaseId = response.databaseId;
@@ -36610,7 +37614,7 @@ module.exports = function () {
     });
 
 };
-},{"../pouchDbOptions":140,"./initiateForeignChangeQuery":136,"pouchdb":55}],129:[function(require,module,exports){
+},{"../pouchDbOptions":172,"./initiateForeignChangeQuery":164,"pouchdb":82}],156:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -36657,7 +37661,7 @@ module.exports = function () {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../form/initiateForm":118,"./generateDataForTree":133,"./treeContextmenuItems":139,"jstree":26}],130:[function(require,module,exports){
+},{"../form/initiateForm":145,"./generateDataForTree":160,"./treeContextmenuItems":171,"jstree":27}],157:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -36690,7 +37694,7 @@ module.exports = function (object) {
 
     return jstreeObject;
 };
-},{"./getLabelForObject":134,"underscore":99}],131:[function(require,module,exports){
+},{"./getLabelForObject":161,"underscore":126}],158:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -36703,7 +37707,7 @@ module.exports = function (object) {
     jstreeObject.parent = '#';
     return jstreeObject;
 };
-},{"./createTreeNodeObject":130}],132:[function(require,module,exports){
+},{"./createTreeNodeObject":157}],159:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -36729,7 +37733,7 @@ module.exports = function () {
         }
     };
 };
-},{}],133:[function(require,module,exports){
+},{}],160:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -36763,7 +37767,7 @@ module.exports = function () {
 
     return _.union(objectsData, childHierarchiesData);
 };
-},{"./createChildHierarchiesOfObject":127,"./createTreeNodeObject":130,"./createTreeNodeRootObject":131,"./getLabelForObject":134,"underscore":99}],134:[function(require,module,exports){
+},{"./createChildHierarchiesOfObject":154,"./createTreeNodeObject":157,"./createTreeNodeRootObject":158,"./getLabelForObject":161,"underscore":126}],161:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -36794,7 +37798,33 @@ module.exports = function (object, correspondingHierarchy) {
     label      = '<strong>' + labelValue + '</strong>';
     return label;
 };
-},{"underscore":99}],135:[function(require,module,exports){
+},{"underscore":126}],162:[function(require,module,exports){
+/*jslint node: true, browser: true, nomen: true, todo: true */
+'use strict';
+
+var PouchDB         = require('pouchdb'),
+    pouchDbOptions  = require('../pouchDbOptions'),
+    openSigninModal = require('./openSigninModal'),
+    initiateNav     = require('./initiateNav'),
+    tellWithModal   = require('../tellWithModal');
+
+module.exports = function () {
+    var db = new PouchDB('http://localhost:5984/oi', pouchDbOptions);
+
+    db.get('_local/login_name').then(function (response) {
+        window.oi.loginName = response.name;
+        initiateNav();
+    }).catch(function (error) {
+        if (error.status === 404) {
+            openSigninModal();
+        } else {
+            console.log('error retrieving login: ', error);
+            openSigninModal();
+        }
+    });
+
+};
+},{"../pouchDbOptions":172,"../tellWithModal":177,"./initiateNav":165,"./openSigninModal":167,"pouchdb":82}],163:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -36804,7 +37834,7 @@ var PouchDB                     = require('pouchdb'),
     pouchDbOptions              = require('../pouchDbOptions');
 
 module.exports = function () {
-    var db = new PouchDB('oi', pouchDbOptions);
+    var db = new PouchDB('http://localhost:5984/oi', pouchDbOptions);
 
     // TODO: filter only the users documents
     // TODO: watch changes to hierarchies
@@ -36817,7 +37847,7 @@ module.exports = function () {
         key: 'object'
     }).on('change', handleExternalObjectChanges);
 };
-},{"../handleExternalObjectChanges":125,"../pouchDbOptions":140,"./foreignChangedIndex":132,"pouchdb":55}],136:[function(require,module,exports){
+},{"../handleExternalObjectChanges":152,"../pouchDbOptions":172,"./foreignChangedIndex":159,"pouchdb":82}],164:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -36828,7 +37858,7 @@ var _                    = require('underscore'),
     pouchDbOptions       = require('../pouchDbOptions');
 
 module.exports = function () {
-    var db = new PouchDB('oi', pouchDbOptions);
+    var db = new PouchDB('http://localhost:5984/oi', pouchDbOptions);
 
     // TODO: get only the users data
     db.query('foreign_changed', {include_docs: true}).then(function () {
@@ -36852,7 +37882,7 @@ module.exports = function () {
         }
     });
 };
-},{"../pouchDbOptions":140,"./foreignChangedIndex":132,"./initiateChangeStream":135,"pouchdb":55,"underscore":99}],137:[function(require,module,exports){
+},{"../pouchDbOptions":172,"./foreignChangedIndex":159,"./initiateChangeStream":163,"pouchdb":82,"underscore":126}],165:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -36868,7 +37898,7 @@ var $                   = (typeof window !== "undefined" ? window.$ : typeof glo
     objectsByTypeIndex  = require('./objectsByTypeIndex');
 
 module.exports = function () {
-    var db = new PouchDB('oi', pouchDbOptions);
+    var db = new PouchDB('http://localhost:5984/oi', pouchDbOptions);
 
     // expose pouchdb to pouchdb-fauxton
     window.PouchDB = PouchDB;
@@ -36953,7 +37983,7 @@ module.exports = function () {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../pouchDbOptions":140,"../syncPouch":144,"./createDatabaseId":128,"./createTree":129,"./objectsByTypeIndex":138,"async":3,"pouchdb":55,"underscore":99}],138:[function(require,module,exports){
+},{"../pouchDbOptions":172,"../syncPouch":176,"./createDatabaseId":155,"./createTree":156,"./objectsByTypeIndex":166,"async":3,"pouchdb":82,"underscore":126}],166:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -36972,7 +38002,172 @@ module.exports = function () {
         }
     };
 };
-},{}],139:[function(require,module,exports){
+},{}],167:[function(require,module,exports){
+(function (global){
+/*jslint node: true, browser: true, nomen: true, todo: true */
+'use strict';
+
+var $ = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null);
+
+module.exports = function () {
+    // modal öffnen
+    // so, dass der Benutzer nicht daran vorbeikommt
+    $('#signinWithModal').modal({backdrop: 'static', keyboard: false});
+    $('#signinWithModal').find('.well').validator({
+        errors: {
+            delay: 1000,
+            match: 'stimmt nicht überein'
+        }
+    });
+};
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],168:[function(require,module,exports){
+(function (global){
+/*jslint node: true, browser: true, nomen: true, todo: true */
+'use strict';
+
+var $              = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+    PouchDB        = require('pouchdb'),
+    pouchDbOptions = require('../pouchDbOptions'),
+    tellWithModal  = require('../tellWithModal'),
+    initiateNav    = require('./initiateNav');
+
+module.exports = function (signindata) {
+    var db = new PouchDB('http://localhost:5984/oi', pouchDbOptions);
+
+    PouchDB.plugin(require('pouchdb-authentication'));
+
+    // expose pouchdb to pouchdb-fauxton
+    window.PouchDB = PouchDB;
+
+    console.log('signindata: ', signindata);
+
+    // signin
+    db.login(signindata.name, signindata.password).then(function (response) {
+
+        console.log('response of db.login: ', response);
+
+        window.oi.loginName = signindata.name;
+        // name in DB speichern
+        // nachher auslagern, da auch nach signup
+        if (signindata.remember) {
+            db.put(signindata.name, '_local/login_name');
+        }
+        initiateNav();
+        $('#signinWithModal').modal('hide');
+    }).catch(function (error) {
+
+        console.log('error: ', error);
+
+        if (error.name === 'unauthorized') {
+            // name or password incorrect
+            tellWithModal('Anmeldung gescheitert', 'Sie haben Email und/oder Passwort falsch eingegeben. Oder müssen Sie ein Konto erstellen?');
+        } else {
+            // cosmic rays, a meteor, etc.
+            tellWithModal('Anmeldung gescheitert', 'Oh je. Die Anwendung ist offenbar schlecht gelaunt. Bitte versuchen Sie es nochmals. Gemeldeter Fehler: ' + JSON.stringify(error));
+        }
+    });
+};
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../pouchDbOptions":172,"../tellWithModal":177,"./initiateNav":165,"pouchdb":82,"pouchdb-authentication":31}],169:[function(require,module,exports){
+(function (global){
+/*jslint node: true, browser: true, nomen: true, todo: true */
+'use strict';
+
+var $             = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+    signIn        = require('./signIn'),
+    signUp        = require('./signUp'),
+    tellWithModal = require('../tellWithModal'),
+    validateEmail = require('../validateEmail');
+
+function validSignin(signindata) {
+    var validName,
+        validPassword,
+        valid;
+
+    validName     = signindata.name && validateEmail(signindata.name) ? true : false;
+    validPassword = signindata.password                               ? true : false;
+    valid         = validName && validPassword                        ? true : false;
+
+    return valid;
+}
+
+function validSignup(signupdata) {
+    // name and password were validated. check rest
+    // TODO: now only password match. Add more later
+    var passwordsMatch,
+        valid;
+
+    passwordsMatch = signupdata.password === signupdata.password2 ? true : false;
+    valid          = passwordsMatch;
+
+    return valid;
+}
+
+module.exports = function () {
+    var signindata = {},
+        signup     = $('#signinWithModalSignupCheckbox').is(':checked');
+
+    signindata.name      = $('#signinWithModalEmail').val();
+    signindata.password  = $('#signinWithModalPassword').val();
+    signindata.password2 = $('#signinWithModalPassword2').val();
+    signindata.remember  = $('#signinWithModalRemember').is(':checked');
+
+    // Eingabe von Name und Passwort validieren
+    if (!validSignin(signindata)) {
+        tellWithModal('Anmeldung gescheitert', 'Bitte prüfen Sie Ihre Eingaben');
+        return;
+    }
+
+    // signin oder signup?
+    if (signup) {
+        // Eigabe der Metadaten validieren
+        if (!validSignup(signindata)) {
+            tellWithModal('Anmeldung gescheitert', 'Bitte prüfen Sie Ihre Eingaben');
+            return;
+        }
+        signUp(signindata);
+        return;
+    }
+    signIn(signindata);
+};
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../tellWithModal":177,"../validateEmail":178,"./signIn":168,"./signUp":170}],170:[function(require,module,exports){
+/*jslint node: true, browser: true, nomen: true, todo: true */
+'use strict';
+
+var PouchDB        = require('pouchdb'),
+    pouchDbOptions = require('../pouchDbOptions'),
+    signIn         = require('./signIn'),
+    tellWithModal  = require('../tellWithModal');
+
+module.exports = function (signindata) {
+    var db = new PouchDB('http://localhost:5984/oi', pouchDbOptions);
+
+    PouchDB.plugin(require('pouchdb-authentication'));
+
+    // expose pouchdb to pouchdb-fauxton
+    window.PouchDB = PouchDB;
+
+    // signup, then call signin
+    db.signup(signindata.name, signindata.password, {
+        metadata: {
+            // bei signup weitere Felder ausfüllen lassen
+            // genug, um eine Rechnung schicken zu können?
+            /*Nachname: 'Tester',
+            Vorname: 'Test',
+            Strasse: 'x-str 40',
+            PLZ: 8000,
+            Ort: 'ort'*/
+        }
+    }).then(function (response) {
+        signIn(signindata);
+    }).catch(function (error) {
+        // Fehler melden
+        tellWithModal('Das Konto konnte nicht erstellt werden', 'Die Datenbank meldete: ' + error);
+    });
+};
+},{"../pouchDbOptions":172,"../tellWithModal":177,"./signIn":168,"pouchdb":82,"pouchdb-authentication":31}],171:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -37009,7 +38204,7 @@ module.exports = function ($node) {
     };
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../createNewObjectFromHierarchy":104,"../createNewObjectFromObject":105,"../deleteObjectAndChildren":106,"underscore":99}],140:[function(require,module,exports){
+},{"../createNewObjectFromHierarchy":131,"../createNewObjectFromObject":132,"../deleteObjectAndChildren":133,"underscore":126}],172:[function(require,module,exports){
 /*
  * hier können Optionen für die pouch gesetzt werden,
  * so, dass sie nur an einem Ort erfasst sind
@@ -37025,7 +38220,7 @@ module.exports = function () {
         'ajax': {'cache': false}
     };
 };
-},{}],141:[function(require,module,exports){
+},{}],173:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus */
 'use strict';
@@ -37072,7 +38267,7 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./form/positionFormBtngroup":120,"underscore":99}],142:[function(require,module,exports){
+},{"./form/positionFormBtngroup":147,"underscore":126}],174:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -37084,27 +38279,46 @@ var $                     = (typeof window !== "undefined" ? window.$ : typeof g
     onClickFormDelete     = require('./event/onClickFormDelete'),
     onChangeElement       = require('./event/onChangeElement'),
     onClickNavbarCollapse = require('./event/onClickNavbarCollapse'),
-    onClickNavbarBrand    = require('./event/onClickNavbarBrand');
+    onClickNavbarBrand    = require('./event/onClickNavbarBrand'),
+    signInOrUp            = require('./nav/signInOrUp');
 
 module.exports = function () {
     // scroll event doesn't buble up, so it cant be delegated from # to .
     $('.js-tab')
-        .on('scroll',                                 onScrollTab);
-
-    $('#form')
-        .on('click',       '#formNew',                onClickFormNew)
-        .on('click',       '#formDelete',             onClickFormDelete);
-
-    $('#formContent')
-        .on('keyup focus', 'textarea',                fitTextareaToContent)
-        .on('change',      'input, textarea, select', onChangeElement);
+        .on('scroll',                                      onScrollTab);
 
     $('body')
-        .on('click.nav',   '.navbar-collapse.in',     onClickNavbarCollapse)
-        .on('click.nav',   '.navbar-brand',           onClickNavbarBrand);
+        .on('click', '#signinWithModalSignupCheckbox', function () {
+            if ($(this).is(':checked')) {
+                $('#signinWithModalPassword2').parent().show();
+                $('#signinWithModalSigninButton').text('Konto erstellen und anmelden');
+            } else {
+                $('#signinWithModalPassword2').parent().hide();
+                $('#signinWithModalSigninButton').text('anmelden');
+            }
+        })
+        .on('click',       '#signinWithModalSigninButton', signInOrUp);
+
+    $('#signinWithModal').on('keypress', function (event) {
+        if (event.which === 13) {
+            $('#signinWithModalSigninButton').trigger('click');
+        }
+    });
+
+    $('#form')
+        .on('click',       '#formNew',                     onClickFormNew)
+        .on('click',       '#formDelete',                  onClickFormDelete);
+
+    $('#formContent')
+        .on('keyup focus', 'textarea',                     fitTextareaToContent)
+        .on('change',      'input, textarea, select',      onChangeElement);
+
+    $('body')
+        .on('click.nav',   '.navbar-collapse.in',          onClickNavbarCollapse)
+        .on('click.nav',   '.navbar-brand',                onClickNavbarBrand);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./event/onChangeElement":108,"./event/onClickFormDelete":109,"./event/onClickFormNew":110,"./event/onClickNavbarBrand":111,"./event/onClickNavbarCollapse":112,"./event/onScrollTab":113,"./form/fitTextareaToContent":116}],143:[function(require,module,exports){
+},{"./event/onChangeElement":135,"./event/onClickFormDelete":136,"./event/onClickFormNew":137,"./event/onClickNavbarBrand":138,"./event/onClickNavbarCollapse":139,"./event/onScrollTab":140,"./form/fitTextareaToContent":143,"./nav/signInOrUp":169}],175:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -37129,7 +38343,7 @@ module.exports = function (tab) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],144:[function(require,module,exports){
+},{}],176:[function(require,module,exports){
 /**
  * synchronisiert die Daten aus einer CouchDB in PouchDB
  */
@@ -37147,7 +38361,7 @@ var PouchDB        = require('pouchdb'),
     remoteCouch    = 'http://' + couchUser + ':' + couchPassword + '@' + couchUrl + '/' + couchName;
 
 module.exports = function () {
-    var db = new PouchDB('oi', pouchDbOptions);
+    var db = new PouchDB('http://localhost:5984/oi', pouchDbOptions);
 
     function syncError() {
         console.log('error syncing');
@@ -37165,7 +38379,7 @@ module.exports = function () {
     if (remoteCouch) { sync(); }
 };
 
-},{"./configuration":102,"./pouchDbOptions":140,"pouchdb":55}],145:[function(require,module,exports){
+},{"./configuration":129,"./pouchDbOptions":172,"pouchdb":82}],177:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -37188,7 +38402,20 @@ module.exports = function (title, text) {
     $modal.modal(options);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],146:[function(require,module,exports){
+},{}],178:[function(require,module,exports){
+/*
+ * prüft, ob ein String eine email-Adressen sein könnte
+ * Quelle: http://stackoverflow.com/questions/46155/validate-email-address-in-javascript
+ */
+
+/*jslint node: true, browser: true, nomen: true, todo: true */
+'use strict';
+
+module.exports = function (string) {
+    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(string);
+};
+},{}],179:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, helper, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing, functionType="function";
   return "<div class=\"form-group\">\r\n    <label class=\"control-label\">"
@@ -37202,7 +38429,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(((helper = (helper = helpers.checked || (depth0 != null ? depth0.checked : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"checked","hash":{},"data":data}) : helper)))
     + ">\r\n            </label>\r\n        </div>\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":24}],147:[function(require,module,exports){
+},{"handlebars":25}],180:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,depths) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "            <div class=\"checkbox\">\r\n                <label>\r\n                    <input type=\"checkbox\" id=\""
@@ -37229,11 +38456,11 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "    </div>\r\n</div>";
 },"useData":true,"useDepths":true});
-},{"handlebars":24}],148:[function(require,module,exports){
+},{"handlebars":25}],181:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   return "<div class=\"btn-toolbar\" role=\"toolbar\" aria-label=\"Daten Toolbar\">\r\n    <div class=\"btn-group pull-right\" role=\"group\" aria-label=\"Daten Button group\">\r\n        <button id=\"formNew\" class=\"btn btn-default\">neu</button>\r\n        <button id=\"formDelete\" class=\"btn btn-default\">löschen</button>\r\n    </div>\r\n</div>";
   },"useData":true});
-},{"handlebars":24}],149:[function(require,module,exports){
+},{"handlebars":25}],182:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "<div class=\"form-group\">\r\n    <label for=\""
@@ -37252,7 +38479,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.value : stack1), depth0))
     + "\">\r\n</div>";
 },"useData":true});
-},{"handlebars":24}],150:[function(require,module,exports){
+},{"handlebars":25}],183:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,depths) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "            <div class=\"radio\">\r\n                <label>\r\n                    <input type=\"radio\" name=\""
@@ -37279,7 +38506,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "    </div>\r\n</div>";
 },"useData":true,"useDepths":true});
-},{"handlebars":24}],151:[function(require,module,exports){
+},{"handlebars":25}],184:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, buffer = "                <option value=";
   stack1 = lambda((depth0 != null ? depth0.value : depth0), depth0);
@@ -37302,7 +38529,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "        </select>\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":24}],152:[function(require,module,exports){
+},{"handlebars":25}],185:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "<div class=\"form-group\">\r\n    <label for=\""
@@ -37319,4 +38546,4 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.value : stack1), depth0))
     + "</textarea>\r\n</div>";
 },"useData":true});
-},{"handlebars":24}]},{},[1]);
+},{"handlebars":25}]},{},[1]);

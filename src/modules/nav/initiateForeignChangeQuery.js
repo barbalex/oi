@@ -8,7 +8,7 @@ var _                    = require('underscore'),
     pouchDbOptions       = require('../pouchDbOptions');
 
 module.exports = function () {
-    var db = new PouchDB('oi', pouchDbOptions);
+    var db = new PouchDB('http://localhost:5984/oi', pouchDbOptions);
 
     // TODO: get only the users data
     db.query('foreign_changed', {include_docs: true}).then(function () {
