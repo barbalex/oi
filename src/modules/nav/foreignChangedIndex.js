@@ -10,21 +10,12 @@ module.exports = function () {
                     var doEmit = false;
                     if (doc.lastEdited) {
                         if (doc.lastEdited.database) {
-                            if (doc.lastEdited.database !== window.oi.databaseId) {
-                                doEmit = true;
-                            }
+                            emit([doc.type], null);
                         } else {
-                            doEmit = true;
+                            emit([doc.type], null);
                         }
                     } else {
-                        doEmit = true;
-                    }
-                    if (doEmit) {
-                        if (doc.users && doc.users.length > 0 && doc.type) {
-                            doc.users.forEach(function (user) {
-                                emit([user, doc.type], null);
-                            });
-                        }
+                        emit([doc.type], null);
                     }
                 }.toString()
             }

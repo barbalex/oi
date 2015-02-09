@@ -37443,27 +37443,33 @@ module.exports = function (change) {
         activeNode   = tree.get_selected(true)[0],
         activeId     = activeNode.data.type === 'object' ? activeNode.id : activeNode.data.id;
 
-    // update model of object
-    modelObject = _.find(window.oi.objects, function (object) {
-        return object._id === change.id;
-    });
+    // only use changes on docs with this user
+    if (change.doc.users && change.doc.users.indexOf(window.oi.loginName) > -1) {
+        // only use changes from different databases
+        if (change.doc.lastEdited && change.doc.lastEdited.database && change.doc.lastEdited.database !== window.oi.databaseId) {
+            // update model of object
+            modelObject = _.find(window.oi.objects, function (object) {
+                return object._id === change.id;
+            });
 
-    // nur weiterfahren, wenn ein model gefunden wurde
-    if (modelObject) {
-        // replace existing object with new one
-        window.oi.objects[window.oi.objects.indexOf(modelObject)] = change.doc;
+            // nur weiterfahren, wenn ein model gefunden wurde
+            if (modelObject) {
+                // replace existing object with new one
+                window.oi.objects[window.oi.objects.indexOf(modelObject)] = change.doc;
 
-        // refresh form if this object is shown
-        // cant update only changed field because it is unknown (?)
-        if ($formContent.html() !== "" && activeId === change.doc._id) {
-            initiateForm(change.doc._id, 'object');
-        }
-        // refresh tree
-        correspondingHierarchy = _.find(window.oi.hierarchies, function (hierarchy) {
-            return hierarchy._id === change.doc.hId;
-        });
-        if (change.doc.data && correspondingHierarchy && correspondingHierarchy.nameField) {
-            $('#navContent').jstree().rename_node('#' + change.doc._id, getLabelForObject(change.doc, correspondingHierarchy));
+                // refresh form if this object is shown
+                // cant update only changed field because it is unknown (?)
+                if ($formContent.html() !== "" && activeId === change.doc._id) {
+                    initiateForm(change.doc._id, 'object');
+                }
+                // refresh tree
+                correspondingHierarchy = _.find(window.oi.hierarchies, function (hierarchy) {
+                    return hierarchy._id === change.doc.hId;
+                });
+                if (change.doc.data && correspondingHierarchy && correspondingHierarchy.nameField) {
+                    $('#navContent').jstree().rename_node('#' + change.doc._id, getLabelForObject(change.doc, correspondingHierarchy));
+                }
+            }
         }
     }
 };
@@ -37718,21 +37724,12 @@ module.exports = function () {
                     var doEmit = false;
                     if (doc.lastEdited) {
                         if (doc.lastEdited.database) {
-                            if (doc.lastEdited.database !== window.oi.databaseId) {
-                                doEmit = true;
-                            }
+                            emit([doc.type], null);
                         } else {
-                            doEmit = true;
+                            emit([doc.type], null);
                         }
                     } else {
-                        doEmit = true;
-                    }
-                    if (doEmit) {
-                        if (doc.users && doc.users.length > 0 && doc.type) {
-                            doc.users.forEach(function (user) {
-                                emit([user, doc.type], null);
-                            });
-                        }
+                        emit([doc.type], null);
                     }
                 }.toString()
             }
@@ -37840,12 +37837,14 @@ module.exports = function () {
     // should filter: 
     // - doc.lastEdited.database !== window.oi.databaseId
     // - user is in users
+    // - doc.type = type
+    // use changesFilter if req can be dynamically passed
     db.changes({
         since: 'now',
         live: true,
-        include_docs: true/*,
+        include_docs: true,
         view: foreignChangedIndex(),
-        key: [window.oi.loginName, 'object']*/
+        key: 'object'
     }).on('change', handleExternalObjectChanges);
 };
 },{"../handleExternalObjectChanges":152,"../pouchDbOptions":172,"./foreignChangedIndex":159,"pouchdb":82}],164:[function(require,module,exports){

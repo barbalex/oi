@@ -15,11 +15,13 @@ module.exports = function () {
     // should filter: 
     // - doc.lastEdited.database !== window.oi.databaseId
     // - user is in users
+    // - doc.type = type
+    // use changesFilter if req can be dynamically passed
     db.changes({
         since: 'now',
         live: true,
-        include_docs: true/*,
+        include_docs: true,
         view: foreignChangedIndex(),
-        key: [window.oi.loginName, 'object']*/
+        key: 'object'
     }).on('change', handleExternalObjectChanges);
 };
