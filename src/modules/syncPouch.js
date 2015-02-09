@@ -15,7 +15,7 @@ var PouchDB        = require('pouchdb'),
     remoteCouch    = 'http://' + couchUser + ':' + couchPassword + '@' + couchUrl + '/' + couchName;
 
 module.exports = function () {
-    var db = new PouchDB('http://localhost:5984/oi', pouchDbOptions);
+    var db = new PouchDB('oi', pouchDbOptions);
 
     function syncError() {
         console.log('error syncing');

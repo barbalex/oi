@@ -8,20 +8,20 @@ var _                    = require('underscore'),
     pouchDbOptions       = require('../pouchDbOptions');
 
 module.exports = function () {
-    var db = new PouchDB('http://localhost:5984/oi', pouchDbOptions);
+    var db = new PouchDB('oi', pouchDbOptions);
 
-    // TODO: get only the users data
-    db.query('foreign_changed', {include_docs: true}).then(function () {
+    // key: get only changes of the users objects
+    db.query('foreign_changed', {include_docs: true, key: [window.oi.loginName, 'object']}).then(function () {
         initiateChangeStream();
     }).catch(function (error) {
         if (error.status === 404) {
             // index doesnt exist yet > create it
             db.put(foreignChangedIndex()).then(function () {
                 // kick off an initial build, return immediately
-                return db.query('foreign_changed', {stale: 'update_after'});
+                return db.query('foreign_changed', {stale: 'update_after', key: [window.oi.loginName, 'object']});
             }).then(function () {
                 // query the index (much faster now!)
-                return db.query('foreign_changed', {include_docs: true});
+                return db.query('foreign_changed', {include_docs: true, key: [window.oi.loginName, 'object']});
             }).then(function () {
                 initiateChangeStream();
             }).catch(function (error) {

@@ -56279,7 +56279,7 @@ module.exports = function (object, hierarchy) {
         parentNode,
         newObjectNode,
         childHierarchies,
-        tree = $('#navContent').jstree(),
+        tree         = $('#navContent').jstree(),
         $formContent = $('#formContent');
 
     newObject                     = {};
@@ -56292,8 +56292,7 @@ module.exports = function (object, hierarchy) {
     newObject.users               = object.users;
     newObject.lastEdited          = {};
     newObject.lastEdited.date     = dateformat(new Date(), 'isoDateTime');
-    // TODO: get real user
-    newObject.lastEdited.user     = 'z@z.ch';
+    newObject.lastEdited.user     = window.oi.loginName;
     newObject.lastEdited.database = window.oi.databaseId;
     newObject.data                = {};
     if (hierarchy.fields) {
@@ -56420,7 +56419,7 @@ module.exports = function ($node) {
         parentNodeId,
         objectsToDelete = [],
         childrenToDelete,
-        db              = new PouchDB('http://localhost:5984/oi', pouchDbOptions);
+        db              = new PouchDB('oi', pouchDbOptions);
 
     // ermitteln, wieviele child-Objekte betroffen werden
     childrenToDelete = _.map(nodeChildren, function (child) {
@@ -56976,14 +56975,13 @@ var $                 = (typeof window !== "undefined" ? window.$ : typeof globa
 module.exports = function (id, field, value) {
     var object,
         lastEdited = {},
-        db         = new PouchDB('http://localhost:5984/oi', pouchDbOptions);
+        db         = new PouchDB('oi', pouchDbOptions);
 
     // get data for object
     object              = getObject(id);
     // build lastEdited
     lastEdited.date     = dateformat(new Date(), 'isoDateTime');
-    // TODO: get real user
-    lastEdited.user     = 'z@z.ch';
+    lastEdited.user     = window.oi.loginName;
     lastEdited.database = window.oi.databaseId;
 
     if (object) {
@@ -57231,7 +57229,7 @@ var PouchDB                    = require('pouchdb'),
 
 module.exports = function () {
     var databaseId = {},
-        db         = new PouchDB('http://localhost:5984/oi', pouchDbOptions);
+        db         = new PouchDB('oi', pouchDbOptions);
 
     db.get('_local/databaseId').then(function (response) {
         window.oi.databaseId = response.databaseId;
@@ -57355,16 +57353,24 @@ module.exports = function () {
         views: {
             'foreign_changed': {
                 map: function (doc) {
+                    var doEmit = false;
                     if (doc.lastEdited) {
                         if (doc.lastEdited.database) {
                             if (doc.lastEdited.database !== window.oi.databaseId) {
-                                emit(doc.type);
+                                doEmit = true;
                             }
                         } else {
-                            emit(doc.type);
+                            doEmit = true;
                         }
                     } else {
-                        emit(doc.type);
+                        doEmit = true;
+                    }
+                    if (doEmit) {
+                        if (doc.users && doc.users.length > 0 && doc.type) {
+                            doc.users.forEach(function (user) {
+                                emit([user, doc.type], null);
+                            });
+                        }
                     }
                 }.toString()
             }
@@ -57440,29 +57446,21 @@ module.exports = function (object, correspondingHierarchy) {
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var PouchDB         = require('pouchdb'),
-    pouchDbOptions  = require('../pouchDbOptions'),
-    openSigninModal = require('./openSigninModal'),
-    initiateNav     = require('./initiateNav'),
-    tellWithModal   = require('../tellWithModal');
+var openSigninModal = require('./openSigninModal'),
+    initiateNav     = require('./initiateNav');
 
 module.exports = function () {
-    var db = new PouchDB('http://localhost:5984/oi', pouchDbOptions);
+    var loginName = localStorage.loginName;
 
-    db.get('_local/login_name').then(function (response) {
-        window.oi.loginName = response.name;
+    if (loginName) {
+        window.oi.loginName = loginName;
         initiateNav();
-    }).catch(function (error) {
-        if (error.status === 404) {
-            openSigninModal();
-        } else {
-            console.log('error retrieving login: ', error);
-            openSigninModal();
-        }
-    });
+    } else {
+        openSigninModal();
+    }
 
 };
-},{"../pouchDbOptions":172,"../tellWithModal":177,"./initiateNav":165,"./openSigninModal":167,"pouchdb":82}],163:[function(require,module,exports){
+},{"./initiateNav":165,"./openSigninModal":167}],163:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -57472,17 +57470,20 @@ var PouchDB                     = require('pouchdb'),
     pouchDbOptions              = require('../pouchDbOptions');
 
 module.exports = function () {
-    var db = new PouchDB('http://localhost:5984/oi', pouchDbOptions);
+    var db = new PouchDB('oi', pouchDbOptions);
 
-    // TODO: filter only the users documents
     // TODO: watch changes to hierarchies
     // when changes happen in DB, update model and when necessary ui
+    // create filter function
+    // should filter: 
+    // - doc.lastEdited.database !== window.oi.databaseId
+    // - user is in users
     db.changes({
         since: 'now',
         live: true,
-        include_docs: true,
-        filter: foreignChangedIndex(),
-        key: 'object'
+        include_docs: true/*,
+        view: foreignChangedIndex(),
+        key: [window.oi.loginName, 'object']*/
     }).on('change', handleExternalObjectChanges);
 };
 },{"../handleExternalObjectChanges":152,"../pouchDbOptions":172,"./foreignChangedIndex":159,"pouchdb":82}],164:[function(require,module,exports){
@@ -57496,20 +57497,20 @@ var _                    = require('underscore'),
     pouchDbOptions       = require('../pouchDbOptions');
 
 module.exports = function () {
-    var db = new PouchDB('http://localhost:5984/oi', pouchDbOptions);
+    var db = new PouchDB('oi', pouchDbOptions);
 
-    // TODO: get only the users data
-    db.query('foreign_changed', {include_docs: true}).then(function () {
+    // key: get only changes of the users objects
+    db.query('foreign_changed', {include_docs: true, key: [window.oi.loginName, 'object']}).then(function () {
         initiateChangeStream();
     }).catch(function (error) {
         if (error.status === 404) {
             // index doesnt exist yet > create it
             db.put(foreignChangedIndex()).then(function () {
                 // kick off an initial build, return immediately
-                return db.query('foreign_changed', {stale: 'update_after'});
+                return db.query('foreign_changed', {stale: 'update_after', key: [window.oi.loginName, 'object']});
             }).then(function () {
                 // query the index (much faster now!)
-                return db.query('foreign_changed', {include_docs: true});
+                return db.query('foreign_changed', {include_docs: true, key: [window.oi.loginName, 'object']});
             }).then(function () {
                 initiateChangeStream();
             }).catch(function (error) {
@@ -57525,21 +57526,24 @@ module.exports = function () {
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $                   = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
-    _                   = require('underscore'),
-    async               = require('async'),
-    PouchDB             = require('pouchdb'),
-    pouchDbOptions      = require('../pouchDbOptions'),
-    syncPouch           = require('../syncPouch'),
-    createTree          = require('./createTree'),
-    createDatabaseId    = require('./createDatabaseId'),
-    objectsByTypeIndex  = require('./objectsByTypeIndex');
+var $                       = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+    _                       = require('underscore'),
+    async                   = require('async'),
+    PouchDB                 = require('pouchdb'),
+    pouchDbOptions          = require('../pouchDbOptions'),
+    syncPouch               = require('../syncPouch'),
+    createTree              = require('./createTree'),
+    createDatabaseId        = require('./createDatabaseId'),
+    objectsByUserTypeIndex  = require('./objectsByUserTypeIndex');
 
 module.exports = function () {
-    var db = new PouchDB('http://localhost:5984/oi', pouchDbOptions);
+    // now open LOCAL db
+    var db = new PouchDB('oi', pouchDbOptions);
 
     // expose pouchdb to pouchdb-fauxton
     window.PouchDB = PouchDB;
+
+    console.log('initiateNav');
 
     // every database gets a locally saved id
     // this id is added to every document changed
@@ -57553,7 +57557,7 @@ module.exports = function () {
     async.parallel({
         hierarchies: function (callback) {
             // TODO: get only the users data
-            db.query('objects_by_type', {include_docs: true, key: 'hierarchy'}).then(function (result) {
+            db.query('objects_by_type', {include_docs: true, key: [window.oi.loginName, 'hierarchy']}).then(function (result) {
                 var hierarchies = _.map(result.rows, function (row) {
                     return row.doc;
                 });
@@ -57561,19 +57565,19 @@ module.exports = function () {
             }).catch(function (error) {
                 if (error.status === 404) {
                     // index doesnt exist yet
-                    db.put(objectsByTypeIndex()).then(function () {
+                    db.put(objectsByUserTypeIndex()).then(function () {
                         // kick off an initial build, return immediately
                         return db.query('objects_by_type', {stale: 'update_after'});
                     }).then(function () {
                         // query the index (much faster now!)
-                        return db.query('objects_by_type', {include_docs: true, key: 'hierarchy'});
+                        return db.query('objects_by_type', {include_docs: true, key: [window.oi.loginName, 'hierarchy']});
                     }).then(function (result) {
                         var hierarchies = _.map(result.rows, function (row) {
                             return row.doc;
                         });
                         callback(null, hierarchies);
                     }).catch(function (error) {
-                        callback('error querrying hierarchies after putting objectsByTypeIndex: ' + error, null);
+                        callback('error querrying hierarchies after putting objectsByUserTypeIndex: ' + error, null);
                     });
                 } else {
                     callback('error querrying hierarchies: ' + error, null);
@@ -57582,7 +57586,7 @@ module.exports = function () {
         },
         objects: function (callback) {
             // TODO: get only the users data
-            db.query('objects_by_type', {include_docs: true, key: 'object'}).then(function (result) {
+            db.query('objects_by_type', {include_docs: true, key: [window.oi.loginName, 'object']}).then(function (result) {
                 var objects = _.map(result.rows, function (row) {
                     return row.doc;
                 });
@@ -57590,19 +57594,19 @@ module.exports = function () {
             }).catch(function (error) {
                 if (error.status === 404) {
                     // index doesnt exist yet > create it
-                    db.put(objectsByTypeIndex()).then(function () {
+                    db.put(objectsByUserTypeIndex()).then(function () {
                         // kick off an initial build, return immediately
                         return db.query('objects_by_type', {stale: 'update_after'});
                     }).then(function () {
                         // query the index (much faster now!)
-                        return db.query('objects_by_type', {include_docs: true, key: 'object'});
+                        return db.query('objects_by_type', {include_docs: true, key: [window.oi.loginName, 'object']});
                     }).then(function (result) {
                         var objects = _.map(result.rows, function (row) {
                             return row.doc;
                         });
                         callback(null, objects);
                     }).catch(function (error) {
-                        callback('error querrying objects after putting objectsByTypeIndex: ' + error, null);
+                        callback('error querrying objects after putting objectsByUserTypeIndex: ' + error, null);
                     });
                 } else {
                     callback('error querrying objects: ' + error, null);
@@ -57621,11 +57625,10 @@ module.exports = function () {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../pouchDbOptions":172,"../syncPouch":176,"./createDatabaseId":155,"./createTree":156,"./objectsByTypeIndex":166,"async":3,"pouchdb":82,"underscore":126}],166:[function(require,module,exports){
+},{"../pouchDbOptions":172,"../syncPouch":176,"./createDatabaseId":155,"./createTree":156,"./objectsByUserTypeIndex":166,"async":3,"pouchdb":82,"underscore":126}],166:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-// TODO: get only the users data
 module.exports = function () {
     return {
         _id: '_design/objects_by_type',
@@ -57633,7 +57636,11 @@ module.exports = function () {
             'objects_by_type': {
                 map: function (doc) {
                     if (doc.type) {
-                        emit(doc.type);
+                        if (doc.users && doc.users.length > 0) {
+                            doc.users.forEach(function (user) {
+                                emit([user, doc.type], null);
+                            });
+                        }
                     }
                 }.toString()
             }
@@ -57666,36 +57673,27 @@ module.exports = function () {
 
 var $              = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
     PouchDB        = require('pouchdb'),
-    pouchDbOptions = require('../pouchDbOptions'),
     tellWithModal  = require('../tellWithModal'),
     initiateNav    = require('./initiateNav');
 
 module.exports = function (signindata) {
-    var db = new PouchDB('http://localhost:5984/oi', pouchDbOptions);
+    var db = new PouchDB('http://localhost:5984/oi');
 
     PouchDB.plugin(require('pouchdb-authentication'));
 
-    // expose pouchdb to pouchdb-fauxton
-    window.PouchDB = PouchDB;
-
-    console.log('signindata: ', signindata);
-
     // signin
     db.login(signindata.name, signindata.password).then(function (response) {
-
-        console.log('response of db.login: ', response);
-
         window.oi.loginName = signindata.name;
         // name in DB speichern
         // nachher auslagern, da auch nach signup
         if (signindata.remember) {
-            db.put(signindata.name, '_local/login_name');
+            localStorage.loginName = signindata.name;
         }
         initiateNav();
         $('#signinWithModal').modal('hide');
     }).catch(function (error) {
 
-        console.log('error: ', error);
+        console.log('error from db.login: ', error);
 
         if (error.name === 'unauthorized') {
             // name or password incorrect
@@ -57707,7 +57705,7 @@ module.exports = function (signindata) {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../pouchDbOptions":172,"../tellWithModal":177,"./initiateNav":165,"pouchdb":82,"pouchdb-authentication":31}],169:[function(require,module,exports){
+},{"../tellWithModal":177,"./initiateNav":165,"pouchdb":82,"pouchdb-authentication":31}],169:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -57775,12 +57773,11 @@ module.exports = function () {
 'use strict';
 
 var PouchDB        = require('pouchdb'),
-    pouchDbOptions = require('../pouchDbOptions'),
     signIn         = require('./signIn'),
     tellWithModal  = require('../tellWithModal');
 
 module.exports = function (signindata) {
-    var db = new PouchDB('http://localhost:5984/oi', pouchDbOptions);
+    var db = new PouchDB('http://localhost:5984/oi');
 
     PouchDB.plugin(require('pouchdb-authentication'));
 
@@ -57805,7 +57802,7 @@ module.exports = function (signindata) {
         tellWithModal('Das Konto konnte nicht erstellt werden', 'Die Datenbank meldete: ' + error);
     });
 };
-},{"../pouchDbOptions":172,"../tellWithModal":177,"./signIn":168,"pouchdb":82,"pouchdb-authentication":31}],171:[function(require,module,exports){
+},{"../tellWithModal":177,"./signIn":168,"pouchdb":82,"pouchdb-authentication":31}],171:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -57855,7 +57852,8 @@ module.exports = function ($node) {
 
 module.exports = function () {
     return {
-        'ajax': {'cache': false}
+        //'ajax': {'cache': false},
+        //'adapter': 'idb'
     };
 };
 },{}],173:[function(require,module,exports){
@@ -57999,7 +57997,7 @@ var PouchDB        = require('pouchdb'),
     remoteCouch    = 'http://' + couchUser + ':' + couchPassword + '@' + couchUrl + '/' + couchName;
 
 module.exports = function () {
-    var db = new PouchDB('http://localhost:5984/oi', pouchDbOptions);
+    var db = new PouchDB('oi', pouchDbOptions);
 
     function syncError() {
         console.log('error syncing');

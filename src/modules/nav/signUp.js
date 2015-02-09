@@ -2,12 +2,11 @@
 'use strict';
 
 var PouchDB        = require('pouchdb'),
-    pouchDbOptions = require('../pouchDbOptions'),
     signIn         = require('./signIn'),
     tellWithModal  = require('../tellWithModal');
 
 module.exports = function (signindata) {
-    var db = new PouchDB('http://localhost:5984/oi', pouchDbOptions);
+    var db = new PouchDB('http://localhost:5984/oi');
 
     PouchDB.plugin(require('pouchdb-authentication'));
 

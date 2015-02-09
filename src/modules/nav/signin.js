@@ -3,36 +3,27 @@
 
 var $              = require('jquery'),
     PouchDB        = require('pouchdb'),
-    pouchDbOptions = require('../pouchDbOptions'),
     tellWithModal  = require('../tellWithModal'),
     initiateNav    = require('./initiateNav');
 
 module.exports = function (signindata) {
-    var db = new PouchDB('http://localhost:5984/oi', pouchDbOptions);
+    var db = new PouchDB('http://localhost:5984/oi');
 
     PouchDB.plugin(require('pouchdb-authentication'));
 
-    // expose pouchdb to pouchdb-fauxton
-    window.PouchDB = PouchDB;
-
-    console.log('signindata: ', signindata);
-
     // signin
     db.login(signindata.name, signindata.password).then(function (response) {
-
-        console.log('response of db.login: ', response);
-
         window.oi.loginName = signindata.name;
         // name in DB speichern
         // nachher auslagern, da auch nach signup
         if (signindata.remember) {
-            db.put(signindata.name, '_local/login_name');
+            localStorage.loginName = signindata.name;
         }
         initiateNav();
         $('#signinWithModal').modal('hide');
     }).catch(function (error) {
 
-        console.log('error: ', error);
+        console.log('error from db.login: ', error);
 
         if (error.name === 'unauthorized') {
             // name or password incorrect

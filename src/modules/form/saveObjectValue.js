@@ -12,14 +12,13 @@ var $                 = require('jquery'),
 module.exports = function (id, field, value) {
     var object,
         lastEdited = {},
-        db         = new PouchDB('http://localhost:5984/oi', pouchDbOptions);
+        db         = new PouchDB('oi', pouchDbOptions);
 
     // get data for object
     object              = getObject(id);
     // build lastEdited
     lastEdited.date     = dateformat(new Date(), 'isoDateTime');
-    // TODO: get real user
-    lastEdited.user     = 'z@z.ch';
+    lastEdited.user     = window.oi.loginName;
     lastEdited.database = window.oi.databaseId;
 
     if (object) {

@@ -7,16 +7,24 @@ module.exports = function () {
         views: {
             'foreign_changed': {
                 map: function (doc) {
+                    var doEmit = false;
                     if (doc.lastEdited) {
                         if (doc.lastEdited.database) {
                             if (doc.lastEdited.database !== window.oi.databaseId) {
-                                emit(doc.type);
+                                doEmit = true;
                             }
                         } else {
-                            emit(doc.type);
+                            doEmit = true;
                         }
                     } else {
-                        emit(doc.type);
+                        doEmit = true;
+                    }
+                    if (doEmit) {
+                        if (doc.users && doc.users.length > 0 && doc.type) {
+                            doc.users.forEach(function (user) {
+                                emit([user, doc.type], null);
+                            });
+                        }
                     }
                 }.toString()
             }

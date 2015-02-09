@@ -29,7 +29,7 @@ module.exports = function (object, hierarchy) {
         parentNode,
         newObjectNode,
         childHierarchies,
-        tree = $('#navContent').jstree(),
+        tree         = $('#navContent').jstree(),
         $formContent = $('#formContent');
 
     newObject                     = {};
@@ -42,8 +42,7 @@ module.exports = function (object, hierarchy) {
     newObject.users               = object.users;
     newObject.lastEdited          = {};
     newObject.lastEdited.date     = dateformat(new Date(), 'isoDateTime');
-    // TODO: get real user
-    newObject.lastEdited.user     = 'z@z.ch';
+    newObject.lastEdited.user     = window.oi.loginName;
     newObject.lastEdited.database = window.oi.databaseId;
     newObject.data                = {};
     if (hierarchy.fields) {

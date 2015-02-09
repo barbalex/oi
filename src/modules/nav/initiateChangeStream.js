@@ -7,16 +7,19 @@ var PouchDB                     = require('pouchdb'),
     pouchDbOptions              = require('../pouchDbOptions');
 
 module.exports = function () {
-    var db = new PouchDB('http://localhost:5984/oi', pouchDbOptions);
+    var db = new PouchDB('oi', pouchDbOptions);
 
-    // TODO: filter only the users documents
     // TODO: watch changes to hierarchies
     // when changes happen in DB, update model and when necessary ui
+    // create filter function
+    // should filter: 
+    // - doc.lastEdited.database !== window.oi.databaseId
+    // - user is in users
     db.changes({
         since: 'now',
         live: true,
-        include_docs: true,
-        filter: foreignChangedIndex(),
-        key: 'object'
+        include_docs: true/*,
+        view: foreignChangedIndex(),
+        key: [window.oi.loginName, 'object']*/
     }).on('change', handleExternalObjectChanges);
 };

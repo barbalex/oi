@@ -7,7 +7,7 @@ var PouchDB                    = require('pouchdb'),
 
 module.exports = function () {
     var databaseId = {},
-        db         = new PouchDB('http://localhost:5984/oi', pouchDbOptions);
+        db         = new PouchDB('oi', pouchDbOptions);
 
     db.get('_local/databaseId').then(function (response) {
         window.oi.databaseId = response.databaseId;

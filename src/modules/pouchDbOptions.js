@@ -10,6 +10,7 @@
 
 module.exports = function () {
     return {
-        'ajax': {'cache': false}
+        //'ajax': {'cache': false},
+        //'adapter': 'idb'
     };
 };
