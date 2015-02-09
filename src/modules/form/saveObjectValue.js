@@ -12,7 +12,7 @@ var $                 = require('jquery'),
 module.exports = function (id, field, value) {
     var object,
         lastEdited = {},
-        db         = new PouchDB('oi', pouchDbOptions);
+        localDb    = new PouchDB('oi', pouchDbOptions);
 
     // get data for object
     object              = getObject(id);
@@ -27,7 +27,7 @@ module.exports = function (id, field, value) {
         object.lastEdited  = lastEdited;
 
         // write to pouch
-        db.put(object)
+        localDb.put(object)
             .then(function (response) {
                 // update rev in model object
                 object._rev = response.rev;

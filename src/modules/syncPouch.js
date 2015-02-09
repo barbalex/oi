@@ -15,7 +15,7 @@ var PouchDB        = require('pouchdb'),
     remoteCouch    = 'http://' + couchUser + ':' + couchPassword + '@' + couchUrl + '/' + couchName;
 
 module.exports = function () {
-    var db = new PouchDB('oi', pouchDbOptions);
+    var localDb = new PouchDB('oi', pouchDbOptions);
 
     function syncError() {
         console.log('error syncing');
@@ -26,8 +26,8 @@ module.exports = function () {
             live:  true,
             retry: true
         };
-        db.replicate.to(remoteCouch, opts, syncError);
-        db.replicate.from(remoteCouch, opts, syncError);
+        localDb.replicate.to(remoteCouch, opts, syncError);
+        localDb.replicate.from(remoteCouch, opts, syncError);
     }
 
     if (remoteCouch) { sync(); }

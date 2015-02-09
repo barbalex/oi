@@ -6,7 +6,7 @@ var PouchDB        = require('pouchdb'),
     tellWithModal  = require('../tellWithModal');
 
 module.exports = function (signindata) {
-    var db = new PouchDB('http://localhost:5984/oi');
+    var remoteDb = new PouchDB('http://localhost:5984/oi');
 
     PouchDB.plugin(require('pouchdb-authentication'));
 
@@ -14,7 +14,7 @@ module.exports = function (signindata) {
     window.PouchDB = PouchDB;
 
     // signup, then call signin
-    db.signup(signindata.name, signindata.password, {
+    remoteDb.signup(signindata.name, signindata.password, {
         metadata: {
             // bei signup weitere Felder ausfüllen lassen
             // genug, um eine Rechnung schicken zu können?

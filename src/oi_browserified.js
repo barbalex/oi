@@ -42,7 +42,7 @@ window.oi.initiiereApp = function () {
 
 // gleich ein mal ausführen
 window.oi.initiiereApp();
-},{"./modules/initiateResizables":153,"./modules/nav/getLogin":162,"./modules/nav/initiateNav":165,"./modules/setupEvents":174,"bootstrap-validator":4,"handlebars":25}],2:[function(require,module,exports){
+},{"./modules/initiateResizables":153,"./modules/nav/getLogin":161,"./modules/nav/initiateNav":163,"./modules/setupEvents":172,"bootstrap-validator":4,"handlebars":25}],2:[function(require,module,exports){
 module.exports={
     "user": "barbalex",
     "pass": "dLhdMg12"
@@ -36754,7 +36754,7 @@ module.exports = function (objectId) {
 /*
  * gets a node from the tree
  * deletes the node's object, all child objects
- * from db, model and tree
+ * from localDb, model and tree
  * also removes child hierarchies in tree
  * selects the parent node
  */
@@ -36781,7 +36781,7 @@ module.exports = function ($node) {
         parentNodeId,
         objectsToDelete = [],
         childrenToDelete,
-        db              = new PouchDB('oi', pouchDbOptions);
+        localDb              = new PouchDB('oi', pouchDbOptions);
 
     // ermitteln, wieviele child-Objekte betroffen werden
     childrenToDelete = _.map(nodeChildren, function (child) {
@@ -36814,8 +36814,8 @@ module.exports = function ($node) {
             var nodeJson = tree.get_node('#' + childNodeId);
 
             if (nodeJson && nodeJson.data && nodeJson.data.type && nodeJson.data.type === 'object') {
-                // delete object from db and model
-                db.remove(getObject(nodeJson.id));
+                // delete object from localDb and model
+                localDb.remove(getObject(nodeJson.id));
                 deleteObjectFromModel(nodeJson.id);
             }
             // delete node (hierarchies and objects)
@@ -36826,8 +36826,8 @@ module.exports = function ($node) {
         if (objectsToDelete.length > 0) {
             object = getObject(objectId);
             if (object) {
-                // delete object in db
-                db.remove(object).then(function () {
+                // delete object in localDb
+                localDb.remove(object).then(function () {
                     // delete model
                     window.oi.objects = _.without(window.oi.objects, object);
                     // delete node
@@ -36853,7 +36853,7 @@ module.exports = function ($node) {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./askYesNoWithModal":128,"./deleteObjectFromModel":134,"./getObject":150,"./pouchDbOptions":172,"./tellWithModal":177,"pouchdb":82,"underscore":126}],134:[function(require,module,exports){
+},{"./askYesNoWithModal":128,"./deleteObjectFromModel":134,"./getObject":150,"./pouchDbOptions":170,"./tellWithModal":175,"pouchdb":82,"underscore":126}],134:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -37269,7 +37269,7 @@ module.exports = function (id, type) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../../templates/checkbox":179,"../../../templates/checkboxGroup":180,"../../../templates/formButtonToolbar":181,"../../../templates/input":182,"../../../templates/optionGroup":183,"../../../templates/select":184,"../../../templates/textarea":185,"../getHierarchy":149,"../getObject":150,"./addCheckedToValueList":141,"./fitTextareaToContent":143,"./positionFormBtngroup":147,"underscore":126}],146:[function(require,module,exports){
+},{"../../../templates/checkbox":177,"../../../templates/checkboxGroup":178,"../../../templates/formButtonToolbar":179,"../../../templates/input":180,"../../../templates/optionGroup":181,"../../../templates/select":182,"../../../templates/textarea":183,"../getHierarchy":149,"../getObject":150,"./addCheckedToValueList":141,"./fitTextareaToContent":143,"./positionFormBtngroup":147,"underscore":126}],146:[function(require,module,exports){
 // Hilfsfunktion, die typeof ersetzt und ergänzt
 // typeof gibt bei input-Feldern immer String zurück!
 
@@ -37337,7 +37337,7 @@ var $                 = (typeof window !== "undefined" ? window.$ : typeof globa
 module.exports = function (id, field, value) {
     var object,
         lastEdited = {},
-        db         = new PouchDB('oi', pouchDbOptions);
+        localDb    = new PouchDB('oi', pouchDbOptions);
 
     // get data for object
     object              = getObject(id);
@@ -37352,7 +37352,7 @@ module.exports = function (id, field, value) {
         object.lastEdited  = lastEdited;
 
         // write to pouch
-        db.put(object)
+        localDb.put(object)
             .then(function (response) {
                 // update rev in model object
                 object._rev = response.rev;
@@ -37373,7 +37373,7 @@ module.exports = function (id, field, value) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../getObject":150,"../nav/getLabelForObject":161,"../pouchDbOptions":172,"dateformat":9,"pouchdb":82,"underscore":126}],149:[function(require,module,exports){
+},{"../getObject":150,"../nav/getLabelForObject":160,"../pouchDbOptions":170,"dateformat":9,"pouchdb":82,"underscore":126}],149:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -37439,42 +37439,48 @@ module.exports = function (change) {
     var modelObject,
         correspondingHierarchy,
         $formContent = $('#formContent'),
-        tree         = $('#navContent').jstree(true),
+        tree         = $('#navContent').jstree(),
         activeNode   = tree.get_selected(true)[0],
-        activeId     = activeNode.data.type === 'object' ? activeNode.id : activeNode.data.id;
+        activeId     = null;
 
-    // only use changes on docs with this user
-    if (change.doc.users && change.doc.users.indexOf(window.oi.loginName) > -1) {
-        // only use changes from different databases
-        if (change.doc.lastEdited && change.doc.lastEdited.database && change.doc.lastEdited.database !== window.oi.databaseId) {
-            // update model of object
-            modelObject = _.find(window.oi.objects, function (object) {
-                return object._id === change.id;
-            });
+    if (activeNode) {
+        activeId = activeNode.data.type === 'object' ? activeNode.id : activeNode.data.id
+    }
 
-            // nur weiterfahren, wenn ein model gefunden wurde
-            if (modelObject) {
-                // replace existing object with new one
-                window.oi.objects[window.oi.objects.indexOf(modelObject)] = change.doc;
-
-                // refresh form if this object is shown
-                // cant update only changed field because it is unknown (?)
-                if ($formContent.html() !== "" && activeId === change.doc._id) {
-                    initiateForm(change.doc._id, 'object');
-                }
-                // refresh tree
-                correspondingHierarchy = _.find(window.oi.hierarchies, function (hierarchy) {
-                    return hierarchy._id === change.doc.hId;
+    if (change.doc.type && change.doc.type === 'object') {
+        // only use changes on docs with this user
+        if (change.doc.users && change.doc.users.indexOf(window.oi.loginName) > -1) {
+            // only use changes from different databases
+            if (change.doc.lastEdited && change.doc.lastEdited.database && change.doc.lastEdited.database !== window.oi.databaseId) {
+                // update model of object
+                modelObject = _.find(window.oi.objects, function (object) {
+                    return object._id === change.id;
                 });
-                if (change.doc.data && correspondingHierarchy && correspondingHierarchy.nameField) {
-                    $('#navContent').jstree().rename_node('#' + change.doc._id, getLabelForObject(change.doc, correspondingHierarchy));
+
+                // nur weiterfahren, wenn ein model gefunden wurde
+                if (modelObject) {
+                    // replace existing object with new one
+                    window.oi.objects[window.oi.objects.indexOf(modelObject)] = change.doc;
+
+                    // refresh form if this object is shown
+                    // cant update only changed field because it is unknown (?)
+                    if (activeId && activeId === change.doc._id) {
+                        initiateForm(change.doc._id, 'object');
+                    }
+                    // refresh tree
+                    correspondingHierarchy = _.find(window.oi.hierarchies, function (hierarchy) {
+                        return hierarchy._id === change.doc.hId;
+                    });
+                    if (change.doc.data && correspondingHierarchy && correspondingHierarchy.nameField) {
+                        $('#navContent').jstree().rename_node('#' + change.doc._id, getLabelForObject(change.doc, correspondingHierarchy));
+                    }
                 }
             }
         }
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./form/initiateForm":145,"./nav/getLabelForObject":161,"underscore":126}],153:[function(require,module,exports){
+},{"./form/initiateForm":145,"./nav/getLabelForObject":160,"underscore":126}],153:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -37550,7 +37556,7 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./alsoResizeReverse":127,"./form/positionFormBtngroup":147,"./setWidthOfTabs":173,"./showTab":175}],154:[function(require,module,exports){
+},{"./alsoResizeReverse":127,"./form/positionFormBtngroup":147,"./setWidthOfTabs":171,"./showTab":173}],154:[function(require,module,exports){
 // creates descendant hierarchical objects of single objects
 // adds them to an array
 
@@ -37591,24 +37597,24 @@ module.exports = function (object) {
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var PouchDB                    = require('pouchdb'),
-    initiateForeignChangeQuery = require('./initiateForeignChangeQuery'),
-    pouchDbOptions             = require('../pouchDbOptions');
+var PouchDB              = require('pouchdb'),
+    initiateChangeStream = require('./initiateChangeStream'),
+    pouchDbOptions       = require('../pouchDbOptions');
 
 module.exports = function () {
     var databaseId = {},
-        db         = new PouchDB('oi', pouchDbOptions);
+        localDb    = new PouchDB('oi', pouchDbOptions);
 
-    db.get('_local/databaseId').then(function (response) {
+    localDb.get('_local/databaseId').then(function (response) {
         window.oi.databaseId = response.databaseId;
-        initiateForeignChangeQuery();
+        initiateChangeStream();
     }).catch(function (err) {
         if (err.status === 404) {
             // document is missing > create new one and make it accessible as global variable
             databaseId.databaseId = Math.random();
-            db.put(databaseId, '_local/databaseId').then(function () {
+            localDb.put(databaseId, '_local/databaseId').then(function () {
                 window.oi.databaseId = databaseId.databaseId;
-                initiateForeignChangeQuery();
+                initiateChangeStream();
             }).catch(function (err) {
                 console.log('error creating databaseId: ', err);
             });
@@ -37618,7 +37624,7 @@ module.exports = function () {
     });
 
 };
-},{"../pouchDbOptions":172,"./initiateForeignChangeQuery":164,"pouchdb":82}],156:[function(require,module,exports){
+},{"../pouchDbOptions":170,"./initiateChangeStream":162,"pouchdb":82}],156:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -37665,7 +37671,7 @@ module.exports = function () {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../form/initiateForm":145,"./generateDataForTree":160,"./treeContextmenuItems":171,"jstree":27}],157:[function(require,module,exports){
+},{"../form/initiateForm":145,"./generateDataForTree":159,"./treeContextmenuItems":169,"jstree":27}],157:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -37698,7 +37704,7 @@ module.exports = function (object) {
 
     return jstreeObject;
 };
-},{"./getLabelForObject":161,"underscore":126}],158:[function(require,module,exports){
+},{"./getLabelForObject":160,"underscore":126}],158:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -37712,31 +37718,6 @@ module.exports = function (object) {
     return jstreeObject;
 };
 },{"./createTreeNodeObject":157}],159:[function(require,module,exports){
-/*jslint node: true, browser: true, nomen: true, todo: true */
-'use strict';
-
-module.exports = function () {
-    return {
-        _id: '_design/foreign_changed',
-        views: {
-            'foreign_changed': {
-                map: function (doc) {
-                    var doEmit = false;
-                    if (doc.lastEdited) {
-                        if (doc.lastEdited.database) {
-                            emit([doc.type], null);
-                        } else {
-                            emit([doc.type], null);
-                        }
-                    } else {
-                        emit([doc.type], null);
-                    }
-                }.toString()
-            }
-        }
-    };
-};
-},{}],160:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -37770,7 +37751,7 @@ module.exports = function () {
 
     return _.union(objectsData, childHierarchiesData);
 };
-},{"./createChildHierarchiesOfObject":154,"./createTreeNodeObject":157,"./createTreeNodeRootObject":158,"./getLabelForObject":161,"underscore":126}],161:[function(require,module,exports){
+},{"./createChildHierarchiesOfObject":154,"./createTreeNodeObject":157,"./createTreeNodeRootObject":158,"./getLabelForObject":160,"underscore":126}],160:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -37801,7 +37782,7 @@ module.exports = function (object, correspondingHierarchy) {
     label      = '<strong>' + labelValue + '</strong>';
     return label;
 };
-},{"underscore":126}],162:[function(require,module,exports){
+},{"underscore":126}],161:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -37819,17 +37800,16 @@ module.exports = function () {
     }
 
 };
-},{"./initiateNav":165,"./openSigninModal":167}],163:[function(require,module,exports){
+},{"./initiateNav":163,"./openSigninModal":165}],162:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
 var PouchDB                     = require('pouchdb'),
     handleExternalObjectChanges = require('../handleExternalObjectChanges'),
-    foreignChangedIndex         = require('./foreignChangedIndex'),
     pouchDbOptions              = require('../pouchDbOptions');
 
 module.exports = function () {
-    var db = new PouchDB('oi', pouchDbOptions);
+    var localDb = new PouchDB('oi', pouchDbOptions);
 
     // TODO: watch changes to hierarchies
     // when changes happen in DB, update model and when necessary ui
@@ -37839,50 +37819,13 @@ module.exports = function () {
     // - user is in users
     // - doc.type = type
     // use changesFilter if req can be dynamically passed
-    db.changes({
+    localDb.changes({
         since: 'now',
         live: true,
-        include_docs: true,
-        view: foreignChangedIndex(),
-        key: 'object'
+        include_docs: true
     }).on('change', handleExternalObjectChanges);
 };
-},{"../handleExternalObjectChanges":152,"../pouchDbOptions":172,"./foreignChangedIndex":159,"pouchdb":82}],164:[function(require,module,exports){
-/*jslint node: true, browser: true, nomen: true, todo: true */
-'use strict';
-
-var _                    = require('underscore'),
-    PouchDB              = require('pouchdb'),
-    initiateChangeStream = require('./initiateChangeStream'),
-    foreignChangedIndex  = require('./foreignChangedIndex'),
-    pouchDbOptions       = require('../pouchDbOptions');
-
-module.exports = function () {
-    var db = new PouchDB('oi', pouchDbOptions);
-
-    // key: get only changes of the users objects
-    db.query('foreign_changed', {include_docs: true, key: [window.oi.loginName, 'object']}).then(function () {
-        initiateChangeStream();
-    }).catch(function (error) {
-        if (error.status === 404) {
-            // index doesnt exist yet > create it
-            db.put(foreignChangedIndex()).then(function () {
-                // kick off an initial build, return immediately
-                return db.query('foreign_changed', {stale: 'update_after', key: [window.oi.loginName, 'object']});
-            }).then(function () {
-                // query the index (much faster now!)
-                return db.query('foreign_changed', {include_docs: true, key: [window.oi.loginName, 'object']});
-            }).then(function () {
-                initiateChangeStream();
-            }).catch(function (error) {
-                console.log('error querrying foreignChanged: ', error);
-            });
-        } else {
-            console.log('error querrying foreignChanged: ', error);
-        }
-    });
-};
-},{"../pouchDbOptions":172,"./foreignChangedIndex":159,"./initiateChangeStream":163,"pouchdb":82,"underscore":126}],165:[function(require,module,exports){
+},{"../handleExternalObjectChanges":152,"../pouchDbOptions":170,"pouchdb":82}],163:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -37898,11 +37841,13 @@ var $                       = (typeof window !== "undefined" ? window.$ : typeof
     objectsByUserTypeIndex  = require('./objectsByUserTypeIndex');
 
 module.exports = function () {
-    // now open LOCAL db
-    var db = new PouchDB('oi', pouchDbOptions);
+    // now open LOCAL localDb
+    var localDb = new PouchDB('oi', pouchDbOptions);
 
     // expose pouchdb to pouchdb-fauxton
     window.PouchDB = PouchDB;
+    // Versuch, aber hat nichts genützt
+    //PouchDB.setMaxListeners(0);
 
     console.log('initiateNav');
 
@@ -37914,11 +37859,10 @@ module.exports = function () {
 
     syncPouch();
 
-    // get data from db
+    // get data from localDb
     async.parallel({
         hierarchies: function (callback) {
-            // TODO: get only the users data
-            db.query('objects_by_type', {include_docs: true, key: [window.oi.loginName, 'hierarchy']}).then(function (result) {
+            localDb.query('objects_by_user_type', {include_docs: true, key: [window.oi.loginName, 'hierarchy']}).then(function (result) {
                 var hierarchies = _.map(result.rows, function (row) {
                     return row.doc;
                 });
@@ -37926,12 +37870,12 @@ module.exports = function () {
             }).catch(function (error) {
                 if (error.status === 404) {
                     // index doesnt exist yet
-                    db.put(objectsByUserTypeIndex()).then(function () {
+                    localDb.put(objectsByUserTypeIndex()).then(function () {
                         // kick off an initial build, return immediately
-                        return db.query('objects_by_type', {stale: 'update_after'});
+                        return localDb.query('objects_by_user_type', {stale: 'update_after'});
                     }).then(function () {
                         // query the index (much faster now!)
-                        return db.query('objects_by_type', {include_docs: true, key: [window.oi.loginName, 'hierarchy']});
+                        return localDb.query('objects_by_user_type', {include_docs: true, key: [window.oi.loginName, 'hierarchy']});
                     }).then(function (result) {
                         var hierarchies = _.map(result.rows, function (row) {
                             return row.doc;
@@ -37946,8 +37890,7 @@ module.exports = function () {
             });
         },
         objects: function (callback) {
-            // TODO: get only the users data
-            db.query('objects_by_type', {include_docs: true, key: [window.oi.loginName, 'object']}).then(function (result) {
+            localDb.query('objects_by_user_type', {include_docs: true, key: [window.oi.loginName, 'object']}).then(function (result) {
                 var objects = _.map(result.rows, function (row) {
                     return row.doc;
                 });
@@ -37955,12 +37898,12 @@ module.exports = function () {
             }).catch(function (error) {
                 if (error.status === 404) {
                     // index doesnt exist yet > create it
-                    db.put(objectsByUserTypeIndex()).then(function () {
+                    localDb.put(objectsByUserTypeIndex()).then(function () {
                         // kick off an initial build, return immediately
-                        return db.query('objects_by_type', {stale: 'update_after'});
+                        return localDb.query('objects_by_user_type', {stale: 'update_after'});
                     }).then(function () {
                         // query the index (much faster now!)
-                        return db.query('objects_by_type', {include_docs: true, key: [window.oi.loginName, 'object']});
+                        return localDb.query('objects_by_user_type', {include_docs: true, key: [window.oi.loginName, 'object']});
                     }).then(function (result) {
                         var objects = _.map(result.rows, function (row) {
                             return row.doc;
@@ -37986,15 +37929,15 @@ module.exports = function () {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../pouchDbOptions":172,"../syncPouch":176,"./createDatabaseId":155,"./createTree":156,"./objectsByUserTypeIndex":166,"async":3,"pouchdb":82,"underscore":126}],166:[function(require,module,exports){
+},{"../pouchDbOptions":170,"../syncPouch":174,"./createDatabaseId":155,"./createTree":156,"./objectsByUserTypeIndex":164,"async":3,"pouchdb":82,"underscore":126}],164:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
 module.exports = function () {
     return {
-        _id: '_design/objects_by_type',
+        _id: '_design/objects_by_user_type',
         views: {
-            'objects_by_type': {
+            'objects_by_user_type': {
                 map: function (doc) {
                     if (doc.type) {
                         if (doc.users && doc.users.length > 0) {
@@ -38008,7 +37951,7 @@ module.exports = function () {
         }
     };
 };
-},{}],167:[function(require,module,exports){
+},{}],165:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -38027,7 +37970,7 @@ module.exports = function () {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],168:[function(require,module,exports){
+},{}],166:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -38038,12 +37981,12 @@ var $              = (typeof window !== "undefined" ? window.$ : typeof global !
     initiateNav    = require('./initiateNav');
 
 module.exports = function (signindata) {
-    var db = new PouchDB('http://localhost:5984/oi');
+    var remoteDb = new PouchDB('http://localhost:5984/oi');
 
     PouchDB.plugin(require('pouchdb-authentication'));
 
     // signin
-    db.login(signindata.name, signindata.password).then(function (response) {
+    remoteDb.login(signindata.name, signindata.password).then(function (response) {
         window.oi.loginName = signindata.name;
         // name in DB speichern
         // nachher auslagern, da auch nach signup
@@ -38054,7 +37997,7 @@ module.exports = function (signindata) {
         $('#signinWithModal').modal('hide');
     }).catch(function (error) {
 
-        console.log('error from db.login: ', error);
+        console.log('error from remoteDb.login: ', error);
 
         if (error.name === 'unauthorized') {
             // name or password incorrect
@@ -38066,7 +38009,7 @@ module.exports = function (signindata) {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../tellWithModal":177,"./initiateNav":165,"pouchdb":82,"pouchdb-authentication":31}],169:[function(require,module,exports){
+},{"../tellWithModal":175,"./initiateNav":163,"pouchdb":82,"pouchdb-authentication":31}],167:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -38129,7 +38072,7 @@ module.exports = function () {
     signIn(signindata);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../tellWithModal":177,"../validateEmail":178,"./signIn":168,"./signUp":170}],170:[function(require,module,exports){
+},{"../tellWithModal":175,"../validateEmail":176,"./signIn":166,"./signUp":168}],168:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -38138,7 +38081,7 @@ var PouchDB        = require('pouchdb'),
     tellWithModal  = require('../tellWithModal');
 
 module.exports = function (signindata) {
-    var db = new PouchDB('http://localhost:5984/oi');
+    var remoteDb = new PouchDB('http://localhost:5984/oi');
 
     PouchDB.plugin(require('pouchdb-authentication'));
 
@@ -38146,7 +38089,7 @@ module.exports = function (signindata) {
     window.PouchDB = PouchDB;
 
     // signup, then call signin
-    db.signup(signindata.name, signindata.password, {
+    remoteDb.signup(signindata.name, signindata.password, {
         metadata: {
             // bei signup weitere Felder ausfüllen lassen
             // genug, um eine Rechnung schicken zu können?
@@ -38163,7 +38106,7 @@ module.exports = function (signindata) {
         tellWithModal('Das Konto konnte nicht erstellt werden', 'Die Datenbank meldete: ' + error);
     });
 };
-},{"../tellWithModal":177,"./signIn":168,"pouchdb":82,"pouchdb-authentication":31}],171:[function(require,module,exports){
+},{"../tellWithModal":175,"./signIn":166,"pouchdb":82,"pouchdb-authentication":31}],169:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -38200,7 +38143,7 @@ module.exports = function ($node) {
     };
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../createNewObjectFromHierarchy":131,"../createNewObjectFromObject":132,"../deleteObjectAndChildren":133,"underscore":126}],172:[function(require,module,exports){
+},{"../createNewObjectFromHierarchy":131,"../createNewObjectFromObject":132,"../deleteObjectAndChildren":133,"underscore":126}],170:[function(require,module,exports){
 /*
  * hier können Optionen für die pouch gesetzt werden,
  * so, dass sie nur an einem Ort erfasst sind
@@ -38217,7 +38160,7 @@ module.exports = function () {
         //'adapter': 'idb'
     };
 };
-},{}],173:[function(require,module,exports){
+},{}],171:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus */
 'use strict';
@@ -38264,7 +38207,7 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./form/positionFormBtngroup":147,"underscore":126}],174:[function(require,module,exports){
+},{"./form/positionFormBtngroup":147,"underscore":126}],172:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -38315,7 +38258,7 @@ module.exports = function () {
         .on('click.nav',   '.navbar-brand',                onClickNavbarBrand);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./event/onChangeElement":135,"./event/onClickFormDelete":136,"./event/onClickFormNew":137,"./event/onClickNavbarBrand":138,"./event/onClickNavbarCollapse":139,"./event/onScrollTab":140,"./form/fitTextareaToContent":143,"./nav/signInOrUp":169}],175:[function(require,module,exports){
+},{"./event/onChangeElement":135,"./event/onClickFormDelete":136,"./event/onClickFormNew":137,"./event/onClickNavbarBrand":138,"./event/onClickNavbarCollapse":139,"./event/onScrollTab":140,"./form/fitTextareaToContent":143,"./nav/signInOrUp":167}],173:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -38340,7 +38283,7 @@ module.exports = function (tab) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],176:[function(require,module,exports){
+},{}],174:[function(require,module,exports){
 /**
  * synchronisiert die Daten aus einer CouchDB in PouchDB
  */
@@ -38358,7 +38301,7 @@ var PouchDB        = require('pouchdb'),
     remoteCouch    = 'http://' + couchUser + ':' + couchPassword + '@' + couchUrl + '/' + couchName;
 
 module.exports = function () {
-    var db = new PouchDB('oi', pouchDbOptions);
+    var localDb = new PouchDB('oi', pouchDbOptions);
 
     function syncError() {
         console.log('error syncing');
@@ -38369,14 +38312,14 @@ module.exports = function () {
             live:  true,
             retry: true
         };
-        db.replicate.to(remoteCouch, opts, syncError);
-        db.replicate.from(remoteCouch, opts, syncError);
+        localDb.replicate.to(remoteCouch, opts, syncError);
+        localDb.replicate.from(remoteCouch, opts, syncError);
     }
 
     if (remoteCouch) { sync(); }
 };
 
-},{"./configuration":129,"./pouchDbOptions":172,"pouchdb":82}],177:[function(require,module,exports){
+},{"./configuration":129,"./pouchDbOptions":170,"pouchdb":82}],175:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -38399,7 +38342,7 @@ module.exports = function (title, text) {
     $modal.modal(options);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],178:[function(require,module,exports){
+},{}],176:[function(require,module,exports){
 /*
  * prüft, ob ein String eine email-Adressen sein könnte
  * Quelle: http://stackoverflow.com/questions/46155/validate-email-address-in-javascript
@@ -38412,7 +38355,7 @@ module.exports = function (string) {
     var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(string);
 };
-},{}],179:[function(require,module,exports){
+},{}],177:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, helper, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing, functionType="function";
   return "<div class=\"form-group\">\r\n    <label class=\"control-label\">"
@@ -38426,7 +38369,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(((helper = (helper = helpers.checked || (depth0 != null ? depth0.checked : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"checked","hash":{},"data":data}) : helper)))
     + ">\r\n            </label>\r\n        </div>\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":25}],180:[function(require,module,exports){
+},{"handlebars":25}],178:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,depths) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "            <div class=\"checkbox\">\r\n                <label>\r\n                    <input type=\"checkbox\" id=\""
@@ -38453,11 +38396,11 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "    </div>\r\n</div>";
 },"useData":true,"useDepths":true});
-},{"handlebars":25}],181:[function(require,module,exports){
+},{"handlebars":25}],179:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   return "<div class=\"btn-toolbar\" role=\"toolbar\" aria-label=\"Daten Toolbar\">\r\n    <div class=\"btn-group pull-right\" role=\"group\" aria-label=\"Daten Button group\">\r\n        <button id=\"formNew\" class=\"btn btn-default\">neu</button>\r\n        <button id=\"formDelete\" class=\"btn btn-default\">löschen</button>\r\n    </div>\r\n</div>";
   },"useData":true});
-},{"handlebars":25}],182:[function(require,module,exports){
+},{"handlebars":25}],180:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "<div class=\"form-group\">\r\n    <label for=\""
@@ -38476,7 +38419,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.value : stack1), depth0))
     + "\">\r\n</div>";
 },"useData":true});
-},{"handlebars":25}],183:[function(require,module,exports){
+},{"handlebars":25}],181:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,depths) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "            <div class=\"radio\">\r\n                <label>\r\n                    <input type=\"radio\" name=\""
@@ -38503,7 +38446,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "    </div>\r\n</div>";
 },"useData":true,"useDepths":true});
-},{"handlebars":25}],184:[function(require,module,exports){
+},{"handlebars":25}],182:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, buffer = "                <option value=";
   stack1 = lambda((depth0 != null ? depth0.value : depth0), depth0);
@@ -38526,7 +38469,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "        </select>\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":25}],185:[function(require,module,exports){
+},{"handlebars":25}],183:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "<div class=\"form-group\">\r\n    <label for=\""

@@ -3,11 +3,10 @@
 
 var PouchDB                     = require('pouchdb'),
     handleExternalObjectChanges = require('../handleExternalObjectChanges'),
-    changedObjectsIndex         = require('./changedObjectsIndex'),
     pouchDbOptions              = require('../pouchDbOptions');
 
 module.exports = function () {
-    var db = new PouchDB('oi', pouchDbOptions);
+    var localDb = new PouchDB('oi', pouchDbOptions);
 
     // TODO: watch changes to hierarchies
     // when changes happen in DB, update model and when necessary ui
@@ -17,10 +16,9 @@ module.exports = function () {
     // - user is in users
     // - doc.type = type
     // use changesFilter if req can be dynamically passed
-    db.changes({
+    localDb.changes({
         since: 'now',
         live: true,
-        include_docs: true,
-        view: changedObjectsIndex(),
+        include_docs: true
     }).on('change', handleExternalObjectChanges);
 };

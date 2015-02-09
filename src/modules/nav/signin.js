@@ -7,12 +7,12 @@ var $              = require('jquery'),
     initiateNav    = require('./initiateNav');
 
 module.exports = function (signindata) {
-    var db = new PouchDB('http://localhost:5984/oi');
+    var remoteDb = new PouchDB('http://localhost:5984/oi');
 
     PouchDB.plugin(require('pouchdb-authentication'));
 
     // signin
-    db.login(signindata.name, signindata.password).then(function (response) {
+    remoteDb.login(signindata.name, signindata.password).then(function (response) {
         window.oi.loginName = signindata.name;
         // name in DB speichern
         // nachher auslagern, da auch nach signup
@@ -23,7 +23,7 @@ module.exports = function (signindata) {
         $('#signinWithModal').modal('hide');
     }).catch(function (error) {
 
-        console.log('error from db.login: ', error);
+        console.log('error from remoteDb.login: ', error);
 
         if (error.name === 'unauthorized') {
             // name or password incorrect

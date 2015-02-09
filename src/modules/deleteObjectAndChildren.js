@@ -1,7 +1,7 @@
 /*
  * gets a node from the tree
  * deletes the node's object, all child objects
- * from db, model and tree
+ * from localDb, model and tree
  * also removes child hierarchies in tree
  * selects the parent node
  */
@@ -28,7 +28,7 @@ module.exports = function ($node) {
         parentNodeId,
         objectsToDelete = [],
         childrenToDelete,
-        db              = new PouchDB('oi', pouchDbOptions);
+        localDb              = new PouchDB('oi', pouchDbOptions);
 
     // ermitteln, wieviele child-Objekte betroffen werden
     childrenToDelete = _.map(nodeChildren, function (child) {
@@ -61,8 +61,8 @@ module.exports = function ($node) {
             var nodeJson = tree.get_node('#' + childNodeId);
 
             if (nodeJson && nodeJson.data && nodeJson.data.type && nodeJson.data.type === 'object') {
-                // delete object from db and model
-                db.remove(getObject(nodeJson.id));
+                // delete object from localDb and model
+                localDb.remove(getObject(nodeJson.id));
                 deleteObjectFromModel(nodeJson.id);
             }
             // delete node (hierarchies and objects)
@@ -73,8 +73,8 @@ module.exports = function ($node) {
         if (objectsToDelete.length > 0) {
             object = getObject(objectId);
             if (object) {
-                // delete object in db
-                db.remove(object).then(function () {
+                // delete object in localDb
+                localDb.remove(object).then(function () {
                     // delete model
                     window.oi.objects = _.without(window.oi.objects, object);
                     // delete node
