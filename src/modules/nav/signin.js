@@ -19,7 +19,8 @@ module.exports = function (signindata) {
         if (signindata.remember) {
             localStorage.loginName = signindata.name;
         }
-        initiateNav();
+        // set firstSync true
+        initiateNav(true);
         $('#signinWithModal').modal('hide');
     }).catch(function (error) {
 
