@@ -1,9 +1,10 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $         = require('jquery'),
-    _         = require('underscore'),
-    getObject = require('../getObject');
+var $             = require('jquery'),
+    _             = require('underscore'),
+    getObject     = require('../getObject'),
+    saveHierarchy = require('../form/saveHierarchy');
 
 module.exports = function () {
     event.preventDefault();
@@ -52,11 +53,11 @@ module.exports = function () {
                     if (field) {
                         // update model
                         field.order = index;
-                        // TODO: update db
-
                     }
 
                 });
+                // update hierarchy in db
+                saveHierarchy(correspondingHierarchy);
             }
         });
     }

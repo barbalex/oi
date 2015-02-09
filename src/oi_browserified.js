@@ -42,7 +42,7 @@ window.oi.initiiereApp = function () {
 
 // gleich ein mal ausführen
 window.oi.initiiereApp();
-},{"./modules/initiateResizables":154,"./modules/nav/getLogin":163,"./modules/nav/initiateNav":165,"./modules/setupEvents":174,"bootstrap-validator":4,"handlebars":25}],2:[function(require,module,exports){
+},{"./modules/initiateResizables":155,"./modules/nav/getLogin":164,"./modules/nav/initiateNav":166,"./modules/setupEvents":175,"bootstrap-validator":4,"handlebars":25}],2:[function(require,module,exports){
 module.exports={
     "user": "barbalex",
     "pass": "dLhdMg12"
@@ -36689,7 +36689,7 @@ module.exports = function (object, hierarchy) {
     return newObject;
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./guid":152,"./nav/createChildHierarchiesOfObject":155,"./nav/createTreeNodeObject":159,"dateformat":9,"underscore":126}],131:[function(require,module,exports){
+},{"./guid":153,"./nav/createChildHierarchiesOfObject":156,"./nav/createTreeNodeObject":160,"dateformat":9,"underscore":126}],131:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -36723,7 +36723,7 @@ module.exports = function (hierarchyId, parentId) {
         console.log('error: no parent hierarchy found for hierarchy with id = ', hierarchyId);
     }
 };
-},{"./createNewObject":130,"./getHierarchy":150,"underscore":126}],132:[function(require,module,exports){
+},{"./createNewObject":130,"./getHierarchy":151,"underscore":126}],132:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -36749,7 +36749,7 @@ module.exports = function (objectId) {
         console.log('error: no hierarchy found for object with id = ', objectId);
     }
 };
-},{"./createNewObject":130,"./getHierarchy":150,"./getObject":151}],133:[function(require,module,exports){
+},{"./createNewObject":130,"./getHierarchy":151,"./getObject":152}],133:[function(require,module,exports){
 (function (global){
 /*
  * gets a node from the tree
@@ -36853,7 +36853,7 @@ module.exports = function ($node) {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./askYesNoWithModal":128,"./deleteObjectFromModel":134,"./getObject":151,"./pouchDbOptions":172,"./tellWithModal":177,"pouchdb":82,"underscore":126}],134:[function(require,module,exports){
+},{"./askYesNoWithModal":128,"./deleteObjectFromModel":134,"./getObject":152,"./pouchDbOptions":173,"./tellWithModal":178,"pouchdb":82,"underscore":126}],134:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -36885,7 +36885,7 @@ module.exports = function () {
     saveObjectValue(id, field, value);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../form/getValueAfterChange":145,"../form/saveObjectValue":149}],136:[function(require,module,exports){
+},{"../form/getValueAfterChange":145,"../form/saveObjectValue":150}],136:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -36930,9 +36930,10 @@ module.exports = function () {
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $         = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
-    _         = require('underscore'),
-    getObject = require('../getObject');
+var $             = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+    _             = require('underscore'),
+    getObject     = require('../getObject'),
+    saveHierarchy = require('../form/saveHierarchy');
 
 module.exports = function () {
     event.preventDefault();
@@ -36981,17 +36982,17 @@ module.exports = function () {
                     if (field) {
                         // update model
                         field.order = index;
-                        // TODO: update db
-
                     }
 
                 });
+                // update hierarchy in db
+                saveHierarchy(correspondingHierarchy);
             }
         });
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../getObject":151,"underscore":126}],139:[function(require,module,exports){
+},{"../form/saveHierarchy":149,"../getObject":152,"underscore":126}],139:[function(require,module,exports){
 (function (global){
 // klickt man in der Mobilansicht des Menus auf den Titel, soll es schliessen
 
@@ -37339,7 +37340,7 @@ module.exports = function (id, type) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../../templates/checkbox":179,"../../../templates/checkboxGroup":180,"../../../templates/formButtonToolbar":181,"../../../templates/input":182,"../../../templates/optionGroup":183,"../../../templates/select":184,"../../../templates/textarea":185,"../getHierarchy":150,"../getObject":151,"./addCheckedToValueList":142,"./fitTextareaToContent":144,"./positionFormBtngroup":148,"underscore":126}],147:[function(require,module,exports){
+},{"../../../templates/checkbox":180,"../../../templates/checkboxGroup":181,"../../../templates/formButtonToolbar":182,"../../../templates/input":183,"../../../templates/optionGroup":184,"../../../templates/select":185,"../../../templates/textarea":186,"../getHierarchy":151,"../getObject":152,"./addCheckedToValueList":142,"./fitTextareaToContent":144,"./positionFormBtngroup":148,"underscore":126}],147:[function(require,module,exports){
 // Hilfsfunktion, die typeof ersetzt und ergänzt
 // typeof gibt bei input-Feldern immer String zurück!
 
@@ -37402,6 +37403,50 @@ var $                 = (typeof window !== "undefined" ? window.$ : typeof globa
     PouchDB           = require('pouchdb'),
     pouchDbOptions    = require('../pouchDbOptions'),
     getLabelForObject = require('../nav/getLabelForObject'),
+    getHierarchy      = require('../getHierarchy');
+
+module.exports = function (hierarchy) {
+    var lastEdited = {},
+        localDb    = new PouchDB('oi', pouchDbOptions);
+
+    // build lastEdited
+    lastEdited.date     = dateformat(new Date(), 'isoDateTime');
+    lastEdited.user     = window.oi.loginName;
+    lastEdited.database = window.oi.databaseId;
+
+    // set new value
+    hierarchy.lastEdited  = lastEdited;
+
+    // write to pouch
+    localDb.put(hierarchy)
+        .then(function (response) {
+            // update rev in model object
+            hierarchy._rev = response.rev;
+
+            // TODO: if field is nameField, update name in tree
+            /*var correspondingHierarchy = _.find(window.oi.hierarchies, function (hierarchy) {
+                return hierarchy._id === object.hId;
+            });
+            if (object.data && correspondingHierarchy && correspondingHierarchy.nameField && correspondingHierarchy.nameField === field) {
+                $('#navContent').jstree().rename_node('#' + object._id, getLabelForObject(object, correspondingHierarchy));
+            }*/
+        })
+        .catch(function (err) {
+            console.log('error: ', err);
+        });
+};
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../getHierarchy":151,"../nav/getLabelForObject":163,"../pouchDbOptions":173,"dateformat":9,"pouchdb":82,"underscore":126}],150:[function(require,module,exports){
+(function (global){
+/*jslint node: true, browser: true, nomen: true, todo: true */
+'use strict';
+
+var $                 = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+    dateformat        = require('dateformat'),
+    _                 = require('underscore'),
+    PouchDB           = require('pouchdb'),
+    pouchDbOptions    = require('../pouchDbOptions'),
+    getLabelForObject = require('../nav/getLabelForObject'),
     getObject         = require('../getObject');
 
 module.exports = function (id, field, value) {
@@ -37443,7 +37488,7 @@ module.exports = function (id, field, value) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../getObject":151,"../nav/getLabelForObject":162,"../pouchDbOptions":172,"dateformat":9,"pouchdb":82,"underscore":126}],150:[function(require,module,exports){
+},{"../getObject":152,"../nav/getLabelForObject":163,"../pouchDbOptions":173,"dateformat":9,"pouchdb":82,"underscore":126}],151:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -37457,7 +37502,7 @@ module.exports = function (hierarchyId) {
 
     return hierarchy || null;
 };
-},{"underscore":126}],151:[function(require,module,exports){
+},{"underscore":126}],152:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -37471,7 +37516,7 @@ module.exports = function (id) {
 
     return object || null;
 };
-},{"underscore":126}],152:[function(require,module,exports){
+},{"underscore":126}],153:[function(require,module,exports){
 /*
 * generiert eine uuid
 * Quelle: http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
@@ -37490,7 +37535,7 @@ module.exports = function () {
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
         s4() + '-' + s4() + s4() + s4();
 };
-},{}],153:[function(require,module,exports){
+},{}],154:[function(require,module,exports){
 (function (global){
 /*
  * passt model und wenn nötig die ui an,
@@ -37550,7 +37595,7 @@ module.exports = function (change) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./form/initiateForm":146,"./nav/getLabelForObject":162,"underscore":126}],154:[function(require,module,exports){
+},{"./form/initiateForm":146,"./nav/getLabelForObject":163,"underscore":126}],155:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -37626,7 +37671,7 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./alsoResizeReverse":127,"./form/positionFormBtngroup":148,"./setWidthOfTabs":173,"./showTab":175}],155:[function(require,module,exports){
+},{"./alsoResizeReverse":127,"./form/positionFormBtngroup":148,"./setWidthOfTabs":174,"./showTab":176}],156:[function(require,module,exports){
 // creates descendant hierarchical objects of single objects
 // adds them to an array
 
@@ -37663,7 +37708,7 @@ module.exports = function (object) {
     }
     return [];
 };
-},{"underscore":126}],156:[function(require,module,exports){
+},{"underscore":126}],157:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -37694,7 +37739,7 @@ module.exports = function () {
     });
 
 };
-},{"../pouchDbOptions":172,"./initiateChangeStream":164,"pouchdb":82}],157:[function(require,module,exports){
+},{"../pouchDbOptions":173,"./initiateChangeStream":165,"pouchdb":82}],158:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -37716,7 +37761,7 @@ module.exports = function (callback) {
         callback('error querrying hierarchies after putting objectsByUserTypeIndex: ' + error, null);
     });
 };
-},{"../pouchDbOptions":172,"./objectsByUserTypeIndex":166,"pouchdb":82}],158:[function(require,module,exports){
+},{"../pouchDbOptions":173,"./objectsByUserTypeIndex":167,"pouchdb":82}],159:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -37763,7 +37808,7 @@ module.exports = function () {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../form/initiateForm":146,"./generateDataForTree":161,"./treeContextmenuItems":171,"jstree":27}],159:[function(require,module,exports){
+},{"../form/initiateForm":146,"./generateDataForTree":162,"./treeContextmenuItems":172,"jstree":27}],160:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -37796,7 +37841,7 @@ module.exports = function (object) {
 
     return jstreeObject;
 };
-},{"./getLabelForObject":162,"underscore":126}],160:[function(require,module,exports){
+},{"./getLabelForObject":163,"underscore":126}],161:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -37809,7 +37854,7 @@ module.exports = function (object) {
     jstreeObject.parent = '#';
     return jstreeObject;
 };
-},{"./createTreeNodeObject":159}],161:[function(require,module,exports){
+},{"./createTreeNodeObject":160}],162:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -37843,7 +37888,7 @@ module.exports = function () {
 
     return _.union(objectsData, childHierarchiesData);
 };
-},{"./createChildHierarchiesOfObject":155,"./createTreeNodeObject":159,"./createTreeNodeRootObject":160,"./getLabelForObject":162,"underscore":126}],162:[function(require,module,exports){
+},{"./createChildHierarchiesOfObject":156,"./createTreeNodeObject":160,"./createTreeNodeRootObject":161,"./getLabelForObject":163,"underscore":126}],163:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -37874,7 +37919,7 @@ module.exports = function (object, correspondingHierarchy) {
     label      = '<strong>' + labelValue + '</strong>';
     return label;
 };
-},{"underscore":126}],163:[function(require,module,exports){
+},{"underscore":126}],164:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -37892,7 +37937,7 @@ module.exports = function () {
     }
 
 };
-},{"./initiateNav":165,"./openSigninModal":167}],164:[function(require,module,exports){
+},{"./initiateNav":166,"./openSigninModal":168}],165:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -37917,7 +37962,7 @@ module.exports = function () {
         include_docs: true
     }).on('change', handleExternalObjectChanges);
 };
-},{"../handleExternalObjectChanges":153,"../pouchDbOptions":172,"pouchdb":82}],165:[function(require,module,exports){
+},{"../handleExternalObjectChanges":154,"../pouchDbOptions":173,"pouchdb":82}],166:[function(require,module,exports){
 (function (global){
 /*
  * initiiert die nav
@@ -37997,7 +38042,7 @@ module.exports = function (firstSync) {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../pouchDbOptions":172,"../syncPouch":176,"./createDatabaseId":156,"./createObjectsByUserTypeIndex":157,"./createTree":158,"./objectsByUserTypeIndex":166,"async":3,"pouchdb":82,"underscore":126}],166:[function(require,module,exports){
+},{"../pouchDbOptions":173,"../syncPouch":177,"./createDatabaseId":157,"./createObjectsByUserTypeIndex":158,"./createTree":159,"./objectsByUserTypeIndex":167,"async":3,"pouchdb":82,"underscore":126}],167:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -38019,7 +38064,7 @@ module.exports = function () {
         }
     };
 };
-},{}],167:[function(require,module,exports){
+},{}],168:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -38038,7 +38083,7 @@ module.exports = function () {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],168:[function(require,module,exports){
+},{}],169:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -38076,7 +38121,7 @@ module.exports = function (signindata) {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../tellWithModal":177,"./initiateNav":165,"pouchdb":82,"pouchdb-authentication":31}],169:[function(require,module,exports){
+},{"../tellWithModal":178,"./initiateNav":166,"pouchdb":82,"pouchdb-authentication":31}],170:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -38139,7 +38184,7 @@ module.exports = function () {
     signIn(signindata);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../tellWithModal":177,"../validateEmail":178,"./signIn":168,"./signUp":170}],170:[function(require,module,exports){
+},{"../tellWithModal":178,"../validateEmail":179,"./signIn":169,"./signUp":171}],171:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -38173,7 +38218,7 @@ module.exports = function (signindata) {
         tellWithModal('Das Konto konnte nicht erstellt werden', 'Die Datenbank meldete: ' + error);
     });
 };
-},{"../tellWithModal":177,"./signIn":168,"pouchdb":82,"pouchdb-authentication":31}],171:[function(require,module,exports){
+},{"../tellWithModal":178,"./signIn":169,"pouchdb":82,"pouchdb-authentication":31}],172:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -38210,7 +38255,7 @@ module.exports = function ($node) {
     };
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../createNewObjectFromHierarchy":131,"../createNewObjectFromObject":132,"../deleteObjectAndChildren":133,"underscore":126}],172:[function(require,module,exports){
+},{"../createNewObjectFromHierarchy":131,"../createNewObjectFromObject":132,"../deleteObjectAndChildren":133,"underscore":126}],173:[function(require,module,exports){
 /*
  * hier können Optionen für die pouch gesetzt werden,
  * so, dass sie nur an einem Ort erfasst sind
@@ -38227,7 +38272,7 @@ module.exports = function () {
         //'adapter': 'idb'
     };
 };
-},{}],173:[function(require,module,exports){
+},{}],174:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus */
 'use strict';
@@ -38274,7 +38319,7 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./form/positionFormBtngroup":148,"underscore":126}],174:[function(require,module,exports){
+},{"./form/positionFormBtngroup":148,"underscore":126}],175:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -38328,7 +38373,7 @@ module.exports = function () {
         .on('click.nav',   '.navbar-brand',                onClickNavbarBrand);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./event/onChangeElement":135,"./event/onClickFormDelete":136,"./event/onClickFormNew":137,"./event/onClickNavFormSort":138,"./event/onClickNavbarBrand":139,"./event/onClickNavbarCollapse":140,"./event/onScrollTab":141,"./form/fitTextareaToContent":144,"./nav/signInOrUp":169}],175:[function(require,module,exports){
+},{"./event/onChangeElement":135,"./event/onClickFormDelete":136,"./event/onClickFormNew":137,"./event/onClickNavFormSort":138,"./event/onClickNavbarBrand":139,"./event/onClickNavbarCollapse":140,"./event/onScrollTab":141,"./form/fitTextareaToContent":144,"./nav/signInOrUp":170}],176:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -38353,7 +38398,7 @@ module.exports = function (tab) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],176:[function(require,module,exports){
+},{}],177:[function(require,module,exports){
 /**
  * synchronisiert die Daten aus einer CouchDB in PouchDB
  */
@@ -38389,7 +38434,7 @@ module.exports = function () {
     if (remoteCouch) { sync(); }
 };
 
-},{"./configuration":129,"./pouchDbOptions":172,"pouchdb":82}],177:[function(require,module,exports){
+},{"./configuration":129,"./pouchDbOptions":173,"pouchdb":82}],178:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -38412,7 +38457,7 @@ module.exports = function (title, text) {
     $modal.modal(options);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],178:[function(require,module,exports){
+},{}],179:[function(require,module,exports){
 /*
  * prüft, ob ein String eine email-Adressen sein könnte
  * Quelle: http://stackoverflow.com/questions/46155/validate-email-address-in-javascript
@@ -38425,7 +38470,7 @@ module.exports = function (string) {
     var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(string);
 };
-},{}],179:[function(require,module,exports){
+},{}],180:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, helper, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing, functionType="function";
   return "<div class=\"form-group js-form-group\">\r\n    <label class=\"control-label\">"
@@ -38439,7 +38484,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(((helper = (helper = helpers.checked || (depth0 != null ? depth0.checked : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"checked","hash":{},"data":data}) : helper)))
     + ">\r\n            </label>\r\n        </div>\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":25}],180:[function(require,module,exports){
+},{"handlebars":25}],181:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,depths) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "            <div class=\"checkbox\">\r\n                <label>\r\n                    <input type=\"checkbox\" id=\""
@@ -38466,11 +38511,11 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "    </div>\r\n</div>";
 },"useData":true,"useDepths":true});
-},{"handlebars":25}],181:[function(require,module,exports){
+},{"handlebars":25}],182:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   return "<div class=\"btn-toolbar\" role=\"toolbar\" aria-label=\"Daten Toolbar\">\r\n    <div class=\"btn-group pull-right\" role=\"group\" aria-label=\"Daten Button group\">\r\n        <button id=\"formNew\" class=\"btn btn-default\">neu</button>\r\n        <button id=\"formDelete\" class=\"btn btn-default\">löschen</button>\r\n    </div>\r\n</div>";
   },"useData":true});
-},{"handlebars":25}],182:[function(require,module,exports){
+},{"handlebars":25}],183:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "<div class=\"form-group js-form-group\">\r\n    <label for=\""
@@ -38489,7 +38534,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.value : stack1), depth0))
     + "\">\r\n</div>";
 },"useData":true});
-},{"handlebars":25}],183:[function(require,module,exports){
+},{"handlebars":25}],184:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,depths) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "            <div class=\"radio\">\r\n                <label>\r\n                    <input type=\"radio\" name=\""
@@ -38516,7 +38561,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "    </div>\r\n</div>";
 },"useData":true,"useDepths":true});
-},{"handlebars":25}],184:[function(require,module,exports){
+},{"handlebars":25}],185:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, buffer = "                <option value=";
   stack1 = lambda((depth0 != null ? depth0.value : depth0), depth0);
@@ -38539,7 +38584,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "        </select>\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":25}],185:[function(require,module,exports){
+},{"handlebars":25}],186:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "<div class=\"form-group js-form-group\">\r\n    <label for=\""
