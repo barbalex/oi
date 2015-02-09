@@ -17,7 +17,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
     + escapeExpression(lambda((depth0 != null ? depth0.label : depth0), depth0))
     + "\r\n                </label>\r\n            </div>\r\n";
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data,depths) {
-  var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, buffer = "<div class=\"form-group\">\r\n    <label class=\"control-label\">"
+  var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, buffer = "<div class=\"form-group js-form-group\">\r\n    <label class=\"control-label\">"
     + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.label : stack1), depth0))
     + "</label>\r\n    <div class=\"controls reducedMargin\">\r\n";
   stack1 = helpers.each.call(depth0, ((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.valueList : stack1), {"name":"each","hash":{},"fn":this.program(1, data, depths),"inverse":this.noop,"data":data});

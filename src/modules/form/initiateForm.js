@@ -30,6 +30,10 @@ module.exports = function (id, type) {
         if (object && object.hId) {
             hierarchy = getHierarchy(object.hId);
             if (hierarchy && hierarchy.fields) {
+                // sort fields by order
+                hierarchy.fields = _.sortBy(hierarchy.fields, function (field) {
+                    return field.order || 0;
+                });
                 _.each(hierarchy.fields, function (field) {
                     var templateObject                  = {};
                     templateObject.object               = {};

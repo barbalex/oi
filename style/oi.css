@@ -89,6 +89,11 @@ body {
   max-width: calc(100% - 8px);
   padding: 5px 14px 5px 10px;
 }
+#formContent .ui-sortable-handle {
+  border: solid rgb(234, 118, 118) 1px;
+  cursor: move;
+  background-color: rgb(255, 187, 156);
+}
 #formSeparator {
   display: none;
 }

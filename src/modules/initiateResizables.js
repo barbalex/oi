@@ -39,7 +39,7 @@ module.exports = function () {
         containment:       '#content'
     });
 
-    $('.nav').on('click', 'li', function (event) {
+    $('.js-nav-tabs').on('click', 'li', function (event) {
         var id  = $(this).attr('id'),
             tab = id.substring(0, id.length - 4);
 

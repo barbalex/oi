@@ -9,6 +9,7 @@ var $                     = require('jquery'),
     onChangeElement       = require('./event/onChangeElement'),
     onClickNavbarCollapse = require('./event/onClickNavbarCollapse'),
     onClickNavbarBrand    = require('./event/onClickNavbarBrand'),
+    onClickNavFormSort    = require('./event/onClickNavFormSort'),
     signInOrUp            = require('./nav/signInOrUp');
 
 module.exports = function () {
@@ -33,6 +34,8 @@ module.exports = function () {
             $('#signinWithModalSigninButton').trigger('click');
         }
     });
+
+    $('.nav').on('click', '#navFormSort', onClickNavFormSort);
 
     $('#form')
         .on('click',       '#formNew',                     onClickFormNew)
