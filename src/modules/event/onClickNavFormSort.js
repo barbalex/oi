@@ -43,9 +43,6 @@ module.exports = function () {
                     // get field label
                     fieldLabel = $(this).find('[data-object]').data('object').label;
 
-                    console.log('fieldLabel: ', fieldLabel);
-                    console.log('index: ', index);
-
                     // hierarchy.fields.order = index
                     field = _.find(correspondingHierarchy.fields, function (field) {
                         return field.label === fieldLabel;
