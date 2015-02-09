@@ -57516,8 +57516,6 @@ module.exports = function (firstSync) {
     // expose pouchdb to pouchdb-fauxton
     window.PouchDB = PouchDB;
 
-    console.log('initiateNav');
-
     // every database gets a locally saved id
     // this id is added to every document changed
     // with it the changes feed can ignore locally changed documents
@@ -57632,12 +57630,10 @@ module.exports = function (signindata) {
             localStorage.loginName = signindata.name;
         }
         // set firstSync true
+        // then data for model is fetched from remote db
         initiateNav(true);
         $('#signinWithModal').modal('hide');
     }).catch(function (error) {
-
-        console.log('error from remoteDb.login: ', error);
-
         if (error.name === 'unauthorized') {
             // name or password incorrect
             tellWithModal('Anmeldung gescheitert', 'Sie haben Email und/oder Passwort falsch eingegeben. Oder müssen Sie ein Konto erstellen?');

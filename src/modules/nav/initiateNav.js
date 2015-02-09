@@ -27,8 +27,6 @@ module.exports = function (firstSync) {
     // expose pouchdb to pouchdb-fauxton
     window.PouchDB = PouchDB;
 
-    console.log('initiateNav');
-
     // every database gets a locally saved id
     // this id is added to every document changed
     // with it the changes feed can ignore locally changed documents

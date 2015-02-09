@@ -13,4 +13,4 @@ var gulp = require('gulp'),
 
 requireDir('../gulp-tasks', {recurse: true});
 
-return gulp.task('default', ['dev']);
+return gulp.task('default', ['dev_1']);
