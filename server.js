@@ -28,6 +28,15 @@ server.route({
 
 server.route({
     method: 'GET',
+    path: '/oi.appcache',
+    handler: function (request, reply) {
+        reply('/oi.appcache')
+            .type('text/cache-manifest');
+    }
+});
+
+server.route({
+    method: 'GET',
     path: '/src/{param*}',
     handler: {
         directory: {

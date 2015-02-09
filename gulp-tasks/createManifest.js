@@ -13,7 +13,7 @@ module.exports = function () {
     manifestText += 'images/favicon.ico' + os.EOL;
     manifestText += 'src/oi_built.js'    + os.EOL + os.EOL;
     manifestText += 'NETWORK:'           + os.EOL;
-    manifestText += '*'                 + os.EOL;
+    manifestText += '*'                  + os.EOL;
 
     return manifestText;
 };

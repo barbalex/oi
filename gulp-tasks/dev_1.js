@@ -9,6 +9,6 @@ var fs             = require('fs'),
 requireDir('../gulp-tasks', {recurse: true});
 
 return gulp.task('dev_1', ['templates'], function () {
-    fs.writeFile('oi.manifest', createManifest());
+    fs.writeFile('oi.appcache', createManifest());
     gulp.start('dev_2');
 });
