@@ -3,7 +3,7 @@
 
 var PouchDB                     = require('pouchdb'),
     handleExternalObjectChanges = require('../handleExternalObjectChanges'),
-    foreignChangedIndex         = require('./foreignChangedIndex'),
+    changedObjectsIndex         = require('./changedObjectsIndex'),
     pouchDbOptions              = require('../pouchDbOptions');
 
 module.exports = function () {
@@ -21,7 +21,6 @@ module.exports = function () {
         since: 'now',
         live: true,
         include_docs: true,
-        view: foreignChangedIndex(),
-        key: 'object'
+        view: changedObjectsIndex(),
     }).on('change', handleExternalObjectChanges);
 };
