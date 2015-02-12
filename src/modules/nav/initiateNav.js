@@ -35,7 +35,8 @@ module.exports = function (firstSync) {
         if (error) { console.log('error getting project names: ', error); }
 
         // build model
-        getModelData(firstSync, projectNames, function () {
+        getModelData(firstSync, projectNames, function (error) {
+            if (error) { console.log('error getting model data: ', error); }
             // every database gets a locally saved id
             // this id is added to every document changed
             // with it the changes feed can ignore locally changed documents

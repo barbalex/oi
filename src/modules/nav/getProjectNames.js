@@ -3,7 +3,7 @@
 
 var _             = require('underscore'),
     PouchDB       = require('pouchdb'),
-    configuration = require('./configuration'),
+    configuration = require('../configuration'),
     couchUrl      = configuration.couch.dbUrl,
     couchName     = configuration.couch.dbName;
 

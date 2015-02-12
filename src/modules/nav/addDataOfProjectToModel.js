@@ -5,7 +5,7 @@ var _                            = require('underscore'),
     async                        = require('async'),
     PouchDB                      = require('pouchdb'),
     pouchDbOptions               = require('../pouchDbOptions'),
-    configuration                = require('./configuration'),
+    configuration                = require('../configuration'),
     couchUrl                     = configuration.couch.dbUrl,
     createObjectsByUserTypeIndex = require('./createObjectsByUserTypeIndex');
 
@@ -20,7 +20,6 @@ module.exports = function (firstSync, projectName, callback) {
     // if is the fist sync: get the modeldata from remoteDb
     async.parallel({
         hierarchies: function (callback) {
-            // TODO: loop through all projectDb's
             db.query('objects_by_user_type', {include_docs: true, key: [window.oi.loginName, 'hierarchy']}).then(function (result) {
                 var hierarchies = _.map(result.rows, function (row) {
                     return row.doc;
@@ -30,7 +29,7 @@ module.exports = function (firstSync, projectName, callback) {
                 if (error.status === 404) {
                     createObjectsByUserTypeIndex();
                 }
-                callback('error querrying hierarchies: ' + error, null);
+                callback('error querrying hierarchies in project ' + projectName + ': ' + error, null);
             });
         },
         objects: function (callback) {
@@ -43,16 +42,16 @@ module.exports = function (firstSync, projectName, callback) {
                 if (error.status === 404) {
                     createObjectsByUserTypeIndex();
                 }
-                callback('error querrying objects: ' + error, null);
+                callback('error querrying objects in project ' + projectName + ': ' + error, null);
             });
         }
     }, function (error, results) {
         // results equals to: { hierarchies: hierarchies, objects: objects }
         if (error) {
             console.log('error getting modeldata for project ' + projectName + ': ', error);
-            return null;
         }
-
-        return results;
+        callback(error, results);
+        //window.oi.hierarchies.push(results.hierarchies);
+        //window.oi.objects.push(results.objects);
     });
 };

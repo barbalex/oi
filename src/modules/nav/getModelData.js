@@ -6,30 +6,29 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var _                     = require('underscore'),
-    getModelDataOfProject = require('./getModelDataOfProject');
+var _                       = require('underscore'),
+    async                   = require('async'),
+    addDataOfProjectToModel = require('./addDataOfProjectToModel');
 
 module.exports = function (firstSync, projectNames, callback) {
-    var resultsArray;
-
-    // loop through projectNames
-    // get their data
-    resultsArray = _.map(projectNames, function (projectName) {
-        return getModelDataOfProject(firstSync, projectName);
-    });
+    var functions = [];
 
     // create globals for data (primitive self-built models)
     window.oi.hierarchies = [];
     window.oi.objects     = [];
 
-    _.each(resultsArray, function (result) {
-        if (result && result.hierarchies) {
-            window.oi.hierarchies.push(result.hierarchies);
-        }
-        if (result && result.objects) {
-            window.oi.objects.push(result.objects);
-        }
-    });
+    // loop through projects
+    // add their data to the model
 
-    callback();
+    // TODO: use async.parralel to execute array of functions parralel and know when they are finished
+    /*_.each(projectNames, function (projectName) {
+        functions.push(addDataOfProjectToModel(firstSync, projectName));
+    });*/
+
+    async.each(projectNames, function (projectName, callback) {
+        callback(addDataOfProjectToModel(firstSync, projectName));
+    }, function (error, results) {
+        console.log('results from getting model data: ', results);
+        callback(error, results);
+    });
 };
