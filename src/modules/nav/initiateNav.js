@@ -34,8 +34,6 @@ module.exports = function (firstSync) {
         // TODO: tell the user
         if (error) { console.log('error getting project names: ', error); }
 
-        console.log('project names: ', projectNames);
-
         // build model
         getModelData(firstSync, projectNames, function (error) {
             if (error) { console.log('error getting model data: ', error); }

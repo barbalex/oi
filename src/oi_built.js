@@ -60945,8 +60945,9 @@ module.exports = function (firstSync, projectName, callback) {
         if (error) {
             console.log('error getting modeldata for project ' + projectName + ': ', error);
         }
-        console.log('results for ' + projectName, results);
         callback(error, results);
+        //window.oi.hierarchies.push(results.hierarchies);
+        //window.oi.objects.push(results.objects);
     });
 };
 },{"../configuration":129,"../pouchDbOptions":179,"./createObjectsByUserTypeIndex":163,"async":3,"pouchdb":82,"underscore":126}],161:[function(require,module,exports){
@@ -61266,26 +61267,17 @@ module.exports = function (firstSync, callback) {
     if (firstSync) {
         remoteDb.get('org.couchdb.user:' + window.oi.loginName).then(function (user) {
             projectDbs = user.roles;
-
-            console.log('projectNames from remote: ', projectDbs);
-
             callback(null, projectDbs);
         }).catch(function (error) {
-
-            console.log('error from remote: ', error);
-
             callback(error, null);
         });
     } else {
-        // get list of projectDbs from pouch
+        // get list of projectDbs from model
         projectDbs = _.map(window.oi.objects, function (object) {
             if (!object.parent) {
                 return 'project_' + object._id;
             }
         });
-
-        console.log('projectNames from local: ', projectDbs);
-
         callback(null, projectDbs);
     }
 };
@@ -61326,8 +61318,6 @@ module.exports = function (firstSync) {
     getProjectNames(firstSync, function (error, projectNames) {
         // TODO: tell the user
         if (error) { console.log('error getting project names: ', error); }
-
-        console.log('project names: ', projectNames);
 
         // build model
         getModelData(firstSync, projectNames, function (error) {

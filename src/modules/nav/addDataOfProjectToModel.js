@@ -50,7 +50,8 @@ module.exports = function (firstSync, projectName, callback) {
         if (error) {
             console.log('error getting modeldata for project ' + projectName + ': ', error);
         }
-        console.log('results for ' + projectName, results);
         callback(error, results);
+        //window.oi.hierarchies.push(results.hierarchies);
+        //window.oi.objects.push(results.objects);
     });
 };
