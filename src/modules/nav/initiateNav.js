@@ -11,68 +11,41 @@ var $                            = require('jquery'),
     async                        = require('async'),
     PouchDB                      = require('pouchdb'),
     pouchDbOptions               = require('../pouchDbOptions'),
-    sync                         = require('../sync'),
+    syncWithRemoteDb             = require('../syncWithRemoteDb'),
+    syncWithRemoteUserDb         = require('../syncWithRemoteUserDb'),
     createTree                   = require('./createTree'),
     createDatabaseId             = require('./createDatabaseId'),
-    createObjectsByUserTypeIndex = require('./createObjectsByUserTypeIndex');
+    createObjectsByUserTypeIndex = require('./createObjectsByUserTypeIndex'),
+    getModelData                 = require('./getModelData'),
+    getProjectNames              = require('./getProjectNames');
+
+function syncWithRemoteDbs(projectDbs) {
+    _.each(projectDbs, function (projectDb) {
+        syncWithRemoteDb(projectDb);
+    });
+}
 
 module.exports = function (firstSync) {
-    // now open LOCAL localDb
-    var localDb  = new PouchDB('oi', pouchDbOptions),
-        remoteDb = new PouchDB('http://localhost:5984/oi'),
-        // if ist the fist sync: get the modeldata from remoteDb
-        db = firstSync ? remoteDb : localDb;
-
     // expose pouchdb to pouchdb-fauxton
     window.PouchDB = PouchDB;
 
-    // every database gets a locally saved id
-    // this id is added to every document changed
-    // with it the changes feed can ignore locally changed documents
-    // also starts the change-stream
-    createDatabaseId();
+    // get project names
+    getProjectNames(firstSync, function (error, projectNames) {
+        // TODO: tell the user
+        if (error) { console.log('error getting project names: ', error); }
 
-    // start syncing
-    // TODO: wait until model is loaded??!!
-    sync(firstSync);
+        // build model
+        getModelData(firstSync, projectNames, function () {
+            // every database gets a locally saved id
+            // this id is added to every document changed
+            // with it the changes feed can ignore locally changed documents
+            createDatabaseId();
 
-    // get data from localDb
-    // if is the fist sync: get the modeldata from remoteDb
-    async.parallel({
-        hierarchies: function (callback) {
-            db.query('objects_by_user_type', {include_docs: true, key: [window.oi.loginName, 'hierarchy']}).then(function (result) {
-                var hierarchies = _.map(result.rows, function (row) {
-                    return row.doc;
-                });
-                callback(null, hierarchies);
-            }).catch(function (error) {
-                if (error.status === 404) {
-                    createObjectsByUserTypeIndex();
-                }
-                callback('error querrying hierarchies: ' + error, null);
-            });
-        },
-        objects: function (callback) {
-            db.query('objects_by_user_type', {include_docs: true, key: [window.oi.loginName, 'object']}).then(function (result) {
-                var objects = _.map(result.rows, function (row) {
-                    return row.doc;
-                });
-                callback(null, objects);
-            }).catch(function (error) {
-                if (error.status === 404) {
-                    createObjectsByUserTypeIndex();
-                }
-                callback('error querrying objects: ' + error, null);
-            });
-        }
-    }, function (error, results) {
-        // results equals to: { hierarchies: hierarchies, objects: objects }
-        if (error) { return console.log('error: ', error); }
+            createTree();
 
-        // create globals for data (primitive self-built models)
-        window.oi.hierarchies = results.hierarchies;
-        window.oi.objects     = results.objects;
-
-        createTree();
+            // start syncing
+            syncWithRemoteDbs(projectNames);
+            syncWithRemoteUserDb();
+        });
     });
 };

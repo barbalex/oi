@@ -10,9 +10,6 @@ var PouchDB        = require('pouchdb'),
     configuration  = require('./configuration'),
     couchUrl       = configuration.couch.dbUrl,
     couchName      = configuration.couch.dbName,
-    // TODO: are these necessary? Get rid of it!
-    couchUser      = configuration.couch.userName,
-    couchPassword  = configuration.couch.passWord,
     handleChanges  = require('./handleChanges');
 
 function syncError(err) {
@@ -21,7 +18,7 @@ function syncError(err) {
 
 module.exports = function (couchName) {
     var localDb  = new PouchDB('oi', pouchDbOptions),
-        remoteDb = 'http://' + couchUser + ':' + couchPassword + '@' + couchUrl + '/' + couchName,
+        remoteDb = 'http://' + couchUrl + '/' + couchName,
         options  = {
             retry:        true,
             since:        'now',
