@@ -16,17 +16,26 @@ module.exports = function (firstSync, callback) {
     if (firstSync) {
         remoteDb.get('org.couchdb.user:' + window.oi.loginName).then(function (user) {
             projectDbs = user.roles;
+
+            console.log('projectNames from remote: ', projectDbs);
+
             callback(null, projectDbs);
         }).catch(function (error) {
+
+            console.log('error from remote: ', error);
+
             callback(error, null);
         });
     } else {
-        // get list of projectDbs from model
+        // get list of projectDbs from pouch
         projectDbs = _.map(window.oi.objects, function (object) {
             if (!object.parent) {
                 return 'project_' + object._id;
             }
         });
+
+        console.log('projectNames from local: ', projectDbs);
+
         callback(null, projectDbs);
     }
 };
