@@ -18,6 +18,7 @@ module.exports = function () {
     // - user is in users
     // - doc.type = type
     // use changesFilter if req can be dynamically passed
+
     localDb.changes({
         since:        'now',
         live:         true,

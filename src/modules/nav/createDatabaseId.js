@@ -2,7 +2,7 @@
 'use strict';
 
 var PouchDB              = require('pouchdb'),
-    initiateChangeStream = require('./initiateChangeStream'),
+    initiateChangeStreams = require('./initiateChangeStreams'),
     pouchDbOptions       = require('../pouchDbOptions');
 
 module.exports = function () {
@@ -11,14 +11,14 @@ module.exports = function () {
 
     localDb.get('_local/databaseId').then(function (response) {
         window.oi.databaseId = response.databaseId;
-        initiateChangeStream();
+        initiateChangeStreams();
     }).catch(function (err) {
         if (err.status === 404) {
             // document is missing > create new one and make it accessible as global variable
             databaseId.databaseId = Math.random();
             localDb.put(databaseId, '_local/databaseId').then(function () {
                 window.oi.databaseId = databaseId.databaseId;
-                initiateChangeStream();
+                initiateChangeStreams();
             }).catch(function (err) {
                 console.log('error creating databaseId: ', err);
             });

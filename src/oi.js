@@ -4,7 +4,6 @@
 var Handlebars                  = require('handlebars'),
     initiateResizables          = require('./modules/initiateResizables'),
     setupEvents                 = require('./modules/setupEvents'),
-    initiateNav                 = require('./modules/nav/initiateNav'),
     getLogin                    = require('./modules/nav/getLogin');
 
 require('bootstrap-validator');

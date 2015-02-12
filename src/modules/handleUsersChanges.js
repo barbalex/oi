@@ -11,10 +11,8 @@ var _       = require('underscore'),
     PouchDB = require('pouchdb'),
     usersDb = new PouchDB('http://localhost:5984/_users');
 
-module.exports = function (change) {
-    console.log('change: ', change);
-    var user     = change.doc,
-        userName = user.name,
+module.exports = function (user) {
+    var userName = user.name,
         rootObjects,
         rootObjectsProjectNames,
         projectsToAdd,

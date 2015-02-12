@@ -11,10 +11,9 @@ var $                            = require('jquery'),
     async                        = require('async'),
     PouchDB                      = require('pouchdb'),
     pouchDbOptions               = require('../pouchDbOptions'),
-    syncPouch                    = require('../syncPouch'),
+    sync                         = require('../sync'),
     createTree                   = require('./createTree'),
     createDatabaseId             = require('./createDatabaseId'),
-    objectsByUserTypeIndex       = require('./objectsByUserTypeIndex'),
     createObjectsByUserTypeIndex = require('./createObjectsByUserTypeIndex');
 
 module.exports = function (firstSync) {
@@ -33,10 +32,12 @@ module.exports = function (firstSync) {
     // also starts the change-stream
     createDatabaseId();
 
-    syncPouch();
+    // start syncing
+    // TODO: wait until model is loaded??!!
+    sync(firstSync);
 
     // get data from localDb
-    // if ist the fist sync: get the modeldata from remoteDb
+    // if is the fist sync: get the modeldata from remoteDb
     async.parallel({
         hierarchies: function (callback) {
             db.query('objects_by_user_type', {include_docs: true, key: [window.oi.loginName, 'hierarchy']}).then(function (result) {

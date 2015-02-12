@@ -13,7 +13,7 @@ module.exports = function (object) {
 
     // look for descendant hierarchies desselben Projekts
     descendantHierarchies = _.filter(window.oi.hierarchies, function (hierarchy) {
-        return hierarchy.parent !== null && hierarchy.parent === object.hId && _.indexOf(hierarchy.projIds, object.projId) > -1;
+        return hierarchy.parent !== null && hierarchy.parent === object.hId && hierarchy.projId === object.projId;
     });
 
     if (descendantHierarchies.length > 0) {
