@@ -23172,7 +23172,7 @@ window.oi.initiiereApp = function () {
 
 // gleich ein mal ausführen
 window.oi.initiiereApp();
-},{"./modules/initiateResizables":157,"./modules/nav/getLogin":166,"./modules/nav/initiateNav":168,"./modules/setupEvents":177,"bootstrap-validator":4,"handlebars":25}],2:[function(require,module,exports){
+},{"./modules/initiateResizables":158,"./modules/nav/getLogin":167,"./modules/nav/initiateNav":169,"./modules/setupEvents":178,"bootstrap-validator":4,"handlebars":25}],2:[function(require,module,exports){
 module.exports={
     "user": "barbalex",
     "pass": "dLhdMg12"
@@ -59819,7 +59819,7 @@ module.exports = function (object, hierarchy) {
     return newObject;
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./guid":155,"./nav/createChildHierarchiesOfObject":158,"./nav/createTreeNodeObject":162,"dateformat":9,"underscore":126}],131:[function(require,module,exports){
+},{"./guid":155,"./nav/createChildHierarchiesOfObject":159,"./nav/createTreeNodeObject":163,"dateformat":9,"underscore":126}],131:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -59983,7 +59983,7 @@ module.exports = function ($node) {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./askYesNoWithModal":128,"./deleteObjectFromModel":134,"./getObject":154,"./pouchDbOptions":175,"./tellWithModal":180,"pouchdb":82,"underscore":126}],134:[function(require,module,exports){
+},{"./askYesNoWithModal":128,"./deleteObjectFromModel":134,"./getObject":154,"./pouchDbOptions":176,"./tellWithModal":181,"pouchdb":82,"underscore":126}],134:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -60497,7 +60497,7 @@ module.exports = function (id, type) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../../templates/checkbox":182,"../../../templates/checkboxGroup":183,"../../../templates/formButtonToolbar":184,"../../../templates/input":185,"../../../templates/optionGroup":186,"../../../templates/select":187,"../../../templates/textarea":188,"../getHierarchy":153,"../getObject":154,"./addCheckedToValueList":144,"./fitTextareaToContent":146,"./positionFormBtngroup":150,"underscore":126}],149:[function(require,module,exports){
+},{"../../../templates/checkbox":183,"../../../templates/checkboxGroup":184,"../../../templates/formButtonToolbar":185,"../../../templates/input":186,"../../../templates/optionGroup":187,"../../../templates/select":188,"../../../templates/textarea":189,"../getHierarchy":153,"../getObject":154,"./addCheckedToValueList":144,"./fitTextareaToContent":146,"./positionFormBtngroup":150,"underscore":126}],149:[function(require,module,exports){
 // Hilfsfunktion, die typeof ersetzt und ergänzt
 // typeof gibt bei input-Feldern immer String zurück!
 
@@ -60593,7 +60593,7 @@ module.exports = function (hierarchy) {
         });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../getHierarchy":153,"../nav/getLabelForObject":165,"../pouchDbOptions":175,"dateformat":9,"pouchdb":82,"underscore":126}],152:[function(require,module,exports){
+},{"../getHierarchy":153,"../nav/getLabelForObject":166,"../pouchDbOptions":176,"dateformat":9,"pouchdb":82,"underscore":126}],152:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -60645,7 +60645,7 @@ module.exports = function (id, field, value) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../getObject":154,"../nav/getLabelForObject":165,"../pouchDbOptions":175,"dateformat":9,"pouchdb":82,"underscore":126}],153:[function(require,module,exports){
+},{"../getObject":154,"../nav/getLabelForObject":166,"../pouchDbOptions":176,"dateformat":9,"pouchdb":82,"underscore":126}],153:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -60715,8 +60715,10 @@ module.exports = function (change) {
         activeNode   = tree.get_selected(true)[0],
         activeId     = null;
 
+    console.log('change: ', change);
+
     if (activeNode) {
-        activeId = activeNode.data.type === 'object' ? activeNode.id : activeNode.data.id
+        activeId = activeNode.data.type === 'object' ? activeNode.id : activeNode.data.id;
     }
 
     if (change.doc.type && change.doc.type === 'object') {
@@ -60752,7 +60754,49 @@ module.exports = function (change) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./form/initiateForm":148,"./nav/getLabelForObject":165,"underscore":126}],157:[function(require,module,exports){
+},{"./form/initiateForm":148,"./nav/getLabelForObject":166,"underscore":126}],157:[function(require,module,exports){
+/*
+ * When the active user's _users-object is changed, it checks it's roles:
+ * - if a role has been deleted, the corresponding project is removed and syncing stopped 
+ * - if a role has been added, the corresponding project is added and syncing added 
+ */
+
+/*jslint node: true, browser: true, nomen: true, todo: true */
+'use strict';
+
+var _       = require('underscore'),
+    PouchDB = require('pouchdb'),
+    usersDb = new PouchDB('http://localhost:5984/_users');
+
+module.exports = function (change) {
+    console.log('change: ', change);
+    var user     = change.doc,
+        userName = user.name,
+        rootObjects,
+        rootObjectsProjectNames,
+        projectsToAdd,
+        projectsToRemove;
+
+    if (userName === window.oi.loginName) {
+        rootObjects = _.filter(window.oi.objects, function (object) {
+            return !object.parent;
+        });
+        rootObjectsProjectNames = _.map(rootObjects, function (rootObject) {
+            return 'project_' + rootObject._id;
+        });
+
+        // projects to be removed:
+        projectsToRemove = _.difference(rootObjectsProjectNames, user.roles);
+        // projects to be added:
+        projectsToAdd    = _.difference(user.roles, rootObjectsProjectNames);
+
+        console.log('rootObjects: ', rootObjects);
+        console.log('rootObjectsProjectNames: ', rootObjectsProjectNames);
+        console.log('projectsToRemove: ', projectsToRemove);
+        console.log('projectsToAdd: ', projectsToAdd);
+    }
+};
+},{"pouchdb":82,"underscore":126}],158:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -60828,7 +60872,7 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./alsoResizeReverse":127,"./form/positionFormBtngroup":150,"./setWidthOfTabs":176,"./showTab":178}],158:[function(require,module,exports){
+},{"./alsoResizeReverse":127,"./form/positionFormBtngroup":150,"./setWidthOfTabs":177,"./showTab":179}],159:[function(require,module,exports){
 // creates descendant hierarchical objects of single objects
 // adds them to an array
 
@@ -60865,7 +60909,7 @@ module.exports = function (object) {
     }
     return [];
 };
-},{"underscore":126}],159:[function(require,module,exports){
+},{"underscore":126}],160:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -60896,7 +60940,7 @@ module.exports = function () {
     });
 
 };
-},{"../pouchDbOptions":175,"./initiateChangeStream":167,"pouchdb":82}],160:[function(require,module,exports){
+},{"../pouchDbOptions":176,"./initiateChangeStream":168,"pouchdb":82}],161:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -60918,7 +60962,7 @@ module.exports = function (callback) {
         callback('error querrying hierarchies after putting objectsByUserTypeIndex: ' + error, null);
     });
 };
-},{"../pouchDbOptions":175,"./objectsByUserTypeIndex":169,"pouchdb":82}],161:[function(require,module,exports){
+},{"../pouchDbOptions":176,"./objectsByUserTypeIndex":170,"pouchdb":82}],162:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -60965,7 +61009,7 @@ module.exports = function () {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../form/initiateForm":148,"./generateDataForTree":164,"./treeContextmenuItems":174,"jstree":27}],162:[function(require,module,exports){
+},{"../form/initiateForm":148,"./generateDataForTree":165,"./treeContextmenuItems":175,"jstree":27}],163:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -60998,7 +61042,7 @@ module.exports = function (object) {
 
     return jstreeObject;
 };
-},{"./getLabelForObject":165,"underscore":126}],163:[function(require,module,exports){
+},{"./getLabelForObject":166,"underscore":126}],164:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -61011,7 +61055,7 @@ module.exports = function (object) {
     jstreeObject.parent = '#';
     return jstreeObject;
 };
-},{"./createTreeNodeObject":162}],164:[function(require,module,exports){
+},{"./createTreeNodeObject":163}],165:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -61045,7 +61089,7 @@ module.exports = function () {
 
     return _.union(objectsData, childHierarchiesData);
 };
-},{"./createChildHierarchiesOfObject":158,"./createTreeNodeObject":162,"./createTreeNodeRootObject":163,"./getLabelForObject":165,"underscore":126}],165:[function(require,module,exports){
+},{"./createChildHierarchiesOfObject":159,"./createTreeNodeObject":163,"./createTreeNodeRootObject":164,"./getLabelForObject":166,"underscore":126}],166:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -61076,7 +61120,7 @@ module.exports = function (object, correspondingHierarchy) {
     label      = '<strong>' + labelValue + '</strong>';
     return label;
 };
-},{"underscore":126}],166:[function(require,module,exports){
+},{"underscore":126}],167:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -61094,16 +61138,18 @@ module.exports = function () {
     }
 
 };
-},{"./initiateNav":168,"./openSigninModal":170}],167:[function(require,module,exports){
+},{"./initiateNav":169,"./openSigninModal":171}],168:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
 var PouchDB                     = require('pouchdb'),
     handleExternalObjectChanges = require('../handleExternalObjectChanges'),
+    handleUsersChanges          = require('../handleUsersChanges'),
     pouchDbOptions              = require('../pouchDbOptions');
 
 module.exports = function () {
-    var localDb = new PouchDB('oi', pouchDbOptions);
+    var localDb       = new PouchDB('oi', pouchDbOptions),
+        remoteUsersDb = new PouchDB('http://localhost:5984/_users');
 
     // TODO: watch changes to hierarchies
     // when changes happen in DB, update model and when necessary ui
@@ -61114,12 +61160,18 @@ module.exports = function () {
     // - doc.type = type
     // use changesFilter if req can be dynamically passed
     localDb.changes({
-        since: 'now',
-        live: true,
+        since:        'now',
+        live:         true,
         include_docs: true
     }).on('change', handleExternalObjectChanges);
+
+    remoteUsersDb.changes({
+        since:        'now',
+        live:         true,
+        include_docs: true
+    }).on('change', handleUsersChanges);
 };
-},{"../handleExternalObjectChanges":156,"../pouchDbOptions":175,"pouchdb":82}],168:[function(require,module,exports){
+},{"../handleExternalObjectChanges":156,"../handleUsersChanges":157,"../pouchDbOptions":176,"pouchdb":82}],169:[function(require,module,exports){
 (function (global){
 /*
  * initiiert die nav
@@ -61199,7 +61251,7 @@ module.exports = function (firstSync) {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../pouchDbOptions":175,"../syncPouch":179,"./createDatabaseId":159,"./createObjectsByUserTypeIndex":160,"./createTree":161,"./objectsByUserTypeIndex":169,"async":3,"pouchdb":82,"underscore":126}],169:[function(require,module,exports){
+},{"../pouchDbOptions":176,"../syncPouch":180,"./createDatabaseId":160,"./createObjectsByUserTypeIndex":161,"./createTree":162,"./objectsByUserTypeIndex":170,"async":3,"pouchdb":82,"underscore":126}],170:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -61221,7 +61273,7 @@ module.exports = function () {
         }
     };
 };
-},{}],170:[function(require,module,exports){
+},{}],171:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -61240,7 +61292,7 @@ module.exports = function () {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],171:[function(require,module,exports){
+},{}],172:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -61278,7 +61330,7 @@ module.exports = function (signindata) {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../tellWithModal":180,"./initiateNav":168,"pouchdb":82,"pouchdb-authentication":31}],172:[function(require,module,exports){
+},{"../tellWithModal":181,"./initiateNav":169,"pouchdb":82,"pouchdb-authentication":31}],173:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -61341,7 +61393,7 @@ module.exports = function () {
     signIn(signindata);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../tellWithModal":180,"../validateEmail":181,"./signIn":171,"./signUp":173}],173:[function(require,module,exports){
+},{"../tellWithModal":181,"../validateEmail":182,"./signIn":172,"./signUp":174}],174:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -61375,7 +61427,7 @@ module.exports = function (signindata) {
         tellWithModal('Das Konto konnte nicht erstellt werden', 'Die Datenbank meldete: ' + error);
     });
 };
-},{"../tellWithModal":180,"./signIn":171,"pouchdb":82,"pouchdb-authentication":31}],174:[function(require,module,exports){
+},{"../tellWithModal":181,"./signIn":172,"pouchdb":82,"pouchdb-authentication":31}],175:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -61412,7 +61464,7 @@ module.exports = function ($node) {
     };
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../createNewObjectFromHierarchy":131,"../createNewObjectFromObject":132,"../deleteObjectAndChildren":133,"underscore":126}],175:[function(require,module,exports){
+},{"../createNewObjectFromHierarchy":131,"../createNewObjectFromObject":132,"../deleteObjectAndChildren":133,"underscore":126}],176:[function(require,module,exports){
 /*
  * hier können Optionen für die pouch gesetzt werden,
  * so, dass sie nur an einem Ort erfasst sind
@@ -61429,7 +61481,7 @@ module.exports = function () {
         //'adapter': 'idb'
     };
 };
-},{}],176:[function(require,module,exports){
+},{}],177:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus */
 'use strict';
@@ -61476,7 +61528,7 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./form/positionFormBtngroup":150,"underscore":126}],177:[function(require,module,exports){
+},{"./form/positionFormBtngroup":150,"underscore":126}],178:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -61522,7 +61574,7 @@ module.exports = function () {
         .on('click.nav',   '.navbar-brand',                  onClickNavbarBrand);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./event/onChangeElement":135,"./event/onClickFormDelete":136,"./event/onClickFormNew":137,"./event/onClickNavFormSort":138,"./event/onClickNavbarBrand":139,"./event/onClickNavbarCollapse":140,"./event/onClickSigninWithModalSignupCheckbox":141,"./event/onKeypressSigninWithModal":142,"./event/onScrollTab":143,"./form/fitTextareaToContent":146,"./nav/signInOrUp":172}],178:[function(require,module,exports){
+},{"./event/onChangeElement":135,"./event/onClickFormDelete":136,"./event/onClickFormNew":137,"./event/onClickNavFormSort":138,"./event/onClickNavbarBrand":139,"./event/onClickNavbarCollapse":140,"./event/onClickSigninWithModalSignupCheckbox":141,"./event/onKeypressSigninWithModal":142,"./event/onScrollTab":143,"./form/fitTextareaToContent":146,"./nav/signInOrUp":173}],179:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -61547,7 +61599,7 @@ module.exports = function (tab) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],179:[function(require,module,exports){
+},{}],180:[function(require,module,exports){
 /**
  * synchronisiert die Daten aus einer CouchDB in PouchDB
  */
@@ -61583,7 +61635,7 @@ module.exports = function () {
     if (remoteCouch) { sync(); }
 };
 
-},{"./configuration":129,"./pouchDbOptions":175,"pouchdb":82}],180:[function(require,module,exports){
+},{"./configuration":129,"./pouchDbOptions":176,"pouchdb":82}],181:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -61606,7 +61658,7 @@ module.exports = function (title, text) {
     $modal.modal(options);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],181:[function(require,module,exports){
+},{}],182:[function(require,module,exports){
 /*
  * prüft, ob ein String eine email-Adressen sein könnte
  * Quelle: http://stackoverflow.com/questions/46155/validate-email-address-in-javascript
@@ -61619,7 +61671,7 @@ module.exports = function (string) {
     var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(string);
 };
-},{}],182:[function(require,module,exports){
+},{}],183:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, helper, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing, functionType="function";
   return "<div class=\"form-group js-form-group\">\r\n    <label class=\"control-label\">"
@@ -61633,7 +61685,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(((helper = (helper = helpers.checked || (depth0 != null ? depth0.checked : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"checked","hash":{},"data":data}) : helper)))
     + ">\r\n            </label>\r\n        </div>\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":25}],183:[function(require,module,exports){
+},{"handlebars":25}],184:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,depths) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "            <div class=\"checkbox\">\r\n                <label>\r\n                    <input type=\"checkbox\" id=\""
@@ -61660,11 +61712,11 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "    </div>\r\n</div>";
 },"useData":true,"useDepths":true});
-},{"handlebars":25}],184:[function(require,module,exports){
+},{"handlebars":25}],185:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   return "<div class=\"btn-toolbar\" role=\"toolbar\" aria-label=\"Daten Toolbar\">\r\n    <div class=\"btn-group pull-right\" role=\"group\" aria-label=\"Daten Button group\">\r\n        <button id=\"formNew\" class=\"btn btn-default\">neu</button>\r\n        <button id=\"formDelete\" class=\"btn btn-default\">löschen</button>\r\n    </div>\r\n</div>";
   },"useData":true});
-},{"handlebars":25}],185:[function(require,module,exports){
+},{"handlebars":25}],186:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "<div class=\"form-group js-form-group\">\r\n    <label for=\""
@@ -61683,7 +61735,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.value : stack1), depth0))
     + "\">\r\n</div>";
 },"useData":true});
-},{"handlebars":25}],186:[function(require,module,exports){
+},{"handlebars":25}],187:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,depths) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "            <div class=\"radio\">\r\n                <label>\r\n                    <input type=\"radio\" name=\""
@@ -61710,7 +61762,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "    </div>\r\n</div>";
 },"useData":true,"useDepths":true});
-},{"handlebars":25}],187:[function(require,module,exports){
+},{"handlebars":25}],188:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, buffer = "                <option value=";
   stack1 = lambda((depth0 != null ? depth0.value : depth0), depth0);
@@ -61733,7 +61785,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "        </select>\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":25}],188:[function(require,module,exports){
+},{"handlebars":25}],189:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "<div class=\"form-group js-form-group\">\r\n    <label for=\""

@@ -4,6 +4,26 @@
 		"selected_items":
 		[
 			[
+				"proje",
+				"projectDbName"
+			],
+			[
+				"user",
+				"userDocnameKeys"
+			],
+			[
+				"userDo",
+				"userDocnames"
+			],
+			[
+				"gulp",
+				"gulp-tasks"
+			],
+			[
+				"jquer",
+				"jquery-ui"
+			],
+			[
 				"signin",
 				"signindata"
 			],
@@ -276,10 +296,6 @@
 				"HtmlContainerBody"
 			],
 			[
-				"user",
-				"user_kommt_vor"
-			],
-			[
 				"ind",
 				"indexpos_hierarchisch"
 			],
@@ -375,7 +391,7 @@
 			"file": "/F/Google Drive/ortinfo/admin.txt",
 			"settings":
 			{
-				"buffer_size": 723,
+				"buffer_size": 862,
 				"line_ending": "Windows"
 			}
 		},
@@ -383,7 +399,7 @@
 			"file": "style/oi.css",
 			"settings":
 			{
-				"buffer_size": 1787,
+				"buffer_size": 1920,
 				"line_ending": "Windows"
 			}
 		},
@@ -391,95 +407,23 @@
 			"file": "index.html",
 			"settings":
 			{
-				"buffer_size": 9491,
+				"buffer_size": 9213,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/modules/nav/getLogin.js",
+			"file": "src/modules/handleExternalObjectChanges.js",
 			"settings":
 			{
-				"buffer_size": 389,
+				"buffer_size": 2438,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/modules/nav/openSigninModal.js",
+			"file": "/C/Users/alex/oi_testdata/index.js",
 			"settings":
 			{
-				"buffer_size": 439,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/modules/nav/signIn.js",
-			"settings":
-			{
-				"buffer_size": 1380,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/modules/nav/signInOrUp.js",
-			"settings":
-			{
-				"buffer_size": 1895,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/modules/nav/signUp.js",
-			"settings":
-			{
-				"buffer_size": 1042,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/modules/nav/initiateChangeStream.js",
-			"settings":
-			{
-				"buffer_size": 895,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/modules/nav/changesFilter.js",
-			"settings":
-			{
-				"buffer_size": 1281,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/modules/nav/foreignChangedIndex.js",
-			"settings":
-			{
-				"buffer_size": 1119,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/modules/nav/initiateForeignChangeQuery.js",
-			"settings":
-			{
-				"buffer_size": 1495,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/modules/nav/objectsByUserTypeIndex.js",
-			"settings":
-			{
-				"buffer_size": 619,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/C/Users/alex/oi_beispielsdaten_laden/index.js",
-			"settings":
-			{
-				"buffer_size": 15097,
+				"buffer_size": 14877,
 				"line_ending": "Windows"
 			}
 		}
@@ -531,32 +475,70 @@
 	"expanded_folders":
 	[
 		"/C/Users/alex/oi",
-		"/C/Users/alex/oi/gulp-tasks",
 		"/C/Users/alex/oi/src",
-		"/C/Users/alex/oi/src/modules",
-		"/C/Users/alex/oi/src/modules/nav"
+		"/C/Users/alex/oi/src/modules"
 	],
 	"file_history":
 	[
-		"/C/Users/alex/oi/src/modules/nav/initiateNav.js",
-		"/C/Users/alex/oi/src/modules/nav/objectsByUserTypeIndex.js",
-		"/C/Users/alex/oi/src/modules/nav/foreignChangedIndex.js",
-		"/C/Users/alex/oi/src/modules/handleExternalObjectChanges.js",
-		"/C/Users/alex/oi/src/modules/nav/objectsByTypeIndex.js",
-		"/C/Users/alex/oi/src/modules/pouchDbOptions.js",
-		"/C/Users/alex/oi/src/modules/nav/hierarchiesIndex.js",
+		"/C/Users/alex/oi_pg/index.js",
+		"/C/Users/alex/oi_pg/package.json",
+		"/C/Users/alex/oi/.gitignore",
+		"/C/Users/alex/oi_testdata/.gitignore",
+		"/C/Users/alex/oi_testdata/.gitattributes",
+		"/C/Users/alex/oi_beispielsdaten_laden/index.js",
+		"/C/Users/alex/oi/src/modules/setupEvents.js",
+		"/C/Users/alex/oi/src/modules/event/onClickNavFormSort.js",
+		"/C/Users/alex/oi/src/modules/form/saveHierarchy.js",
+		"/C/Users/alex/oi/src/modules/form/initiateForm.js",
+		"/C/Users/alex/oi/src/modules/event/onClickSigninWithModalSignupCheckbox.js",
+		"/C/Users/alex/oi/src/modules/event/onKeypressSigninWithModal.js",
+		"/C/Users/alex/oi/src/modules/initiateResizables.js",
 		"/C/Users/alex/oi/src/modules/form/saveObjectValue.js",
-		"/C/Users/alex/oi/src/modules/createNewObject.js",
+		"/C/Users/alex/oi/src/oi_browserified.js",
+		"/C/Users/alex/oi/src/modules/getHierarchyOfObject.js",
+		"/C/Users/alex/oi/templates/checkboxGroup.hdb",
+		"/C/Users/alex/oi/templates/optionGroup.hdb",
+		"/C/Users/alex/oi/templates/select.hdb",
+		"/C/Users/alex/oi/templates/textarea.hdb",
+		"/C/Users/alex/oi/templates/input.hdb",
+		"/C/Users/alex/oi/templates/checkbox.hdb",
+		"/C/Users/alex/oi/src/modules/nav/createObjectsByUserTypeIndex.js",
+		"/C/Users/alex/oi/src/modules/nav/initiateNav.js",
+		"/C/Users/alex/oi/src/modules/nav/signUp.js",
+		"/C/Users/alex/oi/src/modules/nav/signIn.js",
+		"/C/Users/alex/oi/src/modules/nav/getLogin.js",
+		"/C/Users/alex/oi/oi.appcache",
+		"/C/Users/alex/oi/gulp-tasks/dev_1.js",
+		"/C/Users/alex/oi/gulp-tasks/dev_when_watch_1.js",
+		"/C/Users/alex/oi/server.js",
+		"/C/Users/alex/oi/package.json",
+		"/C/Users/alex/oi/gulp-tasks/dev_when_watch_2.js",
+		"/C/Users/alex/oi/gulp-tasks/createManifest.js",
+		"/C/Users/alex/oi/gulp-tasks/dev_style.js",
+		"/C/Users/alex/oi/gulp-tasks/dev_3.js",
+		"/C/Users/alex/oi/gulp-tasks/dev_2.js",
+		"/C/Users/alex/oi/gulp-tasks/manifest.js",
+		"/C/Users/alex/oi/gulp-tasks/dev_when_watch_3.js",
+		"/C/Users/alex/oi/gulp-tasks/dev_4.js",
+		"/C/Users/alex/oi/gulp-tasks/default.js",
+		"/C/Users/alex/oi/src/modules/nav/changesFilter.js",
 		"/C/Users/alex/oi/src/modules/syncPouch.js",
-		"/C/Users/alex/oi/src/modules/nav/initiateForeignChangeQuery.js",
+		"/C/Users/alex/oi/src/modules/handleExternalObjectChanges.js",
 		"/C/Users/alex/oi/src/modules/nav/initiateChangeStream.js",
 		"/C/Users/alex/oi/src/modules/nav/createDatabaseId.js",
 		"/C/Users/alex/oi/src/modules/deleteObjectAndChildren.js",
-		"/C/Users/alex/oi/src/modules/setupEvents.js",
-		"/C/Users/alex/oi/gulp-tasks/dev_src.js",
-		"/C/Users/alex/oi/src/oi_browserified.js",
-		"/C/Users/alex/oi/src/pouchdb.authentication.js",
+		"/C/Users/alex/oi/src/modules/nav/objectsByUserTypeIndex.js",
+		"/C/Users/alex/oi/src/modules/nav/signInOrUp.js",
 		"/C/Users/alex/oi/src/modules/nav/openSigninModal.js",
+		"/C/Users/alex/oi/src/modules/nav/changedObjectsIndex.js",
+		"/C/Users/alex/oi/src/modules/nav/initiateForeignChangeQuery.js",
+		"/C/Users/alex/oi/src/modules/nav/foreignChangedIndex.js",
+		"/C/Users/alex/oi/src/modules/nav/objectsByTypeIndex.js",
+		"/C/Users/alex/oi/src/modules/pouchDbOptions.js",
+		"/C/Users/alex/oi/src/modules/nav/hierarchiesIndex.js",
+		"/C/Users/alex/oi/src/modules/createNewObject.js",
+		"/C/Users/alex/oi/gulp-tasks/dev_src.js",
+		"/C/Users/alex/oi/src/pouchdb.authentication.js",
 		"/C/Users/alex/oi/src/oi.js",
 		"/C/Users/alex/oi/src/modules/validateEmail.js",
 		"/C/Users/alex/oi/src/modules/nav/signup.js",
@@ -570,7 +552,6 @@
 		"/C/Users/alex/oi/src/modules/nav/createTreeNodeObject.js",
 		"/C/Users/alex/oi/src/modules/nav/createTree.js",
 		"/C/Users/alex/oi/src/modules/nav/createChildHierarchiesOfObject.js",
-		"/C/Users/alex/oi/src/modules/form/initiateForm.js",
 		"/C/Users/alex/oi/src/modules/form/positionFormBtngroup.js",
 		"/C/Users/alex/oi/src/modules/event/onClickFormNew.js",
 		"/C/Users/alex/oi/src/modules/event/onChangeElement.js",
@@ -586,7 +567,6 @@
 		"/C/Users/alex/oi/src/modules/event/onScrollTab.js",
 		"/C/Users/alex/oi/src/modules/event/onFormNew.js",
 		"/C/Users/alex/oi/src/modules/event/onNavScroll.js",
-		"/C/Users/alex/oi/src/modules/initiateResizables.js",
 		"/C/Users/alex/oi/src/modules/createNewObjectFromObject.js",
 		"/C/Users/alex/oi/src/modules/getHierarchy.js",
 		"/C/Users/alex/oi/src/modules/createNewObjectFromHierarchy.js",
@@ -601,21 +581,15 @@
 		"/C/Users/alex/oi/src/modules/getObjectWithId.js",
 		"/C/Users/alex/oi/src/modules/createNewObjectFromObjectId.js",
 		"/C/Users/alex/oi/src/modules/createNewObjectFromHierarchyId.js",
-		"/C/Users/alex/oi/server.js",
-		"/C/Users/alex/oi/gulp-tasks/dev_style.js",
-		"/C/Users/alex/oi/templates/input.hdb",
 		"/C/Users/alex/oi/style/bootstrap.css",
 		"/C/Users/alex/oi/style/font-awesome.css",
 		"/C/Users/alex/oi/src/modules/setWidthOfTabs.js",
 		"/C/Users/alex/oi/src/modules/getHierarchyWithId.js",
-		"/C/Users/alex/oi/src/modules/getHierarchyOfObject.js",
 		"/C/Users/alex/oi/src/modules/nav/objectsIndex.js",
-		"/C/Users/alex/oi/package.json",
 		"/C/Users/alex/oi/src/modules/createNewObjectOfHierarchy.js",
 		"/C/Users/alex/oi/src/modules/guid.js",
 		"/C/Users/alex/oi/src/modules/_draft.js",
 		"/C/Users/alex/oi/templates/formButtonToolbar.hdb",
-		"/C/Users/alex/oi_beispielsdaten_laden/index.js",
 		"/C/Users/alex/Downloads/perfect-scrollbar-0.5.8/examples/always-visible.html",
 		"/C/Users/alex/Downloads/perfect-scrollbar-0.5.8/examples/scrollbars-with-margin.html",
 		"/C/Users/alex/oi/style/jquery-ui.theme.css",
@@ -624,52 +598,20 @@
 		"/C/Users/alex/oi/src/modules/handleDbChanges.js",
 		"/C/Users/alex/oi/src/modules/form/myTypeOf.js",
 		"/C/Users/alex/oi/templates/input.js",
-		"/C/Users/alex/oi/templates/select.hdb",
 		"/C/Users/alex/oi/templates/checkbox.js",
 		"/C/Users/alex/oi/src/modules/form/initiateForm_fromDb.js",
 		"/C/Users/alex/oi/src/modules/bindModelInput.js",
 		"/C/Users/alex/oi/gulp-tasks/watch.js",
-		"/C/Users/alex/oi/templates/textarea.hdb",
-		"/C/Users/alex/oi/templates/optionGroup.hdb",
-		"/C/Users/alex/oi/templates/checkboxGroup.hdb",
-		"/C/Users/alex/oi/templates/checkbox.hdb",
-		"/C/Users/alex/oi/gulp-tasks/dev_when_watch_2.js",
-		"/C/Users/alex/oi/gulp-tasks/dev_when_watch_1.js",
 		"/C/Users/alex/oi/src/modules/createGlobals.js",
 		"/C/Users/alex/EvabMobile/_attachments/hArtEdit.html",
 		"/C/Users/alex/EvabMobile/vendor/couchapp/_attachments/evab.js",
 		"/C/Users/alex/EvabMobile/vendor/couchapp/_attachments/app.js",
 		"/C/Users/alex/oi/src/jquery.js",
-		"/C/Users/alex/oi/src/modules/addCheckedToValueList.js",
-		"/C/Users/alex/oi/src/modules/bindModelInputForObject.js",
-		"/C/Users/alex/oi/src/modules/bindModelInputForObjects.js",
-		"/C/Users/alex/oi/src/modules/initiateForm.js",
-		"/C/Users/alex/oi/src/modules/generateDataForTree.js",
-		"/C/Users/alex/oi/src/modules/initiateNav.js",
-		"/C/Users/alex/oi/src/modules/createTree.js",
-		"/C/Users/alex/oi/src/modules/makeValueObjectListFromValueList.js",
-		"/C/Users/alex/oi/src/modules/fitTextareaToContent.js",
-		"/C/Users/alex/oi/gulp-tasks/templates.js",
-		"/C/Users/alex/oi/.gitignore",
-		"/C/Users/alex/Downloads/vakata-jstree-2f630b4/dist/jstree.js",
-		"/C/Users/alex/oi/src/modules/configuration.js",
-		"/C/Users/alex/oi_beispielsdaten_laden/package.json",
-		"/C/Users/alex/artendb_euring_update/index.js",
-		"/C/Users/alex/artendb_euring_update/package.json",
-		"/C/Users/alex/artendb_tww_felder_umbenennnen/index.js",
-		"/C/Users/alex/oi/client/views/main.js",
-		"/C/Users/alex/oi/fakeApi.js",
-		"/C/Users/alex/oi/gulp-tasks/dev_3.js",
-		"/C/Users/alex/oi/gulp-tasks/dev_2.js",
-		"/C/Users/alex/oi/gulp-tasks/browserify.js",
-		"/C/Users/alex/oi/gulp-tasks/default.js",
-		"/C/Users/alex/oi/style/oi_built.css",
-		"/C/Users/alex/oi/gulp-tasks/dev.js",
-		"/C/Users/alex/oi/gulp-tasks/templates_when_watch.js"
+		"/C/Users/alex/oi/src/modules/addCheckedToValueList.js"
 	],
 	"find":
 	{
-		"height": 45.0
+		"height": 48.0
 	},
 	"find_in_files":
 	{
@@ -759,6 +701,41 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"userDocsBulkObject",
+			"userDocs",
+			"userDocnames",
+			"userDocnameKeys",
+			"TODO",
+			"users",
+			"userDocnameKeys",
+			"doc",
+			"change.doc",
+			"z@z.ch",
+			"level",
+			"correspondingHierarchy",
+			"this is active:",
+			"correspondingHierarchy",
+			"oi.manifest",
+			"gulp-manifest",
+			"perfect-scrollbar",
+			"jquery-ui",
+			"TODO",
+			"object changed",
+			"remoteDb",
+			"db",
+			"new PouchDB",
+			"db",
+			"db = new PouchDB",
+			"objects_by_type",
+			"db",
+			"db = new PouchDB",
+			"activeId     = activeNode.data.type === 'object' ? activeNode.id : activeNode.data.id;",
+			"window.PouchDB",
+			"activeNode   = tree.get_selected(true)[0],",
+			"changedObjectsIndex",
+			"initiateForeignChangeQuery",
+			"changedObjectsIndex",
+			"foreign_changed",
 			"foreignChangedIndex",
 			"TODO",
 			"objectsByTypeIndex",
@@ -851,42 +828,7 @@
 			"jstree",
 			"createChildHierarchiesOfObject",
 			"descendantHierarchiesData",
-			"createDescendantHierarchiesOfObject",
-			"treeData:",
-			"createTopObjectsData",
-			"createTreeNodeObject",
-			"jstree",
-			"objects gotten:",
-			"window.PouchDB",
-			"db.query('objects'",
-			"objectsIndex",
-			"key:",
-			"initiateForm",
-			"jstree",
-			"vorne links",
-			"createTreeNodeObject",
-			"createObjectsData",
-			"createDescendantHierarchiesOfObject",
-			"descendantHierarchiesData",
-			"createObjectsData",
-			"objectsData",
-			"jstree",
-			"$('#formContent').data",
-			"container",
-			"separator",
-			"formSeparator",
-			"showTab",
-			"h21",
-			"hierarchy = _.find(window.oi.hierarchies, function (",
-			"_id",
-			"object = _.find(window.oi.objects, function (",
-			"_id",
-			"if (object.parent !== null) {",
-			"foreignChangedIndex",
-			"handleDbObjectChanges",
-			"foreignChangedIndex",
-			"handleDbObjectChanges",
-			"foreign_changed_objects"
+			"createDescendantHierarchiesOfObject"
 		],
 		"highlight": false,
 		"in_selection": false,
@@ -894,6 +836,16 @@
 		"regex": false,
 		"replace_history":
 		[
+			"oldDoc",
+			"doc",
+			"oi.appcache",
+			"localDb",
+			"remoteDb",
+			"localDb",
+			"objects_by_user_type",
+			"remoteDb",
+			"objects_changed",
+			"changedObjectsIndex",
 			"objectsByUserTypeIndex",
 			"new PouchDB('http://localhost:5984/oi', pouchDbOptions)",
 			"new PouchDB(pouchDbOptions)",
@@ -1011,17 +963,7 @@
 			"",
 			"popupTpop",
 			"popupPop",
-			"popupBeob",
-			"layertreeTpop",
-			"layertreePop",
-			"layertreeEigeneEbene",
-			"apflora.pop",
-			"apflora.tpop",
-			"apflora.beobzuordnung",
-			"apflora_beob.beob_bereitgestellt",
-			"apflora_beob.beob_infospezies",
-			"",
-			"apflora.pop"
+			"popupBeob"
 		],
 		"reverse": false,
 		"show_context": true,
@@ -1032,7 +974,7 @@
 	"groups":
 	[
 		{
-			"selected": 9,
+			"selected": 3,
 			"sheets":
 			[
 				{
@@ -1041,15 +983,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 723,
+						"buffer_size": 862,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								723,
-								723
+								519,
+								519
 							]
 						],
 						"settings":
@@ -1060,7 +1002,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 9,
+					"stack_index": 4,
 					"type": "text"
 				},
 				{
@@ -1069,15 +1011,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1787,
+						"buffer_size": 1920,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								682,
-								682
+								1544,
+								1544
 							]
 						],
 						"settings":
@@ -1087,10 +1029,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 2240.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 12,
+					"stack_index": 3,
 					"type": "text"
 				},
 				{
@@ -1099,15 +1041,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 9491,
+						"buffer_size": 9213,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								3938,
-								3938
+								2531,
+								2540
 							]
 						],
 						"settings":
@@ -1117,27 +1059,27 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1157.0,
+						"translation.y": 192.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 8,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
 					"buffer": 3,
-					"file": "src/modules/nav/getLogin.js",
+					"file": "src/modules/handleExternalObjectChanges.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 389,
+						"buffer_size": 2438,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								284,
-								303
+								650,
+								650
 							]
 						],
 						"settings":
@@ -1147,143 +1089,27 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 128.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 6,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
 					"buffer": 4,
-					"file": "src/modules/nav/openSigninModal.js",
+					"file": "/C/Users/alex/oi_testdata/index.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 439,
+						"buffer_size": 14877,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								104,
-								104
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 13,
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "src/modules/nav/signIn.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1380,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								158,
-								158
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 7,
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "src/modules/nav/signInOrUp.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1895,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1573,
-								1573
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 14,
-					"type": "text"
-				},
-				{
-					"buffer": 7,
-					"file": "src/modules/nav/signUp.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1042,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								118,
-								118
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 5,
-					"type": "text"
-				},
-				{
-					"buffer": 8,
-					"file": "src/modules/nav/initiateChangeStream.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 895,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								669,
-								669
+								336,
+								342
 							]
 						],
 						"settings":
@@ -1298,191 +1124,13 @@
 					},
 					"stack_index": 2,
 					"type": "text"
-				},
-				{
-					"buffer": 9,
-					"file": "src/modules/nav/changesFilter.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1281,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								1281
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 10,
-					"file": "src/modules/nav/foreignChangedIndex.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1119,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								77,
-								77
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 11,
-					"file": "src/modules/nav/initiateForeignChangeQuery.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1495,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1238,
-								1258
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
-					"type": "text"
-				},
-				{
-					"buffer": 12,
-					"file": "src/modules/nav/objectsByUserTypeIndex.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 619,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								160,
-								160
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 4,
-					"type": "text"
-				},
-				{
-					"buffer": 13,
-					"file": "/C/Users/alex/oi_beispielsdaten_laden/index.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 15097,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								7697,
-								7697
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 6696.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 11,
-					"type": "text"
-				},
-				{
-					"buffer": 13,
-					"file": "/C/Users/alex/oi_beispielsdaten_laden/index.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 15097,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3311,
-								3311
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 309.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 10,
-					"type": "text"
 				}
 			]
 		}
 	],
 	"incremental_find":
 	{
-		"height": 37.0
+		"height": 40.0
 	},
 	"input":
 	{
@@ -1518,7 +1166,7 @@
 	"project": "oi.sublime-project",
 	"replace":
 	{
-		"height": 84.0
+		"height": 90.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -1539,11 +1187,11 @@
 	},
 	"select_symbol":
 	{
-		"height": 0.0,
+		"height": 392.0,
 		"selected_items":
 		[
 		],
-		"width": 0.0
+		"width": 416.0
 	},
 	"selected_group": 0,
 	"settings":

@@ -19,8 +19,10 @@ module.exports = function (change) {
         activeNode   = tree.get_selected(true)[0],
         activeId     = null;
 
+    console.log('change: ', change);
+
     if (activeNode) {
-        activeId = activeNode.data.type === 'object' ? activeNode.id : activeNode.data.id
+        activeId = activeNode.data.type === 'object' ? activeNode.id : activeNode.data.id;
     }
 
     if (change.doc.type && change.doc.type === 'object') {
