@@ -3,11 +3,13 @@
 
 var $              = require('jquery'),
     PouchDB        = require('pouchdb'),
+    configuration  = require('../configuration'),
+    couchUrl       = configuration.couch.dbUrl,
     tellWithModal  = require('../tellWithModal'),
     initiateNav    = require('./initiateNav');
 
 module.exports = function (signindata) {
-    var remoteDb = new PouchDB('http://localhost:5984/oi');
+    var remoteDb = new PouchDB('http://' + couchUrl + '/oi');
 
     PouchDB.plugin(require('pouchdb-authentication'));
 
@@ -19,9 +21,9 @@ module.exports = function (signindata) {
         if (signindata.remember) {
             localStorage.loginName = signindata.name;
         }
-        // set firstSync true
+        // when first sync, pass roles
         // then data for model is fetched from remote db
-        initiateNav(true);
+        initiateNav(response.roles);
         $('#signinWithModal').modal('hide');
     }).catch(function (error) {
         if (error.name === 'unauthorized') {

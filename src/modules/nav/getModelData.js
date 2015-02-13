@@ -25,10 +25,23 @@ module.exports = function (firstSync, projectNames, callback) {
         functions.push(addDataOfProjectToModel(firstSync, projectName));
     });*/
 
-    async.each(projectNames, function (projectName, callback) {
+    /*async.each(projectNames, function (projectName, callback) {
         callback(addDataOfProjectToModel(firstSync, projectName));
     }, function (error, results) {
         console.log('results from getting model data: ', results);
+        callback(error, results);
+    });*/
+
+    functions = _.map(projectNames, function (projectName) {
+        return function () {
+            addDataOfProjectToModel(firstSync, projectName, callback);
+        };
+    });
+    async.parallel(functions, function (error, results) {
+        if (error) { console.log('error getting modeldata: ', error); }
+
+        console.log('results from getting model data: ', results);
+        
         callback(error, results);
     });
 };
