@@ -1,47 +1,27 @@
-/*
- * initiiert die nav
- * 
- */
-
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var _                       = require('underscore'),
-    async                   = require('async'),
-    addDataOfProjectToModel = require('./addDataOfProjectToModel');
+var _             = require('underscore'),
+    getDataFromDb = require('./getDataFromDb');
 
 module.exports = function (firstSync, projectNames, callback) {
-    var functions = [];
+    var projectsGotten = 0,
+        errors = [];
 
-    // create globals for data (primitive self-built models)
-    window.oi.hierarchies = [];
-    window.oi.objects     = [];
-
-    // loop through projects
-    // add their data to the model
-
-    // TODO: use async.parralel to execute array of functions parralel and know when they are finished
-    /*_.each(projectNames, function (projectName) {
-        functions.push(addDataOfProjectToModel(firstSync, projectName));
-    });*/
-
-    /*async.each(projectNames, function (projectName, callback) {
-        callback(addDataOfProjectToModel(firstSync, projectName));
-    }, function (error, results) {
-        console.log('results from getting model data: ', results);
-        callback(error, results);
-    });*/
-
-    functions = _.map(projectNames, function (projectName) {
-        return function () {
-            addDataOfProjectToModel(firstSync, projectName, callback);
-        };
-    });
-    async.parallel(functions, function (error, results) {
-        if (error) { console.log('error getting modeldata: ', error); }
-
-        console.log('results from getting model data: ', results);
-        
-        callback(error, results);
+    _.each(projectNames, function (projectName) {
+        getDataFromDb(firstSync, projectName, function (error, done) {
+            if (error) {
+                errors.push(error);
+                if (errors.length === projectNames.length) {
+                    return callback(errors, false);
+                }
+            }
+            if (done) {
+                projectsGotten ++;
+                if (projectsGotten === projectNames.length) {
+                    return callback(errors, true);
+                }
+            }
+        });
     });
 };

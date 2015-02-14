@@ -7,9 +7,7 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var _       = require('underscore'),
-    PouchDB = require('pouchdb'),
-    usersDb = new PouchDB('http://localhost:5984/_users');
+var _ = require('underscore');
 
 module.exports = function (user) {
     var userName = user.name,

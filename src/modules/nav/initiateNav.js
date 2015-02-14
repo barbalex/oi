@@ -15,7 +15,6 @@ var $                        = require('jquery'),
     syncWithRemoteUserDb     = require('../syncWithRemoteUserDb'),
     createTree               = require('./createTree'),
     createDatabaseId         = require('./createDatabaseId'),
-    createObjectsByTypeIndex = require('./createObjectsByTypeIndex'),
     getModelData             = require('./getModelData');
 
 function syncWithRemoteDbs(projectDbs) {
@@ -38,12 +37,11 @@ module.exports = function (projectNames) {
         });
     }
 
+    window.oi.objects     = [];
+    window.oi.hierarchies = [];
+
     // build model
-    getModelData(firstSync, projectNames, function (error, results) {
-        if (error) { console.log('error getting model data: ', error); }
-
-        console.log('got model data: ', results);
-
+    getModelData(firstSync, projectNames, function (errors, done) {
         // every database gets a locally saved id
         // this id is added to every document changed
         // with it the changes feed can ignore locally changed documents

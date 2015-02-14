@@ -5,17 +5,19 @@ var PouchDB            = require('pouchdb'),
     pouchDbOptions     = require('../pouchDbOptions'),
     objectsByTypeIndex = require('./objectsByTypeIndex');
 
-module.exports = function (callback) {
-    var localDb  = new PouchDB('oi', pouchDbOptions);
+module.exports = function (db) {
+    //var localDb  = new PouchDB('oi', pouchDbOptions);
+
+    console.log('createObjectsByTypeIndex for db: ', db);
 
     // index doesn't exist yet
-    localDb.put(objectsByTypeIndex()).then(function () {
+    db.put(objectsByTypeIndex()).then(function () {
         // kick off an initial build, return immediately
-        return localDb.query('objects_by_type', {stale: 'update_after'});
+        return db.query('objects_by_type', {stale: 'update_after'});
     }).then(function () {
         // query the index (much faster now!)
-        return localDb.query('objects_by_type', {include_docs: true, key: 'hierarchy'});
+        return db.query('objects_by_type');
     }).catch(function (error) {
-        callback('error querrying hierarchies after putting objectsByTypeIndex: ' + error, null);
+        return console.log('error querrying hierarchies after putting objectsByTypeIndex: ' + error);
     });
 };
