@@ -51,6 +51,9 @@ module.exports = function (projectNames) {
 
         // start syncing
         syncWithRemoteDbs(projectNames);
-        syncWithRemoteUserDb();
+        // not possible without admin rights
+        // so new projects will not turn up without login!
+        // TODO: make new projects turn up via oi_pg creating userDocs
+        //syncWithRemoteUserDb();
     });
 };
