@@ -36780,6 +36780,7 @@ module.exports = function ($node) {
         parentNodeId,
         objectsToDelete = [],
         childrenToDelete,
+        // TODO: get projectId and choose correct db
         localDb              = new PouchDB('oi', pouchDbOptions);
 
     // ermitteln, wieviele child-Objekte betroffen werden
@@ -36852,7 +36853,7 @@ module.exports = function ($node) {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./askYesNoWithModal":128,"./deleteObjectFromModel":134,"./getObject":154,"./pouchDbOptions":176,"./tellWithModal":182,"pouchdb":82,"underscore":126}],134:[function(require,module,exports){
+},{"./askYesNoWithModal":128,"./deleteObjectFromModel":134,"./getObject":154,"./pouchDbOptions":176,"./tellWithModal":183,"pouchdb":82,"underscore":126}],134:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -36876,12 +36877,10 @@ var $                   = (typeof window !== "undefined" ? window.$ : typeof glo
     saveObjectValue     = require('../form/saveObjectValue');
 
 module.exports = function () {
-    var value = getValueAfterChange(this),
-        $that = $(this),
-        id    = $that.data('object')._id,
-        field = $that.data('object').label;
+    var value  = getValueAfterChange(this),
+        object = $(this).data('object');
 
-    saveObjectValue(id, field, value);
+    saveObjectValue(object, value);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../form/getValueAfterChange":147,"../form/saveObjectValue":152}],136:[function(require,module,exports){
@@ -37294,6 +37293,7 @@ module.exports = function (id, type) {
                     templateObject.object               = {};
                     templateObject.object._id           = id;
                     templateObject.object.type          = type;
+                    templateObject.object.projId        = object.projId            || null;
                     templateObject.object.label         = field.label;
                     templateObject.object.inputDataType = field.inputDataType      || null;
                     templateObject.object.value         = object.data[field.label] || null;
@@ -37366,7 +37366,7 @@ module.exports = function (id, type) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../../templates/checkbox":184,"../../../templates/checkboxGroup":185,"../../../templates/formButtonToolbar":186,"../../../templates/input":187,"../../../templates/optionGroup":188,"../../../templates/select":189,"../../../templates/textarea":190,"../getHierarchy":153,"../getObject":154,"./addCheckedToValueList":144,"./fitTextareaToContent":146,"./positionFormBtngroup":150,"underscore":126}],149:[function(require,module,exports){
+},{"../../../templates/checkbox":185,"../../../templates/checkboxGroup":186,"../../../templates/formButtonToolbar":187,"../../../templates/input":188,"../../../templates/optionGroup":189,"../../../templates/select":190,"../../../templates/textarea":191,"../getHierarchy":153,"../getObject":154,"./addCheckedToValueList":144,"./fitTextareaToContent":146,"./positionFormBtngroup":150,"underscore":126}],149:[function(require,module,exports){
 // Hilfsfunktion, die typeof ersetzt und ergänzt
 // typeof gibt bei input-Feldern immer String zurück!
 
@@ -37475,10 +37475,13 @@ var $                 = (typeof window !== "undefined" ? window.$ : typeof globa
     getLabelForObject = require('../nav/getLabelForObject'),
     getObject         = require('../getObject');
 
-module.exports = function (id, field, value) {
-    var object,
+module.exports = function (passedObject, value) {
+    var projId     = passedObject.projId,
+        id         = passedObject._id,
+        field      = passedObject.label,
+        object,
         lastEdited = {},
-        localDb    = new PouchDB('oi', pouchDbOptions);
+        localDb    = new PouchDB('project_' + projId, pouchDbOptions);
 
     // get data for object
     object              = getObject(id);
@@ -37802,31 +37805,13 @@ module.exports = function (object) {
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var PouchDB        = require('pouchdb'),
-    pouchDbOptions = require('../pouchDbOptions');
-
 module.exports = function () {
-    var databaseId = {},
-        localDb    = new PouchDB('oi', pouchDbOptions);
-
-    localDb.get('_local/databaseId').then(function (response) {
-        window.oi.databaseId = response.databaseId;
-    }).catch(function (err) {
-        if (err.status === 404) {
-            // document is missing > create new one and make it accessible as global variable
-            databaseId.databaseId = Math.random();
-            localDb.put(databaseId, '_local/databaseId').then(function () {
-                window.oi.databaseId = databaseId.databaseId;
-            }).catch(function (err) {
-                console.log('error creating databaseId: ', err);
-            });
-        } else {
-            console.log('error retrieving databaseId: ', err);
-        }
-    });
-
+    if (!localStorage.databaseId) {
+        localStorage.databaseId = Math.random();
+    }
+    window.oi.databaseId = localStorage.databaseId;
 };
-},{"../pouchDbOptions":176,"pouchdb":82}],162:[function(require,module,exports){
+},{}],162:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -37951,6 +37936,9 @@ module.exports = function () {
         }
     });
 
+    console.log('objectsData: ', objectsData);
+    console.log('childHierarchiesData: ', childHierarchiesData);
+
     return _.union(objectsData, childHierarchiesData);
 };
 },{"./createChildHierarchiesOfObject":160,"./createTreeNodeObject":163,"./createTreeNodeRootObject":164,"./getLabelForObject":167,"underscore":126}],166:[function(require,module,exports){
@@ -37970,6 +37958,8 @@ module.exports = function (firstSync, projectName, callback) {
         // if ist the fist sync: get the modeldata from remoteDb
         db = firstSync ? remoteDb : localDb;
 
+    //console.log('db: ', db);
+
     db.allDocs({include_docs: true}).then(function (result) {
         var docs = _.map(result.rows, function (row) {
                return row.doc; 
@@ -37977,11 +37967,12 @@ module.exports = function (firstSync, projectName, callback) {
             hierarchies,
             objects;
 
+        //console.log('docs: ', docs);
+
         hierarchies = _.filter(docs, function (doc) {
             return doc.type === 'hierarchy';
         });
         if (hierarchies && hierarchies.length > 0) {
-            console.log('adding hierarchies: ', hierarchies);
             window.oi.hierarchies = _.union(window.oi.hierarchies, hierarchies);
         }
 
@@ -37989,7 +37980,6 @@ module.exports = function (firstSync, projectName, callback) {
             return doc.type === 'object';
         });
         if (objects && objects.length > 0) {
-            console.log('adding objects: ', objects);
             window.oi.objects = _.union(window.oi.objects, objects);
         }
         callback(null, true);
@@ -38060,6 +38050,7 @@ module.exports = function (firstSync, projectNames, callback) {
     _.each(projectNames, function (projectName) {
         getDataFromDb(firstSync, projectName, function (error, done) {
             if (error) {
+                console.log('got an error: ', error);
                 errors.push(error);
                 if (errors.length === projectNames.length) {
                     return callback(errors, false);
@@ -38089,17 +38080,11 @@ var $                        = (typeof window !== "undefined" ? window.$ : typeo
     async                    = require('async'),
     PouchDB                  = require('pouchdb'),
     pouchDbOptions           = require('../pouchDbOptions'),
-    syncWithRemoteDb         = require('../syncWithRemoteDb'),
+    syncWithRemoteDbs        = require('../syncWithRemoteDbs'),
     syncWithRemoteUserDb     = require('../syncWithRemoteUserDb'),
     createTree               = require('./createTree'),
     createDatabaseId         = require('./createDatabaseId'),
     getModelData             = require('./getModelData');
-
-function syncWithRemoteDbs(projectDbs) {
-    _.each(projectDbs, function (projectDb) {
-        syncWithRemoteDb(projectDb);
-    });
-}
 
 module.exports = function (projectNames) {
     var firstSync = projectNames ? true : false;
@@ -38120,6 +38105,8 @@ module.exports = function (projectNames) {
 
     // build model
     getModelData(firstSync, projectNames, function (errors, done) {
+        if (errors && errors.length > 0) { console.log('got model data errors: ', errors); }
+
         // every database gets a locally saved id
         // this id is added to every document changed
         // with it the changes feed can ignore locally changed documents
@@ -38129,6 +38116,7 @@ module.exports = function (projectNames) {
 
         // start syncing
         syncWithRemoteDbs(projectNames);
+
         // not possible without admin rights
         // so new projects will not turn up without login!
         // TODO: make new projects turn up via oi_pg creating userDocs
@@ -38136,7 +38124,7 @@ module.exports = function (projectNames) {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../pouchDbOptions":176,"../syncWithRemoteDb":180,"../syncWithRemoteUserDb":181,"./createDatabaseId":161,"./createTree":162,"./getModelData":169,"async":3,"pouchdb":82,"underscore":126}],171:[function(require,module,exports){
+},{"../pouchDbOptions":176,"../syncWithRemoteDbs":181,"../syncWithRemoteUserDb":182,"./createDatabaseId":161,"./createTree":162,"./getModelData":169,"async":3,"pouchdb":82,"underscore":126}],171:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -38195,7 +38183,7 @@ module.exports = function (signindata) {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../configuration":129,"../tellWithModal":182,"./initiateNav":170,"pouchdb":82,"pouchdb-authentication":31}],173:[function(require,module,exports){
+},{"../configuration":129,"../tellWithModal":183,"./initiateNav":170,"pouchdb":82,"pouchdb-authentication":31}],173:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -38258,16 +38246,18 @@ module.exports = function () {
     signIn(signindata);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../tellWithModal":182,"../validateEmail":183,"./signIn":172,"./signUp":174}],174:[function(require,module,exports){
+},{"../tellWithModal":183,"../validateEmail":184,"./signIn":172,"./signUp":174}],174:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
 var PouchDB        = require('pouchdb'),
+    configuration  = require('../configuration'),
+    couchUrl       = configuration.couch.dbUrl,
     signIn         = require('./signIn'),
     tellWithModal  = require('../tellWithModal');
 
 module.exports = function (signindata) {
-    var remoteDb = new PouchDB('http://localhost:5984/oi');
+    var remoteDb = new PouchDB('http://' + couchUrl + '/oi');
 
     PouchDB.plugin(require('pouchdb-authentication'));
 
@@ -38292,7 +38282,7 @@ module.exports = function (signindata) {
         tellWithModal('Das Konto konnte nicht erstellt werden', 'Die Datenbank meldete: ' + error);
     });
 };
-},{"../tellWithModal":182,"./signIn":172,"pouchdb":82,"pouchdb-authentication":31}],175:[function(require,module,exports){
+},{"../configuration":129,"../tellWithModal":183,"./signIn":172,"pouchdb":82,"pouchdb-authentication":31}],175:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -38476,7 +38466,6 @@ var PouchDB        = require('pouchdb'),
     pouchDbOptions = require('./pouchDbOptions'),
     configuration  = require('./configuration'),
     couchUrl       = configuration.couch.dbUrl,
-    couchName      = configuration.couch.dbName,
     handleChanges  = require('./handleChanges');
 
 function syncError(err) {
@@ -38484,8 +38473,8 @@ function syncError(err) {
 }
 
 module.exports = function (couchName) {
-    var localDb  = new PouchDB('oi', pouchDbOptions),
-        remoteDb = 'http://' + couchUrl + '/' + couchName,
+    var localDb  = new PouchDB(couchName, pouchDbOptions),
+        remoteDb = new PouchDB('http://' + couchUrl + '/' + couchName),
         options  = {
             retry:        true,
             since:        'now',
@@ -38504,6 +38493,19 @@ module.exports = function (couchName) {
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
+var _                = require('underscore'),
+    syncWithRemoteDb = require('./syncWithRemoteDb');
+
+module.exports = function (projectDbs) {
+    _.each(projectDbs, function (projectDb) {
+        syncWithRemoteDb(projectDb);
+    });
+};
+
+},{"./syncWithRemoteDb":180,"underscore":126}],182:[function(require,module,exports){
+/*jslint node: true, browser: true, nomen: true, todo: true */
+'use strict';
+
 var PouchDB            = require('pouchdb'),
     handleUsersChanges = require('./handleUsersChanges'),
     pouchDbOptions     = require('./pouchDbOptions'),
@@ -38519,7 +38521,7 @@ module.exports = function () {
         include_docs: true
     }).on('change', handleUsersChanges);
 };
-},{"./configuration":129,"./handleUsersChanges":158,"./pouchDbOptions":176,"pouchdb":82}],182:[function(require,module,exports){
+},{"./configuration":129,"./handleUsersChanges":158,"./pouchDbOptions":176,"pouchdb":82}],183:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -38542,7 +38544,7 @@ module.exports = function (title, text) {
     $modal.modal(options);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],183:[function(require,module,exports){
+},{}],184:[function(require,module,exports){
 /*
  * prüft, ob ein String eine email-Adressen sein könnte
  * Quelle: http://stackoverflow.com/questions/46155/validate-email-address-in-javascript
@@ -38555,7 +38557,7 @@ module.exports = function (string) {
     var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(string);
 };
-},{}],184:[function(require,module,exports){
+},{}],185:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, helper, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing, functionType="function";
   return "<div class=\"form-group js-form-group\">\n    <label class=\"control-label\">"
@@ -38569,7 +38571,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(((helper = (helper = helpers.checked || (depth0 != null ? depth0.checked : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"checked","hash":{},"data":data}) : helper)))
     + ">\n            </label>\n        </div>\n    </div>\n</div>";
 },"useData":true});
-},{"handlebars":25}],185:[function(require,module,exports){
+},{"handlebars":25}],186:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,depths) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "            <div class=\"checkbox\">\n                <label>\n                    <input type=\"checkbox\" id=\""
@@ -38596,11 +38598,11 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "    </div>\n</div>";
 },"useData":true,"useDepths":true});
-},{"handlebars":25}],186:[function(require,module,exports){
+},{"handlebars":25}],187:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   return "<div class=\"btn-toolbar\" role=\"toolbar\" aria-label=\"Daten Toolbar\">\n    <div class=\"btn-group pull-right\" role=\"group\" aria-label=\"Daten Button group\">\n        <button id=\"formNew\" class=\"btn btn-default\">neu</button>\n        <button id=\"formDelete\" class=\"btn btn-default\">löschen</button>\n    </div>\n</div>";
   },"useData":true});
-},{"handlebars":25}],187:[function(require,module,exports){
+},{"handlebars":25}],188:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "<div class=\"form-group js-form-group\">\n    <label for=\""
@@ -38619,7 +38621,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.value : stack1), depth0))
     + "\">\n</div>";
 },"useData":true});
-},{"handlebars":25}],188:[function(require,module,exports){
+},{"handlebars":25}],189:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,depths) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "            <div class=\"radio\">\n                <label>\n                    <input type=\"radio\" name=\""
@@ -38646,7 +38648,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "    </div>\n</div>";
 },"useData":true,"useDepths":true});
-},{"handlebars":25}],189:[function(require,module,exports){
+},{"handlebars":25}],190:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, buffer = "                <option value=";
   stack1 = lambda((depth0 != null ? depth0.value : depth0), depth0);
@@ -38669,7 +38671,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "        </select>\n    </div>\n</div>";
 },"useData":true});
-},{"handlebars":25}],190:[function(require,module,exports){
+},{"handlebars":25}],191:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "<div class=\"form-group js-form-group\">\n    <label for=\""

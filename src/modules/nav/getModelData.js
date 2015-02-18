@@ -11,6 +11,7 @@ module.exports = function (firstSync, projectNames, callback) {
     _.each(projectNames, function (projectName) {
         getDataFromDb(firstSync, projectName, function (error, done) {
             if (error) {
+                console.log('got an error: ', error);
                 errors.push(error);
                 if (errors.length === projectNames.length) {
                     return callback(errors, false);

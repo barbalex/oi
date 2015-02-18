@@ -9,7 +9,6 @@ var PouchDB        = require('pouchdb'),
     pouchDbOptions = require('./pouchDbOptions'),
     configuration  = require('./configuration'),
     couchUrl       = configuration.couch.dbUrl,
-    couchName      = configuration.couch.dbName,
     handleChanges  = require('./handleChanges');
 
 function syncError(err) {
@@ -17,8 +16,8 @@ function syncError(err) {
 }
 
 module.exports = function (couchName) {
-    var localDb  = new PouchDB('oi', pouchDbOptions),
-        remoteDb = 'http://' + couchUrl + '/' + couchName,
+    var localDb  = new PouchDB(couchName, pouchDbOptions),
+        remoteDb = new PouchDB('http://' + couchUrl + '/' + couchName),
         options  = {
             retry:        true,
             since:        'now',

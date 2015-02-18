@@ -14,6 +14,8 @@ module.exports = function (firstSync, projectName, callback) {
         // if ist the fist sync: get the modeldata from remoteDb
         db = firstSync ? remoteDb : localDb;
 
+    //console.log('db: ', db);
+
     db.allDocs({include_docs: true}).then(function (result) {
         var docs = _.map(result.rows, function (row) {
                return row.doc; 
@@ -21,11 +23,12 @@ module.exports = function (firstSync, projectName, callback) {
             hierarchies,
             objects;
 
+        //console.log('docs: ', docs);
+
         hierarchies = _.filter(docs, function (doc) {
             return doc.type === 'hierarchy';
         });
         if (hierarchies && hierarchies.length > 0) {
-            console.log('adding hierarchies: ', hierarchies);
             window.oi.hierarchies = _.union(window.oi.hierarchies, hierarchies);
         }
 
@@ -33,7 +36,6 @@ module.exports = function (firstSync, projectName, callback) {
             return doc.type === 'object';
         });
         if (objects && objects.length > 0) {
-            console.log('adding objects: ', objects);
             window.oi.objects = _.union(window.oi.objects, objects);
         }
         callback(null, true);

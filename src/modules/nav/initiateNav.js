@@ -11,17 +11,11 @@ var $                        = require('jquery'),
     async                    = require('async'),
     PouchDB                  = require('pouchdb'),
     pouchDbOptions           = require('../pouchDbOptions'),
-    syncWithRemoteDb         = require('../syncWithRemoteDb'),
+    syncWithRemoteDbs        = require('../syncWithRemoteDbs'),
     syncWithRemoteUserDb     = require('../syncWithRemoteUserDb'),
     createTree               = require('./createTree'),
     createDatabaseId         = require('./createDatabaseId'),
     getModelData             = require('./getModelData');
-
-function syncWithRemoteDbs(projectDbs) {
-    _.each(projectDbs, function (projectDb) {
-        syncWithRemoteDb(projectDb);
-    });
-}
 
 module.exports = function (projectNames) {
     var firstSync = projectNames ? true : false;
@@ -42,6 +36,8 @@ module.exports = function (projectNames) {
 
     // build model
     getModelData(firstSync, projectNames, function (errors, done) {
+        if (errors && errors.length > 0) { console.log('got model data errors: ', errors); }
+
         // every database gets a locally saved id
         // this id is added to every document changed
         // with it the changes feed can ignore locally changed documents
@@ -51,6 +47,7 @@ module.exports = function (projectNames) {
 
         // start syncing
         syncWithRemoteDbs(projectNames);
+
         // not possible without admin rights
         // so new projects will not turn up without login!
         // TODO: make new projects turn up via oi_pg creating userDocs

@@ -29,5 +29,8 @@ module.exports = function () {
         }
     });
 
+    console.log('objectsData: ', objectsData);
+    console.log('childHierarchiesData: ', childHierarchiesData);
+
     return _.union(objectsData, childHierarchiesData);
 };

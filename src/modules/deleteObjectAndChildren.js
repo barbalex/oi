@@ -28,6 +28,7 @@ module.exports = function ($node) {
         parentNodeId,
         objectsToDelete = [],
         childrenToDelete,
+        // TODO: get projectId and choose correct db
         localDb              = new PouchDB('oi', pouchDbOptions);
 
     // ermitteln, wieviele child-Objekte betroffen werden

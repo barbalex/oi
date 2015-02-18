@@ -6,10 +6,8 @@ var $                   = require('jquery'),
     saveObjectValue     = require('../form/saveObjectValue');
 
 module.exports = function () {
-    var value = getValueAfterChange(this),
-        $that = $(this),
-        id    = $that.data('object')._id,
-        field = $that.data('object').label;
+    var value  = getValueAfterChange(this),
+        object = $(this).data('object');
 
-    saveObjectValue(id, field, value);
+    saveObjectValue(object, value);
 };

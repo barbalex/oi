@@ -9,10 +9,13 @@ var $                 = require('jquery'),
     getLabelForObject = require('../nav/getLabelForObject'),
     getObject         = require('../getObject');
 
-module.exports = function (id, field, value) {
-    var object,
+module.exports = function (passedObject, value) {
+    var projId     = passedObject.projId,
+        id         = passedObject._id,
+        field      = passedObject.label,
+        object,
         lastEdited = {},
-        localDb    = new PouchDB('oi', pouchDbOptions);
+        localDb    = new PouchDB('project_' + projId, pouchDbOptions);
 
     // get data for object
     object              = getObject(id);
