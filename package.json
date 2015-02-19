@@ -26,7 +26,8 @@
     "jstree": "3.0.9",
     "pouchdb": "3.3.0",
     "pouchdb-authentication": "^0.3.6",
-    "underscore": "1.7.0"
+    "underscore": "1.7.0",
+    "pouchdb-all-dbs": "^1.0.1"
   },
   "devDependencies": {
     "browserify": "8.1.3",

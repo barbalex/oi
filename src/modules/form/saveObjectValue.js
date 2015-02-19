@@ -10,12 +10,15 @@ var $                 = require('jquery'),
     getObject         = require('../getObject');
 
 module.exports = function (passedObject, value) {
-    var projId     = passedObject.projId,
-        id         = passedObject._id,
-        field      = passedObject.label,
+    var projId      = passedObject.projId,
+        projectName = 'project_' + projId,
+        id          = passedObject._id,
+        field       = passedObject.label,
         object,
-        lastEdited = {},
-        localDb    = new PouchDB('project_' + projId, pouchDbOptions);
+        lastEdited  = {},
+        localDb     = new PouchDB(projectName, pouchDbOptions);
+
+    console.log('saveObjectValue: projectName: ', projectName);
 
     // get data for object
     object              = getObject(id);
@@ -29,9 +32,14 @@ module.exports = function (passedObject, value) {
         object.data[field] = value || null;
         object.lastEdited  = lastEdited;
 
+        console.log('putting object: ', object);
+
         // write to pouch
         localDb.put(object)
             .then(function (response) {
+
+                console.log('response from putting: ', response);
+
                 // update rev in model object
                 object._rev = response.rev;
 

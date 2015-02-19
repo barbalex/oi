@@ -17,22 +17,11 @@ var $                        = require('jquery'),
     createDatabaseId         = require('./createDatabaseId'),
     getModelData             = require('./getModelData');
 
-module.exports = function (projectNames) {
+function initiate(projectNames) {
     var firstSync = projectNames ? true : false;
 
     // expose pouchdb to pouchdb-fauxton
     window.PouchDB = PouchDB;
-
-    if (!projectNames) {
-        projectNames = _.map(window.oi.objects, function (object) {
-            if (!object.parent) {
-                return 'project_' + object._id;
-            }
-        });
-    }
-
-    window.oi.objects     = [];
-    window.oi.hierarchies = [];
 
     // build model
     getModelData(firstSync, projectNames, function (errors, done) {
@@ -53,4 +42,28 @@ module.exports = function (projectNames) {
         // TODO: make new projects turn up via oi_pg creating userDocs
         //syncWithRemoteUserDb();
     });
+}
+
+module.exports = function (projectNames) {
+
+    console.log('projectNames: ', projectNames);
+
+    if (!projectNames) {
+        //PouchDB.plugin(require('pouchdb-all-dbs'));
+        require('pouchdb-all-dbs')(PouchDB);
+
+        PouchDB.allDbs().then(function (dbs) {
+            // dbs is an array of strings, e.g. ['mydb1', 'mydb2']
+
+            console.log('projectNames from allDbs: ', dbs);
+
+            projectNames = dbs;
+            initiate(projectNames);
+        }).catch(function (err) {
+            // handle err
+            console.log('error getting projects: ', err);
+        });
+    } else {
+        initiate(projectNames);
+    }
 };
