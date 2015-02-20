@@ -17,16 +17,30 @@ function syncError(err) {
 
 module.exports = function (couchName) {
     var localDb  = new PouchDB(couchName, pouchDbOptions),
-        remoteDb = new PouchDB('http://' + couchUrl + '/' + couchName),
+        remoteDbAddress = 'http://' + window.oi.me.name + ':' + window.oi.me.password + '@' + couchUrl + '/' + couchName,
+        remoteDb = new PouchDB(remoteDbAddress),
         options  = {
             retry:        true,
-            since:        'now',
+            //since:        'now',
             live:         true,
             include_docs: true
         };
 
+    console.log('remoteDbAddress: ', remoteDbAddress);
+
     if (remoteDb) {
-        PouchDB.sync(localDb, remoteDb, options)
+
+        console.log('sync couchName: ', couchName);
+
+        /*PouchDB.sync(localDb, remoteDb, options)
+            .on('error',  syncError)
+            .on('change', handleChanges);*/
+
+        PouchDB.replicate(localDb, remoteDb, options)
+            .on('error',  syncError)
+            .on('change', handleChanges);
+
+        PouchDB.replicate(remoteDb, localDb, options)
             .on('error',  syncError)
             .on('change', handleChanges);
     }

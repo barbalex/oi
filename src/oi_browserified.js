@@ -6,6 +6,8 @@ var initiateApp = require('./modules/initiateApp'),
     PouchDB     = require('pouchdb');
 
 require('bootstrap-validator');
+require('pouchdb-all-dbs')(PouchDB);
+PouchDB.plugin(require('pouchdb-authentication'));
 
 // benötigte globale Variabeln initialisieren
 window.oi             = window.oi       || {};
@@ -17,7 +19,7 @@ window.oi.hierarchies = [];
 window.PouchDB = PouchDB;
 
 initiateApp();
-},{"./modules/initiateApp":183,"bootstrap-validator":4,"pouchdb":106}],2:[function(require,module,exports){
+},{"./modules/initiateApp":183,"bootstrap-validator":4,"pouchdb":106,"pouchdb-all-dbs":28,"pouchdb-authentication":55}],2:[function(require,module,exports){
 module.exports={
     "user": "barbalex",
     "pass": "dLhdMg12"
@@ -36999,7 +37001,7 @@ module.exports = function (object, hierarchy) {
     newObject.users               = object.users;
     newObject.lastEdited          = {};
     newObject.lastEdited.date     = dateformat(new Date(), 'isoDateTime');
-    newObject.lastEdited.user     = window.oi.loginName;
+    newObject.lastEdited.user     = window.oi.me.name;
     newObject.lastEdited.database = window.oi.databaseId;
     newObject.data                = {};
     if (hierarchy.fields) {
@@ -37783,7 +37785,7 @@ module.exports = function (hierarchy) {
 
     // build lastEdited
     lastEdited.date     = dateformat(new Date(), 'isoDateTime');
-    lastEdited.user     = window.oi.loginName;
+    lastEdited.user     = window.oi.me.name;
     lastEdited.database = window.oi.databaseId;
 
     // set new value
@@ -37836,7 +37838,7 @@ module.exports = function (passedObject, value) {
     object              = getObject(id);
     // build lastEdited
     lastEdited.date     = dateformat(new Date(), 'isoDateTime');
-    lastEdited.user     = window.oi.loginName;
+    lastEdited.user     = window.oi.me.name;
     lastEdited.database = window.oi.databaseId;
 
     if (object) {
@@ -37974,7 +37976,7 @@ module.exports = function (doc) {
 
     // only use changes on docs with this user
     // TODO: is given if listens only do project-db's
-    if (doc.users && doc.users.indexOf(window.oi.loginName) > -1) {
+    if (doc.users && doc.users.indexOf(window.oi.me.name) > -1) {
         // only use changes from different databases
         if (doc.lastEdited && doc.lastEdited.database && doc.lastEdited.database !== window.oi.databaseId) {
             // update model of object
@@ -38023,7 +38025,7 @@ module.exports = function (user) {
         projectsToAdd,
         projectsToRemove;
 
-    if (userName === window.oi.loginName) {
+    if (userName === window.oi.me.name) {
         rootObjects = _.filter(window.oi.objects, function (object) {
             return !object.parent;
         });
@@ -38406,10 +38408,12 @@ var openSigninModal = require('./openSigninModal'),
     initiateNav     = require('./initiateNav');
 
 module.exports = function () {
-    var loginName = localStorage.loginName;
+    var loginName = localStorage.me_name;
 
     if (loginName) {
-        window.oi.loginName = loginName;
+        window.oi.me          = {};
+        window.oi.me.name     = loginName;
+        window.oi.me.password = localStorage.me_password;
         initiateNav();
     } else {
         openSigninModal();
@@ -38466,12 +38470,7 @@ var $                        = (typeof window !== "undefined" ? window.$ : typeo
     createDatabaseId         = require('./createDatabaseId'),
     getModelData             = require('./getModelData');
 
-function initiate(projectNames) {
-    var firstSync = projectNames ? true : false;
-
-    // expose pouchdb to pouchdb-fauxton
-    window.PouchDB = PouchDB;
-
+function initiate(projectNames, firstSync) {
     // build model
     getModelData(firstSync, projectNames, function (errors, done) {
         if (errors && errors.length > 0) { console.log('got model data errors: ', errors); }
@@ -38494,6 +38493,7 @@ function initiate(projectNames) {
 }
 
 module.exports = function (projectNames) {
+    var firstSync = projectNames ? true : false;
 
     console.log('projectNames: ', projectNames);
 
@@ -38507,13 +38507,13 @@ module.exports = function (projectNames) {
             console.log('projectNames from allDbs: ', dbs);
 
             projectNames = dbs;
-            initiate(projectNames);
+            initiate(projectNames, firstSync);
         }).catch(function (err) {
             // handle err
             console.log('error getting projects: ', err);
         });
     } else {
-        initiate(projectNames);
+        initiate(projectNames, firstSync);
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
@@ -38541,25 +38541,25 @@ module.exports = function () {
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $              = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
-    PouchDB        = require('pouchdb'),
-    configuration  = require('../configuration'),
-    couchUrl       = configuration.couch.dbUrl,
-    tellWithModal  = require('../tellWithModal'),
-    initiateNav    = require('./initiateNav');
+var $             = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+    PouchDB       = require('pouchdb'),
+    configuration = require('../configuration'),
+    couchUrl      = configuration.couch.dbUrl,
+    tellWithModal = require('../tellWithModal'),
+    initiateNav   = require('./initiateNav');
 
 module.exports = function (signindata) {
     var remoteDb = new PouchDB('http://' + couchUrl + '/oi');
-
-    PouchDB.plugin(require('pouchdb-authentication'));
-
     // signin
     remoteDb.login(signindata.name, signindata.password).then(function (response) {
-        window.oi.loginName = signindata.name;
+        window.oi.me          = {};
+        window.oi.me.name     = signindata.name;
+        window.oi.me.password = signindata.password;
         // name in DB speichern
         // nachher auslagern, da auch nach signup
         if (signindata.remember) {
-            localStorage.loginName = signindata.name;
+            localStorage.me_name     = signindata.name;
+            localStorage.me_password = signindata.password;
         }
         // when first sync, pass roles
         // then data for model is fetched from remote db
@@ -38576,7 +38576,7 @@ module.exports = function (signindata) {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../configuration":153,"../tellWithModal":208,"./initiateNav":195,"pouchdb":106,"pouchdb-authentication":55}],198:[function(require,module,exports){
+},{"../configuration":153,"../tellWithModal":208,"./initiateNav":195,"pouchdb":106}],198:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -38651,12 +38651,6 @@ var PouchDB        = require('pouchdb'),
 
 module.exports = function (signindata) {
     var remoteDb = new PouchDB('http://' + couchUrl + '/oi');
-
-    PouchDB.plugin(require('pouchdb-authentication'));
-
-    // expose pouchdb to pouchdb-fauxton
-    window.PouchDB = PouchDB;
-
     // signup, then call signin
     remoteDb.signup(signindata.name, signindata.password, {
         metadata: {
@@ -38675,7 +38669,7 @@ module.exports = function (signindata) {
         tellWithModal('Das Konto konnte nicht erstellt werden', 'Die Datenbank meldete: ' + error);
     });
 };
-},{"../configuration":153,"../tellWithModal":208,"./signIn":197,"pouchdb":106,"pouchdb-authentication":55}],200:[function(require,module,exports){
+},{"../configuration":153,"../tellWithModal":208,"./signIn":197,"pouchdb":106}],200:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -38867,16 +38861,30 @@ function syncError(err) {
 
 module.exports = function (couchName) {
     var localDb  = new PouchDB(couchName, pouchDbOptions),
-        remoteDb = new PouchDB('http://' + couchUrl + '/' + couchName),
+        remoteDbAddress = 'http://' + window.oi.me.name + ':' + window.oi.me.password + '@' + couchUrl + '/' + couchName,
+        remoteDb = new PouchDB(remoteDbAddress),
         options  = {
             retry:        true,
-            since:        'now',
+            //since:        'now',
             live:         true,
             include_docs: true
         };
 
+    console.log('remoteDbAddress: ', remoteDbAddress);
+
     if (remoteDb) {
-        PouchDB.sync(localDb, remoteDb, options)
+
+        console.log('sync couchName: ', couchName);
+
+        /*PouchDB.sync(localDb, remoteDb, options)
+            .on('error',  syncError)
+            .on('change', handleChanges);*/
+
+        PouchDB.replicate(localDb, remoteDb, options)
+            .on('error',  syncError)
+            .on('change', handleChanges);
+
+        PouchDB.replicate(remoteDb, localDb, options)
             .on('error',  syncError)
             .on('change', handleChanges);
     }

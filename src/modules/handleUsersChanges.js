@@ -16,7 +16,7 @@ module.exports = function (user) {
         projectsToAdd,
         projectsToRemove;
 
-    if (userName === window.oi.loginName) {
+    if (userName === window.oi.me.name) {
         rootObjects = _.filter(window.oi.objects, function (object) {
             return !object.parent;
         });

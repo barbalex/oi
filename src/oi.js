@@ -1,0 +1,20 @@
+/*jslint node: true, browser: true, nomen: true, todo: true */
+'use strict';
+
+var initiateApp = require('./modules/initiateApp'),
+    PouchDB     = require('pouchdb');
+
+require('bootstrap-validator');
+require('pouchdb-all-dbs')(PouchDB);
+PouchDB.plugin(require('pouchdb-authentication'));
+
+// benötigte globale Variabeln initialisieren
+window.oi             = window.oi       || {};
+window.oi.olMap       = window.oi.olMap || {};
+window.oi.objects     = [];
+window.oi.hierarchies = [];
+
+// expose pouchdb to pouchdb-fauxton
+window.PouchDB = PouchDB;
+
+initiateApp();

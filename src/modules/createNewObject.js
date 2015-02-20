@@ -42,7 +42,7 @@ module.exports = function (object, hierarchy) {
     newObject.users               = object.users;
     newObject.lastEdited          = {};
     newObject.lastEdited.date     = dateformat(new Date(), 'isoDateTime');
-    newObject.lastEdited.user     = window.oi.loginName;
+    newObject.lastEdited.user     = window.oi.me.name;
     newObject.lastEdited.database = window.oi.databaseId;
     newObject.data                = {};
     if (hierarchy.fields) {

@@ -25,7 +25,7 @@ module.exports = function (doc) {
 
     // only use changes on docs with this user
     // TODO: is given if listens only do project-db's
-    if (doc.users && doc.users.indexOf(window.oi.loginName) > -1) {
+    if (doc.users && doc.users.indexOf(window.oi.me.name) > -1) {
         // only use changes from different databases
         if (doc.lastEdited && doc.lastEdited.database && doc.lastEdited.database !== window.oi.databaseId) {
             // update model of object

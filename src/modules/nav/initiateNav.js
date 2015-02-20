@@ -17,12 +17,7 @@ var $                        = require('jquery'),
     createDatabaseId         = require('./createDatabaseId'),
     getModelData             = require('./getModelData');
 
-function initiate(projectNames) {
-    var firstSync = projectNames ? true : false;
-
-    // expose pouchdb to pouchdb-fauxton
-    window.PouchDB = PouchDB;
-
+function initiate(projectNames, firstSync) {
     // build model
     getModelData(firstSync, projectNames, function (errors, done) {
         if (errors && errors.length > 0) { console.log('got model data errors: ', errors); }
@@ -45,6 +40,7 @@ function initiate(projectNames) {
 }
 
 module.exports = function (projectNames) {
+    var firstSync = projectNames ? true : false;
 
     console.log('projectNames: ', projectNames);
 
@@ -58,12 +54,12 @@ module.exports = function (projectNames) {
             console.log('projectNames from allDbs: ', dbs);
 
             projectNames = dbs;
-            initiate(projectNames);
+            initiate(projectNames, firstSync);
         }).catch(function (err) {
             // handle err
             console.log('error getting projects: ', err);
         });
     } else {
-        initiate(projectNames);
+        initiate(projectNames, firstSync);
     }
 };

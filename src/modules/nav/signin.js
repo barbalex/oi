@@ -1,25 +1,25 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $              = require('jquery'),
-    PouchDB        = require('pouchdb'),
-    configuration  = require('../configuration'),
-    couchUrl       = configuration.couch.dbUrl,
-    tellWithModal  = require('../tellWithModal'),
-    initiateNav    = require('./initiateNav');
+var $             = require('jquery'),
+    PouchDB       = require('pouchdb'),
+    configuration = require('../configuration'),
+    couchUrl      = configuration.couch.dbUrl,
+    tellWithModal = require('../tellWithModal'),
+    initiateNav   = require('./initiateNav');
 
 module.exports = function (signindata) {
     var remoteDb = new PouchDB('http://' + couchUrl + '/oi');
-
-    PouchDB.plugin(require('pouchdb-authentication'));
-
     // signin
     remoteDb.login(signindata.name, signindata.password).then(function (response) {
-        window.oi.loginName = signindata.name;
+        window.oi.me          = {};
+        window.oi.me.name     = signindata.name;
+        window.oi.me.password = signindata.password;
         // name in DB speichern
         // nachher auslagern, da auch nach signup
         if (signindata.remember) {
-            localStorage.loginName = signindata.name;
+            localStorage.me_name     = signindata.name;
+            localStorage.me_password = signindata.password;
         }
         // when first sync, pass roles
         // then data for model is fetched from remote db

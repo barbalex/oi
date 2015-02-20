@@ -15,7 +15,7 @@ module.exports = function (hierarchy) {
 
     // build lastEdited
     lastEdited.date     = dateformat(new Date(), 'isoDateTime');
-    lastEdited.user     = window.oi.loginName;
+    lastEdited.user     = window.oi.me.name;
     lastEdited.database = window.oi.databaseId;
 
     // set new value

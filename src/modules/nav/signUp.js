@@ -9,12 +9,6 @@ var PouchDB        = require('pouchdb'),
 
 module.exports = function (signindata) {
     var remoteDb = new PouchDB('http://' + couchUrl + '/oi');
-
-    PouchDB.plugin(require('pouchdb-authentication'));
-
-    // expose pouchdb to pouchdb-fauxton
-    window.PouchDB = PouchDB;
-
     // signup, then call signin
     remoteDb.signup(signindata.name, signindata.password, {
         metadata: {

@@ -5,10 +5,12 @@ var openSigninModal = require('./openSigninModal'),
     initiateNav     = require('./initiateNav');
 
 module.exports = function () {
-    var loginName = localStorage.loginName;
+    var loginName = localStorage.me_name;
 
     if (loginName) {
-        window.oi.loginName = loginName;
+        window.oi.me          = {};
+        window.oi.me.name     = loginName;
+        window.oi.me.password = localStorage.me_password;
         initiateNav();
     } else {
         openSigninModal();
