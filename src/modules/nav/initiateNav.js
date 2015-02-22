@@ -10,7 +10,6 @@ var $                        = require('jquery'),
     _                        = require('underscore'),
     async                    = require('async'),
     PouchDB                  = require('pouchdb'),
-    pouchDbOptions           = require('../pouchDbOptions'),
     syncWithRemoteDbs        = require('../syncWithRemoteDbs'),
     syncWithRemoteUserDb     = require('../syncWithRemoteUserDb'),
     createTree               = require('./createTree'),
@@ -42,24 +41,19 @@ function initiate(projectNames, firstSync) {
 module.exports = function (projectNames) {
     var firstSync = projectNames ? true : false;
 
-    console.log('projectNames: ', projectNames);
-
     if (!projectNames) {
         //PouchDB.plugin(require('pouchdb-all-dbs'));
         require('pouchdb-all-dbs')(PouchDB);
 
         PouchDB.allDbs().then(function (dbs) {
             // dbs is an array of strings, e.g. ['mydb1', 'mydb2']
-
-            console.log('projectNames from allDbs: ', dbs);
-
             projectNames = dbs;
-            initiate(projectNames, firstSync);
+            initiate(projectNames, false);
         }).catch(function (err) {
             // handle err
             console.log('error getting projects: ', err);
         });
     } else {
-        initiate(projectNames, firstSync);
+        initiate(projectNames, true);
     }
 };

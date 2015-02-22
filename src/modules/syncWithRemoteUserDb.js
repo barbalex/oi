@@ -3,7 +3,6 @@
 
 var PouchDB            = require('pouchdb'),
     handleUsersChanges = require('./handleUsersChanges'),
-    pouchDbOptions     = require('./pouchDbOptions'),
     configuration      = require('./configuration'),
     couchUrl           = configuration.couch.dbUrl;
 

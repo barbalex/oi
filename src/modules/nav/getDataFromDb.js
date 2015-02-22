@@ -1,29 +1,31 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var _                        = require('underscore'),
-    PouchDB                  = require('pouchdb'),
-    pouchDbOptions           = require('../pouchDbOptions'),
-    configuration            = require('../configuration'),
-    couchUrl                 = configuration.couch.dbUrl;
+var _             = require('underscore'),
+    PouchDB       = require('pouchdb'),
+    configuration = require('../configuration'),
+    couchUrl      = configuration.couch.dbUrl;
 
 module.exports = function (firstSync, projectName, callback) {
     // now open LOCAL localDb
-    var localDb  = new PouchDB(projectName, pouchDbOptions),
-        remoteDb = new PouchDB('http://' + couchUrl + '/' + projectName),
-        // if ist the fist sync: get the modeldata from remoteDb
-        db = firstSync ? remoteDb : localDb;
+    var localDb         = new PouchDB(projectName),
+        remoteDbAddress = 'http://' + couchUrl + '/' + projectName,
+        remoteDb        = new PouchDB(remoteDbAddress),
+        // if is fist sync: get the modeldata from remoteDb
+        db              = firstSync ? remoteDb : localDb;
 
-    //console.log('db: ', db);
-
-    db.allDocs({include_docs: true}).then(function (result) {
+    db.allDocs({
+        include_docs: true,
+        auth: {
+            username: window.oi.me.name,
+            password: window.oi.me.password
+        }
+    }).then(function (result) {
         var docs = _.map(result.rows, function (row) {
                return row.doc; 
             }),
             hierarchies,
             objects;
-
-        //console.log('docs: ', docs);
 
         hierarchies = _.filter(docs, function (doc) {
             return doc.type === 'hierarchy';

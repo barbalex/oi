@@ -5,7 +5,6 @@ var $                 = require('jquery'),
     dateformat        = require('dateformat'),
     _                 = require('underscore'),
     PouchDB           = require('pouchdb'),
-    pouchDbOptions    = require('../pouchDbOptions'),
     getLabelForObject = require('../nav/getLabelForObject'),
     getObject         = require('../getObject');
 
@@ -16,7 +15,13 @@ module.exports = function (passedObject, value) {
         field       = passedObject.label,
         object,
         lastEdited  = {},
-        localDb     = new PouchDB(projectName, pouchDbOptions);
+        options     = {
+            auth: {
+                username: window.oi.me.name,
+                password: window.oi.me.password
+            }
+        }
+        localDb     = new PouchDB(projectName, options);
 
     console.log('saveObjectValue: projectName: ', projectName);
 

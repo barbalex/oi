@@ -12,7 +12,6 @@
 var $                     = require('jquery'),
     _                     = require('underscore'),
     PouchDB               = require('pouchdb'),
-    pouchDbOptions        = require('./pouchDbOptions'),
     deleteObjectFromModel = require('./deleteObjectFromModel'),
     getObject             = require('./getObject'),
     askYesNoWithModal     = require('./askYesNoWithModal'),
@@ -29,7 +28,7 @@ module.exports = function ($node) {
         objectsToDelete = [],
         childrenToDelete,
         // TODO: get projectId and choose correct db
-        localDb              = new PouchDB('oi', pouchDbOptions);
+        localDb              = new PouchDB('oi');
 
     // ermitteln, wieviele child-Objekte betroffen werden
     childrenToDelete = _.map(nodeChildren, function (child) {

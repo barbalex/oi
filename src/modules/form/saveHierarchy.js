@@ -5,13 +5,12 @@ var $                 = require('jquery'),
     dateformat        = require('dateformat'),
     _                 = require('underscore'),
     PouchDB           = require('pouchdb'),
-    pouchDbOptions    = require('../pouchDbOptions'),
     getLabelForObject = require('../nav/getLabelForObject'),
     getHierarchy      = require('../getHierarchy');
 
 module.exports = function (hierarchy) {
     var lastEdited = {},
-        localDb    = new PouchDB('oi', pouchDbOptions);
+        localDb    = new PouchDB('oi');
 
     // build lastEdited
     lastEdited.date     = dateformat(new Date(), 'isoDateTime');

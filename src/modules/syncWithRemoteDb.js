@@ -6,7 +6,6 @@
 'use strict';
 
 var PouchDB        = require('pouchdb'),
-    pouchDbOptions = require('./pouchDbOptions'),
     configuration  = require('./configuration'),
     couchUrl       = configuration.couch.dbUrl,
     handleChanges  = require('./handleChanges');
@@ -16,32 +15,36 @@ function syncError(err) {
 }
 
 module.exports = function (couchName) {
-    var localDb  = new PouchDB(couchName, pouchDbOptions),
-        remoteDbAddress = 'http://' + window.oi.me.name + ':' + window.oi.me.password + '@' + couchUrl + '/' + couchName,
-        remoteDb = new PouchDB(remoteDbAddress),
-        options  = {
-            retry:        true,
+    var options         = {
+            auth: {
+                username: window.oi.me.name,
+                password: window.oi.me.password
+            }
+        },
+        localDb         = new PouchDB(couchName),
+        remoteDbAddress = 'http://' + couchUrl + '/' + couchName,
+        remoteDb        = new PouchDB(remoteDbAddress, options),
+        syncOptions         = {
+            //retry:        true,
             //since:        'now',
             live:         true,
             include_docs: true
         };
 
-    console.log('remoteDbAddress: ', remoteDbAddress);
-
     if (remoteDb) {
 
-        console.log('sync couchName: ', couchName);
+        console.log('syncing with: ', remoteDbAddress);
 
-        /*PouchDB.sync(localDb, remoteDb, options)
+        PouchDB.sync(localDb, remoteDb, syncOptions)
+            .on('error',  syncError)
+            .on('change', handleChanges);
+
+        /*PouchDB.replicate(localDb, remoteDb, syncOptions)
+            .on('error',  syncError)
+            .on('change', handleChanges);
+
+        PouchDB.replicate(remoteDb, localDb, syncOptions)
             .on('error',  syncError)
             .on('change', handleChanges);*/
-
-        PouchDB.replicate(localDb, remoteDb, options)
-            .on('error',  syncError)
-            .on('change', handleChanges);
-
-        PouchDB.replicate(remoteDb, localDb, options)
-            .on('error',  syncError)
-            .on('change', handleChanges);
     }
 };
