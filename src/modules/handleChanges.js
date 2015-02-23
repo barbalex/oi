@@ -10,7 +10,7 @@ var handleExternalObjectChanges = require('./handleExternalObjectChanges'),
 
 module.exports = function (change) {
 
-    console.log('change: ', change);
+    //console.log('change: ', change);
 
     if (change.doc && change.doc.type) {
         var doc = change.doc;

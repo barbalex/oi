@@ -15,36 +15,29 @@ function syncError(err) {
 }
 
 module.exports = function (couchName) {
-    var options         = {
+    var dbOptions = {
             auth: {
                 username: window.oi.me.name,
                 password: window.oi.me.password
             }
         },
-        localDb         = new PouchDB(couchName),
-        remoteDbAddress = 'http://' + couchUrl + '/' + couchName,
-        remoteDb        = new PouchDB(remoteDbAddress, options),
-        syncOptions         = {
-            //retry:        true,
-            //since:        'now',
+        syncOptions = {
+            live: true,
+            retry: true
+        },
+        changeOptions = {
+            since:        'now',
             live:         true,
             include_docs: true
-        };
+        },
+        localDb         = new PouchDB(couchName),
+        remoteDbAddress = 'http://' + couchUrl + '/' + couchName,
+        remoteDb        = new PouchDB(remoteDbAddress, dbOptions);
 
     if (remoteDb) {
-
-        console.log('syncing with: ', remoteDbAddress);
-
-        PouchDB.sync(localDb, remoteDb, syncOptions)
-            .on('error',  syncError)
-            .on('change', handleChanges);
-
-        /*PouchDB.replicate(localDb, remoteDb, syncOptions)
-            .on('error',  syncError)
-            .on('change', handleChanges);
-
-        PouchDB.replicate(remoteDb, localDb, syncOptions)
-            .on('error',  syncError)
-            .on('change', handleChanges);*/
+        // sync
+        window.oi[couchName + '_sync'] = PouchDB.sync(localDb, remoteDb, syncOptions);
+        // watch changes
+        remoteDb.changes(changeOptions).on('change', handleChanges);
     }
 };

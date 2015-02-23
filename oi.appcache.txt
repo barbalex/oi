@@ -1,7 +1,5 @@
 CACHE MANIFEST
-#1424726604663
 
-CACHE:
 index.html
 images/favicon.ico
 src/oi_built.js
@@ -10,3 +8,5 @@ style/oi_built.css
 
 NETWORK:
 *
+
+#1424711914763

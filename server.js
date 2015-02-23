@@ -15,7 +15,7 @@ server.connection({
 // start the server:
 server.start(function (err) {
     if (err) { throw err; }
-    console.log('ortinfo is running at: http://localhost:2000. Yep. That\'s pretty awesome.');
+    console.log('ortinfo is running at: http://localhost:2000');
 });
 
 server.route({
@@ -30,6 +30,7 @@ server.route({
     method: 'GET',
     path: '/oi.appcache',
     handler: function (request, reply) {
+        //console.log('serving oi.appcache');
         reply('/oi.appcache')
             .type('text/cache-manifest');
     }

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="de" manifest="oi.appcache">
+<html lang="de" manifest="oi.appcache" type="text/cache-manifest">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0 maximum-scale=1.0">
@@ -164,6 +164,17 @@
                 window.oi.getLogin();
                 // query $.hook('xx') instead of $('[data-hook="xx"]')
                 $.extend({hook:function (h) { return $('[data-hook'+(!h||h=='*'?'':'~="'+h+'"')+']'); }});
+                //register event to cache site for offline use
+                function cacheUpdatereadyListener() {
+                    window.applicationCache.update();
+                    window.applicationCache.swapCache();
+                }
+                function cacheErrorListener() {
+                    console.log('app not available offline');
+                }
+                cache = window.applicationCache;
+                cache.addEventListener('updateready', cacheUpdatereadyListener, false);
+                cache.addEventListener('error', cacheErrorListener, false);
             });
         </script>
     </body>

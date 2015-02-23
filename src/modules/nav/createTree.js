@@ -28,7 +28,7 @@ module.exports = function () {
                 return treeContextmenuItems($node);
             }
         }
-    }).on('ready.jstree', function (e, data) {
+    }).on('ready.jstree', function () {
         // scrollbars aktualisieren
         $('.scrollbar').perfectScrollbar('update');
     }).on('create_node.jstree', function (e, data) {

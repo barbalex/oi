@@ -60509,7 +60509,7 @@ module.exports = function () {
 
 var $ = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null);
 
-module.exports = function () {
+module.exports = function (event) {
     if (event.which === 13) {
         $('#signinWithModalSigninButton').trigger('click');
     }
@@ -60525,8 +60525,6 @@ var $ = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined
 module.exports = function () {
     var $separator = $(this).find('.js-separator').first(),
         $content   = $(this).find('.js-content').first();
-
-    console.log('scrolling tab');
 
     $separator.css('height', $content.height() + 40);
 };
@@ -61058,7 +61056,7 @@ var handleExternalObjectChanges = require('./handleExternalObjectChanges'),
 
 module.exports = function (change) {
 
-    console.log('change: ', change);
+    //console.log('change: ', change);
 
     if (change.doc && change.doc.type) {
         var doc = change.doc;
@@ -61082,28 +61080,58 @@ module.exports = function (change) {
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $                 = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
-    _                 = require('underscore'),
-    initiateForm      = require('./form/initiateForm'),
-    getLabelForObject = require('./nav/getLabelForObject');
+var $                        = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+    _                        = require('underscore'),
+    initiateForm             = require('./form/initiateForm'),
+    getLabelForObject        = require('./nav/getLabelForObject'),
+    createTree               = require('./nav/createTree'),
+    createTreeNodeObject     = require('./nav/createTreeNodeObject'),
+    createTreeNodeRootObject = require('./nav/createTreeNodeRootObject');
+
+function refreshTree(doc) {
+    var correspondingHierarchy,
+        tree = $('#navContent').jstree();
+
+    correspondingHierarchy = _.find(window.oi.hierarchies, function (hierarchy) {
+        return hierarchy._id === doc.hId;
+    });
+    if (doc.data && correspondingHierarchy && correspondingHierarchy.nameField) {
+        tree.rename_node('#' + doc._id, getLabelForObject(doc, correspondingHierarchy));
+    }
+}
+
+function addNodeToTree(doc) {
+    var correspondingHierarchy,
+        tree = $('#navContent').jstree(),
+        node;
+
+    node = doc.parent === null ? createTreeNodeRootObject(doc) : createTreeNodeObject(doc);
+
+    correspondingHierarchy = _.find(window.oi.hierarchies, function (hierarchy) {
+        return hierarchy._id === doc.hId;
+    });
+    // find hierarchy-node of doc
+    // create new node
+    if (doc.data && correspondingHierarchy && correspondingHierarchy.nameField) {
+        tree.create_node('#' + doc.parent + doc.hId, node);
+    }
+}
 
 module.exports = function (doc) {
     var modelObject,
-        correspondingHierarchy,
-        $formContent = $('#formContent'),
-        tree         = $('#navContent').jstree(),
-        activeNode   = tree.get_selected(true)[0],
-        activeId     = null;
+        tree       = $('#navContent').jstree(),
+        activeNode = tree.get_selected(true)[0],
+        activeId   = null;
 
     if (activeNode) {
         activeId = activeNode.data.type === 'object' ? activeNode.id : activeNode.data.id;
     }
 
-    // only use changes on docs with this user
-    // TODO: is given if listens only do project-db's
-    if (doc.users && doc.users.indexOf(window.oi.me.name) > -1) {
-        // only use changes from different databases
-        if (doc.lastEdited && doc.lastEdited.database && doc.lastEdited.database !== window.oi.databaseId) {
+    console.log('handleExternalObjectChanges: doc: ', doc);
+
+    // only use changes from different databases
+    if (doc.lastEdited) {
+        if (!doc.lastEdited.database || doc.lastEdited.database !== window.oi.databaseId) {
             // update model of object
             modelObject = _.find(window.oi.objects, function (object) {
                 return object._id === doc._id;
@@ -61111,6 +61139,8 @@ module.exports = function (doc) {
 
             // nur weiterfahren, wenn ein model gefunden wurde
             if (modelObject) {
+                // TODO: check if doc was deleted
+
                 // replace existing object with new one
                 window.oi.objects[window.oi.objects.indexOf(modelObject)] = doc;
 
@@ -61120,18 +61150,20 @@ module.exports = function (doc) {
                     initiateForm(doc._id, 'object');
                 }
                 // refresh tree
-                correspondingHierarchy = _.find(window.oi.hierarchies, function (hierarchy) {
-                    return hierarchy._id === doc.hId;
-                });
-                if (doc.data && correspondingHierarchy && correspondingHierarchy.nameField) {
-                    tree.rename_node('#' + doc._id, getLabelForObject(doc, correspondingHierarchy));
-                }
+                refreshTree(doc);
+            } else {
+                // TODO: das Objekt wurde neu erfasst
+
+                console.log('pushing new doc to model: ', doc);
+
+                window.oi.objects.push(doc);
+                addNodeToTree(doc);
             }
         }
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./form/initiateForm":171,"./nav/getLabelForObject":191,"underscore":149}],181:[function(require,module,exports){
+},{"./form/initiateForm":171,"./nav/createTree":186,"./nav/createTreeNodeObject":187,"./nav/createTreeNodeRootObject":188,"./nav/getLabelForObject":191,"underscore":149}],181:[function(require,module,exports){
 /*
  * When the active user's _users-object is changed, it checks it's roles:
  * - if a role has been deleted, the corresponding project is removed and syncing stopped 
@@ -61353,7 +61385,7 @@ module.exports = function () {
                 return treeContextmenuItems($node);
             }
         }
-    }).on('ready.jstree', function (e, data) {
+    }).on('ready.jstree', function () {
         // scrollbars aktualisieren
         $('.scrollbar').perfectScrollbar('update');
     }).on('create_node.jstree', function (e, data) {
@@ -61962,37 +61994,30 @@ function syncError(err) {
 }
 
 module.exports = function (couchName) {
-    var options         = {
+    var dbOptions = {
             auth: {
                 username: window.oi.me.name,
                 password: window.oi.me.password
             }
         },
-        localDb         = new PouchDB(couchName),
-        remoteDbAddress = 'http://' + couchUrl + '/' + couchName,
-        remoteDb        = new PouchDB(remoteDbAddress, options),
-        syncOptions         = {
-            //retry:        true,
-            //since:        'now',
+        syncOptions = {
+            live: true,
+            retry: true
+        },
+        changeOptions = {
+            since:        'now',
             live:         true,
             include_docs: true
-        };
+        },
+        localDb         = new PouchDB(couchName),
+        remoteDbAddress = 'http://' + couchUrl + '/' + couchName,
+        remoteDb        = new PouchDB(remoteDbAddress, dbOptions);
 
     if (remoteDb) {
-
-        console.log('syncing with: ', remoteDbAddress);
-
-        PouchDB.sync(localDb, remoteDb, syncOptions)
-            .on('error',  syncError)
-            .on('change', handleChanges);
-
-        /*PouchDB.replicate(localDb, remoteDb, syncOptions)
-            .on('error',  syncError)
-            .on('change', handleChanges);
-
-        PouchDB.replicate(remoteDb, localDb, syncOptions)
-            .on('error',  syncError)
-            .on('change', handleChanges);*/
+        // sync
+        window.oi[couchName + '_sync'] = PouchDB.sync(localDb, remoteDb, syncOptions);
+        // watch changes
+        remoteDb.changes(changeOptions).on('change', handleChanges);
     }
 };
 
