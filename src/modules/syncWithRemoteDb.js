@@ -5,10 +5,10 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var PouchDB        = require('pouchdb'),
-    configuration  = require('./configuration'),
-    couchUrl       = configuration.couch.dbUrl,
-    handleChanges  = require('./handleChanges');
+var PouchDB       = require('pouchdb'),
+    configuration = require('./configuration'),
+    couchUrl      = configuration.couch.dbUrl,
+    handleChanges = require('./handleChanges');
 
 function syncError(err) {
     console.log('error syncing: ', err);
