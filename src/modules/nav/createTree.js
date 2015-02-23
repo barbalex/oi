@@ -32,7 +32,11 @@ module.exports = function () {
         // scrollbars aktualisieren
         $('.scrollbar').perfectScrollbar('update');
     }).on('create_node.jstree', function (e, data) {
-        $navContent.jstree().select_node(data.node);
+        if (!window.oi.dontSelectNode) {
+            $navContent.jstree().select_node(data.node);
+        } else {
+            delete window.oi.dontSelectNode;
+        }
     }).on('select_node.jstree', function (e, data) {
         if (data.node.data.type === 'object') {
             initiateForm(data.node.id, 'object');

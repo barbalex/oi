@@ -15,31 +15,22 @@ var $                        = require('jquery'),
     createTreeNodeRootObject = require('./nav/createTreeNodeRootObject');
 
 function refreshTree(doc) {
-    var correspondingHierarchy,
-        tree = $('#navContent').jstree();
-
-    correspondingHierarchy = _.find(window.oi.hierarchies, function (hierarchy) {
+    var correspondingHierarchy = _.find(window.oi.hierarchies, function (hierarchy) {
         return hierarchy._id === doc.hId;
     });
     if (doc.data && correspondingHierarchy && correspondingHierarchy.nameField) {
-        tree.rename_node('#' + doc._id, getLabelForObject(doc, correspondingHierarchy));
+        $('#navContent').jstree().rename_node('#' + doc._id, getLabelForObject(doc, correspondingHierarchy));
     }
 }
 
 function addNodeToTree(doc) {
-    var correspondingHierarchy,
-        tree = $('#navContent').jstree(),
-        node;
+    var node = doc.parent === null ? createTreeNodeRootObject(doc) : createTreeNodeObject(doc);
 
-    node = doc.parent === null ? createTreeNodeRootObject(doc) : createTreeNodeObject(doc);
-
-    correspondingHierarchy = _.find(window.oi.hierarchies, function (hierarchy) {
-        return hierarchy._id === doc.hId;
-    });
-    // find hierarchy-node of doc
     // create new node
-    if (doc.data && correspondingHierarchy && correspondingHierarchy.nameField) {
-        tree.create_node('#' + doc.parent + doc.hId, node);
+    if (doc.parent && doc.hId) {
+        // tell not to select node
+        window.oi.dontSelectNode = true;
+        $('#navContent').jstree().create_node('#' + doc.parent + doc.hId, node);
     }
 }
 
