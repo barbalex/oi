@@ -60234,8 +60234,7 @@ var $                     = (typeof window !== "undefined" ? window.$ : typeof g
     deleteObjectFromModel = require('./deleteObjectFromModel'),
     getObject             = require('./getObject'),
     askYesNoWithModal     = require('./askYesNoWithModal'),
-    tellWithModal         = require('./tellWithModal'),
-    $body                 = $('body');
+    tellWithModal         = require('./tellWithModal');
 
 module.exports = function ($node) {
     var objectId        = $node.id,
@@ -60248,7 +60247,8 @@ module.exports = function ($node) {
         objectsToDelete = [],
         childrenToDelete,
         // TODO: get projectId and choose correct db
-        localDb              = new PouchDB('oi');
+        localDb         = new PouchDB('project_' + getObject(objectId).projId),
+        $body           = $('body');
 
     // ermitteln, wieviele child-Objekte betroffen werden
     childrenToDelete = _.map(nodeChildren, function (child) {
@@ -60271,6 +60271,9 @@ module.exports = function ($node) {
     askYesNoWithModal('sicher?', 'es werden ' + objectsToDelete.length + ' Objekte direkt und ' + childrenToDelete.length + ' hierarchisch tiefer liegende Objekte gelöscht', 'ja, löschen', 'nein, abbrechen');
 
     $body.on('click', '#askYesNoWithModalYes', function () {
+
+        console.log('askYesNoWithModalYes clicked');
+
         // event-listeners entfernen
         $body
             .off('click', '#askYesNoWithModalNo')
@@ -60294,6 +60297,9 @@ module.exports = function ($node) {
         if (objectsToDelete.length > 0) {
             object = getObject(objectId);
             if (object) {
+
+                console.log('deleting object: ', object);
+
                 // delete object in localDb
                 localDb.remove(object).then(function () {
                     // delete model
@@ -61056,7 +61062,10 @@ var handleExternalObjectChanges = require('./handleExternalObjectChanges'),
 
 module.exports = function (change) {
 
-    //console.log('change: ', change);
+    console.log('change: ', change);
+
+    // TODO: if change.deleted === true
+    // get previous doc
 
     if (change.doc && change.doc.type) {
         var doc = change.doc;
