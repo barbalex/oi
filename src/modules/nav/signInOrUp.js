@@ -14,7 +14,7 @@ function validSignin(signindata) {
 
     validName     = signindata.name && validateEmail(signindata.name) ? true : false;
     validPassword = signindata.password                               ? true : false;
-    valid         = validName && validPassword                        ? true : false;
+    valid         = !!(validName && validPassword);
 
     return valid;
 }
@@ -25,7 +25,7 @@ function validSignup(signupdata) {
     var passwordsMatch,
         valid;
 
-    passwordsMatch = signupdata.password === signupdata.password2 ? true : false;
+    passwordsMatch = signupdata.password === signupdata.password2;
     valid          = passwordsMatch;
 
     return valid;

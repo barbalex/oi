@@ -18,7 +18,7 @@ module.exports = function (firstSync, projectNames, callback) {
                 }
             }
             if (done) {
-                projectsGotten ++;
+                projectsGotten++;
                 if (projectsGotten === projectNames.length) {
                     return callback(errors, true);
                 }

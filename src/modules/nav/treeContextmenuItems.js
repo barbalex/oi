@@ -2,7 +2,6 @@
 'use strict';
 
 var $                            = require('jquery'),
-    _                            = require('underscore'),
     createNewObjectFromObject    = require('../createNewObjectFromObject'),
     createNewObjectFromHierarchy = require('../createNewObjectFromHierarchy'),
     deleteObjectAndChildren      = require('../deleteObjectAndChildren');

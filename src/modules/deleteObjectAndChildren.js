@@ -15,7 +15,8 @@ var $                     = require('jquery'),
     deleteObjectFromModel = require('./deleteObjectFromModel'),
     getObject             = require('./getObject'),
     askYesNoWithModal     = require('./askYesNoWithModal'),
-    tellWithModal         = require('./tellWithModal');
+    tellWithModal         = require('./tellWithModal'),
+    $body                 = $('body');
 
 module.exports = function ($node) {
     var objectId        = $node.id,
@@ -50,10 +51,11 @@ module.exports = function ($node) {
     // wenn Objekte betroffen sind: mitteilen und event-listeners einrichten
     askYesNoWithModal('sicher?', 'es werden ' + objectsToDelete.length + ' Objekte direkt und ' + childrenToDelete.length + ' hierarchisch tiefer liegende Objekte gelöscht', 'ja, löschen', 'nein, abbrechen');
 
-    $('body').on('click', '#askYesNoWithModalYes', function () {
+    $body.on('click', '#askYesNoWithModalYes', function () {
         // event-listeners entfernen
-        $('body').off('click', '#askYesNoWithModalNo');
-        $('body').off('click', '#askYesNoWithModalYes');
+        $body
+            .off('click', '#askYesNoWithModalNo')
+            .off('click', '#askYesNoWithModalYes');
 
         // weiter machen
         // remove all children objects and nodes

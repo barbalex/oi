@@ -21,11 +21,13 @@ module.exports = function (firstSync, projectName, callback) {
             password: window.oi.me.password
         }
     }).then(function (result) {
-        var docs = _.map(result.rows, function (row) {
-               return row.doc; 
-            }),
+        var docs,
             hierarchies,
             objects;
+
+        docs = _.map(result.rows, function (row) {
+           return row.doc;
+        });
 
         hierarchies = _.filter(docs, function (doc) {
             return doc.type === 'hierarchy';

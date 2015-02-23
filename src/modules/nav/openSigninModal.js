@@ -6,11 +6,12 @@ var $ = require('jquery');
 module.exports = function () {
     // modal öffnen
     // so, dass der Benutzer nicht daran vorbeikommt
-    $('#signinWithModal').modal({backdrop: 'static', keyboard: false});
-    $('#signinWithModal').find('.well').validator({
-        errors: {
-            delay: 1000,
-            match: 'stimmt nicht überein'
-        }
-    });
+    $('#signinWithModal')
+        .modal({backdrop: 'static', keyboard: false})
+        .find('.well').validator({
+            errors: {
+                delay: 1000,
+                match: 'stimmt nicht überein'
+            }
+        });
 };

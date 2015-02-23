@@ -48,12 +48,12 @@ module.exports = function (projectNames) {
         PouchDB.allDbs().then(function (dbs) {
             // dbs is an array of strings, e.g. ['mydb1', 'mydb2']
             projectNames = dbs;
-            initiate(projectNames, false);
+            initiate(projectNames, firstSync);
         }).catch(function (err) {
             // handle err
             console.log('error getting projects: ', err);
         });
     } else {
-        initiate(projectNames, true);
+        initiate(projectNames, firstSync);
     }
 };

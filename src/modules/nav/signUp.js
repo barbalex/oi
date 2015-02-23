@@ -1,11 +1,11 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var PouchDB        = require('pouchdb'),
-    configuration  = require('../configuration'),
-    couchUrl       = configuration.couch.dbUrl,
-    signIn         = require('./signIn'),
-    tellWithModal  = require('../tellWithModal');
+var PouchDB       = require('pouchdb'),
+    configuration = require('../configuration'),
+    couchUrl      = configuration.couch.dbUrl,
+    signIn        = require('./signIn'),
+    tellWithModal = require('../tellWithModal');
 
 module.exports = function (signindata) {
     var remoteDb = new PouchDB('http://' + couchUrl + '/oi');

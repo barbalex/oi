@@ -17,10 +17,11 @@ var $                     = require('jquery'),
     getHierarchy          = require('../getHierarchy');
 
 module.exports = function (id, type) {
-    var html        = '',
-        textareaIds = [],
+    var html         = '',
+        textareaIds  = [],
         object,
-        hierarchy;
+        hierarchy,
+        $formContent = $('#formContent');
 
     switch (type) {
     case 'object':
@@ -86,7 +87,7 @@ module.exports = function (id, type) {
                 // add button toolbar
                 html += formButtonToolbar();
 
-                $('#formContent').html(html);
+                $formContent.html(html);
 
                 positionFormBtngroup();
 
@@ -106,7 +107,7 @@ module.exports = function (id, type) {
         break;
     case 'hierarchy':
         html += formButtonToolbar();
-        $('#formContent').html(html);
+        $formContent.html(html);
         positionFormBtngroup();
         break;
     }

@@ -2,7 +2,6 @@
 'use strict';
 
 var _                              = require('underscore'),
-    getLabelForObject              = require('./getLabelForObject'),
     createTreeNodeObject           = require('./createTreeNodeObject'),
     createTreeNodeRootObject       = require('./createTreeNodeRootObject'),
     createChildHierarchiesOfObject = require('./createChildHierarchiesOfObject');

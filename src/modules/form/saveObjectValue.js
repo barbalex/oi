@@ -20,7 +20,7 @@ module.exports = function (passedObject, value) {
                 username: window.oi.me.name,
                 password: window.oi.me.password
             }
-        }
+        },
         localDb     = new PouchDB(projectName, options);
 
     console.log('saveObjectValue: projectName: ', projectName);

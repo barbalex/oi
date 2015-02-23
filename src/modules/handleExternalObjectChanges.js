@@ -48,7 +48,7 @@ module.exports = function (doc) {
                     return hierarchy._id === doc.hId;
                 });
                 if (doc.data && correspondingHierarchy && correspondingHierarchy.nameField) {
-                    $('#navContent').jstree().rename_node('#' + doc._id, getLabelForObject(doc, correspondingHierarchy));
+                    tree.rename_node('#' + doc._id, getLabelForObject(doc, correspondingHierarchy));
                 }
             }
         }

@@ -21,7 +21,9 @@ module.exports = function () {
 
     $('body')
         .on('click',       '#signinWithModalSignupCheckbox', onClickSigninWithModalSignupCheckbox)
-        .on('click',       '#signinWithModalSigninButton',   signInOrUp);
+        .on('click',       '#signinWithModalSigninButton',   signInOrUp)
+        .on('click.nav',   '.navbar-collapse.in',            onClickNavbarCollapse)
+        .on('click.nav',   '.navbar-brand',                  onClickNavbarBrand);
 
     $('#signinWithModal')
         .on('keypress',                                      onKeypressSigninWithModal);
@@ -36,8 +38,4 @@ module.exports = function () {
     $('#formContent')
         .on('keyup focus', 'textarea',                       fitTextareaToContent)
         .on('change',      'input, textarea, select',        onChangeElement);
-
-    $('body')
-        .on('click.nav',   '.navbar-collapse.in',            onClickNavbarCollapse)
-        .on('click.nav',   '.navbar-brand',                  onClickNavbarBrand);
 };
