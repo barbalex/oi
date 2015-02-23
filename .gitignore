@@ -46,6 +46,5 @@ node_modules
 src/oi_browserified.js
 style/oi_built.css
 style/oi_built.css.map
-couchpass.json
 src/oi_built.js
 oi.sublime-workspace

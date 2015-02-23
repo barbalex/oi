@@ -1,4 +1,4 @@
-/*jslint node: true, browser: true, nomen: true, todo: true, plusplus */
+/*jslint node: true, browser: true, nomen: true, todo: true, plusplus*/
 'use strict';
 
 var _                    = require('underscore'),

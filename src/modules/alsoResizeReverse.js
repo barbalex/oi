@@ -79,8 +79,6 @@ module.exports = function () {
         },
 
         stop: function (event, ui) {
-            var self = $(this).data("ui-resizable");
-
             $(this).removeData("ui-resizable-alsoresize-reverse");
         }
     });
