@@ -34,6 +34,10 @@ function addNodeToTree(doc) {
     }
 }
 
+function removeNodeFromTree(doc) {
+    $('#navContent').jstree().delete_node('#' + doc._id);
+}
+
 module.exports = function (doc) {
     var modelObject,
         tree       = $('#navContent').jstree(),
@@ -43,38 +47,44 @@ module.exports = function (doc) {
     if (activeNode) {
         activeId = activeNode.data.type === 'object' ? activeNode.id : activeNode.data.id;
     }
-
-    console.log('handleExternalObjectChanges: doc: ', doc);
-
     // only use changes from different databases
     if (doc.lastEdited) {
         if (!doc.lastEdited.database || doc.lastEdited.database !== window.oi.databaseId) {
-            // update model of object
-            modelObject = _.find(window.oi.objects, function (object) {
-                return object._id === doc._id;
-            });
-
-            // nur weiterfahren, wenn ein model gefunden wurde
-            if (modelObject) {
-                // TODO: check if doc was deleted
-
-                // replace existing object with new one
-                window.oi.objects[window.oi.objects.indexOf(modelObject)] = doc;
-
-                // refresh form if this object is shown
-                // cant update only changed field because it is unknown (?)
+            if (doc._deleted) {
+                // doc was deleted
+                // remove it from model
+                window.oi.objects = _.without(window.oi.objects, doc);
+                // remove from tree
+                removeNodeFromTree(doc);
+                // select parent if this object is shown
                 if (activeId && activeId === doc._id) {
-                    initiateForm(doc._id, 'object');
+                    $('#navContent').jstree().select_node('#' + doc.parent + doc.hId);
                 }
-                // refresh tree
-                refreshTree(doc);
             } else {
-                // TODO: das Objekt wurde neu erfasst
+                // doc was changed or created new
+                // update model of object
+                modelObject = _.find(window.oi.objects, function (object) {
+                    return object._id === doc._id;
+                });
 
-                console.log('pushing new doc to model: ', doc);
+                // only continue if model was found
+                if (modelObject) {
+                    // existing doc was changed
+                    // replace existing object with new one
+                    window.oi.objects[window.oi.objects.indexOf(modelObject)] = doc;
 
-                window.oi.objects.push(doc);
-                addNodeToTree(doc);
+                    // refresh form if this object is shown
+                    // cant update only changed field because it is unknown (?)
+                    if (activeId && activeId === doc._id) {
+                        initiateForm(doc._id, 'object');
+                    }
+                    // refresh tree
+                    refreshTree(doc);
+                } else {
+                    // doc was newly created
+                    window.oi.objects.push(doc);
+                    addNodeToTree(doc);
+                }
             }
         }
     }

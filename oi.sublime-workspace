@@ -408,114 +408,58 @@
 			}
 		},
 		{
-			"file": "style/oi.css",
-			"settings":
-			{
-				"buffer_size": 1920,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "index.html",
-			"settings":
-			{
-				"buffer_size": 9213,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/modules/nav/initiateNav.js",
-			"settings":
-			{
-				"buffer_size": 1970,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/modules/handleUsersChanges.js",
-			"settings":
-			{
-				"buffer_size": 1309,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/modules/syncWithRemoteUserDb.js",
-			"settings":
-			{
-				"buffer_size": 545,
-				"line_ending": "Windows"
-			}
-		},
-		{
 			"file": "src/modules/syncWithRemoteDb.js",
 			"settings":
 			{
-				"buffer_size": 1460,
+				"buffer_size": 1224,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/modules/setWidthOfTabs.js",
+			"file": "src/modules/handleChanges.js",
 			"settings":
 			{
-				"buffer_size": 1418,
+				"buffer_size": 723,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/modules/alsoResizeReverse.js",
+			"file": "src/modules/handleExternalObjectChanges.js",
 			"settings":
 			{
-				"buffer_size": 3313,
+				"buffer_size": 2899,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/modules/nav/treeContextmenuItems.js",
+			"file": "src/modules/setupEvents.js",
 			"settings":
 			{
-				"buffer_size": 1073,
+				"buffer_size": 2171,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/modules/nav/getModelData.js",
+			"file": "src/modules/event/onClickFormDelete.js",
 			"settings":
 			{
-				"buffer_size": 890,
+				"buffer_size": 333,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/modules/nav/getDataFromDb.js",
+			"file": "src/modules/deleteObjectAndChildren.js",
 			"settings":
 			{
-				"buffer_size": 1578,
+				"buffer_size": 4340,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/modules/form/saveObjectValue.js",
+			"file": "src/modules/deleteObjectFromModel.js",
 			"settings":
 			{
-				"buffer_size": 2314,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/modules/event/onChangeElement.js",
-			"settings":
-			{
-				"buffer_size": 407,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/C/Users/alex/oi_testdata/index.js",
-			"settings":
-			{
-				"buffer_size": 18574,
+				"buffer_size": 352,
 				"line_ending": "Windows"
 			}
 		}
@@ -567,10 +511,37 @@
 	"expanded_folders":
 	[
 		"/C/Users/alex/oi",
-		"/C/Users/alex/oi/src/modules/event"
+		"/C/Users/alex/oi/src",
+		"/C/Users/alex/oi/src/modules",
+		"/C/Users/alex/oi/src/modules/nav"
 	],
 	"file_history":
 	[
+		"/C/Users/alex/oi/style/oi.css",
+		"/C/Users/alex/oi/index.html",
+		"/C/Users/alex/oi/src/modules/nav/createTree.js",
+		"/C/Users/alex/oi/src/modules/nav/generateDataForTree.js",
+		"/C/Users/alex/oi/src/modules/handleChanges.js",
+		"/C/Users/alex/oi/src/modules/nav/initiateNav.js",
+		"/C/Users/alex/oi_testdata/index.js",
+		"/C/Users/alex/oi/src/oi_browserified.js",
+		"/C/Users/alex/oi/src/modules/handleUsersChanges.js",
+		"/C/Users/alex/oi/src/modules/syncWithRemoteUserDb.js",
+		"/C/Users/alex/oi/src/modules/event/onScrollTab.js",
+		"/C/Users/alex/oi/src/modules/setWidthOfTabs.js",
+		"/C/Users/alex/oi/src/modules/alsoResizeReverse.js",
+		"/C/Users/alex/oi/src/modules/nav/treeContextmenuItems.js",
+		"/C/Users/alex/oi/src/modules/nav/getModelData.js",
+		"/C/Users/alex/oi/src/modules/nav/getDataFromDb.js",
+		"/C/Users/alex/oi/src/modules/form/saveObjectValue.js",
+		"/C/Users/alex/oi/oi.appcache",
+		"/C/Users/alex/oi/server.js",
+		"/C/Users/alex/oi/src/oi.js",
+		"/C/Users/alex/oi/src/modules/setupEvents.js",
+		"/C/Users/alex/oi/src/modules/event/onKeypressSigninWithModal.js",
+		"/C/Users/alex/oi/gulp-tasks/createManifest.js",
+		"/C/Users/alex/oi/gulp-tasks/watch.js",
+		"/C/Users/alex/oi/gulp-tasks/dev_1.js",
 		"/C/Users/alex/oi/.gitignore",
 		"/C/Users/alex/oi/src/modules/configuration.js",
 		"/C/Users/alex/oi/couchpass.json",
@@ -583,36 +554,25 @@
 		"/C/Users/alex/oi/src/modules/nav/objectsByTypeIndex.js",
 		"/C/Users/alex/oi_pg/package.json",
 		"/C/Users/alex/oi/src/modules/nav/getProjectNames.js",
-		"/C/Users/alex/oi/src/modules/handleUsersChanges.js",
 		"/C/Users/alex/oi/src/modules/syncWithRemoteDb.js",
-		"/C/Users/alex/oi/src/modules/nav/getModelData.js",
-		"/C/Users/alex/oi/src/modules/syncWithRemoteUserDb.js",
 		"/C/Users/alex/oi_testdata/package.json",
 		"/C/Users/alex/oi/src/modules/handleExternalObjectChanges.js",
-		"/C/Users/alex/oi/src/modules/handleChanges.js",
 		"/C/Users/alex/oi/src/modules/nav/sync.js",
 		"/C/Users/alex/oi/src/modules/nav/syncWithRemoteUserDb.js",
 		"/C/Users/alex/oi/src/modules/nav/createDatabaseId.js",
 		"/C/Users/alex/Downloads/apber.sql",
 		"/C/Users/alex/Downloads/apber.csv",
-		"/C/Users/alex/oi/src/oi.js",
 		"/C/Users/alex/oi/src/modules/nav/initiateChangeStreams.js",
 		"/C/Users/alex/oi/src/modules/nav/initiateChangeStream.js",
-		"/C/Users/alex/oi_testdata/index.js",
 		"/C/Users/alex/oi/src/modules/nav/createChildHierarchiesOfObject.js",
-		"/C/Users/alex/oi/src/modules/nav/initiateNav.js",
 		"/C/Users/alex/oi_testdata/.gitignore",
 		"/C/Users/alex/oi_testdata/.gitattributes",
 		"/C/Users/alex/oi_beispielsdaten_laden/index.js",
-		"/C/Users/alex/oi/src/modules/setupEvents.js",
 		"/C/Users/alex/oi/src/modules/event/onClickNavFormSort.js",
 		"/C/Users/alex/oi/src/modules/form/saveHierarchy.js",
 		"/C/Users/alex/oi/src/modules/form/initiateForm.js",
 		"/C/Users/alex/oi/src/modules/event/onClickSigninWithModalSignupCheckbox.js",
-		"/C/Users/alex/oi/src/modules/event/onKeypressSigninWithModal.js",
 		"/C/Users/alex/oi/src/modules/initiateResizables.js",
-		"/C/Users/alex/oi/src/modules/form/saveObjectValue.js",
-		"/C/Users/alex/oi/src/oi_browserified.js",
 		"/C/Users/alex/oi/src/modules/getHierarchyOfObject.js",
 		"/C/Users/alex/oi/templates/checkboxGroup.hdb",
 		"/C/Users/alex/oi/templates/optionGroup.hdb",
@@ -623,13 +583,9 @@
 		"/C/Users/alex/oi/src/modules/nav/createObjectsByUserTypeIndex.js",
 		"/C/Users/alex/oi/src/modules/nav/signUp.js",
 		"/C/Users/alex/oi/src/modules/nav/getLogin.js",
-		"/C/Users/alex/oi/oi.appcache",
-		"/C/Users/alex/oi/gulp-tasks/dev_1.js",
 		"/C/Users/alex/oi/gulp-tasks/dev_when_watch_1.js",
-		"/C/Users/alex/oi/server.js",
 		"/C/Users/alex/oi/package.json",
 		"/C/Users/alex/oi/gulp-tasks/dev_when_watch_2.js",
-		"/C/Users/alex/oi/gulp-tasks/createManifest.js",
 		"/C/Users/alex/oi/gulp-tasks/dev_style.js",
 		"/C/Users/alex/oi/gulp-tasks/dev_3.js",
 		"/C/Users/alex/oi/gulp-tasks/dev_2.js",
@@ -655,12 +611,9 @@
 		"/C/Users/alex/oi/src/modules/askYesNoWithModal.js",
 		"/C/Users/alex/oi/templates/signup.hdb",
 		"/C/Users/alex/oi/templates/signin.hdb",
-		"/C/Users/alex/oi/style/oi.css",
 		"/C/Users/alex/oi/src/modules/nav/getLabelForObject.js",
-		"/C/Users/alex/oi/src/modules/nav/generateDataForTree.js",
 		"/C/Users/alex/oi/src/modules/nav/createTreeNodeRootObject.js",
 		"/C/Users/alex/oi/src/modules/nav/createTreeNodeObject.js",
-		"/C/Users/alex/oi/src/modules/nav/createTree.js",
 		"/C/Users/alex/oi/src/modules/form/positionFormBtngroup.js",
 		"/C/Users/alex/oi/src/modules/event/onClickFormNew.js",
 		"/C/Users/alex/oi/src/modules/event/onChangeElement.js",
@@ -673,14 +626,11 @@
 		"/C/Users/alex/oi/src/modules/event/onClickNavbarBrand.js",
 		"/C/Users/alex/oi/src/modules/event/onClickNavbarCollapse.js",
 		"/C/Users/alex/oi/src/modules/event/onClickFormDelete.js",
-		"/C/Users/alex/oi/src/modules/event/onScrollTab.js",
 		"/C/Users/alex/oi/src/modules/event/onFormNew.js",
 		"/C/Users/alex/oi/src/modules/event/onNavScroll.js",
 		"/C/Users/alex/oi/src/modules/createNewObjectFromObject.js",
 		"/C/Users/alex/oi/src/modules/getHierarchy.js",
 		"/C/Users/alex/oi/src/modules/createNewObjectFromHierarchy.js",
-		"/C/Users/alex/oi/src/modules/nav/treeContextmenuItems.js",
-		"/C/Users/alex/oi/src/modules/alsoResizeReverse.js",
 		"/C/Users/alex/oi/src/modules/PouchDBWithDefaults.js",
 		"/C/Users/alex/oi/src/modules/PouchDbWithOptions.js",
 		"/C/Users/alex/oi/src/modules/deleteObjectFromTreeNode.js",
@@ -692,13 +642,9 @@
 		"/C/Users/alex/oi/src/modules/createNewObjectFromHierarchyId.js",
 		"/C/Users/alex/oi/style/bootstrap.css",
 		"/C/Users/alex/oi/style/font-awesome.css",
-		"/C/Users/alex/oi/src/modules/setWidthOfTabs.js",
 		"/C/Users/alex/oi/src/modules/getHierarchyWithId.js",
 		"/C/Users/alex/oi/src/modules/nav/objectsIndex.js",
-		"/C/Users/alex/oi/src/modules/createNewObjectOfHierarchy.js",
-		"/C/Users/alex/oi/src/modules/guid.js",
-		"/C/Users/alex/oi/src/modules/_draft.js",
-		"/C/Users/alex/oi/templates/formButtonToolbar.hdb"
+		"/C/Users/alex/oi/src/modules/createNewObjectOfHierarchy.js"
 	],
 	"find":
 	{
@@ -792,6 +738,10 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"formContent",
+			"changes",
+			"scrolling tab",
+			"f (event.which === 13) {",
 			"_",
 			"couchpass",
 			"passWord",
@@ -915,11 +865,7 @@
 			"db.",
 			".data('id'",
 			"saveObjectValue",
-			"lastEdited.date     = dateformat(new Date(), 'isoDateTime');",
-			"get_selected",
-			"get_node",
-			".data('id'",
-			".data('type'"
+			"lastEdited.date     = dateformat(new Date(), 'isoDateTime');"
 		],
 		"highlight": false,
 		"in_selection": false,
@@ -1065,7 +1011,7 @@
 	"groups":
 	[
 		{
-			"selected": 13,
+			"selected": 1,
 			"sheets":
 			[
 				{
@@ -1093,294 +1039,54 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 12,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "style/oi.css",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1920,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1544,
-								1544
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/CSS/CSS.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 414.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 14,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "index.html",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 9213,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2531,
-								2540
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/HTML/HTML.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 182.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 13,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "src/modules/nav/initiateNav.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1970,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1581,
-								1581
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 525.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 4,
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "src/modules/handleUsersChanges.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1309,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 8,
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "src/modules/syncWithRemoteUserDb.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 545,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 10,
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "src/modules/syncWithRemoteDb.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1460,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								775,
-								782
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 232.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 9,
-					"type": "text"
-				},
-				{
-					"buffer": 7,
-					"file": "src/modules/setWidthOfTabs.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1418,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								85,
-								85
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 7,
-					"type": "text"
-				},
-				{
-					"buffer": 8,
-					"file": "src/modules/alsoResizeReverse.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 3313,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3237,
-								3237
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 1595.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 6,
-					"type": "text"
-				},
-				{
-					"buffer": 9,
-					"file": "src/modules/nav/treeContextmenuItems.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1073,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								291,
-								314
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
 					"stack_index": 5,
 					"type": "text"
 				},
 				{
-					"buffer": 10,
-					"file": "src/modules/nav/getModelData.js",
+					"buffer": 1,
+					"file": "src/modules/syncWithRemoteDb.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 890,
+						"buffer_size": 1224,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								125,
-								138
+								1199,
+								1212
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 145.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "src/modules/handleChanges.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 723,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								439,
+								439
 							]
 						],
 						"settings":
@@ -1391,86 +1097,86 @@
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
-					"type": "text"
-				},
-				{
-					"buffer": 11,
-					"file": "src/modules/nav/getDataFromDb.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1578,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								989,
-								989
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 261.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 12,
-					"file": "src/modules/form/saveObjectValue.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2314,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								826,
-								837
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 377.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
 					"type": "text"
 				},
 				{
-					"buffer": 13,
-					"file": "src/modules/event/onChangeElement.js",
-					"semi_transient": true,
+					"buffer": 3,
+					"file": "src/modules/handleExternalObjectChanges.js",
+					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 407,
+						"buffer_size": 2899,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								1694,
+								1694
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "src/modules/setupEvents.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2171,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								380,
+								397
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 58.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "src/modules/event/onClickFormDelete.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 333,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								330,
+								330
 							]
 						],
 						"settings":
@@ -1481,38 +1187,65 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 7,
 					"type": "text"
 				},
 				{
-					"buffer": 14,
-					"file": "/C/Users/alex/oi_testdata/index.js",
+					"buffer": 6,
+					"file": "src/modules/deleteObjectAndChildren.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 18574,
+						"buffer_size": 4340,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								18574,
-								18574
+								1217,
+								1217
 							]
 						],
 						"settings":
 						{
-							"history_list_is_closing": true,
 							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 17075.0,
+						"translation.y": 522.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 11,
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "src/modules/deleteObjectFromModel.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 352,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								343,
+								343
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
 					"type": "text"
 				}
 			]

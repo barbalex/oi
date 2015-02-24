@@ -23,8 +23,6 @@ module.exports = function (passedObject, value) {
         },
         localDb     = new PouchDB(projectName, options);
 
-    console.log('saveObjectValue: projectName: ', projectName);
-
     // get data for object
     object              = getObject(id);
     // build lastEdited
@@ -36,15 +34,9 @@ module.exports = function (passedObject, value) {
         // set new value
         object.data[field] = value || null;
         object.lastEdited  = lastEdited;
-
-        console.log('putting object: ', object);
-
         // write to pouch
         localDb.put(object)
             .then(function (response) {
-
-                console.log('response from putting: ', response);
-
                 // update rev in model object
                 object._rev = response.rev;
 

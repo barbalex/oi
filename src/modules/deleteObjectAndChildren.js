@@ -11,6 +11,7 @@
 
 var $                     = require('jquery'),
     _                     = require('underscore'),
+    dateformat            = require('dateformat'),
     PouchDB               = require('pouchdb'),
     deleteObjectFromModel = require('./deleteObjectFromModel'),
     getObject             = require('./getObject'),
@@ -28,7 +29,8 @@ module.exports = function ($node) {
         objectsToDelete = [],
         childrenToDelete,
         // TODO: get projectId and choose correct db
-        localDb         = new PouchDB('project_' + getObject(objectId).projId),
+        localDbName     = 'project_' + getObject(objectId).projId,
+        localDb         = new PouchDB(localDbName),
         $body           = $('body');
 
     // ermitteln, wieviele child-Objekte betroffen werden
@@ -52,8 +54,7 @@ module.exports = function ($node) {
     askYesNoWithModal('sicher?', 'es werden ' + objectsToDelete.length + ' Objekte direkt und ' + childrenToDelete.length + ' hierarchisch tiefer liegende Objekte gelöscht', 'ja, löschen', 'nein, abbrechen');
 
     $body.on('click', '#askYesNoWithModalYes', function () {
-
-        console.log('askYesNoWithModalYes clicked');
+        var lastEdited  = {};
 
         // event-listeners entfernen
         $body
@@ -78,11 +79,19 @@ module.exports = function ($node) {
         if (objectsToDelete.length > 0) {
             object = getObject(objectId);
             if (object) {
-
-                console.log('deleting object: ', object);
-
                 // delete object in localDb
-                localDb.remove(object).then(function () {
+                // add _deleted: true instead of remove object
+                // to keep other info because is needed to evaluate deleted objects in syncing db's
+                object._deleted = true;
+                // add databaseId so syncing db can tell if change happened in other db
+                // build lastEdited
+                lastEdited.date     = dateformat(new Date(), 'isoDateTime');
+                lastEdited.user     = window.oi.me.name;
+                lastEdited.database = window.oi.databaseId;
+                object.lastEdited   = lastEdited;
+                // put object
+                localDb.put(object).then(function () {
+                //localDb.remove(object).then(function () {
                     // delete model
                     window.oi.objects = _.without(window.oi.objects, object);
                     // delete node

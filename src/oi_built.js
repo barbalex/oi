@@ -60230,6 +60230,7 @@ module.exports = function (objectId) {
 
 var $                     = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
     _                     = require('underscore'),
+    dateformat            = require('dateformat'),
     PouchDB               = require('pouchdb'),
     deleteObjectFromModel = require('./deleteObjectFromModel'),
     getObject             = require('./getObject'),
@@ -60247,7 +60248,8 @@ module.exports = function ($node) {
         objectsToDelete = [],
         childrenToDelete,
         // TODO: get projectId and choose correct db
-        localDb         = new PouchDB('project_' + getObject(objectId).projId),
+        localDbName     = 'project_' + getObject(objectId).projId,
+        localDb         = new PouchDB(localDbName),
         $body           = $('body');
 
     // ermitteln, wieviele child-Objekte betroffen werden
@@ -60271,8 +60273,7 @@ module.exports = function ($node) {
     askYesNoWithModal('sicher?', 'es werden ' + objectsToDelete.length + ' Objekte direkt und ' + childrenToDelete.length + ' hierarchisch tiefer liegende Objekte gelöscht', 'ja, löschen', 'nein, abbrechen');
 
     $body.on('click', '#askYesNoWithModalYes', function () {
-
-        console.log('askYesNoWithModalYes clicked');
+        var lastEdited  = {};
 
         // event-listeners entfernen
         $body
@@ -60297,11 +60298,19 @@ module.exports = function ($node) {
         if (objectsToDelete.length > 0) {
             object = getObject(objectId);
             if (object) {
-
-                console.log('deleting object: ', object);
-
                 // delete object in localDb
-                localDb.remove(object).then(function () {
+                // add _deleted: true instead of remove object
+                // to keep other info because is needed to evaluate deleted objects in syncing db's
+                object._deleted = true;
+                // add databaseId so syncing db can tell if change happened in other db
+                // build lastEdited
+                lastEdited.date     = dateformat(new Date(), 'isoDateTime');
+                lastEdited.user     = window.oi.me.name;
+                lastEdited.database = window.oi.databaseId;
+                object.lastEdited   = lastEdited;
+                // put object
+                localDb.put(object).then(function () {
+                //localDb.remove(object).then(function () {
                     // delete model
                     window.oi.objects = _.without(window.oi.objects, object);
                     // delete node
@@ -60327,7 +60336,7 @@ module.exports = function ($node) {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./askYesNoWithModal":151,"./deleteObjectFromModel":157,"./getObject":177,"./tellWithModal":206,"pouchdb":105,"underscore":149}],157:[function(require,module,exports){
+},{"./askYesNoWithModal":151,"./deleteObjectFromModel":157,"./getObject":177,"./tellWithModal":206,"dateformat":8,"pouchdb":105,"underscore":149}],157:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -60961,8 +60970,6 @@ module.exports = function (passedObject, value) {
         },
         localDb     = new PouchDB(projectName, options);
 
-    console.log('saveObjectValue: projectName: ', projectName);
-
     // get data for object
     object              = getObject(id);
     // build lastEdited
@@ -60974,15 +60981,9 @@ module.exports = function (passedObject, value) {
         // set new value
         object.data[field] = value || null;
         object.lastEdited  = lastEdited;
-
-        console.log('putting object: ', object);
-
         // write to pouch
         localDb.put(object)
             .then(function (response) {
-
-                console.log('response from putting: ', response);
-
                 // update rev in model object
                 object._rev = response.rev;
 
@@ -61057,18 +61058,15 @@ module.exports = function () {
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var handleExternalObjectChanges = require('./handleExternalObjectChanges'),
+var PouchDB                     = require('pouchdb'),
+    handleExternalObjectChanges = require('./handleExternalObjectChanges'),
     handleUsersChanges          = require('./handleUsersChanges');
 
 module.exports = function (change) {
-
-    console.log('change: ', change);
-
-    // TODO: if change.deleted === true
-    // get previous doc
+    var doc;
 
     if (change.doc && change.doc.type) {
-        var doc = change.doc;
+        doc = change.doc;
         switch (doc.type) {
         case 'user':
             handleUsersChanges(doc);
@@ -61079,7 +61077,7 @@ module.exports = function (change) {
         }
     }
 };
-},{"./handleExternalObjectChanges":180,"./handleUsersChanges":181}],180:[function(require,module,exports){
+},{"./handleExternalObjectChanges":180,"./handleUsersChanges":181,"pouchdb":105}],180:[function(require,module,exports){
 (function (global){
 /*
  * passt model und wenn nötig die ui an,
@@ -61117,6 +61115,10 @@ function addNodeToTree(doc) {
     }
 }
 
+function removeNodeFromTree(doc) {
+    $('#navContent').jstree().delete_node('#' + doc._id);
+}
+
 module.exports = function (doc) {
     var modelObject,
         tree       = $('#navContent').jstree(),
@@ -61126,38 +61128,44 @@ module.exports = function (doc) {
     if (activeNode) {
         activeId = activeNode.data.type === 'object' ? activeNode.id : activeNode.data.id;
     }
-
-    console.log('handleExternalObjectChanges: doc: ', doc);
-
     // only use changes from different databases
     if (doc.lastEdited) {
         if (!doc.lastEdited.database || doc.lastEdited.database !== window.oi.databaseId) {
-            // update model of object
-            modelObject = _.find(window.oi.objects, function (object) {
-                return object._id === doc._id;
-            });
-
-            // nur weiterfahren, wenn ein model gefunden wurde
-            if (modelObject) {
-                // TODO: check if doc was deleted
-
-                // replace existing object with new one
-                window.oi.objects[window.oi.objects.indexOf(modelObject)] = doc;
-
-                // refresh form if this object is shown
-                // cant update only changed field because it is unknown (?)
+            if (doc._deleted) {
+                // doc was deleted
+                // remove it from model
+                window.oi.objects = _.without(window.oi.objects, doc);
+                // remove from tree
+                removeNodeFromTree(doc);
+                // select parent if this object is shown
                 if (activeId && activeId === doc._id) {
-                    initiateForm(doc._id, 'object');
+                    $('#navContent').jstree().select_node('#' + doc.parent + doc.hId);
                 }
-                // refresh tree
-                refreshTree(doc);
             } else {
-                // TODO: das Objekt wurde neu erfasst
+                // doc was changed or created new
+                // update model of object
+                modelObject = _.find(window.oi.objects, function (object) {
+                    return object._id === doc._id;
+                });
 
-                console.log('pushing new doc to model: ', doc);
+                // only continue if model was found
+                if (modelObject) {
+                    // existing doc was changed
+                    // replace existing object with new one
+                    window.oi.objects[window.oi.objects.indexOf(modelObject)] = doc;
 
-                window.oi.objects.push(doc);
-                addNodeToTree(doc);
+                    // refresh form if this object is shown
+                    // cant update only changed field because it is unknown (?)
+                    if (activeId && activeId === doc._id) {
+                        initiateForm(doc._id, 'object');
+                    }
+                    // refresh tree
+                    refreshTree(doc);
+                } else {
+                    // doc was newly created
+                    window.oi.objects.push(doc);
+                    addNodeToTree(doc);
+                }
             }
         }
     }

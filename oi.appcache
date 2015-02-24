@@ -1,5 +1,5 @@
 CACHE MANIFEST
-#1424729347388
+#1424818782451
 
 CACHE:
 index.html
@@ -8,5 +8,3 @@ src/oi_built.js
 style/jstree.css
 style/oi_built.css
 
-NETWORK:
-*

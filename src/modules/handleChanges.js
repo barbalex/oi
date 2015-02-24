@@ -5,18 +5,15 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var handleExternalObjectChanges = require('./handleExternalObjectChanges'),
+var PouchDB                     = require('pouchdb'),
+    handleExternalObjectChanges = require('./handleExternalObjectChanges'),
     handleUsersChanges          = require('./handleUsersChanges');
 
 module.exports = function (change) {
-
-    console.log('change: ', change);
-
-    // TODO: if change.deleted === true
-    // get previous doc
+    var doc;
 
     if (change.doc && change.doc.type) {
-        var doc = change.doc;
+        doc = change.doc;
         switch (doc.type) {
         case 'user':
             handleUsersChanges(doc);
