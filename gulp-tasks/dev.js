@@ -15,6 +15,7 @@ return gulp.task('dev', function () {
         'templates',
         'browserify',
         ['dev_style', 'dev_src'],
-        'watch'
+        'watch',
+        'dev_notify'
     );
 });

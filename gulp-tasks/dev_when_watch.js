@@ -9,7 +9,7 @@ var fs             = require('fs'),
 
 requireDir('../gulp-tasks', {recurse: true});
 
-return gulp.task('dev_when_watch', ['templates'], function () {
+return gulp.task('dev_when_watch', function () {
     fs.writeFile('oi.appcache', createManifest());
     runSequence(
         'templates',
