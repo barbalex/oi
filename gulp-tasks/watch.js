@@ -15,7 +15,7 @@ return gulp.task('watch', function () {
             'src/templates/*.hdb',
             'gulp-tasks/createManifest.js'
         ],
-        ['dev_when_watch_1']
+        ['dev_when_watch']
     );
     gulp.watch(
         [ 'style/oi.css' ],

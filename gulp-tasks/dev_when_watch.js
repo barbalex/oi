@@ -4,11 +4,16 @@
 var fs             = require('fs'),
     gulp           = require('gulp'),
     requireDir     = require('require-dir'),
+    runSequence    = require('run-sequence'),
     createManifest = require('./createManifest');
 
 requireDir('../gulp-tasks', {recurse: true});
 
-return gulp.task('dev_when_watch_1', ['templates'], function () {
+return gulp.task('dev_when_watch', ['templates'], function () {
     fs.writeFile('oi.appcache', createManifest());
-    gulp.start('dev_when_watch_2');
+    runSequence(
+        'templates',
+        'browserify',
+        'dev_src'
+    );
 });
