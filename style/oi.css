@@ -113,9 +113,15 @@ body {
  */
 
 #map {
-  background-color: #E1FFE1;
+  background-color: #222;
   width: 45vw;
   display: none;
+}
+
+#map .tabTitleContainer {
+  position: absolute;
+  width: inherit;
+  z-index: 1;
 }
 
 /* 
