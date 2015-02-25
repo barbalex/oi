@@ -84,6 +84,9 @@ module.exports = function (doc) {
                     // doc was newly created
                     window.oi.objects.push(doc);
                     addNodeToTree(doc);
+
+                    // TODO: if new project, start syncing
+                    
                 }
             }
         }

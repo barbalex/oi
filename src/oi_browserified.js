@@ -37823,9 +37823,13 @@ var $                 = (typeof window !== "undefined" ? window.$ : typeof globa
     _                 = require('underscore'),
     PouchDB           = require('pouchdb'),
     getLabelForObject = require('../nav/getLabelForObject'),
-    getObject         = require('../getObject');
+    getObject         = require('../getObject'),
+    syncWithRemoteDb  = require('../syncWithRemoteDb');
 
 module.exports = function (passedObject, value) {
+
+    console.log('saveObjectValue: passedObject: ', passedObject);
+
     var projId      = passedObject.projId,
         projectName = 'project_' + projId,
         id          = passedObject._id,
@@ -37854,6 +37858,24 @@ module.exports = function (passedObject, value) {
         // write to pouch
         localDb.put(object)
             .then(function (response) {
+
+                console.log('response from saving object: ', response);
+
+                // check if this was a new project
+                if (!object._rev) {
+                    // TODO: new project: start syncing
+
+                    // TODO: tell when new project
+                    // write object ALSO to oi that is listened to from oi_pg
+                    // then start syncing
+
+                    console.log('starting to sync with new db: ', projectName);
+                    // give oi_pg time to create the new db
+                    setTimeout(function () {
+                        syncWithRemoteDb(projectName);
+                    }, 1000);
+                }
+
                 // update rev in model object
                 object._rev = response.rev;
 
@@ -37873,7 +37895,7 @@ module.exports = function (passedObject, value) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../getObject":177,"../nav/getLabelForObject":191,"dateformat":8,"pouchdb":105,"underscore":149}],176:[function(require,module,exports){
+},{"../getObject":177,"../nav/getLabelForObject":191,"../syncWithRemoteDb":203,"dateformat":8,"pouchdb":105,"underscore":149}],176:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -38035,6 +38057,9 @@ module.exports = function (doc) {
                     // doc was newly created
                     window.oi.objects.push(doc);
                     addNodeToTree(doc);
+
+                    // TODO: if new project, start syncing
+                    
                 }
             }
         }

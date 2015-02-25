@@ -48,3 +48,6 @@ style/oi_built.css
 style/oi_built.css.map
 src/oi_built.js
 oi.sublime-workspace
+oi.sublime-workspace
+*.map
+oi.appcache
