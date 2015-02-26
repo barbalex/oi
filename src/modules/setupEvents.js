@@ -12,7 +12,8 @@ var $                                    = require('jquery'),
     onClickNavFormSort                   = require('./event/onClickNavFormSort'),
     onKeypressSigninWithModal            = require('./event/onKeypressSigninWithModal'),
     onClickSigninWithModalSignupCheckbox = require('./event/onClickSigninWithModalSignupCheckbox'),
-    signInOrUp                           = require('./nav/signInOrUp');
+    signInOrUp                           = require('./nav/signInOrUp'),
+    createLayerForData                   = require('./map/createLayerForData');
 
 module.exports = function () {
     // scroll event doesn't buble up, so it cant be delegated from # to .
@@ -35,11 +36,12 @@ module.exports = function () {
         .on('click',       '#formNew',                       onClickFormNew)
         .on('click',       '#formDelete',                    onClickFormDelete)
         .on('click',       '.js-geometryMap',                function (event) {
-            console.log('clicked ', $(this).prev().attr('id'));
+            var object = $(this).prev().data('object');
+
             // trigger opening Karte
-
+            $('#mapMenu').trigger('click');
             // load vector layer
-
+            createLayerForData(object.hId, object.label);
         });
 
     $('#formContent')

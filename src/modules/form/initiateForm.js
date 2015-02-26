@@ -82,6 +82,7 @@ module.exports = function (id, type) {
                     case 'geoJson':
                         // Daten als JSON in textarea schreiben
                         templateObject.object.value = JSON.stringify(object.data[field.label]);
+                        templateObject.object.hId   = object.hId;
                         html += geoJson(templateObject);
                         textareaIds.push(id + field.label);
                         break;
