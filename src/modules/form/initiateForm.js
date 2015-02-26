@@ -9,6 +9,7 @@ var $                     = require('jquery'),
     optionGroup           = require('../../../templates/optionGroup'),
     checkboxGroup         = require('../../../templates/checkboxGroup'),
     select                = require('../../../templates/select'),
+    geoJson               = require('../../../templates/geoJson'),
     formButtonToolbar     = require('../../../templates/formButtonToolbar'),
     fitTextareaToContent  = require('./fitTextareaToContent'),
     addCheckedToValueList = require('./addCheckedToValueList'),
@@ -77,6 +78,12 @@ module.exports = function (id, type) {
                         // object.data muss Array sein - ist bei select nicht so, weil eh nur ein Wert gesetzt werden kann > Wert in Array setzen
                         templateObject.object.valueList = addCheckedToValueList(field.valueList, object.data[field.label], 'select');
                         html += select(templateObject);
+                        break;
+                    case 'geoJson':
+                        // Daten als JSON in textarea schreiben
+                        templateObject.object.value = JSON.stringify(object.data[field.label]);
+                        html += geoJson(templateObject);
+                        textareaIds.push(id + field.label);
                         break;
                     default:
                         html += input(templateObject);

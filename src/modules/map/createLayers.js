@@ -1,22 +1,22 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var _               = require('underscore'),
-    ol              = require('openlayers'),
-    createWmtsLayer = require('./createWmtsLayer');
+var _                                   = require('underscore'),
+    ol                                  = require('openlayers'),
+    createLayerSwisstopoPixelkarteFarbe = require('./createLayerSwisstopoPixelkarteFarbe');
 
 module.exports = function () {
     var layers = [],
         mapQuestSat,
-        swisstopoPixel;
+        SwisstopoPixelkarteFarbe;
 
     mapQuestSat = new ol.layer.Tile({
         source: new ol.source.MapQuest({layer: 'sat'})
     });
 
-    swisstopoPixel = createWmtsLayer(20140520);
+    SwisstopoPixelkarteFarbe = createLayerSwisstopoPixelkarteFarbe(20140520);
 
-    layers.push(swisstopoPixel);
+    layers.push(SwisstopoPixelkarteFarbe);
 
     return layers;
 };

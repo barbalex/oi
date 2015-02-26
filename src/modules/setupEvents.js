@@ -33,7 +33,14 @@ module.exports = function () {
 
     $('#form')
         .on('click',       '#formNew',                       onClickFormNew)
-        .on('click',       '#formDelete',                    onClickFormDelete);
+        .on('click',       '#formDelete',                    onClickFormDelete)
+        .on('click',       '.js-geometryMap',                function (event) {
+            console.log('clicked ', $(this).prev().attr('id'));
+            // trigger opening Karte
+
+            // load vector layer
+
+        });
 
     $('#formContent')
         .on('keyup focus', 'textarea',                       fitTextareaToContent)

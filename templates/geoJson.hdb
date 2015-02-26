@@ -1,0 +1,5 @@
+<div class="form-group js-form-group">
+    <label for="{{object._id}}{{object.label}}">{{object.label}}</label>
+    <textarea class="form-control" id="{{object._id}}{{object.label}}" data-object="{{json object}}">{{object.value}}</textarea>
+    <button class="js-geometryMap" class="btn btn-default">Karte</button>
+</div>

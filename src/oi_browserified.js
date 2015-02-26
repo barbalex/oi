@@ -38527,6 +38527,7 @@ var $                     = (typeof window !== "undefined" ? window.$ : typeof g
     optionGroup           = require('../../../templates/optionGroup'),
     checkboxGroup         = require('../../../templates/checkboxGroup'),
     select                = require('../../../templates/select'),
+    geoJson               = require('../../../templates/geoJson'),
     formButtonToolbar     = require('../../../templates/formButtonToolbar'),
     fitTextareaToContent  = require('./fitTextareaToContent'),
     addCheckedToValueList = require('./addCheckedToValueList'),
@@ -38596,6 +38597,12 @@ module.exports = function (id, type) {
                         templateObject.object.valueList = addCheckedToValueList(field.valueList, object.data[field.label], 'select');
                         html += select(templateObject);
                         break;
+                    case 'geoJson':
+                        // Daten als JSON in textarea schreiben
+                        templateObject.object.value = JSON.stringify(object.data[field.label]);
+                        html += geoJson(templateObject);
+                        textareaIds.push(id + field.label);
+                        break;
                     default:
                         html += input(templateObject);
                         break;
@@ -38631,7 +38638,7 @@ module.exports = function (id, type) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../../templates/checkbox":213,"../../../templates/checkboxGroup":214,"../../../templates/formButtonToolbar":215,"../../../templates/input":216,"../../../templates/optionGroup":217,"../../../templates/select":218,"../../../templates/textarea":219,"../getHierarchy":177,"../getObject":178,"./addCheckedToValueList":168,"./fitTextareaToContent":170,"./positionFormBtngroup":174,"underscore":150}],173:[function(require,module,exports){
+},{"../../../templates/checkbox":213,"../../../templates/checkboxGroup":214,"../../../templates/formButtonToolbar":215,"../../../templates/geoJson":216,"../../../templates/input":217,"../../../templates/optionGroup":218,"../../../templates/select":219,"../../../templates/textarea":220,"../getHierarchy":177,"../getObject":178,"./addCheckedToValueList":168,"./fitTextareaToContent":170,"./positionFormBtngroup":174,"underscore":150}],173:[function(require,module,exports){
 // Hilfsfunktion, die typeof ersetzt und ergänzt
 // typeof gibt bei input-Feldern immer String zurück!
 
@@ -39154,29 +39161,6 @@ module.exports = function () {
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var _               = require('underscore'),
-    ol              = require('openlayers'),
-    createWmtsLayer = require('./createWmtsLayer');
-
-module.exports = function () {
-    var layers = [],
-        mapQuestSat,
-        swisstopoPixel;
-
-    mapQuestSat = new ol.layer.Tile({
-        source: new ol.source.MapQuest({layer: 'sat'})
-    });
-
-    swisstopoPixel = createWmtsLayer(20140520);
-
-    layers.push(swisstopoPixel);
-
-    return layers;
-};
-},{"./createWmtsLayer":187,"openlayers":27,"underscore":150}],187:[function(require,module,exports){
-/*jslint node: true, browser: true, nomen: true, todo: true */
-'use strict';
-
 var ol = require('openlayers');
 
 function qualifyURL(url) {
@@ -39205,7 +39189,30 @@ module.exports = function (timestamp) {
         })
     });
 };
-},{"openlayers":27}],188:[function(require,module,exports){
+},{"openlayers":27}],187:[function(require,module,exports){
+/*jslint node: true, browser: true, nomen: true, todo: true */
+'use strict';
+
+var _                                   = require('underscore'),
+    ol                                  = require('openlayers'),
+    createLayerSwisstopoPixelkarteFarbe = require('./createLayerSwisstopoPixelkarteFarbe');
+
+module.exports = function () {
+    var layers = [],
+        mapQuestSat,
+        SwisstopoPixelkarteFarbe;
+
+    mapQuestSat = new ol.layer.Tile({
+        source: new ol.source.MapQuest({layer: 'sat'})
+    });
+
+    SwisstopoPixelkarteFarbe = createLayerSwisstopoPixelkarteFarbe(20140520);
+
+    layers.push(SwisstopoPixelkarteFarbe);
+
+    return layers;
+};
+},{"./createLayerSwisstopoPixelkarteFarbe":186,"openlayers":27,"underscore":150}],188:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -39235,7 +39242,7 @@ module.exports = function () {
         addMousePositionControl();
     }
 };
-},{"./addMousePositionControl":185,"./createLayers":186,"openlayers":27}],189:[function(require,module,exports){
+},{"./addMousePositionControl":185,"./createLayers":187,"openlayers":27}],189:[function(require,module,exports){
 // creates descendant hierarchical objects of single objects
 // adds them to an array
 
@@ -39878,7 +39885,14 @@ module.exports = function () {
 
     $('#form')
         .on('click',       '#formNew',                       onClickFormNew)
-        .on('click',       '#formDelete',                    onClickFormDelete);
+        .on('click',       '#formDelete',                    onClickFormDelete)
+        .on('click',       '.js-geometryMap',                function (event) {
+            console.log('clicked ', $(this).prev().attr('id'));
+            // trigger opening Karte
+
+            // load vector layer
+
+        });
 
     $('#formContent')
         .on('keyup focus', 'textarea',                       fitTextareaToContent)
@@ -40079,6 +40093,23 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.label : stack1), depth0))
     + "\">"
     + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.label : stack1), depth0))
+    + "</label>\r\n    <textarea class=\"form-control\" id=\""
+    + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1._id : stack1), depth0))
+    + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.label : stack1), depth0))
+    + "\" data-object=\""
+    + escapeExpression(((helpers.json || (depth0 && depth0.json) || helperMissing).call(depth0, (depth0 != null ? depth0.object : depth0), {"name":"json","hash":{},"data":data})))
+    + "\">"
+    + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.value : stack1), depth0))
+    + "</textarea>\r\n    <button class=\"js-geometryMap\" class=\"btn btn-default\">Karte</button>\r\n</div>";
+},"useData":true});
+},{"handlebars":24}],217:[function(require,module,exports){
+var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
+  return "<div class=\"form-group js-form-group\">\r\n    <label for=\""
+    + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1._id : stack1), depth0))
+    + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.label : stack1), depth0))
+    + "\">"
+    + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.label : stack1), depth0))
     + "</label>\r\n    <input type=\""
     + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.inputDataType : stack1), depth0))
     + "\" class=\"form-control\" id=\""
@@ -40090,7 +40121,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.value : stack1), depth0))
     + "\">\r\n</div>";
 },"useData":true});
-},{"handlebars":24}],217:[function(require,module,exports){
+},{"handlebars":24}],218:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,depths) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "            <div class=\"radio\">\r\n                <label>\r\n                    <input type=\"radio\" name=\""
@@ -40117,7 +40148,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "    </div>\r\n</div>";
 },"useData":true,"useDepths":true});
-},{"handlebars":24}],218:[function(require,module,exports){
+},{"handlebars":24}],219:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, buffer = "                <option value=";
   stack1 = lambda((depth0 != null ? depth0.value : depth0), depth0);
@@ -40140,7 +40171,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "        </select>\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":24}],219:[function(require,module,exports){
+},{"handlebars":24}],220:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "<div class=\"form-group js-form-group\">\r\n    <label for=\""
