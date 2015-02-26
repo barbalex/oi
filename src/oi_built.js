@@ -62199,6 +62199,9 @@ module.exports = function () {
         containment:       '#content',
         resize: function (event, ui) {
             positionFormBtngroup();
+            if (window.oi.olMap.map) {
+                window.oi.olMap.map.updateSize();
+            }
         }
     });
 
@@ -62208,6 +62211,9 @@ module.exports = function () {
         containment:       '#content',
         resize: function (event, ui) {
             positionFormBtngroup();
+            if (window.oi.olMap.map) {
+                window.oi.olMap.map.updateSize();
+            }
         }
     });
     // obiger Code überschreibt display:none aus css
@@ -62216,7 +62222,12 @@ module.exports = function () {
     $('#map').resizable({
         handles:           { 'e': '#mapSeparator' },
         alsoResizeReverse: '#utils',
-        containment:       '#content'
+        containment:       '#content',
+        resize: function (event, ui) {
+            if (window.oi.olMap.map) {
+                window.oi.olMap.map.updateSize();
+            }
+        }
     });
 
     $('.js-nav-tabs').on('click', 'li', function (event) {
@@ -62955,6 +62966,7 @@ module.exports = function () {
         $('#' + widthObject.id).css('width', widthAfter);
     });
 
+    window.oi.olMap.map.updateSize();
     positionFormBtngroup();
 };
 
@@ -63008,8 +63020,8 @@ module.exports = function () {
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $             = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
-    initiateOlmap = require('./map/initiateMap');
+var $           = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+    initiateMap = require('./map/initiateMap');
 
 module.exports = function (tab) {
     $('.js-tab').each(function () {
@@ -63024,7 +63036,7 @@ module.exports = function (tab) {
                 // Seite ausblenden
                 $(this).show();
                 if (tab === 'map') {
-                    initiateOlmap();
+                    initiateMap();
                 }
             }
         }

@@ -19,6 +19,9 @@ module.exports = function () {
         containment:       '#content',
         resize: function (event, ui) {
             positionFormBtngroup();
+            if (window.oi.olMap.map) {
+                window.oi.olMap.map.updateSize();
+            }
         }
     });
 
@@ -28,6 +31,9 @@ module.exports = function () {
         containment:       '#content',
         resize: function (event, ui) {
             positionFormBtngroup();
+            if (window.oi.olMap.map) {
+                window.oi.olMap.map.updateSize();
+            }
         }
     });
     // obiger Code überschreibt display:none aus css
@@ -36,7 +42,12 @@ module.exports = function () {
     $('#map').resizable({
         handles:           { 'e': '#mapSeparator' },
         alsoResizeReverse: '#utils',
-        containment:       '#content'
+        containment:       '#content',
+        resize: function (event, ui) {
+            if (window.oi.olMap.map) {
+                window.oi.olMap.map.updateSize();
+            }
+        }
     });
 
     $('.js-nav-tabs').on('click', 'li', function (event) {

@@ -39,5 +39,6 @@ module.exports = function () {
         $('#' + widthObject.id).css('width', widthAfter);
     });
 
+    window.oi.olMap.map.updateSize();
     positionFormBtngroup();
 };

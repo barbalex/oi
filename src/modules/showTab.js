@@ -1,8 +1,8 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $             = require('jquery'),
-    initiateOlmap = require('./map/initiateMap');
+var $           = require('jquery'),
+    initiateMap = require('./map/initiateMap');
 
 module.exports = function (tab) {
     $('.js-tab').each(function () {
@@ -17,7 +17,7 @@ module.exports = function (tab) {
                 // Seite ausblenden
                 $(this).show();
                 if (tab === 'map') {
-                    initiateOlmap();
+                    initiateMap();
                 }
             }
         }
