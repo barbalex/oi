@@ -9328,6 +9328,18 @@ body {
   z-index: 1;
 }
 
+/*Koordinatenanzeige gestalten*/
+#map .ol-mouse-position {
+    font-weight: 900;
+    font-family: Arial, Verdana, Helvetica, sans-serif;
+    /*Koordinaten weiss hinterlegen, damit sie auf jedem Hintergrund gut sichtbar sind*/
+    text-shadow: 0 1px 1px white,1px 0 1px white,0 -1px 1px white,-1px 0 1px white,0 2px 1px white,2px 0 1px white,0 -2px 1px white,-2px 0 1px white;
+    top:    auto;
+    bottom: 10px;
+    right:  10px;
+    position: absolute;
+}
+
 /* 
  * UTILS 
  */
