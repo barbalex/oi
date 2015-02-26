@@ -27,6 +27,9 @@ module.exports = function (wert) {
     // funktioniert aber nicht für '2010'
     //return ({}).toString.call(wert).match(/\s([a-zA-Z]+)/)[1].toLowerCase();
 
+    console.log('myTypeOf: wert: ', wert);
+    console.log('myTypeOf: typeof wert: ', typeof wert);
+
     if (typeof wert === 'boolean')   { return 'boolean'; }
     if (typeof wert === 'number')    { return 'number'; }
     /*if (parseInt(wert, 10) && parseFloat(wert) && parseInt(wert, 10) !== parseFloat(wert) && parseInt(wert, 10) == wert) { return 'float'; }

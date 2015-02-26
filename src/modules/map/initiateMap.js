@@ -11,6 +11,7 @@ module.exports = function () {
     //center: [684297, 237600],
     //center: [902568.5270415349, 5969980.338127118],
     //center: [47.17188, 8.11776],
+    //center: [8.16363, 47.12031],
     if (!window.oi.olMap.map) {
         // By default OpenLayers does not know about the EPSG:21781 (Swiss) projection.
         // So we create a projection instance for EPSG:21781 and pass it to
@@ -20,8 +21,8 @@ module.exports = function () {
             code: 'EPSG:21781',
             // The extent is used to determine zoom level 0. Recommended values for a
             // projection's validity extent can be found at http://epsg.io/.
-            //extent: [485869.5728, 76443.1884, 837076.5648, 299941.7864],
-            extent: [420000, 30000, 900000, 350000],
+            extent: [485869.5728, 76443.1884, 837076.5648, 299941.7864],
+            //extent: [420000, 30000, 900000, 350000],
             units: 'm'
         });
         ol.proj.addProjection(projection);

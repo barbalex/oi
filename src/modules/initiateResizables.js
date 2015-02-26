@@ -4,7 +4,7 @@
 var $                    = require('jquery'),
     alsoResizeReverse    = require('./alsoResizeReverse'),
     setWidthOfTabs       = require('./setWidthOfTabs'),
-    showTab              = require('./showTab'),
+    toggleTab            = require('./toggleTab'),
     positionFormBtngroup = require('./form/positionFormBtngroup');
 
 module.exports = function () {
@@ -55,7 +55,7 @@ module.exports = function () {
             tab = id.substring(0, id.length - 4);
 
         event.preventDefault();
-        showTab(tab);
+        toggleTab(tab);
         setWidthOfTabs();
     });
 

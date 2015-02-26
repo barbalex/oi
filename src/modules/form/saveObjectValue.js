@@ -17,6 +17,7 @@ module.exports = function (passedObject, value) {
         projectName = 'project_' + projId,
         id          = passedObject._id,
         field       = passedObject.label,
+        inputType   = passedObject.inputType,
         object,
         lastEdited  = {},
         options     = {
@@ -33,6 +34,11 @@ module.exports = function (passedObject, value) {
     lastEdited.date     = dateformat(new Date(), 'isoDateTime');
     lastEdited.user     = window.oi.me.name;
     lastEdited.database = window.oi.databaseId;
+
+    // bei geoJson: Value in Objekt verwandeln
+    if (inputType === 'geoJson') {
+        value = JSON.parse(value);
+    }
 
     if (object) {
         // set new value

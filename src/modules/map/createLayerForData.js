@@ -34,7 +34,7 @@ module.exports = function (hId, label) {
         'crs': {
             'type': 'name',
             'properties': {
-                'name': 'EPSG:4326'
+                'name': 'EPSG:3857'
             }
         },
         'features': vectorSourceFeatures

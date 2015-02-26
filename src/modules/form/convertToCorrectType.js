@@ -10,7 +10,11 @@ module.exports = function (feldWert) {
     if (type === 'float')   { return parseFloat(feldWert); }
     if (type === 'integer') { return parseInt(feldWert, 10); }
     if (type === 'number')  { return parseInt(feldWert, 10); }
+    if (type === 'object')  { return JSON.parse(feldWert); }
 
-    // object nicht umwandeln. Man muss beim Vergleichen unterscheiden können, ob es ein Object war
+    console.log('feldWert: ', feldWert);
+    console.log('type: ', type);
+    console.log('parse feldWert: ', JSON.parse(feldWert));
+
     return feldWert;
 };

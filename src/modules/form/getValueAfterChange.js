@@ -15,6 +15,8 @@ module.exports = function (that) {
     var value,
         $that = $(that);
 
+    console.log('getValueAfterChange: that.value: ', that.value);
+
     switch (that.type) {
     case 'text':
     case 'number':
@@ -33,7 +35,6 @@ module.exports = function (that) {
             _.each($('[name="' + $that.data('object')._id + $that.data('object').label + '"]:checked'), function (checkbox) {
                 value.push(convertToCorrectType(checkbox.value));
             });
-            console.log('getValueAfterChange: checkboxGroup: value: ', value);
             break;
         }
         break;

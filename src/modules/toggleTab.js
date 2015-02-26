@@ -4,10 +4,10 @@
 var $           = require('jquery'),
     initiateMap = require('./map/initiateMap');
 
-module.exports = function (tab) {
+module.exports = function (tab, show) {
     $('.js-tab').each(function () {
         if ($(this).attr('id') === tab) {
-            if ($(this).is(':visible')) {
+            if ($(this).is(':visible') && !show) {
                 // navbar: Menu deaktivieren
                 $('#' + tab + 'Menu').removeClass('active');
                 // Seite ausblenden

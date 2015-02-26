@@ -38119,7 +38119,7 @@ module.exports = function ($node) {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./askYesNoWithModal":152,"./deleteObjectFromModel":158,"./getObject":178,"./tellWithModal":212,"dateformat":8,"pouchdb":106,"underscore":150}],158:[function(require,module,exports){
+},{"./askYesNoWithModal":152,"./deleteObjectFromModel":158,"./getObject":178,"./tellWithModal":211,"dateformat":8,"pouchdb":106,"underscore":150}],158:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -38145,6 +38145,9 @@ var $                   = (typeof window !== "undefined" ? window.$ : typeof glo
 module.exports = function () {
     var value  = getValueAfterChange(this),
         object = $(this).data('object');
+
+    console.log('onChangeElement: value: ', value);
+    console.log('onChangeElement: typeof value: ', typeof value);
 
     saveObjectValue(object, value);
 };
@@ -38413,8 +38416,12 @@ module.exports = function (feldWert) {
     if (type === 'float')   { return parseFloat(feldWert); }
     if (type === 'integer') { return parseInt(feldWert, 10); }
     if (type === 'number')  { return parseInt(feldWert, 10); }
+    if (type === 'object')  { return JSON.parse(feldWert); }
 
-    // object nicht umwandeln. Man muss beim Vergleichen unterscheiden können, ob es ein Object war
+    console.log('feldWert: ', feldWert);
+    console.log('type: ', type);
+    console.log('parse feldWert: ', JSON.parse(feldWert));
+
     return feldWert;
 };
 },{"./myTypeOf":173}],170:[function(require,module,exports){
@@ -38488,6 +38495,8 @@ module.exports = function (that) {
     var value,
         $that = $(that);
 
+    console.log('getValueAfterChange: that.value: ', that.value);
+
     switch (that.type) {
     case 'text':
     case 'number':
@@ -38506,7 +38515,6 @@ module.exports = function (that) {
             _.each($('[name="' + $that.data('object')._id + $that.data('object').label + '"]:checked'), function (checkbox) {
                 value.push(convertToCorrectType(checkbox.value));
             });
-            console.log('getValueAfterChange: checkboxGroup: value: ', value);
             break;
         }
         break;
@@ -38559,6 +38567,7 @@ module.exports = function (id, type) {
                     templateObject.object               = {};
                     templateObject.object._id           = id;
                     templateObject.object.type          = type;
+                    templateObject.object.inputType     = field.inputType;
                     templateObject.object.projId        = object.projId            || null;
                     templateObject.object.label         = field.label;
                     templateObject.object.inputDataType = field.inputDataType      || null;
@@ -38669,6 +38678,9 @@ module.exports = function (wert) {
     // funktioniert aber nicht für '2010'
     //return ({}).toString.call(wert).match(/\s([a-zA-Z]+)/)[1].toLowerCase();
 
+    console.log('myTypeOf: wert: ', wert);
+    console.log('myTypeOf: typeof wert: ', typeof wert);
+
     if (typeof wert === 'boolean')   { return 'boolean'; }
     if (typeof wert === 'number')    { return 'number'; }
     /*if (parseInt(wert, 10) && parseFloat(wert) && parseInt(wert, 10) !== parseFloat(wert) && parseInt(wert, 10) == wert) { return 'float'; }
@@ -38755,6 +38767,7 @@ module.exports = function (passedObject, value) {
         projectName = 'project_' + projId,
         id          = passedObject._id,
         field       = passedObject.label,
+        inputType   = passedObject.inputType,
         object,
         lastEdited  = {},
         options     = {
@@ -38771,6 +38784,11 @@ module.exports = function (passedObject, value) {
     lastEdited.date     = dateformat(new Date(), 'isoDateTime');
     lastEdited.user     = window.oi.me.name;
     lastEdited.database = window.oi.databaseId;
+
+    // bei geoJson: Value in Objekt verwandeln
+    if (inputType === 'geoJson') {
+        value = JSON.parse(value);
+    }
 
     if (object) {
         // set new value
@@ -38816,7 +38834,7 @@ module.exports = function (passedObject, value) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../getObject":178,"../nav/getLabelForObject":197,"../syncWithRemoteDb":209,"dateformat":8,"pouchdb":106,"underscore":150}],177:[function(require,module,exports){
+},{"../getObject":178,"../nav/getLabelForObject":197,"../syncWithRemoteDb":208,"dateformat":8,"pouchdb":106,"underscore":150}],177:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -39062,7 +39080,7 @@ module.exports = function () {
 var $                    = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
     alsoResizeReverse    = require('./alsoResizeReverse'),
     setWidthOfTabs       = require('./setWidthOfTabs'),
-    showTab              = require('./showTab'),
+    toggleTab            = require('./toggleTab'),
     positionFormBtngroup = require('./form/positionFormBtngroup');
 
 module.exports = function () {
@@ -39113,7 +39131,7 @@ module.exports = function () {
             tab = id.substring(0, id.length - 4);
 
         event.preventDefault();
-        showTab(tab);
+        toggleTab(tab);
         setWidthOfTabs();
     });
 
@@ -39141,7 +39159,7 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./alsoResizeReverse":151,"./form/positionFormBtngroup":174,"./setWidthOfTabs":206,"./showTab":208}],185:[function(require,module,exports){
+},{"./alsoResizeReverse":151,"./form/positionFormBtngroup":174,"./setWidthOfTabs":206,"./toggleTab":212}],185:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -39153,8 +39171,8 @@ module.exports = function () {
         // The number argument in createStringXY is the number of decimal places
         coordinateFormat: ol.coordinate.createStringXY(0),
         //projection: "EPSG:21781",
-        projection: "EPSG:3857",
-        //projection: "EPSG:4326",
+        //projection: "EPSG:3857",
+        projection: "EPSG:4326",
         undefinedHTML: '&nbsp;' // what openlayers will use if the map returns undefined for a map coordinate
     });
     window.oi.olMap.map.addControl(mousePositionControl);
@@ -39196,7 +39214,7 @@ module.exports = function (hId, label) {
         'crs': {
             'type': 'name',
             'properties': {
-                'name': 'EPSG:4326'
+                'name': 'EPSG:3857'
             }
         },
         'features': vectorSourceFeatures
@@ -39312,6 +39330,7 @@ module.exports = function () {
     //center: [684297, 237600],
     //center: [902568.5270415349, 5969980.338127118],
     //center: [47.17188, 8.11776],
+    //center: [8.16363, 47.12031],
     if (!window.oi.olMap.map) {
         // By default OpenLayers does not know about the EPSG:21781 (Swiss) projection.
         // So we create a projection instance for EPSG:21781 and pass it to
@@ -39321,8 +39340,8 @@ module.exports = function () {
             code: 'EPSG:21781',
             // The extent is used to determine zoom level 0. Recommended values for a
             // projection's validity extent can be found at http://epsg.io/.
-            //extent: [485869.5728, 76443.1884, 837076.5648, 299941.7864],
-            extent: [420000, 30000, 900000, 350000],
+            extent: [485869.5728, 76443.1884, 837076.5648, 299941.7864],
+            //extent: [420000, 30000, 900000, 350000],
             units: 'm'
         });
         ol.proj.addProjection(projection);
@@ -39716,7 +39735,7 @@ module.exports = function (projectNames) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../syncWithRemoteDbs":210,"../syncWithRemoteUserDb":211,"./createDatabaseId":191,"./createTree":192,"./getModelData":199,"async":2,"pouchdb":106,"pouchdb-all-dbs":28,"underscore":150}],201:[function(require,module,exports){
+},{"../syncWithRemoteDbs":209,"../syncWithRemoteUserDb":210,"./createDatabaseId":191,"./createTree":192,"./getModelData":199,"async":2,"pouchdb":106,"pouchdb-all-dbs":28,"underscore":150}],201:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -39776,7 +39795,7 @@ module.exports = function (signindata) {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../configuration":153,"../tellWithModal":212,"./initiateNav":200,"pouchdb":106}],203:[function(require,module,exports){
+},{"../configuration":153,"../tellWithModal":211,"./initiateNav":200,"pouchdb":106}],203:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -39839,7 +39858,7 @@ module.exports = function () {
     signIn(signindata);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../tellWithModal":212,"../validateEmail":213,"./signIn":202,"./signUp":204}],204:[function(require,module,exports){
+},{"../tellWithModal":211,"../validateEmail":213,"./signIn":202,"./signUp":204}],204:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -39869,7 +39888,7 @@ module.exports = function (signindata) {
         tellWithModal('Das Konto konnte nicht erstellt werden', 'Die Datenbank meldete: ' + error);
     });
 };
-},{"../configuration":153,"../tellWithModal":212,"./signIn":202,"pouchdb":106}],205:[function(require,module,exports){
+},{"../configuration":153,"../tellWithModal":211,"./signIn":202,"pouchdb":106}],205:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -39970,7 +39989,9 @@ var $                                    = (typeof window !== "undefined" ? wind
     onKeypressSigninWithModal            = require('./event/onKeypressSigninWithModal'),
     onClickSigninWithModalSignupCheckbox = require('./event/onClickSigninWithModalSignupCheckbox'),
     signInOrUp                           = require('./nav/signInOrUp'),
-    createLayerForData                   = require('./map/createLayerForData');
+    createLayerForData                   = require('./map/createLayerForData'),
+    toggleTab                            = require('./toggleTab'),
+    setWidthOfTabs                       = require('./setWidthOfTabs');
 
 module.exports = function () {
     // scroll event doesn't buble up, so it cant be delegated from # to .
@@ -39993,10 +40014,12 @@ module.exports = function () {
         .on('click',       '#formNew',                       onClickFormNew)
         .on('click',       '#formDelete',                    onClickFormDelete)
         .on('click',       '.js-geometryMap',                function (event) {
-            var object = $(this).prev().data('object');
+            var object = $(this).prev().data('object'),
+                show   = true;
 
-            // trigger opening Karte
-            $('#mapMenu').trigger('click');
+            // open map
+            toggleTab('map', show);
+            setWidthOfTabs();
             // load vector layer
             createLayerForData(object.hId, object.label);
         });
@@ -40006,36 +40029,7 @@ module.exports = function () {
         .on('change',      'input, textarea, select',        onChangeElement);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./event/onChangeElement":159,"./event/onClickFormDelete":160,"./event/onClickFormNew":161,"./event/onClickNavFormSort":162,"./event/onClickNavbarBrand":163,"./event/onClickNavbarCollapse":164,"./event/onClickSigninWithModalSignupCheckbox":165,"./event/onKeypressSigninWithModal":166,"./event/onScrollTab":167,"./form/fitTextareaToContent":170,"./map/createLayerForData":186,"./nav/signInOrUp":203}],208:[function(require,module,exports){
-(function (global){
-/*jslint node: true, browser: true, nomen: true, todo: true */
-'use strict';
-
-var $           = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
-    initiateMap = require('./map/initiateMap');
-
-module.exports = function (tab) {
-    $('.js-tab').each(function () {
-        if ($(this).attr('id') === tab) {
-            if ($(this).is(':visible')) {
-                // navbar: Menu deaktivieren
-                $('#' + tab + 'Menu').removeClass('active');
-                // Seite ausblenden
-                $(this).hide();
-            } else {
-                $('#' + tab + 'Menu').addClass('active');
-                // Seite ausblenden
-                $(this).show();
-                if (tab === 'map') {
-                    initiateMap();
-                }
-            }
-        }
-    });
-};
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./map/initiateMap":189}],209:[function(require,module,exports){
+},{"./event/onChangeElement":159,"./event/onClickFormDelete":160,"./event/onClickFormNew":161,"./event/onClickNavFormSort":162,"./event/onClickNavbarBrand":163,"./event/onClickNavbarCollapse":164,"./event/onClickSigninWithModalSignupCheckbox":165,"./event/onKeypressSigninWithModal":166,"./event/onScrollTab":167,"./form/fitTextareaToContent":170,"./map/createLayerForData":186,"./nav/signInOrUp":203,"./setWidthOfTabs":206,"./toggleTab":212}],208:[function(require,module,exports){
 /**
  * synchronisiert die Daten aus einer CouchDB in PouchDB
  */
@@ -40080,7 +40074,7 @@ module.exports = function (couchName) {
     }
 };
 
-},{"./configuration":153,"./handleChanges":180,"pouchdb":106}],210:[function(require,module,exports){
+},{"./configuration":153,"./handleChanges":180,"pouchdb":106}],209:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -40093,7 +40087,7 @@ module.exports = function (projectDbs) {
     });
 };
 
-},{"./syncWithRemoteDb":209,"underscore":150}],211:[function(require,module,exports){
+},{"./syncWithRemoteDb":208,"underscore":150}],210:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -40111,7 +40105,7 @@ module.exports = function () {
         include_docs: true
     }).on('change', handleUsersChanges);
 };
-},{"./configuration":153,"./handleUsersChanges":182,"pouchdb":106}],212:[function(require,module,exports){
+},{"./configuration":153,"./handleUsersChanges":182,"pouchdb":106}],211:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -40134,7 +40128,36 @@ module.exports = function (title, text) {
     $modal.modal(options);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],213:[function(require,module,exports){
+},{}],212:[function(require,module,exports){
+(function (global){
+/*jslint node: true, browser: true, nomen: true, todo: true */
+'use strict';
+
+var $           = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+    initiateMap = require('./map/initiateMap');
+
+module.exports = function (tab, show) {
+    $('.js-tab').each(function () {
+        if ($(this).attr('id') === tab) {
+            if ($(this).is(':visible') && !show) {
+                // navbar: Menu deaktivieren
+                $('#' + tab + 'Menu').removeClass('active');
+                // Seite ausblenden
+                $(this).hide();
+            } else {
+                $('#' + tab + 'Menu').addClass('active');
+                // Seite ausblenden
+                $(this).show();
+                if (tab === 'map') {
+                    initiateMap();
+                }
+            }
+        }
+    });
+};
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./map/initiateMap":189}],213:[function(require,module,exports){
 /*
  * prüft, ob ein String eine email-Adressen sein könnte
  * Quelle: http://stackoverflow.com/questions/46155/validate-email-address-in-javascript

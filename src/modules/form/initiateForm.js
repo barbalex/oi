@@ -41,6 +41,7 @@ module.exports = function (id, type) {
                     templateObject.object               = {};
                     templateObject.object._id           = id;
                     templateObject.object.type          = type;
+                    templateObject.object.inputType     = field.inputType;
                     templateObject.object.projId        = object.projId            || null;
                     templateObject.object.label         = field.label;
                     templateObject.object.inputDataType = field.inputDataType      || null;
