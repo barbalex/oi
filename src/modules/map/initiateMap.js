@@ -10,6 +10,7 @@ module.exports = function () {
 
     //center: [684297, 237600],
     //center: [902568.5270415349, 5969980.338127118],
+    //center: [47.17188, 8.11776],
     if (!window.oi.olMap.map) {
         // By default OpenLayers does not know about the EPSG:21781 (Swiss) projection.
         // So we create a projection instance for EPSG:21781 and pass it to

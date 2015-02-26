@@ -62282,8 +62282,8 @@ module.exports = function () {
         // This is the format we want the coordinate in
         // The number argument in createStringXY is the number of decimal places
         coordinateFormat: ol.coordinate.createStringXY(0),
-        projection: "EPSG:21781",
-        //projection: "EPSG:3857",
+        //projection: "EPSG:21781",
+        projection: "EPSG:3857",
         //projection: "EPSG:4326",
         undefinedHTML: '&nbsp;' // what openlayers will use if the map returns undefined for a map coordinate
     });
@@ -62441,6 +62441,7 @@ module.exports = function () {
 
     //center: [684297, 237600],
     //center: [902568.5270415349, 5969980.338127118],
+    //center: [47.17188, 8.11776],
     if (!window.oi.olMap.map) {
         // By default OpenLayers does not know about the EPSG:21781 (Swiss) projection.
         // So we create a projection instance for EPSG:21781 and pass it to
