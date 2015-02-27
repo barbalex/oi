@@ -11,11 +11,11 @@ var $                     = require('jquery'),
     select                = require('../../../templates/select'),
     geoJson               = require('../../../templates/geoJson'),
     formButtonToolbar     = require('../../../templates/formButtonToolbar'),
-    fitTextareaToContent  = require('./fitTextareaToContent'),
     addCheckedToValueList = require('./addCheckedToValueList'),
     positionFormBtngroup  = require('./positionFormBtngroup'),
     getObject             = require('../getObject'),
-    getHierarchy          = require('../getHierarchy');
+    getHierarchy          = require('../getHierarchy'),
+    resizeTextareas       = require('./resizeTextareas');
 
 module.exports = function (id, type) {
     var html         = '',
@@ -99,11 +99,7 @@ module.exports = function (id, type) {
                 $formContent.html(html);
 
                 positionFormBtngroup();
-
-                // textareas: Grösse an Wert anpassen
-                _.each(textareaIds, function (textareaId) {
-                    fitTextareaToContent(textareaId);
-                });
+                resizeTextareas();
 
                 // scrollbars aktualisieren
                 $('.scrollbar').perfectScrollbar('update');

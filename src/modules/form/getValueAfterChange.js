@@ -15,8 +15,6 @@ module.exports = function (that) {
     var value,
         $that = $(that);
 
-    console.log('getValueAfterChange: that.value: ', that.value);
-
     switch (that.type) {
     case 'text':
     case 'number':

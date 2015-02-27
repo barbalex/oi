@@ -2,10 +2,13 @@
 'use strict';
 
 var $                    = require('jquery'),
+    _                    = require('underscore'),
     alsoResizeReverse    = require('./alsoResizeReverse'),
     setWidthOfTabs       = require('./setWidthOfTabs'),
     toggleTab            = require('./toggleTab'),
-    positionFormBtngroup = require('./form/positionFormBtngroup');
+    positionFormBtngroup = require('./form/positionFormBtngroup'),
+    resizeTextareas      = require('./form/resizeTextareas'),
+    refreshMap           = require('./map/refreshMap');
 
 module.exports = function () {
     var zaehler;
@@ -17,11 +20,10 @@ module.exports = function () {
         handles:           { 'e': '#navSeparator' },
         alsoResizeReverse: '#form',
         containment:       '#content',
-        resize: function (event, ui) {
+        resize: function () {
             positionFormBtngroup();
-            if (window.oi.olMap.map) {
-                window.oi.olMap.map.updateSize();
-            }
+            refreshMap();
+            resizeTextareas();
         }
     });
 
@@ -29,11 +31,10 @@ module.exports = function () {
         handles:           { 'e': '#formSeparator' },
         alsoResizeReverse: '#map',
         containment:       '#content',
-        resize: function (event, ui) {
+        resize: function () {
             positionFormBtngroup();
-            if (window.oi.olMap.map) {
-                window.oi.olMap.map.updateSize();
-            }
+            refreshMap();
+            resizeTextareas();
         }
     });
     // obiger Code überschreibt display:none aus css
@@ -43,10 +44,9 @@ module.exports = function () {
         handles:           { 'e': '#mapSeparator' },
         alsoResizeReverse: '#utils',
         containment:       '#content',
-        resize: function (event, ui) {
-            if (window.oi.olMap.map) {
-                window.oi.olMap.map.updateSize();
-            }
+        resize: function () {
+            refreshMap();
+            resizeTextareas();
         }
     });
 

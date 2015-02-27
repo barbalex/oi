@@ -10,9 +10,6 @@ var $                 = require('jquery'),
     syncWithRemoteDb  = require('../syncWithRemoteDb');
 
 module.exports = function (passedObject, value) {
-
-    console.log('saveObjectValue: passedObject: ', passedObject);
-
     var projId      = passedObject.projId,
         projectName = 'project_' + projId,
         id          = passedObject._id,

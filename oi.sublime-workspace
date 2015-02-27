@@ -4,6 +4,22 @@
 		"selected_items":
 		[
 			[
+				"templ",
+				"templateObject"
+			],
+			[
+				"ve",
+				"vectorSourceObjects"
+			],
+			[
+				"ret",
+				"returnValue"
+			],
+			[
+				"re",
+				"returnValue"
+			],
+			[
 				"pro",
 				"projectName"
 			],
@@ -112,10 +128,6 @@
 				"templateObject"
 			],
 			[
-				"re",
-				"results"
-			],
-			[
 				"map",
 				"mapHierarchyToJstreeData"
 			],
@@ -142,10 +154,6 @@
 			[
 				"max",
 				"max-height"
-			],
-			[
-				"ret",
-				"returnWert"
 			],
 			[
 				"Pop",
@@ -411,7 +419,7 @@
 			"file": "style/oi.css",
 			"settings":
 			{
-				"buffer_size": 2000,
+				"buffer_size": 2627,
 				"line_ending": "Windows"
 			}
 		},
@@ -427,15 +435,7 @@
 			"file": "src/modules/map/initiateMap.js",
 			"settings":
 			{
-				"buffer_size": 552,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/modules/showTab.js",
-			"settings":
-			{
-				"buffer_size": 770,
+				"buffer_size": 1780,
 				"line_ending": "Windows"
 			}
 		},
@@ -443,47 +443,39 @@
 			"file": "src/modules/map/createLayers.js",
 			"settings":
 			{
-				"buffer_size": 371,
+				"buffer_size": 655,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/modules/event/onChangeElement.js",
+			"file": "src/modules/map/createLayerSwisstopoPixelkarteFarbe.js",
 			"settings":
 			{
-				"buffer_size": 407,
+				"buffer_size": 1394,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/modules/form/saveObjectValue.js",
+			"file": "src/modules/map/addMousePositionControl.js",
 			"settings":
 			{
-				"buffer_size": 2933,
+				"buffer_size": 682,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/modules/syncWithRemoteDb.js",
+			"file": "src/modules/map/createLayerForData.js",
 			"settings":
 			{
-				"buffer_size": 1224,
+				"buffer_size": 2181,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/modules/handleExternalObjectChanges.js",
+			"file": "/C/Users/alex/oi_testdata/index.js",
 			"settings":
 			{
-				"buffer_size": 3555,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/modules/createNewObject.js",
-			"settings":
-			{
-				"buffer_size": 2985,
+				"buffer_size": 19449,
 				"line_ending": "Windows"
 			}
 		}
@@ -537,17 +529,38 @@
 		"/C/Users/alex/oi",
 		"/C/Users/alex/oi/src",
 		"/C/Users/alex/oi/src/modules",
+		"/C/Users/alex/oi/src/modules/event",
 		"/C/Users/alex/oi/src/modules/form",
 		"/C/Users/alex/oi/src/modules/map",
-		"/C/Users/alex/oi/src/modules/nav",
-		"/C/Users/alex/oi/style"
+		"/C/Users/alex/oi/templates"
 	],
 	"file_history":
 	[
+		"/C/Users/alex/oi/src/modules/setupEvents.js",
+		"/C/Users/alex/oi/src/modules/event/onClickGeometryField.js",
+		"/C/Users/alex/oi/templates/geoJson.hdb",
+		"/C/Users/alex/oi/templates/geoJson.js",
+		"/C/Users/alex/oi/src/modules/event/onChangeElement.js",
+		"/C/Users/alex/oi/src/modules/form/initiateForm.js",
+		"/C/Users/alex/oi/src/modules/form/saveObjectValue.js",
+		"/C/Users/alex/oi/src/modules/form/getValueAfterChange.js",
+		"/C/Users/alex/oi/src/modules/form/myTypeOf.js",
+		"/C/Users/alex/oi/src/modules/form/convertToCorrectType.js",
+		"/C/Users/alex/oi/src/modules/initiateResizables.js",
+		"/C/Users/alex/oi/src/modules/toggleTab.js",
+		"/C/Users/alex/oi/index.html",
+		"/C/Users/alex/oi/src/oi_browserified.js",
+		"/C/Users/alex/oi/templates/textarea.hdb",
+		"/C/Users/alex/oi/src/modules/map/createLayerSwisstopoPixelkarteFarbe.js",
+		"/C/Users/alex/oi/src/modules/showTab.js",
+		"/C/Users/alex/oi/src/modules/setWidthOfTabs.js",
+		"/C/Users/alex/oi/src/modules/map/createWmtsLayer.js",
+		"/C/Users/alex/oi/src/modules/syncWithRemoteDb.js",
+		"/C/Users/alex/oi/src/modules/handleExternalObjectChanges.js",
+		"/C/Users/alex/oi/src/modules/createNewObject.js",
+		"/C/Users/alex/oi/src/modules/map/addMousePositionControl.js",
 		"/C/Users/alex/oi/src/oi.js",
 		"/C/Users/alex/oi/src/modules/initiateApp.js",
-		"/C/Users/alex/oi/src/modules/initiateResizables.js",
-		"/C/Users/alex/oi/src/modules/setupEvents.js",
 		"/C/Users/alex/oi/gulp-tasks/dev.js",
 		"/C/Users/alex/oi/gulp-tasks/default.js",
 		"/C/Users/alex/oi/gulp-tasks/dev_when_watch.js",
@@ -556,26 +569,20 @@
 		"/C/Users/alex/oi/src/modules/nav/createTreeNodeRootObject.js",
 		"/C/Users/alex/oi/src/modules/nav/generateDataForTree.js",
 		"/C/Users/alex/oi/gulp-tasks/createManifest.js",
-		"/C/Users/alex/oi/src/oi_browserified.js",
 		"/C/Users/alex/oi/server.js",
-		"/C/Users/alex/oi/src/modules/syncWithRemoteDb.js",
 		"/C/Users/alex/oi/src/modules/handleChanges.js",
 		"/C/Users/alex/oi/src/modules/syncWithRemoteDbs.js",
 		"/C/Users/alex/oi/src/modules/deleteObjectAndChildren.js",
-		"/C/Users/alex/oi/src/modules/form/saveObjectValue.js",
-		"/C/Users/alex/oi/src/modules/handleExternalObjectChanges.js",
 		"/C/Users/alex/oi/src/modules/event/onClickFormDelete.js",
 		"/C/Users/alex/oi/src/modules/deleteObjectFromModel.js",
 		"/C/Users/alex/oi_pg/index.js",
 		"/C/Users/alex/oi/style/oi.css",
-		"/C/Users/alex/oi/index.html",
 		"/C/Users/alex/oi/src/modules/nav/createTree.js",
 		"/C/Users/alex/oi/src/modules/nav/initiateNav.js",
 		"/C/Users/alex/oi_testdata/index.js",
 		"/C/Users/alex/oi/src/modules/handleUsersChanges.js",
 		"/C/Users/alex/oi/src/modules/syncWithRemoteUserDb.js",
 		"/C/Users/alex/oi/src/modules/event/onScrollTab.js",
-		"/C/Users/alex/oi/src/modules/setWidthOfTabs.js",
 		"/C/Users/alex/oi/src/modules/alsoResizeReverse.js",
 		"/C/Users/alex/oi/src/modules/nav/treeContextmenuItems.js",
 		"/C/Users/alex/oi/src/modules/nav/getModelData.js",
@@ -608,13 +615,11 @@
 		"/C/Users/alex/oi_beispielsdaten_laden/index.js",
 		"/C/Users/alex/oi/src/modules/event/onClickNavFormSort.js",
 		"/C/Users/alex/oi/src/modules/form/saveHierarchy.js",
-		"/C/Users/alex/oi/src/modules/form/initiateForm.js",
 		"/C/Users/alex/oi/src/modules/event/onClickSigninWithModalSignupCheckbox.js",
 		"/C/Users/alex/oi/src/modules/getHierarchyOfObject.js",
 		"/C/Users/alex/oi/templates/checkboxGroup.hdb",
 		"/C/Users/alex/oi/templates/optionGroup.hdb",
 		"/C/Users/alex/oi/templates/select.hdb",
-		"/C/Users/alex/oi/templates/textarea.hdb",
 		"/C/Users/alex/oi/templates/input.hdb",
 		"/C/Users/alex/oi/templates/checkbox.hdb",
 		"/C/Users/alex/oi/src/modules/nav/createObjectsByUserTypeIndex.js",
@@ -638,7 +643,6 @@
 		"/C/Users/alex/oi/src/modules/nav/foreignChangedIndex.js",
 		"/C/Users/alex/oi/src/modules/pouchDbOptions.js",
 		"/C/Users/alex/oi/src/modules/nav/hierarchiesIndex.js",
-		"/C/Users/alex/oi/src/modules/createNewObject.js",
 		"/C/Users/alex/oi/gulp-tasks/dev_src.js",
 		"/C/Users/alex/oi/src/pouchdb.authentication.js",
 		"/C/Users/alex/oi/src/modules/validateEmail.js",
@@ -650,11 +654,7 @@
 		"/C/Users/alex/oi/src/modules/nav/createTreeNodeObject.js",
 		"/C/Users/alex/oi/src/modules/form/positionFormBtngroup.js",
 		"/C/Users/alex/oi/src/modules/event/onClickFormNew.js",
-		"/C/Users/alex/oi/src/modules/event/onChangeElement.js",
-		"/C/Users/alex/oi/src/modules/form/getValueAfterChange.js",
 		"/C/Users/alex/oi/src/modules/getObject.js",
-		"/C/Users/alex/oi/src/modules/showTab.js",
-		"/C/Users/alex/oi/src/modules/form/convertToCorrectType.js",
 		"/C/Users/alex/oi/src/modules/tellWithModal.js",
 		"/C/Users/alex/oi/src/modules/form/addCheckedToValueList.js",
 		"/C/Users/alex/oi/src/modules/event/onClickNavbarBrand.js",
@@ -663,15 +663,7 @@
 		"/C/Users/alex/oi/src/modules/event/onNavScroll.js",
 		"/C/Users/alex/oi/src/modules/createNewObjectFromObject.js",
 		"/C/Users/alex/oi/src/modules/getHierarchy.js",
-		"/C/Users/alex/oi/src/modules/createNewObjectFromHierarchy.js",
-		"/C/Users/alex/oi/src/modules/PouchDBWithDefaults.js",
-		"/C/Users/alex/oi/src/modules/PouchDbWithOptions.js",
-		"/C/Users/alex/oi/src/modules/deleteObjectFromTreeNode.js",
-		"/C/Users/alex/oi/src/modules/deleteObjectFromModelById.js",
-		"/C/Users/alex/oi/src/modules/handleDbObjectChanges.js",
-		"/C/Users/alex/oi/templates/formHierarchiesButtonToolbar.hdb",
-		"/C/Users/alex/oi/src/modules/getObjectWithId.js",
-		"/C/Users/alex/oi/src/modules/createNewObjectFromObjectId.js"
+		"/C/Users/alex/oi/src/modules/createNewObjectFromHierarchy.js"
 	],
 	"find":
 	{
@@ -766,6 +758,17 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"js-geometryMap",
+			"saveObjectValue",
+			"showTab",
+			"mapMenu",
+			"formButtonToolbar",
+			"btn-toolbar",
+			"h121",
+			"data",
+			"swisstopoPixel",
+			"createWmtsLayer",
+			"require('ol')",
 			"mapContent",
 			"map",
 			"addNodeToTree",
@@ -882,18 +885,7 @@
 			"foreignChangedIndex",
 			"TODO",
 			"objectsByTypeIndex",
-			"hierarchiesIndex",
-			"TODO",
-			"signindata:",
-			"new PouchDB",
-			"content",
-			"TODO",
-			"new PouchDB(pouchDbOptions)",
-			"new PouchDB('oi', pouchDbOptions)",
-			"db.login(signindata.name, signindata.password).then(function () {",
-			"initiateNav",
-			"db.login(signindata.name, signindata.password).then(function () {",
-			"signinWithModalSignin"
+			"hierarchiesIndex"
 		],
 		"highlight": false,
 		"in_selection": false,
@@ -901,6 +893,10 @@
 		"regex": false,
 		"replace_history":
 		[
+			"js-geometryField",
+			"toggleTab",
+			"SwisstopoPixelkarteFarbe",
+			"createLayerSwisstopoPixelkarteFarbe",
 			"[Berichte]![ber_ind_erfassung]",
 			"callback",
 			"db",
@@ -1024,11 +1020,7 @@
 			"apflora.ap",
 			"apflora.pop_status_werte",
 			"apflora.ap_umsetzung_werte",
-			"apflora.ap_bearbstand_werte",
-			"apflora.tpop",
-			"apflora.pop",
-			"apflora.ap",
-			"apflora.tpopkontr"
+			"apflora.ap_bearbstand_werte"
 		],
 		"reverse": false,
 		"show_context": true,
@@ -1039,7 +1031,7 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 7,
 			"sheets":
 			[
 				{
@@ -1067,7 +1059,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 10,
+					"stack_index": 9,
 					"type": "text"
 				},
 				{
@@ -1076,15 +1068,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2000,
+						"buffer_size": 2627,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1778,
-								1778
+								2493,
+								2493
 							]
 						],
 						"settings":
@@ -1094,10 +1086,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 3064.0,
+						"translation.y": 3006.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 8,
 					"type": "text"
 				},
 				{
@@ -1113,8 +1105,8 @@
 						"selection":
 						[
 							[
-								3419,
-								3419
+								2057,
+								2057
 							]
 						],
 						"settings":
@@ -1124,10 +1116,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1131.0,
+						"translation.y": 490.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 7,
 					"type": "text"
 				},
 				{
@@ -1136,43 +1128,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 552,
+						"buffer_size": 1780,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								338,
-								338
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "src/modules/showTab.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 770,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								716,
-								716
+								377,
+								413
 							]
 						],
 						"settings":
@@ -1182,55 +1146,27 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 174.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 5,
 					"type": "text"
 				},
 				{
-					"buffer": 5,
+					"buffer": 4,
 					"file": "src/modules/map/createLayers.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 371,
+						"buffer_size": 655,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								368,
-								368
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 4,
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "src/modules/event/onChangeElement.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 407,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								369,
-								369
+								578,
+								586
 							]
 						],
 						"settings":
@@ -1245,20 +1181,20 @@
 					"type": "text"
 				},
 				{
-					"buffer": 7,
-					"file": "src/modules/form/saveObjectValue.js",
+					"buffer": 5,
+					"file": "src/modules/map/createLayerSwisstopoPixelkarteFarbe.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2933,
+						"buffer_size": 1394,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1663,
-								1663
+								506,
+								506
 							]
 						],
 						"settings":
@@ -1268,27 +1204,85 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1131.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "src/modules/map/addMousePositionControl.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 682,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								446,
+								446
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "src/modules/map/createLayerForData.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2181,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								928,
+								928
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 667.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
 					"buffer": 8,
-					"file": "src/modules/syncWithRemoteDb.js",
+					"file": "/C/Users/alex/oi_testdata/index.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1224,
+						"buffer_size": 19449,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1017,
-								1017
+								3967,
+								3967
 							]
 						],
 						"settings":
@@ -1298,27 +1292,27 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 58.0,
+						"translation.y": 3996.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 7,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
-					"buffer": 9,
-					"file": "src/modules/handleExternalObjectChanges.js",
+					"buffer": 8,
+					"file": "/C/Users/alex/oi_testdata/index.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3555,
+						"buffer_size": 19449,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								3504,
-								3504
+								8055,
+								8055
 							]
 						],
 						"settings":
@@ -1328,40 +1322,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1846.0,
+						"translation.y": 7260.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 8,
-					"type": "text"
-				},
-				{
-					"buffer": 10,
-					"file": "src/modules/createNewObject.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2985,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2272,
-								2281
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 870.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 9,
+					"stack_index": 2,
 					"type": "text"
 				}
 			]

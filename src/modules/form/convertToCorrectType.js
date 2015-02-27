@@ -12,9 +12,5 @@ module.exports = function (feldWert) {
     if (type === 'number')  { return parseInt(feldWert, 10); }
     if (type === 'object')  { return JSON.parse(feldWert); }
 
-    console.log('feldWert: ', feldWert);
-    console.log('type: ', type);
-    console.log('parse feldWert: ', JSON.parse(feldWert));
-
     return feldWert;
 };

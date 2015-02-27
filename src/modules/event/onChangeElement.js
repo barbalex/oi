@@ -9,8 +9,5 @@ module.exports = function () {
     var value  = getValueAfterChange(this),
         object = $(this).data('object');
 
-    console.log('onChangeElement: value: ', value);
-    console.log('onChangeElement: typeof value: ', typeof value);
-
     saveObjectValue(object, value);
 };
