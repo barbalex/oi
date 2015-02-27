@@ -5,7 +5,8 @@ var $                    = require('jquery'),
     jstree               = require('jstree'),
     generateDataForTree  = require('./generateDataForTree'),
     initiateForm         = require('../form/initiateForm'),
-    treeContextmenuItems = require('./treeContextmenuItems');
+    treeContextmenuItems = require('./treeContextmenuItems'),
+    refreshScrollbar     = require('../refreshScrollbar');
 
 module.exports = function () {
     var treeData    = generateDataForTree(),
@@ -29,8 +30,7 @@ module.exports = function () {
             }
         }
     }).on('ready.jstree', function () {
-        // scrollbars aktualisieren
-        $('.scrollbar').perfectScrollbar('update');
+        refreshScrollbar();
     }).on('create_node.jstree', function (e, data) {
         if (!window.oi.dontSelectNode) {
             $navContent.jstree().select_node(data.node);

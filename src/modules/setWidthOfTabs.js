@@ -3,7 +3,8 @@
 
 var _                    = require('underscore'),
     $                    = require('jquery'),
-    positionFormBtngroup = require('./form/positionFormBtngroup');
+    positionFormBtngroup = require('./form/positionFormBtngroup'),
+    refreshMap           = require('./map/refreshMap');
 
 module.exports = function () {
     var widths         = [],
@@ -39,6 +40,6 @@ module.exports = function () {
         $('#' + widthObject.id).css('width', widthAfter);
     });
 
-    window.oi.olMap.map.updateSize();
+    refreshMap();
     positionFormBtngroup();
 };

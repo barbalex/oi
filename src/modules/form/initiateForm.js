@@ -15,7 +15,8 @@ var $                     = require('jquery'),
     positionFormBtngroup  = require('./positionFormBtngroup'),
     getObject             = require('../getObject'),
     getHierarchy          = require('../getHierarchy'),
-    resizeTextareas       = require('./resizeTextareas');
+    resizeTextareas       = require('./resizeTextareas'),
+    refreshScrollbar      = require('../refreshScrollbar');
 
 module.exports = function (id, type) {
     var html         = '',
@@ -100,9 +101,7 @@ module.exports = function (id, type) {
 
                 positionFormBtngroup();
                 resizeTextareas();
-
-                // scrollbars aktualisieren
-                $('.scrollbar').perfectScrollbar('update');
+                refreshScrollbar();
             } else {
                 console.log('error: found hierarchy for object with id ', id);
             }

@@ -8,7 +8,8 @@ var $                    = require('jquery'),
     toggleTab            = require('./toggleTab'),
     positionFormBtngroup = require('./form/positionFormBtngroup'),
     resizeTextareas      = require('./form/resizeTextareas'),
-    refreshMap           = require('./map/refreshMap');
+    refreshMap           = require('./map/refreshMap'),
+    refreshScrollbar     = require('./refreshScrollbar');
 
 module.exports = function () {
     var zaehler;
@@ -72,7 +73,7 @@ module.exports = function () {
                 if (zaehler === window.oi.resizeWindowZaehler) {
                     // in den letzten 400 Millisekunden hat sich nichts geändert > reagieren
                     setWidthOfTabs();
-                    $('.scrollbar').perfectScrollbar('update');
+                    refreshScrollbar();
                     window.oi.resizeWindowZaehler = 0;
                 }
             }, 500);

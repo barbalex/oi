@@ -38119,7 +38119,7 @@ module.exports = function ($node) {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./askYesNoWithModal":152,"./deleteObjectFromModel":158,"./getObject":180,"./tellWithModal":214,"dateformat":8,"pouchdb":106,"underscore":150}],158:[function(require,module,exports){
+},{"./askYesNoWithModal":152,"./deleteObjectFromModel":158,"./getObject":180,"./tellWithModal":215,"dateformat":8,"pouchdb":106,"underscore":150}],158:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -38210,7 +38210,7 @@ module.exports = function () {
     createLayerForData(object.hId, object.label);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../map/createLayerForData":188,"../setWidthOfTabs":209,"../toggleTab":215}],163:[function(require,module,exports){
+},{"../map/createLayerForData":188,"../setWidthOfTabs":210,"../toggleTab":216}],163:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -38553,7 +38553,8 @@ var $                     = (typeof window !== "undefined" ? window.$ : typeof g
     positionFormBtngroup  = require('./positionFormBtngroup'),
     getObject             = require('../getObject'),
     getHierarchy          = require('../getHierarchy'),
-    resizeTextareas       = require('./resizeTextareas');
+    resizeTextareas       = require('./resizeTextareas'),
+    refreshScrollbar      = require('../refreshScrollbar');
 
 module.exports = function (id, type) {
     var html         = '',
@@ -38638,9 +38639,7 @@ module.exports = function (id, type) {
 
                 positionFormBtngroup();
                 resizeTextareas();
-
-                // scrollbars aktualisieren
-                $('.scrollbar').perfectScrollbar('update');
+                refreshScrollbar();
             } else {
                 console.log('error: found hierarchy for object with id ', id);
             }
@@ -38656,7 +38655,7 @@ module.exports = function (id, type) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../../templates/checkbox":217,"../../../templates/checkboxGroup":218,"../../../templates/formButtonToolbar":219,"../../../templates/geoJson":220,"../../../templates/input":221,"../../../templates/optionGroup":222,"../../../templates/select":223,"../../../templates/textarea":224,"../getHierarchy":179,"../getObject":180,"./addCheckedToValueList":169,"./positionFormBtngroup":175,"./resizeTextareas":176,"underscore":150}],174:[function(require,module,exports){
+},{"../../../templates/checkbox":218,"../../../templates/checkboxGroup":219,"../../../templates/formButtonToolbar":220,"../../../templates/geoJson":221,"../../../templates/input":222,"../../../templates/optionGroup":223,"../../../templates/select":224,"../../../templates/textarea":225,"../getHierarchy":179,"../getObject":180,"../refreshScrollbar":209,"./addCheckedToValueList":169,"./positionFormBtngroup":175,"./resizeTextareas":176,"underscore":150}],174:[function(require,module,exports){
 // Hilfsfunktion, die typeof ersetzt und ergänzt
 // typeof gibt bei input-Feldern immer String zurück!
 
@@ -38851,7 +38850,7 @@ module.exports = function (passedObject, value) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../getObject":180,"../nav/getLabelForObject":200,"../syncWithRemoteDb":211,"dateformat":8,"pouchdb":106,"underscore":150}],179:[function(require,module,exports){
+},{"../getObject":180,"../nav/getLabelForObject":200,"../syncWithRemoteDb":212,"dateformat":8,"pouchdb":106,"underscore":150}],179:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -39089,7 +39088,7 @@ module.exports = function () {
         return JSON.stringify(context);
     });
 };
-},{"./initiateResizables":186,"./nav/getLogin":201,"./setupEvents":210,"handlebars":24}],186:[function(require,module,exports){
+},{"./initiateResizables":186,"./nav/getLogin":201,"./setupEvents":211,"handlebars":24}],186:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -39101,7 +39100,8 @@ var $                    = (typeof window !== "undefined" ? window.$ : typeof gl
     toggleTab            = require('./toggleTab'),
     positionFormBtngroup = require('./form/positionFormBtngroup'),
     resizeTextareas      = require('./form/resizeTextareas'),
-    refreshMap           = require('./map/refreshMap');
+    refreshMap           = require('./map/refreshMap'),
+    refreshScrollbar     = require('./refreshScrollbar');
 
 module.exports = function () {
     var zaehler;
@@ -39165,7 +39165,7 @@ module.exports = function () {
                 if (zaehler === window.oi.resizeWindowZaehler) {
                     // in den letzten 400 Millisekunden hat sich nichts geändert > reagieren
                     setWidthOfTabs();
-                    $('.scrollbar').perfectScrollbar('update');
+                    refreshScrollbar();
                     window.oi.resizeWindowZaehler = 0;
                 }
             }, 500);
@@ -39176,7 +39176,7 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./alsoResizeReverse":151,"./form/positionFormBtngroup":175,"./form/resizeTextareas":176,"./map/refreshMap":192,"./setWidthOfTabs":209,"./toggleTab":215,"underscore":150}],187:[function(require,module,exports){
+},{"./alsoResizeReverse":151,"./form/positionFormBtngroup":175,"./form/resizeTextareas":176,"./map/refreshMap":192,"./refreshScrollbar":209,"./setWidthOfTabs":210,"./toggleTab":216,"underscore":150}],187:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -39426,7 +39426,8 @@ var $                    = (typeof window !== "undefined" ? window.$ : typeof gl
     jstree               = require('jstree'),
     generateDataForTree  = require('./generateDataForTree'),
     initiateForm         = require('../form/initiateForm'),
-    treeContextmenuItems = require('./treeContextmenuItems');
+    treeContextmenuItems = require('./treeContextmenuItems'),
+    refreshScrollbar     = require('../refreshScrollbar');
 
 module.exports = function () {
     var treeData    = generateDataForTree(),
@@ -39450,8 +39451,7 @@ module.exports = function () {
             }
         }
     }).on('ready.jstree', function () {
-        // scrollbars aktualisieren
-        $('.scrollbar').perfectScrollbar('update');
+        refreshScrollbar();
     }).on('create_node.jstree', function (e, data) {
         if (!window.oi.dontSelectNode) {
             $navContent.jstree().select_node(data.node);
@@ -39468,7 +39468,7 @@ module.exports = function () {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../form/initiateForm":173,"./generateDataForTree":198,"./treeContextmenuItems":208,"jstree":26}],196:[function(require,module,exports){
+},{"../form/initiateForm":173,"../refreshScrollbar":209,"./generateDataForTree":198,"./treeContextmenuItems":208,"jstree":26}],196:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -39739,7 +39739,7 @@ module.exports = function (projectNames) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../syncWithRemoteDbs":212,"../syncWithRemoteUserDb":213,"./createDatabaseId":194,"./createTree":195,"./getModelData":202,"async":2,"pouchdb":106,"pouchdb-all-dbs":28,"underscore":150}],204:[function(require,module,exports){
+},{"../syncWithRemoteDbs":213,"../syncWithRemoteUserDb":214,"./createDatabaseId":194,"./createTree":195,"./getModelData":202,"async":2,"pouchdb":106,"pouchdb-all-dbs":28,"underscore":150}],204:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -39799,7 +39799,7 @@ module.exports = function (signindata) {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../configuration":153,"../tellWithModal":214,"./initiateNav":203,"pouchdb":106}],206:[function(require,module,exports){
+},{"../configuration":153,"../tellWithModal":215,"./initiateNav":203,"pouchdb":106}],206:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -39862,7 +39862,7 @@ module.exports = function () {
     signIn(signindata);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../tellWithModal":214,"../validateEmail":216,"./signIn":205,"./signUp":207}],207:[function(require,module,exports){
+},{"../tellWithModal":215,"../validateEmail":217,"./signIn":205,"./signUp":207}],207:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -39892,7 +39892,7 @@ module.exports = function (signindata) {
         tellWithModal('Das Konto konnte nicht erstellt werden', 'Die Datenbank meldete: ' + error);
     });
 };
-},{"../configuration":153,"../tellWithModal":214,"./signIn":205,"pouchdb":106}],208:[function(require,module,exports){
+},{"../configuration":153,"../tellWithModal":215,"./signIn":205,"pouchdb":106}],208:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -39930,12 +39930,24 @@ module.exports = function ($node) {
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../createNewObjectFromHierarchy":155,"../createNewObjectFromObject":156,"../deleteObjectAndChildren":157}],209:[function(require,module,exports){
 (function (global){
+/*jslint node: true, browser: true, nomen: true, todo: true */
+'use strict';
+
+var $ = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null);
+
+module.exports = function () {
+    $('.scrollbar').perfectScrollbar('update');
+};
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],210:[function(require,module,exports){
+(function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus*/
 'use strict';
 
 var _                    = require('underscore'),
     $                    = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
-    positionFormBtngroup = require('./form/positionFormBtngroup');
+    positionFormBtngroup = require('./form/positionFormBtngroup'),
+    refreshMap           = require('./map/refreshMap');
 
 module.exports = function () {
     var widths         = [],
@@ -39971,12 +39983,12 @@ module.exports = function () {
         $('#' + widthObject.id).css('width', widthAfter);
     });
 
-    window.oi.olMap.map.updateSize();
+    refreshMap();
     positionFormBtngroup();
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./form/positionFormBtngroup":175,"underscore":150}],210:[function(require,module,exports){
+},{"./form/positionFormBtngroup":175,"./map/refreshMap":192,"underscore":150}],211:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -40022,7 +40034,7 @@ module.exports = function () {
         .on('change',      'input, textarea, select',        onChangeElement);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./event/onChangeElement":159,"./event/onClickFormDelete":160,"./event/onClickFormNew":161,"./event/onClickGeometryField":162,"./event/onClickNavFormSort":163,"./event/onClickNavbarBrand":164,"./event/onClickNavbarCollapse":165,"./event/onClickSigninWithModalSignupCheckbox":166,"./event/onKeypressSigninWithModal":167,"./event/onScrollTab":168,"./form/fitTextareaToContent":171,"./nav/signInOrUp":206}],211:[function(require,module,exports){
+},{"./event/onChangeElement":159,"./event/onClickFormDelete":160,"./event/onClickFormNew":161,"./event/onClickGeometryField":162,"./event/onClickNavFormSort":163,"./event/onClickNavbarBrand":164,"./event/onClickNavbarCollapse":165,"./event/onClickSigninWithModalSignupCheckbox":166,"./event/onKeypressSigninWithModal":167,"./event/onScrollTab":168,"./form/fitTextareaToContent":171,"./nav/signInOrUp":206}],212:[function(require,module,exports){
 /**
  * synchronisiert die Daten aus einer CouchDB in PouchDB
  */
@@ -40067,7 +40079,7 @@ module.exports = function (couchName) {
     }
 };
 
-},{"./configuration":153,"./handleChanges":182,"pouchdb":106}],212:[function(require,module,exports){
+},{"./configuration":153,"./handleChanges":182,"pouchdb":106}],213:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -40080,7 +40092,7 @@ module.exports = function (projectDbs) {
     });
 };
 
-},{"./syncWithRemoteDb":211,"underscore":150}],213:[function(require,module,exports){
+},{"./syncWithRemoteDb":212,"underscore":150}],214:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -40098,7 +40110,7 @@ module.exports = function () {
         include_docs: true
     }).on('change', handleUsersChanges);
 };
-},{"./configuration":153,"./handleUsersChanges":184,"pouchdb":106}],214:[function(require,module,exports){
+},{"./configuration":153,"./handleUsersChanges":184,"pouchdb":106}],215:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -40121,7 +40133,7 @@ module.exports = function (title, text) {
     $modal.modal(options);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],215:[function(require,module,exports){
+},{}],216:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -40150,7 +40162,7 @@ module.exports = function (tab, show) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./map/initiateMap":191}],216:[function(require,module,exports){
+},{"./map/initiateMap":191}],217:[function(require,module,exports){
 /*
  * prüft, ob ein String eine email-Adressen sein könnte
  * Quelle: http://stackoverflow.com/questions/46155/validate-email-address-in-javascript
@@ -40163,7 +40175,7 @@ module.exports = function (string) {
     var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(string);
 };
-},{}],217:[function(require,module,exports){
+},{}],218:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, helper, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing, functionType="function";
   return "<div class=\"form-group js-form-group\">\r\n    <label class=\"control-label\">"
@@ -40177,7 +40189,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(((helper = (helper = helpers.checked || (depth0 != null ? depth0.checked : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"checked","hash":{},"data":data}) : helper)))
     + ">\r\n            </label>\r\n        </div>\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":24}],218:[function(require,module,exports){
+},{"handlebars":24}],219:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,depths) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "            <div class=\"checkbox\">\r\n                <label>\r\n                    <input type=\"checkbox\" id=\""
@@ -40204,11 +40216,11 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "    </div>\r\n</div>";
 },"useData":true,"useDepths":true});
-},{"handlebars":24}],219:[function(require,module,exports){
+},{"handlebars":24}],220:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   return "<div class=\"btn-toolbar\" role=\"toolbar\" aria-label=\"Daten Toolbar\">\r\n    <div class=\"btn-group pull-right\" role=\"group\" aria-label=\"Daten Button group\">\r\n        <button id=\"formNew\" class=\"btn btn-default\">neu</button>\r\n        <button id=\"formDelete\" class=\"btn btn-default\">löschen</button>\r\n    </div>\r\n</div>";
   },"useData":true});
-},{"handlebars":24}],220:[function(require,module,exports){
+},{"handlebars":24}],221:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "<div class=\"form-group js-form-group\">\r\n    <label for=\""
@@ -40225,7 +40237,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.value : stack1), depth0))
     + "</textarea>\r\n    <button class=\"js-geometryField\" class=\"btn btn-default\">Karte</button>\r\n</div>";
 },"useData":true});
-},{"handlebars":24}],221:[function(require,module,exports){
+},{"handlebars":24}],222:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "<div class=\"form-group js-form-group\">\r\n    <label for=\""
@@ -40244,7 +40256,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.value : stack1), depth0))
     + "\">\r\n</div>";
 },"useData":true});
-},{"handlebars":24}],222:[function(require,module,exports){
+},{"handlebars":24}],223:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,depths) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "            <div class=\"radio\">\r\n                <label>\r\n                    <input type=\"radio\" name=\""
@@ -40271,7 +40283,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "    </div>\r\n</div>";
 },"useData":true,"useDepths":true});
-},{"handlebars":24}],223:[function(require,module,exports){
+},{"handlebars":24}],224:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, buffer = "                <option value=";
   stack1 = lambda((depth0 != null ? depth0.value : depth0), depth0);
@@ -40294,7 +40306,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "        </select>\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":24}],224:[function(require,module,exports){
+},{"handlebars":24}],225:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "<div class=\"form-group js-form-group\">\r\n    <label for=\""
