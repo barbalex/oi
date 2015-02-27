@@ -171,7 +171,27 @@ body {
  */
 
 #utils {
-  background-color: #FFBCBC;
+  background-color: #AD5800;
   width: calc(10vw - 1px);
   display: none;
+}
+
+#utils .panel-group .panel + .panel {
+  margin-top: 0;
+}
+
+#utils .panel-group .panel {
+  border-radius: 0;
+}
+
+#utils .panel-title {
+  font-size: 14px;
+}
+
+#utils .panel-heading {
+  padding: 7px 5px;
+}
+
+#utils .panel-collapse {
+  padding: 0 5px;
 }

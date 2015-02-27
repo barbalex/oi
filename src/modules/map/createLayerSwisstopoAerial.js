@@ -34,7 +34,8 @@ module.exports = function () {
     srcWmtsS3Swissimage = wmtsSource(layerConfig.serverLayerName, layerConfig);
 
     wmtsS3Swissimage = new ol.layer.Tile({
-        source: srcWmtsS3Swissimage
+        source: srcWmtsS3Swissimage,
+        group: 'background'
     });
 
     return wmtsS3Swissimage;

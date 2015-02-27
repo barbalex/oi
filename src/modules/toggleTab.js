@@ -18,6 +18,7 @@ module.exports = function (tab, show) {
                 $(this).show();
                 if (tab === 'map') {
                     initiateMap();
+                    $('#utils').show();
                 }
             }
         }

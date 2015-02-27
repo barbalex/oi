@@ -38655,7 +38655,7 @@ module.exports = function (id, type) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../../templates/checkbox":221,"../../../templates/checkboxGroup":222,"../../../templates/formButtonToolbar":223,"../../../templates/geoJson":224,"../../../templates/input":225,"../../../templates/optionGroup":226,"../../../templates/select":227,"../../../templates/textarea":228,"../getHierarchy":179,"../getObject":180,"../refreshScrollbar":212,"./addCheckedToValueList":169,"./positionFormBtngroup":175,"./resizeTextareas":176,"underscore":150}],174:[function(require,module,exports){
+},{"../../../templates/checkbox":221,"../../../templates/checkboxGroup":222,"../../../templates/formButtonToolbar":223,"../../../templates/geoJson":224,"../../../templates/input":225,"../../../templates/optionGroup":227,"../../../templates/select":228,"../../../templates/textarea":229,"../getHierarchy":179,"../getObject":180,"../refreshScrollbar":212,"./addCheckedToValueList":169,"./positionFormBtngroup":175,"./resizeTextareas":176,"underscore":150}],174:[function(require,module,exports){
 // Hilfsfunktion, die typeof ersetzt und ergänzt
 // typeof gibt bei input-Feldern immer String zurück!
 
@@ -39193,8 +39193,8 @@ module.exports = function () {
         source: new ol.source.MapQuest({layer: 'sat'})
     });
 
-    //layers.push(createLayerSwisstopoPixelFarbe());
     window.oi.olMap.map.addLayer(createLayerSwisstopoPixelFarbe());
+    //window.oi.olMap.map.addLayer(createLayerSwisstopoAerial());
 };
 },{"./createLayerSwisstopoAerial":189,"./createLayerSwisstopoPixelFarbe":190,"openlayers":27,"underscore":150}],188:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
@@ -39292,7 +39292,8 @@ module.exports = function () {
     srcWmtsS3Swissimage = wmtsSource(layerConfig.serverLayerName, layerConfig);
 
     wmtsS3Swissimage = new ol.layer.Tile({
-        source: srcWmtsS3Swissimage
+        source: srcWmtsS3Swissimage,
+        group: 'background'
     });
 
     return wmtsS3Swissimage;
@@ -39353,7 +39354,8 @@ var ol                       = require('openlayers'),
     proj4                    = (typeof window !== "undefined" ? window.proj4 : typeof global !== "undefined" ? global.proj4 : null),
     addLayers                = require('./addLayers'),
     mousePositionControl     = require('./mousePositionControl'),
-    instantiateLayersControl = require('./instantiateLayersControl');
+    instantiateLayersControl = require('./instantiateLayersControl'),
+    layertool                = require('../../../templates/layertool');
 
 module.exports = function () {
     // only build up map if not yet done
@@ -39432,10 +39434,13 @@ module.exports = function () {
         });
 
         addLayers();
+
+        // try Layertool
+        $('#utilsLayertool').html(layertool());
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./addLayers":187,"./instantiateLayersControl":192,"./mousePositionControl":193,"openlayers":27}],192:[function(require,module,exports){
+},{"../../../templates/layertool":226,"./addLayers":187,"./instantiateLayersControl":192,"./mousePositionControl":193,"openlayers":27}],192:[function(require,module,exports){
 (function (global){
 /**
  * Quelle: https://raw.githubusercontent.com/boundlessgeo/suite/master/sdk/src/main/resources/client/ol3-common/app/LayersControl.js
@@ -40473,6 +40478,7 @@ module.exports = function (tab, show) {
                 $(this).show();
                 if (tab === 'map') {
                     initiateMap();
+                    $('#utils').show();
                 }
             }
         }
@@ -40575,6 +40581,10 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + "\">\r\n</div>";
 },"useData":true});
 },{"handlebars":24}],226:[function(require,module,exports){
+var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  return "<div class=\"panel-group\" id=\"accordion\" role=\"tablist\" aria-multiselectable=\"true\">\r\n  <div class=\"panel panel-default\">\r\n    <div class=\"panel-heading\" role=\"tab\" id=\"headingOne\">\r\n      <h4 class=\"panel-title\">\r\n        <a data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#collapseOne\" aria-expanded=\"true\" aria-controls=\"collapseOne\">\r\n          Hintergrund\r\n        </a>\r\n      </h4>\r\n    </div>\r\n    <div id=\"collapseOne\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingOne\">\r\n      <div class=\"list-group\">\r\n        Hier kommt eine Hintergrundkarte\r\n      </div>\r\n    </div>\r\n  </div>\r\n  <div class=\"panel panel-default\">\r\n    <div class=\"panel-heading\" role=\"tab\" id=\"headingTwo\">\r\n      <h4 class=\"panel-title\">\r\n        <a class=\"collapsed\" data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#collapseTwo\" aria-expanded=\"false\" aria-controls=\"collapseTwo\">\r\n          Thematische Layer\r\n        </a>\r\n      </h4>\r\n    </div>\r\n    <div id=\"collapseTwo\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingTwo\">\r\n      <div class=\"list-group\">\r\n        Hier kommt ein thematisches Layer\r\n      </div>\r\n    </div>\r\n  </div>\r\n  <div class=\"panel panel-default\">\r\n    <div class=\"panel-heading\" role=\"tab\" id=\"headingThree\">\r\n      <h4 class=\"panel-title\">\r\n        <a class=\"collapsed\" data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#collapseThree\" aria-expanded=\"false\" aria-controls=\"collapseThree\">\r\n          Projekt Layer\r\n        </a>\r\n      </h4>\r\n    </div>\r\n    <div id=\"collapseThree\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingThree\">\r\n      <div class=\"list-group\">\r\n        Das ist ein Projekt Layer\r\n      </div>\r\n      <div class=\"list-group\">\r\n        ...und noch eines\r\n      </div>\r\n    </div>\r\n  </div>\r\n</div>";
+  },"useData":true});
+},{"handlebars":24}],227:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,depths) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "            <div class=\"radio\">\r\n                <label>\r\n                    <input type=\"radio\" name=\""
@@ -40601,7 +40611,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "    </div>\r\n</div>";
 },"useData":true,"useDepths":true});
-},{"handlebars":24}],227:[function(require,module,exports){
+},{"handlebars":24}],228:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, buffer = "                <option value=";
   stack1 = lambda((depth0 != null ? depth0.value : depth0), depth0);
@@ -40624,7 +40634,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "        </select>\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":24}],228:[function(require,module,exports){
+},{"handlebars":24}],229:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "<div class=\"form-group js-form-group\">\r\n    <label for=\""

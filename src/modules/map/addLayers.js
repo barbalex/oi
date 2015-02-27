@@ -14,6 +14,6 @@ module.exports = function () {
         source: new ol.source.MapQuest({layer: 'sat'})
     });
 
-    //layers.push(createLayerSwisstopoPixelFarbe());
     window.oi.olMap.map.addLayer(createLayerSwisstopoPixelFarbe());
+    //window.oi.olMap.map.addLayer(createLayerSwisstopoAerial());
 };

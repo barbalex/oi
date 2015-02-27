@@ -5,7 +5,8 @@ var ol                       = require('openlayers'),
     proj4                    = require('proj4'),
     addLayers                = require('./addLayers'),
     mousePositionControl     = require('./mousePositionControl'),
-    instantiateLayersControl = require('./instantiateLayersControl');
+    instantiateLayersControl = require('./instantiateLayersControl'),
+    layertool                = require('../../../templates/layertool');
 
 module.exports = function () {
     // only build up map if not yet done
@@ -84,5 +85,8 @@ module.exports = function () {
         });
 
         addLayers();
+
+        // try Layertool
+        $('#utilsLayertool').html(layertool());
     }
 };
