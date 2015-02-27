@@ -49,7 +49,8 @@ module.exports = function (hId, label) {
                     width: 4
                 })
             })
-        })
+        }),
+        group: 'project'
     });
 
     window.oi.olMap.map.addLayer(vectorLayer);

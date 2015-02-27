@@ -1,21 +1,20 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var ol                   = require('openlayers'),
-    proj4                = require('proj4'),
-    createLayers         = require('./createLayers'),
-    mousePositionControl = require('./mousePositionControl');
+var ol                       = require('openlayers'),
+    proj4                    = require('proj4'),
+    addLayers                = require('./addLayers'),
+    mousePositionControl     = require('./mousePositionControl'),
+    instantiateLayersControl = require('./instantiateLayersControl');
 
 module.exports = function () {
     // only build up map if not yet done
-
-    //center: [684297, 237600],
-    //center: [902568.5270415349, 5969980.338127118],
-    //center: [47.17188, 8.11776],
-    //center: [8.16363, 47.12031],
     if (!window.oi.olMap.map) {
         var projection,
-            RESOLUTIONS;
+            RESOLUTIONS,
+            map,
+            layers,
+            layerControl;
 
         projection = ol.proj.get('EPSG:21781');
         // We have to set the extent!
@@ -26,7 +25,28 @@ module.exports = function () {
             1000, 750, 650, 500, 250, 100, 50, 20, 10, 5, 2.5, 2, 1.5, 1, 0.5, 0.25, 0.1, 0.05
         ];
 
-        window.oi.olMap.map = new ol.Map({
+        instantiateLayersControl();
+
+        //layerControl = new window.oi.olMap.LayersControl();
+        layerControl = new window.oi.olMap.LayersControl({
+            groups: {
+                background: {
+                    title: "Hintergrund",
+                    exclusive: true
+                },
+                project: {
+                    title: "Projekt",
+                    exclusive: false
+                },
+                default: {
+                    title: "Overlays"
+                }
+            }
+        });
+        //layerControl.setMap(map);
+        window.oi.olMap.layerControl = layerControl;
+
+        map = new ol.Map({
             target: 'map',
             logo: false,
             controls: ol.control.defaults({
@@ -37,9 +57,9 @@ module.exports = function () {
                 new ol.control.ScaleLine({
                     units: 'metric'
                 }),
-                mousePositionControl()
+                mousePositionControl(),
+                layerControl
             ]),
-            layers: createLayers(),
             view: new ol.View({
                 projection: projection,
                 center: [2701719, 1173560],
@@ -47,5 +67,22 @@ module.exports = function () {
                 resolutions: RESOLUTIONS
             })
         });
+
+        // make map global
+        window.oi.olMap.map = map;
+
+        // start listening for changes on the layers
+        // TODO: change layertool
+        layers = map.getLayers();
+        layers.on('add', function (layer) {
+            console.log('layer added: ', layer);
+            window.oi.olMap.layerControl.setMap(window.oi.olMap.map);
+        });
+        layers.on('remove', function (layer) {
+            console.log('layer removed: ', layer);
+            window.oi.olMap.layerControl.setMap(window.oi.olMap.map);
+        });
+
+        addLayers();
     }
 };

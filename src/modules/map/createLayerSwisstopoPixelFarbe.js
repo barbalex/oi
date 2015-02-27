@@ -35,7 +35,8 @@ module.exports = function () {
     srcWmtsS3PixelFarbe = wmtsSource(layerConfig.serverLayerName, layerConfig);
 
     wmtsS3PixelFarbe = new ol.layer.Tile({
-        source: srcWmtsS3PixelFarbe
+        source: srcWmtsS3PixelFarbe,
+        group: 'background'
     });
 
     return wmtsS3PixelFarbe;

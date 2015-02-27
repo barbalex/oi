@@ -157,6 +157,15 @@ body {
   border-radius: 0 4px 0;
 }
 
+#map .layers-control {
+  position: absolute;
+  top:   15px;
+  right: 10px;
+  background-color: rgba(0,60,136,.5);
+  border-radius: 4px;
+  color: #eee;
+}
+
 /* 
  * UTILS 
  */
