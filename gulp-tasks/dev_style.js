@@ -11,6 +11,7 @@ gulp.task('dev_style', function () {
         './style/bootstrap.css',
         './style/font-awesome.css',
         './style/perfect-scrollbar.css',
+        './style/ol.css',
         //'./style/jstree.css',/*  funktioniert nur, wenn direkt in index.html eingebunden*/
         './style/oi.css'
     ])

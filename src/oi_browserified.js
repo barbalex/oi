@@ -38210,7 +38210,7 @@ module.exports = function () {
     createLayerForData(object.hId, object.label);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../map/createLayerForData":188,"../setWidthOfTabs":212,"../toggleTab":218}],163:[function(require,module,exports){
+},{"../map/createLayerForData":187,"../setWidthOfTabs":212,"../toggleTab":218}],163:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -39180,22 +39180,6 @@ module.exports = function () {
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var ol = require('openlayers');
-
-module.exports = function () {
-    var mousePositionControl = new ol.control.MousePosition({
-        // This is the format we want the coordinate in
-        // The number argument in createStringXY is the number of decimal places
-        coordinateFormat: ol.coordinate.createStringXY(0),
-        projection: 'EPSG:21781',
-        undefinedHTML: '&nbsp;' // what openlayers will use if the map returns undefined for a map coordinate
-    });
-    window.oi.olMap.map.addControl(mousePositionControl);
-};
-},{"openlayers":27}],188:[function(require,module,exports){
-/*jslint node: true, browser: true, nomen: true, todo: true */
-'use strict';
-
 var _  = require('underscore'),
     ol = require('openlayers');
 
@@ -39249,7 +39233,7 @@ module.exports = function (hId, label) {
 
     window.oi.olMap.map.addLayer(vectorLayer);
 };
-},{"openlayers":27,"underscore":150}],189:[function(require,module,exports){
+},{"openlayers":27,"underscore":150}],188:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -39260,8 +39244,8 @@ var ol         = require('openlayers'),
 
 module.exports = function () {
     var layerConfig,
-        src_wmts_s3_swissimage,
-        wmts_s3_swissimage;
+        srcWmtsS3Swissimage,
+        wmtsS3Swissimage;
 
     layerConfig = {
         attribution:     "swisstopo",
@@ -39284,85 +39268,90 @@ module.exports = function () {
         type: "wmts"
     };
 
-    src_wmts_s3_swissimage = wmtsSource(layerConfig.serverLayerName, layerConfig);
+    srcWmtsS3Swissimage = wmtsSource(layerConfig.serverLayerName, layerConfig);
 
-    wmts_s3_swissimage = new ol.layer.Tile({
-        source: src_wmts_s3_swissimage
+    wmtsS3Swissimage = new ol.layer.Tile({
+        source: srcWmtsS3Swissimage
     });
 
-    return wmts_s3_swissimage;
+    return wmtsS3Swissimage;
+};
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./wmtsSource":194,"openlayers":27}],189:[function(require,module,exports){
+(function (global){
+/*jslint node: true, browser: true, nomen: true, todo: true */
+'use strict';
+
+var ol         = require('openlayers'),
+    proj4      = (typeof window !== "undefined" ? window.proj4 : typeof global !== "undefined" ? global.proj4 : null),
+    wmtsSource = require('./wmtsSource');
+
+module.exports = function () {
+    var layerConfig,
+        srcWmtsS3PixelFarbe,
+        wmtsS3PixelFarbe;
+
+    layerConfig = {
+        attribution:     "swisstopo",
+        format:          "jpeg",
+        serverLayerName: "ch.swisstopo.pixelkarte-farbe",
+        attributionUrl:  "http://www.swisstopo.admin.ch/internet/swisstopo/de/home.html",
+        topics:          "api,luftbilder,swissmaponline",
+        label:           "Landeskarten",
+        timestamps: [
+            "20151231",
+            "20151231",
+            "20140520",
+            "20140106",
+            "20130903",
+            "20130213",
+            "20120809",
+            "20111206",
+            "20111027",
+            "20110401"
+        ],
+        type: "wmts"
+    };
+
+    srcWmtsS3PixelFarbe = wmtsSource(layerConfig.serverLayerName, layerConfig);
+
+    wmtsS3PixelFarbe = new ol.layer.Tile({
+        source: srcWmtsS3PixelFarbe
+    });
+
+    return wmtsS3PixelFarbe;
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./wmtsSource":194,"openlayers":27}],190:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var ol = require('openlayers');
-
-function qualifyURL(url) {
-    var a = document.createElement('a'),
-        returnValue;
-
-    a.href = url;
-    returnValue = a.cloneNode(false).href;
-    // auf localhost korrigieren
-    if (returnValue === 'http://localhost:2000/') {
-        //returnValue = 'http://api3.geo.admin.ch/';
-        //returnValue = 'http://wmts1.geo.admin.ch/';
-        returnValue = 'http://wmts10.geo.admin.ch/';
-    }
-    return returnValue;
-}
-
-module.exports = function (timestamp) {
-    //url: qualifyURL('..') + '1.0.0/ch.swisstopo.pixelkarte-farbe/default/' + timestamp + '/4326/{z}/{x}/{y}.jpeg'
-    //url: qualifyURL('..') + '1.0.0/ch.swisstopo.pixelkarte-farbe/default/' + timestamp + '/21781/{z}/{x}/{y}.jpeg'
-    //url: qualifyURL('..') + '1.0.0/ch.swisstopo.pixelkarte-farbe/default/' + timestamp + '/3857/{z}/{x}/{y}.jpeg'
-    return new ol.layer.Tile({
-        source: new ol.source.OSM({
-            attributions: [
-                new ol.Attribution({
-                    html: '<a target="new" href="http://www.swisstopo.admin.ch/' +
-                        'internet/swisstopo/en/home.html">swisstopo</a>'
-                })
-            ],
-            url: qualifyURL('..') + '1.0.0/ch.swisstopo.pixelkarte-farbe/default/' + timestamp + '/3857/{z}/{x}/{y}.jpeg'
-        })
-    });
-};
-},{"openlayers":27}],191:[function(require,module,exports){
-/*jslint node: true, browser: true, nomen: true, todo: true */
-'use strict';
-
-var _                                   = require('underscore'),
-    ol                                  = require('openlayers'),
-    createLayerSwisstopoPixelkarteFarbe = require('./createLayerSwisstopoPixelkarteFarbe'),
-    createLayerSwisstopoAerial          = require('./createLayerSwisstopoAerial');
+var _                              = require('underscore'),
+    ol                             = require('openlayers'),
+    createLayerSwisstopoPixelFarbe = require('./createLayerSwisstopoPixelFarbe'),
+    createLayerSwisstopoAerial     = require('./createLayerSwisstopoAerial');
 
 module.exports = function () {
     var layers = [],
-        mapQuestSat,
-        SwisstopoPixelkarteFarbe;
+        mapQuestSat;
 
     mapQuestSat = new ol.layer.Tile({
         source: new ol.source.MapQuest({layer: 'sat'})
     });
 
-    SwisstopoPixelkarteFarbe = createLayerSwisstopoPixelkarteFarbe(20140520);
-
-    layers.push(createLayerSwisstopoAerial());
+    layers.push(createLayerSwisstopoPixelFarbe());
 
     return layers;
 };
-},{"./createLayerSwisstopoAerial":189,"./createLayerSwisstopoPixelkarteFarbe":190,"openlayers":27,"underscore":150}],192:[function(require,module,exports){
+},{"./createLayerSwisstopoAerial":188,"./createLayerSwisstopoPixelFarbe":189,"openlayers":27,"underscore":150}],191:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var ol                      = require('openlayers'),
-    proj4                   = (typeof window !== "undefined" ? window.proj4 : typeof global !== "undefined" ? global.proj4 : null),
-    createLayers            = require('./createLayers'),
-    addMousePositionControl = require('./addMousePositionControl');
+var ol                   = require('openlayers'),
+    proj4                = (typeof window !== "undefined" ? window.proj4 : typeof global !== "undefined" ? global.proj4 : null),
+    createLayers         = require('./createLayers'),
+    mousePositionControl = require('./mousePositionControl');
 
 module.exports = function () {
     proj4.defs("EPSG:21781", "+proj=somerc +lat_0=46.95240555555556 +lon_0=7.439583333333333 +k_0=1 +x_0=600000 +y_0=200000 +ellps=bessel +towgs84=674.4,15.1,405.3,0,0,0,0 +units=m +no_defs");
@@ -39375,16 +39364,12 @@ module.exports = function () {
     //center: [8.16363, 47.12031],
     if (!window.oi.olMap.map) {
         var projection,
-            extent,
             RESOLUTIONS;
 
         projection = ol.proj.get('EPSG:21781');
-
         // We have to set the extent!
         projection.setExtent([2420000, 130000, 2900000, 1350000]);
         //projection.setExtent([485869.5728, 76443.1884, 837076.5648, 299941.7864]);
-        //extent = [2420000, 130000, 2900000, 1350000];
-        extent = [420000, 30000, 900000, 350000];
         RESOLUTIONS = [
             4000, 3750, 3500, 3250, 3000, 2750, 2500, 2250, 2000, 1750, 1500, 1250,
             1000, 750, 650, 500, 250, 100, 50, 20, 10, 5, 2.5, 2, 1.5, 1, 0.5, 0.25, 0.1, 0.05
@@ -39397,23 +39382,47 @@ module.exports = function () {
                 attributionOptions: {
                     collapsible: false
                 }
-            }),
+            }).extend([
+                new ol.control.ScaleLine({
+                    units: 'metric'
+                }),
+                mousePositionControl()
+            ]),
             layers: createLayers(),
             view: new ol.View({
                 projection: projection,
-                //maxZoom: 17,
                 center: [2701719, 1173560],
-                zoom: 17,
-                //minZoom: 2,
-                extent: extent,
+                zoom: 16,
                 resolutions: RESOLUTIONS
             })
         });
-        addMousePositionControl();
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./addMousePositionControl":187,"./createLayers":191,"openlayers":27}],193:[function(require,module,exports){
+},{"./createLayers":190,"./mousePositionControl":192,"openlayers":27}],192:[function(require,module,exports){
+/*jslint node: true, browser: true, nomen: true, todo: true */
+'use strict';
+
+var ol = require('openlayers');
+
+module.exports = function () {
+    var projection,
+        mousePositionControl;
+
+    projection = ol.proj.get('EPSG:21781');
+    // We have to set the extent!
+    projection.setExtent([2420000, 130000, 2900000, 1350000]);
+
+    mousePositionControl = new ol.control.MousePosition({
+        // This is the format we want the coordinate in
+        // The number argument in createStringXY is the number of decimal places
+        coordinateFormat: ol.coordinate.createStringXY(0),
+        projection: projection,
+        undefinedHTML: '&nbsp;' // what openlayers will use if the map returns undefined for a map coordinate
+    });
+    return mousePositionControl;
+};
+},{"openlayers":27}],193:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -40314,7 +40323,7 @@ module.exports = function (tab, show) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./map/initiateMap":192}],219:[function(require,module,exports){
+},{"./map/initiateMap":191}],219:[function(require,module,exports){
 /*
  * prüft, ob ein String eine email-Adressen sein könnte
  * Quelle: http://stackoverflow.com/questions/46155/validate-email-address-in-javascript

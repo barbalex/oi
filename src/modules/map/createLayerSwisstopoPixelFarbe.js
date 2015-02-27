@@ -7,35 +7,36 @@ var ol         = require('openlayers'),
 
 module.exports = function () {
     var layerConfig,
-        srcWmtsS3Swissimage,
-        wmtsS3Swissimage;
+        srcWmtsS3PixelFarbe,
+        wmtsS3PixelFarbe;
 
     layerConfig = {
         attribution:     "swisstopo",
         format:          "jpeg",
-        serverLayerName: "ch.swisstopo.swissimage",
+        serverLayerName: "ch.swisstopo.pixelkarte-farbe",
         attributionUrl:  "http://www.swisstopo.admin.ch/internet/swisstopo/de/home.html",
         topics:          "api,luftbilder,swissmaponline",
-        label:           "SWISSIMAGE",
+        label:           "Landeskarten",
         timestamps: [
             "20151231",
-            "20140620",
-            "20131107",
-            "20130916",
-            "20130422",
+            "20151231",
+            "20140520",
+            "20140106",
+            "20130903",
+            "20130213",
             "20120809",
-            "20120225",
-            "20110914",
-            "20110228"
+            "20111206",
+            "20111027",
+            "20110401"
         ],
         type: "wmts"
     };
 
-    srcWmtsS3Swissimage = wmtsSource(layerConfig.serverLayerName, layerConfig);
+    srcWmtsS3PixelFarbe = wmtsSource(layerConfig.serverLayerName, layerConfig);
 
-    wmtsS3Swissimage = new ol.layer.Tile({
-        source: srcWmtsS3Swissimage
+    wmtsS3PixelFarbe = new ol.layer.Tile({
+        source: srcWmtsS3PixelFarbe
     });
 
-    return wmtsS3Swissimage;
+    return wmtsS3PixelFarbe;
 };
