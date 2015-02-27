@@ -22,11 +22,11 @@ module.exports = function () {
 
         projection = ol.proj.get('EPSG:21781');
 
-        console.log('projection: ', projection);
-
         // We have to set the extent!
         projection.setExtent([2420000, 130000, 2900000, 1350000]);
-        extent = [2420000, 130000, 2900000, 1350000];
+        //projection.setExtent([485869.5728, 76443.1884, 837076.5648, 299941.7864]);
+        //extent = [2420000, 130000, 2900000, 1350000];
+        extent = [420000, 30000, 900000, 350000];
         RESOLUTIONS = [
             4000, 3750, 3500, 3250, 3000, 2750, 2500, 2250, 2000, 1750, 1500, 1250,
             1000, 750, 650, 500, 250, 100, 50, 20, 10, 5, 2.5, 2, 1.5, 1, 0.5, 0.25, 0.1, 0.05
@@ -43,10 +43,10 @@ module.exports = function () {
             layers: createLayers(),
             view: new ol.View({
                 projection: projection,
-                maxZoom: 17,
-                center: [2801719.584192617, 1133560.6877229365],
-                zoom: 15,
-                minZoom: 2,
+                //maxZoom: 17,
+                center: [2701719, 1173560],
+                zoom: 17,
+                //minZoom: 2,
                 extent: extent,
                 resolutions: RESOLUTIONS
             })

@@ -9,6 +9,7 @@ gulp.task('dev_src', function () {
         './src/jquery.js',
         './src/jquery-ui.js',
         './src/perfect-scrollbar.js',
+        './src/proj4.js',
         './src/bootstrap.js',
         './src/jstree.js',
         './src/oi_browserified.js'

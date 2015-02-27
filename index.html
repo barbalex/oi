@@ -162,8 +162,10 @@
                 window.oi.setupEvents();
                 window.oi.initiateResizables();
                 window.oi.getLogin();
+
                 // query $.hook('xx') instead of $('[data-hook="xx"]')
-                $.extend({hook:function (h) { return $('[data-hook'+(!h||h=='*'?'':'~="'+h+'"')+']'); }});
+                //$.extend({hook:function (h) { return $('[data-hook'+(!h||h=='*'?'':'~="'+h+'"')+']'); }});
+
                 //register event to cache site for offline use
                 function cacheUpdatereadyListener() {
                     window.applicationCache.update();
@@ -175,6 +177,9 @@
                 cache = window.applicationCache;
                 cache.addEventListener('updateready', cacheUpdatereadyListener, false);
                 cache.addEventListener('error', cacheErrorListener, false);
+
+                // globale Variabeln
+                proj4.defs("EPSG:21781", "+proj=somerc +lat_0=46.95240555555556 +lon_0=7.439583333333333 +k_0=1 +x_0=600000 +y_0=200000 +ellps=bessel +towgs84=674.4,15.1,405.3,0,0,0,0 +units=m +no_defs");
             });
         </script>
     </body>
