@@ -3,7 +3,8 @@
 
 var _                                   = require('underscore'),
     ol                                  = require('openlayers'),
-    createLayerSwisstopoPixelkarteFarbe = require('./createLayerSwisstopoPixelkarteFarbe');
+    createLayerSwisstopoPixelkarteFarbe = require('./createLayerSwisstopoPixelkarteFarbe'),
+    createLayerSwisstopoAerial          = require('./createLayerSwisstopoAerial');
 
 module.exports = function () {
     var layers = [],
@@ -16,7 +17,7 @@ module.exports = function () {
 
     SwisstopoPixelkarteFarbe = createLayerSwisstopoPixelkarteFarbe(20140520);
 
-    layers.push(SwisstopoPixelkarteFarbe);
+    layers.push(createLayerSwisstopoAerial());
 
     return layers;
 };

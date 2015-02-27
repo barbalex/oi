@@ -2,10 +2,13 @@
 'use strict';
 
 var ol                      = require('openlayers'),
+    proj4                   = require('proj4'),
     createLayers            = require('./createLayers'),
     addMousePositionControl = require('./addMousePositionControl');
 
 module.exports = function () {
+    proj4.defs("EPSG:21781", "+proj=somerc +lat_0=46.95240555555556 +lon_0=7.439583333333333 +k_0=1 +x_0=600000 +y_0=200000 +ellps=bessel +towgs84=674.4,15.1,405.3,0,0,0,0 +units=m +no_defs");
+
     // only build up map if not yet done
 
     //center: [684297, 237600],
@@ -13,19 +16,21 @@ module.exports = function () {
     //center: [47.17188, 8.11776],
     //center: [8.16363, 47.12031],
     if (!window.oi.olMap.map) {
-        // By default OpenLayers does not know about the EPSG:21781 (Swiss) projection.
-        // So we create a projection instance for EPSG:21781 and pass it to
-        // ol.proj.addProjection to make it available to the library.
+        var projection,
+            extent,
+            RESOLUTIONS;
 
-        var projection = new ol.proj.Projection({
-            code: 'EPSG:21781',
-            // The extent is used to determine zoom level 0. Recommended values for a
-            // projection's validity extent can be found at http://epsg.io/.
-            extent: [485869.5728, 76443.1884, 837076.5648, 299941.7864],
-            //extent: [420000, 30000, 900000, 350000],
-            units: 'm'
-        });
-        ol.proj.addProjection(projection);
+        projection = ol.proj.get('EPSG:21781');
+
+        console.log('projection: ', projection);
+
+        // We have to set the extent!
+        projection.setExtent([2420000, 130000, 2900000, 1350000]);
+        extent = [2420000, 130000, 2900000, 1350000];
+        RESOLUTIONS = [
+            4000, 3750, 3500, 3250, 3000, 2750, 2500, 2250, 2000, 1750, 1500, 1250,
+            1000, 750, 650, 500, 250, 100, 50, 20, 10, 5, 2.5, 2, 1.5, 1, 0.5, 0.25, 0.1, 0.05
+        ];
 
         window.oi.olMap.map = new ol.Map({
             target: 'map',
@@ -37,11 +42,13 @@ module.exports = function () {
             }),
             layers: createLayers(),
             view: new ol.View({
-                projection: 'EPSG:3857',
+                projection: projection,
                 maxZoom: 17,
-                center: [902568.5270415349, 5969980.338127118],
+                center: [2801719.584192617, 1133560.6877229365],
                 zoom: 15,
-                minZoom: 2
+                minZoom: 2,
+                extent: extent,
+                resolutions: RESOLUTIONS
             })
         });
         addMousePositionControl();
