@@ -9415,13 +9415,13 @@ body {
   border-radius: 0;
 }
 
-#utils .panel.js-layerTitel {
+#utils .panel.js-layerPanel {
   border-left:  0;
   border-right: 0;
   border-bottom: 1px solid #CFCFCF;
 }
 
-#utils .js-layerTitel :last-child {
+#utils .js-layerPanel :last-child {
   border-bottom: 0;
 }
 
