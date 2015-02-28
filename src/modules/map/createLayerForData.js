@@ -6,16 +6,12 @@ var _  = require('underscore'),
 
 function enlargenExtent(extent, meters) {
     var enlangenedExtent = [];
-    meters = meters || 50;
+    meters = meters || 200;
 
-    console.log('extent before: ', extent);
-
-    enlangenedExtent.push(extent[2] + meters);
-    enlangenedExtent.push(extent[3] + meters);
     enlangenedExtent.push(extent[0] - meters);
     enlangenedExtent.push(extent[1] - meters);
-
-    console.log('extent after: ', enlangenedExtent);
+    enlangenedExtent.push(extent[2] + meters);
+    enlangenedExtent.push(extent[3] + meters);
 
     return enlangenedExtent;
 }
@@ -28,7 +24,9 @@ module.exports = function (selectedObject) {
         hId            = selectedObject.hId,
         label          = selectedObject.label,
         selectedFeature,
-        featuresExtent;
+        featuresExtent,
+        selectedFeatureExtent,
+        selectedFeatureExtentEnlarged;
 
     // extract all objects with this hId from Model
     vectorSourceObjects = _.filter(window.oi.objects, function (object) {
@@ -80,6 +78,12 @@ module.exports = function (selectedObject) {
 
     // zoom to selected
     featuresExtent = ol.extent.createEmpty();
-    ol.extent.extend(featuresExtent, selectedFeature.getGeometry().getExtent());
+    selectedFeatureExtent = selectedFeature.getGeometry().getExtent();
+    selectedFeatureExtentEnlarged = enlargenExtent(selectedFeatureExtent, 200);
+
+    console.log('selectedFeatureExtent: ', selectedFeatureExtent);
+    console.log('selectedFeatureExtentEnlarged: ', selectedFeatureExtentEnlarged);
+
+    ol.extent.extend(featuresExtent, selectedFeatureExtentEnlarged);
     window.oi.olMap.map.getView().fitExtent(featuresExtent, window.oi.olMap.map.getSize());
 };
