@@ -1,54 +1,65 @@
-<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-    <div class="panel panel-default">
+<div class="panel-group" id="utilsLayertoolTitel" role="tablist" aria-multiselectable="true">
+    <div class="panel panel-default js-layerToolTitel">
         <div class="panel-heading" role="tab" id="headingOne">
             <h4 class="panel-title">
-                <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                    Hintergrund
+                <a data-toggle="collapse" data-parent="#utilsLayertoolTitel" href="#utilsLayertoolAccordion" aria-expanded="true" aria-controls="utilsLayertoolAccordion">
+                    Layer
                 </a>
             </h4>
         </div>
-        <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-            <div class="list-group">
-                <div class="checkbox">
-                    <label>
-                        <input type="checkbox"> Hier kommt eine Hintergrundkarte
-                    </label>
+        <div id="utilsLayertoolAccordion" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+            <div class="panel panel-default js-layerTitel">
+                <div class="panel-heading" role="tab" id="headingOne">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#utilsLayertoolAccordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            Hintergrund
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                    <div class="list-group">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox"> Hier kommt eine Hintergrundkarte
+                            </label>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="panel panel-default">
-        <div class="panel-heading" role="tab" id="headingTwo">
-            <h4 class="panel-title">
-                <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                  Thematische Layer
-                </a>
-            </h4>
-        </div>
-        <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-            <div class="list-group">
-                Hier kommt ein thematisches Layer
-            </div>
-        </div>
-    </div>
-    <div class="panel panel-default">
-        <div class="panel-heading" role="tab" id="headingThree">
-            <h4 class="panel-title">
-                <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                  Projekt Layer
-                </a>
-            </h4>
-        </div>
-        <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
-            <div class="list-group">
-                <div class="checkbox">
-                    <label>
-                        <input type="checkbox"> Das ist ein Projekt Layer
-                    </label>
+            <div class="panel panel-default js-layerTitel">
+                <div class="panel-heading" role="tab" id="headingTwo">
+                    <h4 class="panel-title">
+                        <a class="collapsed" data-toggle="collapse" data-parent="#utilsLayertoolAccordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                          Themen
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                    <div class="list-group">
+                        Hier kommt ein thematisches Layer
+                    </div>
                 </div>
             </div>
-            <div class="list-group">
-                ...und noch eines
+            <div class="panel panel-default js-layerTitel">
+                <div class="panel-heading" role="tab" id="headingThree">
+                    <h4 class="panel-title">
+                        <a class="collapsed" data-toggle="collapse" data-parent="#utilsLayertoolAccordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                          Projekte
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+                    <div class="list-group">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox"> Das ist ein Projekt Layer
+                            </label>
+                        </div>
+                    </div>
+                    <div class="list-group">
+                        ...und noch eines
+                    </div>
+                </div>
             </div>
         </div>
     </div>

@@ -9396,10 +9396,42 @@ body {
 
 #utils .panel-heading {
   padding: 7px 5px;
+  background-color: #ECECEC;
 }
 
 #utils .panel-collapse {
   padding: 0 5px;
+}
+
+#utils #utilsLayertoolAccordion {
+  padding-left:  0;
+  padding-right: 0;
+  /* verhindern, dass lange Worte das Layout zerstören */
+  word-wrap: break-word;
+}
+
+#utils .js-layerToolTitel > .panel-heading {
+  background-color: #CFCFCF;
+  border-radius: 0;
+}
+
+#utils .panel.js-layerTitel {
+  border-left:  0;
+  border-right: 0;
+  border-bottom: 1px solid #CFCFCF;
+}
+
+#utils .js-layerTitel :last-child {
+  border-bottom: 0;
+}
+
+#utils .panel {
+  border: 0;
+}
+
+#utils .list-group {
+  border-bottom: 1px solid #ECECEC;
+  border-top: 0;
 }
 
 /*# sourceMappingURL=oi_built.css.map */
