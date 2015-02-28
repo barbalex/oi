@@ -9,7 +9,11 @@
         </div>
         <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
             <div class="list-group">
-                Hier kommt eine Hintergrundkarte
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox"> Hier kommt eine Hintergrundkarte
+                    </label>
+                </div>
             </div>
         </div>
     </div>
@@ -37,7 +41,11 @@
         </div>
         <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
             <div class="list-group">
-                Das ist ein Projekt Layer
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox"> Das ist ein Projekt Layer
+                    </label>
+                </div>
             </div>
             <div class="list-group">
                 ...und noch eines
