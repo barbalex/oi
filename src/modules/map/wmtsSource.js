@@ -85,9 +85,9 @@ module.exports = function (layer, options) {
     url = '[protocol]//[host]/1.0.0/{Layer}/default/[Timestamp]/[MatrixSetId]/' +
                     '{TileMatrix}/' + tileorder + '.[extension]';
 
-    console.log(url);
+    //console.log(url);
     url = url.replace(/\[(\w+?)\]/g, function (m, p) { return localContext[p];});
-      console.log(url);
+    //console.log(url);
     return new ol.source.WMTS( ({
         crossOrigin: 'anonymous',
         attributions: [attribution],

@@ -1,20 +1,9 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var _  = require('underscore'),
-    ol = require('openlayers');
-
-function enlargenExtent(extent, meters) {
-    var enlangenedExtent = [];
-    meters = meters || 200;
-
-    enlangenedExtent.push(extent[0] - meters);
-    enlangenedExtent.push(extent[1] - meters);
-    enlangenedExtent.push(extent[2] + meters);
-    enlangenedExtent.push(extent[3] + meters);
-
-    return enlangenedExtent;
-}
+var _            = require('underscore'),
+    ol           = require('openlayers'),
+    extendExtent = require('./extendExtent');
 
 module.exports = function (selectedObject) {
     var vectorLayer,
@@ -77,13 +66,9 @@ module.exports = function (selectedObject) {
     window.oi.olMap.map.addLayer(vectorLayer);
 
     // zoom to selected
-    featuresExtent = ol.extent.createEmpty();
-    selectedFeatureExtent = selectedFeature.getGeometry().getExtent();
-    selectedFeatureExtentEnlarged = enlargenExtent(selectedFeatureExtent, 200);
-
-    console.log('selectedFeatureExtent: ', selectedFeatureExtent);
-    console.log('selectedFeatureExtentEnlarged: ', selectedFeatureExtentEnlarged);
-
+    featuresExtent                = ol.extent.createEmpty();
+    selectedFeatureExtent         = selectedFeature.getGeometry().getExtent();
+    selectedFeatureExtentEnlarged = extendExtent(selectedFeatureExtent, 200);
     ol.extent.extend(featuresExtent, selectedFeatureExtentEnlarged);
     window.oi.olMap.map.getView().fitExtent(featuresExtent, window.oi.olMap.map.getSize());
 };
