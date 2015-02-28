@@ -14,5 +14,5 @@ module.exports = function () {
     toggleTab('map', show);
     setWidthOfTabs();
     // load vector layer
-    createLayerForData(object.hId, object.label);
+    createLayerForData(object);
 };
