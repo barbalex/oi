@@ -44,5 +44,10 @@ module.exports = function () {
         .on('change',      'input, textarea, select',        onChangeElement);
 
     $('#utils')
-        .on('change',      '.js-lytShowLayer',               onChangeLytShowLayer);
+        .on('change',      '.js-lytShowLayer',               onChangeLytShowLayer)
+        .on('click', '.list-group', function (event) {
+            if (!event.target.type) {
+                $(this).find('.js-lytShowLayer').first().trigger('click');
+            }
+        });
 };

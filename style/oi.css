@@ -226,6 +226,7 @@ body {
 #utils .list-group {
   border-bottom: 1px solid #ECECEC;
   border-top: 0;
+  cursor: pointer;
 }
 
 #utils .lytListGroupLabelText {
