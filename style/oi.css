@@ -233,7 +233,8 @@ body {
   padding-top: 2px;
 }
 
-#utils .list-group .checkbox {
+#utils .list-group .checkbox,
+#utils .list-group .radio {
   margin-top: 5px;
   margin-bottom: 5px;
 }

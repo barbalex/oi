@@ -5,7 +5,6 @@ var ol                       = require('openlayers'),
     proj4                    = require('proj4'),
     addLayers                = require('./addLayers'),
     mousePositionControl     = require('./mousePositionControl'),
-    instantiateLayersControl = require('./instantiateLayersControl'),
     addLayerToLayerControl   = require('./addLayerToLayerControl');
 
 module.exports = function () {
@@ -14,8 +13,7 @@ module.exports = function () {
         var projection,
             RESOLUTIONS,
             map,
-            layers,
-            layerControl;
+            layers;
 
         projection = ol.proj.get('EPSG:21781');
         // We have to set the extent!
@@ -25,27 +23,6 @@ module.exports = function () {
             4000, 3750, 3500, 3250, 3000, 2750, 2500, 2250, 2000, 1750, 1500, 1250,
             1000, 750, 650, 500, 250, 100, 50, 20, 10, 5, 2.5, 2, 1.5, 1, 0.5, 0.25, 0.1, 0.05
         ];
-
-        instantiateLayersControl();
-
-        //layerControl = new window.oi.olMap.LayersControl();
-        layerControl = new window.oi.olMap.LayersControl({
-            groups: {
-                background: {
-                    title: "Hintergrund",
-                    exclusive: true
-                },
-                project: {
-                    title: "Projekt",
-                    exclusive: false
-                },
-                default: {
-                    title: "Overlays"
-                }
-            }
-        });
-        //layerControl.setMap(map);
-        window.oi.olMap.layerControl = layerControl;
 
         map = new ol.Map({
             target: 'map',
@@ -58,8 +35,7 @@ module.exports = function () {
                 new ol.control.ScaleLine({
                     units: 'metric'
                 }),
-                mousePositionControl(),
-                layerControl
+                mousePositionControl()
             ]),
             view: new ol.View({
                 projection: projection,
@@ -73,18 +49,15 @@ module.exports = function () {
         window.oi.olMap.map = map;
 
         // start listening for changes on the layers
-        // TODO: change layertool
+        // change layertool
         layers = map.getLayers();
         layers.on('add', function (response) {
-            var checked = true;
-
-            window.oi.olMap.layerControl.setMap(window.oi.olMap.map);
-            addLayerToLayerControl(response.element, checked);
+            addLayerToLayerControl(response.element);
         });
         layers.on('remove', function (response) {
             console.log('layer removed: ', response.element);
-            window.oi.olMap.layerControl.setMap(window.oi.olMap.map);
             // TODO: remove layer from layertool
+
         });
 
         addLayers();

@@ -38,6 +38,7 @@ module.exports = function () {
         layerTitle:  'Landeskarten farbig',
         layerName:   'pixelkarte-farbe',
         layerGroup:  'background',
+        visible:     true,
         source: srcWmtsS3PixelFarbe
     });
 

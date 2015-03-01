@@ -46,6 +46,7 @@ module.exports = function (selectedObject) {
         layerTitle:  layerTitle,
         layerName:   layerName,
         layerGroup:  'projects',
+        visible:     true,
         source:      vectorSource,
         style: new ol.style.Style({
             stroke: new ol.style.Stroke({

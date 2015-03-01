@@ -15,5 +15,5 @@ module.exports = function () {
     });
 
     window.oi.olMap.map.addLayer(createLayerSwisstopoPixelFarbe());
-    //window.oi.olMap.map.addLayer(createLayerSwisstopoAerial());
+    window.oi.olMap.map.addLayer(createLayerSwisstopoAerial());
 };

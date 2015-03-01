@@ -37,6 +37,7 @@ module.exports = function () {
         layerTitle:  'Luftbild',
         layerName:   'swissimage',
         layerGroup:  'background',
+        visible:     false,
         source: srcWmtsS3Swissimage
     });
 

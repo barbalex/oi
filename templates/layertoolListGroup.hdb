@@ -1,7 +1,7 @@
 <div class="list-group">
-    <div class="checkbox">
+    <div class="{{inputType}}">
         <label>
-            <input type="checkbox" id="{{showControlId}}" class="js-lytShowLayer" {{checked}}><div class="lytListGroupLabelText">{{layerTitle}}</div>
+            <input type="{{inputType}}" id="{{showControlId}}" name="{{inputName}}" class="js-lytShowLayer" {{checked}}><div class="lytListGroupLabelText">{{layerTitle}}</div>
         </label>
     </div>
 </div>
