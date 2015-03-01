@@ -10,22 +10,19 @@ module.exports = function () {
         layer,
         backgroundLayers;
 
-    // input is covered by also clickable list-group
-    if (event.target.type) {
-        layer = _.filter(layers, function (layer) {
-            return layer.get('layerTitle') === layerTitle;
-        });
-        if (layer && layer[0]) {
-            if (layer[0].get('layerGroup') === 'background') {
-                // these are radios, so all other background layers need to be invisible
-                backgroundLayers = _.filter(layers, function (layer) {
-                    return layer.get('layerGroup') === 'background';
-                });
-                _.each(backgroundLayers, function (layer) {
-                    layer.setVisible(false);
-                });
-            }
-            layer[0].setVisible(this.checked);
+    layer = _.filter(layers, function (layer) {
+        return layer.get('layerTitle') === layerTitle;
+    });
+    if (layer && layer[0]) {
+        if (layer[0].get('layerGroup') === 'background') {
+            // these are radios, so all other background layers need to be invisible
+            backgroundLayers = _.filter(layers, function (layer) {
+                return layer.get('layerGroup') === 'background';
+            });
+            _.each(backgroundLayers, function (layer) {
+                layer.setVisible(false);
+            });
         }
+        layer[0].setVisible(this.checked);
     }
 };

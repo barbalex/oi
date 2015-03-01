@@ -38175,23 +38175,20 @@ module.exports = function () {
         layer,
         backgroundLayers;
 
-    // input is covered by also clickable list-group
-    if (event.target.type) {
-        layer = _.filter(layers, function (layer) {
-            return layer.get('layerTitle') === layerTitle;
-        });
-        if (layer && layer[0]) {
-            if (layer[0].get('layerGroup') === 'background') {
-                // these are radios, so all other background layers need to be invisible
-                backgroundLayers = _.filter(layers, function (layer) {
-                    return layer.get('layerGroup') === 'background';
-                });
-                _.each(backgroundLayers, function (layer) {
-                    layer.setVisible(false);
-                });
-            }
-            layer[0].setVisible(this.checked);
+    layer = _.filter(layers, function (layer) {
+        return layer.get('layerTitle') === layerTitle;
+    });
+    if (layer && layer[0]) {
+        if (layer[0].get('layerGroup') === 'background') {
+            // these are radios, so all other background layers need to be invisible
+            backgroundLayers = _.filter(layers, function (layer) {
+                return layer.get('layerGroup') === 'background';
+            });
+            _.each(backgroundLayers, function (layer) {
+                layer.setVisible(false);
+            });
         }
+        layer[0].setVisible(this.checked);
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
@@ -40334,12 +40331,7 @@ module.exports = function () {
         .on('change',      'input, textarea, select',        onChangeElement);
 
     $('#utils')
-        .on('change',      '.js-lytShowLayer',               onChangeLytShowLayer)
-        .on('click', '.list-group', function (event) {
-            if (!event.target.type) {
-                $(this).find('.js-lytShowLayer').first().trigger('click');
-            }
-        });
+        .on('change',      '.js-lytShowLayer',               onChangeLytShowLayer);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./event/onChangeElement":160,"./event/onChangeLytShowLayer":161,"./event/onClickFormDelete":162,"./event/onClickFormNew":163,"./event/onClickGeometryField":164,"./event/onClickNavFormSort":165,"./event/onClickNavbarBrand":166,"./event/onClickNavbarCollapse":167,"./event/onClickSigninWithModalSignupCheckbox":168,"./event/onKeypressSigninWithModal":169,"./event/onScrollTab":170,"./form/fitTextareaToContent":173,"./nav/signInOrUp":212,"underscore":150}],218:[function(require,module,exports){
