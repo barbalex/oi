@@ -1,0 +1,15 @@
+<div class="list-group" data-object="{{json object}}">
+    <div class="layerTitle">{{object.layerTitle}}</div>
+    <div class="{{object.inputType}}">
+        <label>
+            <input type="{{object.inputType}}" id="{{object.showControlId}}" name="{{object.inputName}}" class="js-lytShowLayer" {{object.checked}}><div class="lytListGroupLabelText">zeigen</div>
+        </label>
+    </div>
+    {{#if object.isProject}}
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" id="{{object.inputName}}Bearbeiten" class="js-lytEditLayer"><div class="lytListGroupLabelText">bearbeiten</div>
+            </label>
+        </div>
+    {{/if}}
+</div>

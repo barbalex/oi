@@ -1,0 +1,12 @@
+<div id="lytProject{{object.projId}}" class="panel panel-default js-layerPanel js-projectPanel" data-projId="{{object.projId}}">
+    <div class="panel-heading" role="tab" id="headingProjekte">
+        <h4 class="panel-title">
+            <a class="collapsed" data-toggle="collapse" data-parent="#utilsLayertoolAccordion" href="#collapseProject{{object.projId}}" aria-expanded="false" aria-controls="collapseProject{{object.projId}}">
+              {{object.projectName}}
+            </a>
+        </h4>
+    </div>
+    <div id="collapseProject{{object.projId}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingProjekte">
+        <!--insert layer collapses-->
+    </div>
+</div>

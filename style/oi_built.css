@@ -9432,16 +9432,20 @@ body {
 #utils .list-group {
   border-bottom: 1px solid #ECECEC;
   border-top: 0;
+  font-size: 12px;
+}
+
+#utils .list-group .layerTitle {
+  padding-top: 3px;
 }
 
 #utils .lytListGroupLabelText {
-  font-size: 12px;
   padding-top: 2px;
 }
 
 #utils .list-group .checkbox,
 #utils .list-group .radio {
-  margin-top: 5px;
+  margin-top: 1px;
   margin-bottom: 5px;
 }
 

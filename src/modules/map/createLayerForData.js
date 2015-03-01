@@ -46,6 +46,7 @@ module.exports = function (selectedObject) {
         layerTitle:  layerTitle,
         layerName:   layerName,
         layerGroup:  'projects',
+        objId:       selectedObject._id,
         visible:     true,
         source:      vectorSource,
         style: new ol.style.Style({

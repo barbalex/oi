@@ -5,7 +5,7 @@ var $ = require('jquery'),
     _ = require('underscore');
 
 module.exports = function () {
-    var layerTitle = $(this).next('.lytListGroupLabelText').html(),
+    var layerTitle = $(this).closest('.list-group').data('object').layerTitle,
         layers     = window.oi.olMap.map.getLayers().getArray(),
         layer,
         backgroundLayers;

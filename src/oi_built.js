@@ -66743,7 +66743,7 @@ var $ = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined
     _ = require('underscore');
 
 module.exports = function () {
-    var layerTitle = $(this).next('.lytListGroupLabelText').html(),
+    var layerTitle = $(this).closest('.list-group').data('object').layerTitle,
         layers     = window.oi.olMap.map.getLayers().getArray(),
         layer,
         backgroundLayers;
@@ -67274,7 +67274,7 @@ module.exports = function (id, type) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../../templates/checkbox":225,"../../../templates/checkboxGroup":226,"../../../templates/formButtonToolbar":227,"../../../templates/geoJson":228,"../../../templates/input":229,"../../../templates/optionGroup":231,"../../../templates/select":232,"../../../templates/textarea":233,"../capitalizeFirstLetter":153,"../getHierarchy":181,"../getObject":182,"../refreshScrollbar":216,"./addCheckedToValueList":171,"./positionFormBtngroup":177,"./resizeTextareas":178,"underscore":150}],176:[function(require,module,exports){
+},{"../../../templates/checkbox":225,"../../../templates/checkboxGroup":226,"../../../templates/formButtonToolbar":227,"../../../templates/geoJson":228,"../../../templates/input":229,"../../../templates/optionGroup":232,"../../../templates/select":233,"../../../templates/textarea":234,"../capitalizeFirstLetter":153,"../getHierarchy":181,"../getObject":182,"../refreshScrollbar":216,"./addCheckedToValueList":171,"./positionFormBtngroup":177,"./resizeTextareas":178,"underscore":150}],176:[function(require,module,exports){
 // Hilfsfunktion, die typeof ersetzt und ergänzt
 // typeof gibt bei input-Feldern immer String zurück!
 
@@ -67804,28 +67804,66 @@ module.exports = function () {
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $                     = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
-    capitalizeFirstLetter = require('../capitalizeFirstLetter'),
-    layertoolListGroup    = require('../../../templates/layertoolListGroup');
+var $                      = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+    capitalizeFirstLetter  = require('../capitalizeFirstLetter'),
+    layertoolLayerCollapse = require('../../../templates/layertoolLayerCollapse'),
+    layertoolProjectPanel  = require('../../../templates/layertoolProjectPanel'),
+    getObject              = require('../getObject'),
+    getHierarchy           = require('../getHierarchy');
 
 module.exports = function (layer) {
     var dataObject = {},
+        obj     = {},
         layerGroup,
-        collapseSelector;
+        collapseSelector,
+        project,
+        projId,
+        projectName,
+        object,
+        objId,
+        hierarchy;
 
-    dataObject.layerTitle    = layer.get('layerTitle');
-    dataObject.showControlId = 'show' + layer.get('layerName');
-    dataObject.checked       = layer.getVisible() ? 'checked' : '';
-    layerGroup               = layer.get('layerGroup');
-    dataObject.inputType     = layerGroup === 'background' ? 'radio' : 'checkbox';
+    obj.layerTitle    = layer.get('layerTitle');
+    obj.showControlId = 'show' + layer.get('layerName');
+    obj.checked       = layer.getVisible() ? 'checked' : '';
+    layerGroup        = layer.get('layerGroup');
+    obj.inputType     = layerGroup === 'background' ? 'radio' : 'checkbox';
     // name attribute is needed for radios so only one can be choosen
-    dataObject.inputName     = layerGroup === 'background' ? 'lytBackground' : '';
-    collapseSelector         = '#collapse' + capitalizeFirstLetter(layerGroup);
+    obj.inputName     = layerGroup === 'background' ? 'lytBackground' : '';
+    obj.isProject     = layerGroup === 'projects' ? true : false;
+    collapseSelector  = '#collapse' + capitalizeFirstLetter(layerGroup);
 
-    $(collapseSelector).append(layertoolListGroup(dataObject));
+    // put obj in object, so it can be used as whole
+    dataObject.object = obj;
+
+    // if background or theme
+    if (layerGroup !== 'projects') {
+        $(collapseSelector).append(layertoolLayerCollapse(dataObject));
+    } else {
+        objId                         = layer.get('objId');
+        object                        = getObject(objId);
+        project                       = getObject(object.projId);
+        projId                        = project._id;
+        hierarchy                     = getHierarchy(project.hId);
+        projectName                   = project.data[hierarchy.nameField];
+        dataObject.object.projectName = projectName;
+        dataObject.object.projId      = projId;
+
+        console.log('project.data: ', project.data);
+        console.log('hierarchy.nameField: ', hierarchy.nameField);
+        console.log('project.data[hierarchy.nameField]: ', project.data[hierarchy.nameField]);
+
+        if (!$('#lytProject' + projId).length) {
+            // add project-panel first
+            $('#utilsLayertoolAccordion').append(layertoolProjectPanel(dataObject));
+        }
+        setTimeout(function () {
+            $('#collapseProject' + projId).append(layertoolLayerCollapse(dataObject));
+        }, 100);
+    }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../../templates/layertoolListGroup":230,"../capitalizeFirstLetter":153}],190:[function(require,module,exports){
+},{"../../../templates/layertoolLayerCollapse":230,"../../../templates/layertoolProjectPanel":231,"../capitalizeFirstLetter":153,"../getHierarchy":181,"../getObject":182}],190:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -67894,6 +67932,7 @@ module.exports = function (selectedObject) {
         layerTitle:  layerTitle,
         layerName:   layerName,
         layerGroup:  'projects',
+        objId:       selectedObject._id,
         visible:     true,
         source:      vectorSource,
         style: new ol.style.Style({
@@ -69163,23 +69202,49 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + "\">\r\n</div>";
 },"useData":true});
 },{"handlebars":24}],230:[function(require,module,exports){
-var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
-  return "<div class=\"list-group\">\r\n    <div class=\""
-    + escapeExpression(((helper = (helper = helpers.inputType || (depth0 != null ? depth0.inputType : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"inputType","hash":{},"data":data}) : helper)))
+var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data) {
+  var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression;
+  return "        <div class=\"checkbox\">\r\n            <label>\r\n                <input type=\"checkbox\" id=\""
+    + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.inputName : stack1), depth0))
+    + "Bearbeiten\" class=\"js-lytEditLayer\"><div class=\"lytListGroupLabelText\">bearbeiten</div>\r\n            </label>\r\n        </div>\r\n";
+},"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  var stack1, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, lambda=this.lambda, buffer = "<div class=\"list-group\" data-object=\""
+    + escapeExpression(((helpers.json || (depth0 && depth0.json) || helperMissing).call(depth0, (depth0 != null ? depth0.object : depth0), {"name":"json","hash":{},"data":data})))
+    + "\">\r\n    <div class=\"layerTitle\">"
+    + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.layerTitle : stack1), depth0))
+    + "</div>\r\n    <div class=\""
+    + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.inputType : stack1), depth0))
     + "\">\r\n        <label>\r\n            <input type=\""
-    + escapeExpression(((helper = (helper = helpers.inputType || (depth0 != null ? depth0.inputType : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"inputType","hash":{},"data":data}) : helper)))
+    + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.inputType : stack1), depth0))
     + "\" id=\""
-    + escapeExpression(((helper = (helper = helpers.showControlId || (depth0 != null ? depth0.showControlId : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"showControlId","hash":{},"data":data}) : helper)))
+    + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.showControlId : stack1), depth0))
     + "\" name=\""
-    + escapeExpression(((helper = (helper = helpers.inputName || (depth0 != null ? depth0.inputName : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"inputName","hash":{},"data":data}) : helper)))
+    + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.inputName : stack1), depth0))
     + "\" class=\"js-lytShowLayer\" "
-    + escapeExpression(((helper = (helper = helpers.checked || (depth0 != null ? depth0.checked : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"checked","hash":{},"data":data}) : helper)))
-    + "><div class=\"lytListGroupLabelText\">"
-    + escapeExpression(((helper = (helper = helpers.layerTitle || (depth0 != null ? depth0.layerTitle : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"layerTitle","hash":{},"data":data}) : helper)))
-    + "</div>\r\n        </label>\r\n    </div>\r\n</div>";
+    + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.checked : stack1), depth0))
+    + "><div class=\"lytListGroupLabelText\">zeigen</div>\r\n        </label>\r\n    </div>\r\n";
+  stack1 = helpers['if'].call(depth0, ((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.isProject : stack1), {"name":"if","hash":{},"fn":this.program(1, data),"inverse":this.noop,"data":data});
+  if (stack1 != null) { buffer += stack1; }
+  return buffer + "</div>";
 },"useData":true});
 },{"handlebars":24}],231:[function(require,module,exports){
+var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression;
+  return "<div id=\"lytProject"
+    + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.projId : stack1), depth0))
+    + "\" class=\"panel panel-default js-layerPanel js-projectPanel\" data-projId=\""
+    + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.projId : stack1), depth0))
+    + "\">\r\n    <div class=\"panel-heading\" role=\"tab\" id=\"headingProjekte\">\r\n        <h4 class=\"panel-title\">\r\n            <a class=\"collapsed\" data-toggle=\"collapse\" data-parent=\"#utilsLayertoolAccordion\" href=\"#collapseProject"
+    + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.projId : stack1), depth0))
+    + "\" aria-expanded=\"false\" aria-controls=\"collapseProject"
+    + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.projId : stack1), depth0))
+    + "\">\r\n              "
+    + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.projectName : stack1), depth0))
+    + "\r\n            </a>\r\n        </h4>\r\n    </div>\r\n    <div id=\"collapseProject"
+    + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.projId : stack1), depth0))
+    + "\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingProjekte\">\r\n        <!--insert layer collapses-->\r\n    </div>\r\n</div>";
+},"useData":true});
+},{"handlebars":24}],232:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,depths) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "            <div class=\"radio\">\r\n                <label>\r\n                    <input type=\"radio\" name=\""
@@ -69206,7 +69271,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "    </div>\r\n</div>";
 },"useData":true,"useDepths":true});
-},{"handlebars":24}],232:[function(require,module,exports){
+},{"handlebars":24}],233:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, buffer = "                <option value=";
   stack1 = lambda((depth0 != null ? depth0.value : depth0), depth0);
@@ -69229,7 +69294,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "        </select>\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":24}],233:[function(require,module,exports){
+},{"handlebars":24}],234:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "<div class=\"form-group js-form-group\">\r\n    <label for=\""
