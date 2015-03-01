@@ -239,6 +239,6 @@ body {
 
 #utils .list-group .checkbox,
 #utils .list-group .radio {
-  margin-top: 1px;
-  margin-bottom: 5px;
+  margin-top: 0;
+  margin-bottom: 2px;
 }

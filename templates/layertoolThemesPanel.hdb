@@ -1,0 +1,12 @@
+<div id="lytThemes" class="panel panel-default js-layerPanel">
+    <div class="panel-heading" role="tab" id="headingThemen">
+        <h4 class="panel-title">
+            <a class="collapsed" data-toggle="collapse" data-parent="#utilsLayertoolAccordion" href="#collapseThemes" aria-expanded="false" aria-controls="collapseThemes">
+              Themen
+            </a>
+        </h4>
+    </div>
+    <div id="collapseThemes" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThemen">
+        <!--insert list-groups-->
+    </div>
+</div>

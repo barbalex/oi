@@ -67274,7 +67274,7 @@ module.exports = function (id, type) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../../templates/checkbox":225,"../../../templates/checkboxGroup":226,"../../../templates/formButtonToolbar":227,"../../../templates/geoJson":228,"../../../templates/input":229,"../../../templates/optionGroup":232,"../../../templates/select":233,"../../../templates/textarea":234,"../capitalizeFirstLetter":153,"../getHierarchy":181,"../getObject":182,"../refreshScrollbar":216,"./addCheckedToValueList":171,"./positionFormBtngroup":177,"./resizeTextareas":178,"underscore":150}],176:[function(require,module,exports){
+},{"../../../templates/checkbox":225,"../../../templates/checkboxGroup":226,"../../../templates/formButtonToolbar":227,"../../../templates/geoJson":228,"../../../templates/input":229,"../../../templates/optionGroup":233,"../../../templates/select":234,"../../../templates/textarea":235,"../capitalizeFirstLetter":153,"../getHierarchy":181,"../getObject":182,"../refreshScrollbar":216,"./addCheckedToValueList":171,"./positionFormBtngroup":177,"./resizeTextareas":178,"underscore":150}],176:[function(require,module,exports){
 // Hilfsfunktion, die typeof ersetzt und ergänzt
 // typeof gibt bei input-Feldern immer String zurück!
 
@@ -67805,9 +67805,9 @@ module.exports = function () {
 'use strict';
 
 var $                      = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
-    capitalizeFirstLetter  = require('../capitalizeFirstLetter'),
     layertoolLayerCollapse = require('../../../templates/layertoolLayerCollapse'),
     layertoolProjectPanel  = require('../../../templates/layertoolProjectPanel'),
+    layertoolThemesPanel   = require('../../../templates/layertoolThemesPanel'),
     getObject              = require('../getObject'),
     getHierarchy           = require('../getHierarchy');
 
@@ -67815,13 +67815,15 @@ module.exports = function (layer) {
     var dataObject = {},
         obj     = {},
         layerGroup,
-        collapseSelector,
         project,
         projId,
         projectName,
         object,
         objId,
-        hierarchy;
+        projectHierarchy,
+        $layerGroups;
+
+    $layerGroups = $('#utilsLayertoolAccordion').children();
 
     obj.layerTitle    = layer.get('layerTitle');
     obj.showControlId = 'show' + layer.get('layerName');
@@ -67831,39 +67833,42 @@ module.exports = function (layer) {
     // name attribute is needed for radios so only one can be choosen
     obj.inputName     = layerGroup === 'background' ? 'lytBackground' : '';
     obj.isProject     = layerGroup === 'projects' ? true : false;
-    collapseSelector  = '#collapse' + capitalizeFirstLetter(layerGroup);
 
     // put obj in object, so it can be used as whole
     dataObject.object = obj;
 
     // if background or theme
-    if (layerGroup !== 'projects') {
-        $(collapseSelector).append(layertoolLayerCollapse(dataObject));
-    } else {
+    switch (layerGroup) {
+    case 'background':
+        $('#collapseBackground').append(layertoolLayerCollapse(dataObject));
+        break;
+    case 'themes':
+        if (!$('#lytThemes').length) {
+            // add themes-panel first
+            $('#lytBackground').after(layertoolThemesPanel(dataObject));
+        }
+        $('#collapseThemes').append(layertoolLayerCollapse(dataObject));
+        break;
+    case 'projects':
         objId                         = layer.get('objId');
         object                        = getObject(objId);
-        project                       = getObject(object.projId);
-        projId                        = project._id;
-        hierarchy                     = getHierarchy(project.hId);
-        projectName                   = project.data[hierarchy.nameField];
+        projId                        = object.projId;
+        project                       = getObject(projId);
+        projectHierarchy              = getHierarchy(project.hId);
+        projectName                   = project.data[projectHierarchy.nameField];
         dataObject.object.projectName = projectName;
         dataObject.object.projId      = projId;
-
-        console.log('project.data: ', project.data);
-        console.log('hierarchy.nameField: ', hierarchy.nameField);
-        console.log('project.data[hierarchy.nameField]: ', project.data[hierarchy.nameField]);
 
         if (!$('#lytProject' + projId).length) {
             // add project-panel first
             $('#utilsLayertoolAccordion').append(layertoolProjectPanel(dataObject));
         }
-        setTimeout(function () {
-            $('#collapseProject' + projId).append(layertoolLayerCollapse(dataObject));
-        }, 100);
+        $('#collapseProject' + projId).append(layertoolLayerCollapse(dataObject));
+        break;
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../../templates/layertoolLayerCollapse":230,"../../../templates/layertoolProjectPanel":231,"../capitalizeFirstLetter":153,"../getHierarchy":181,"../getObject":182}],190:[function(require,module,exports){
+},{"../../../templates/layertoolLayerCollapse":230,"../../../templates/layertoolProjectPanel":231,"../../../templates/layertoolThemesPanel":232,"../getHierarchy":181,"../getObject":182}],190:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -69245,6 +69250,10 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + "\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingProjekte\">\r\n        <!--insert layer collapses-->\r\n    </div>\r\n</div>";
 },"useData":true});
 },{"handlebars":24}],232:[function(require,module,exports){
+var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  return "<div id=\"lytThemes\" class=\"panel panel-default js-layerPanel\">\r\n    <div class=\"panel-heading\" role=\"tab\" id=\"headingThemen\">\r\n        <h4 class=\"panel-title\">\r\n            <a class=\"collapsed\" data-toggle=\"collapse\" data-parent=\"#utilsLayertoolAccordion\" href=\"#collapseThemes\" aria-expanded=\"false\" aria-controls=\"collapseThemes\">\r\n              Themen\r\n            </a>\r\n        </h4>\r\n    </div>\r\n    <div id=\"collapseThemes\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingThemen\">\r\n        <!--insert list-groups-->\r\n    </div>\r\n</div>";
+  },"useData":true});
+},{"handlebars":24}],233:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,depths) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "            <div class=\"radio\">\r\n                <label>\r\n                    <input type=\"radio\" name=\""
@@ -69271,7 +69280,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "    </div>\r\n</div>";
 },"useData":true,"useDepths":true});
-},{"handlebars":24}],233:[function(require,module,exports){
+},{"handlebars":24}],234:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, buffer = "                <option value=";
   stack1 = lambda((depth0 != null ? depth0.value : depth0), depth0);
@@ -69294,7 +69303,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "        </select>\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":24}],234:[function(require,module,exports){
+},{"handlebars":24}],235:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "<div class=\"form-group js-form-group\">\r\n    <label for=\""
