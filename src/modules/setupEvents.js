@@ -2,6 +2,7 @@
 'use strict';
 
 var $                                    = require('jquery'),
+    _                                    = require('underscore'),
     fitTextareaToContent                 = require('./form/fitTextareaToContent'),
     onScrollTab                          = require('./event/onScrollTab'),
     onClickFormNew                       = require('./event/onClickFormNew'),
@@ -13,7 +14,8 @@ var $                                    = require('jquery'),
     onKeypressSigninWithModal            = require('./event/onKeypressSigninWithModal'),
     onClickSigninWithModalSignupCheckbox = require('./event/onClickSigninWithModalSignupCheckbox'),
     signInOrUp                           = require('./nav/signInOrUp'),
-    onClickGeometryField                 = require('./event/onClickGeometryField');
+    onClickGeometryField                 = require('./event/onClickGeometryField'),
+    onChangeLytShowLayer                 = require('./event/onChangeLytShowLayer');
 
 module.exports = function () {
     // scroll event doesn't buble up, so it cant be delegated from # to .
@@ -40,4 +42,7 @@ module.exports = function () {
     $('#formContent')
         .on('keyup focus', 'textarea',                       fitTextareaToContent)
         .on('change',      'input, textarea, select',        onChangeElement);
+
+    $('#utils')
+        .on('change',      '.js-lytShowLayer',               onChangeLytShowLayer);
 };

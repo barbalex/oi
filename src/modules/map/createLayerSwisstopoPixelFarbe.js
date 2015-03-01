@@ -35,8 +35,10 @@ module.exports = function () {
     srcWmtsS3PixelFarbe = wmtsSource(layerConfig.serverLayerName, layerConfig);
 
     wmtsS3PixelFarbe = new ol.layer.Tile({
-        source: srcWmtsS3PixelFarbe,
-        group: 'background'
+        layerTitle:  'Landeskarten farbig',
+        layerName:   'pixelkarte-farbe',
+        layerGroup:  'background',
+        source: srcWmtsS3PixelFarbe
     });
 
     return wmtsS3PixelFarbe;

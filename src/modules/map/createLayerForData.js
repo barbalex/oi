@@ -12,6 +12,8 @@ module.exports = function (selectedObject) {
         olFeatureArray = [],
         hId            = selectedObject.hId,
         label          = selectedObject.label,
+        layerName      = selectedObject.layerName,
+        layerTitle     = selectedObject.layerTitle,
         selectedFeature,
         featuresExtent,
         selectedFeatureExtent,
@@ -41,8 +43,10 @@ module.exports = function (selectedObject) {
     vectorSource.addFeatures(olFeatureArray);
 
     vectorLayer = new ol.layer.Vector({
-        title:  label,
-        source: vectorSource,
+        layerTitle:  layerTitle,
+        layerName:   layerName,
+        layerGroup:  'projects',
+        source:      vectorSource,
         style: new ol.style.Style({
             stroke: new ol.style.Stroke({
                 color: 'red',
@@ -59,8 +63,7 @@ module.exports = function (selectedObject) {
                     width: 4
                 })
             })
-        }),
-        group: 'project'
+        })
     });
 
     window.oi.olMap.map.addLayer(vectorLayer);

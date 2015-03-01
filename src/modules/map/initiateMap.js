@@ -6,7 +6,7 @@ var ol                       = require('openlayers'),
     addLayers                = require('./addLayers'),
     mousePositionControl     = require('./mousePositionControl'),
     instantiateLayersControl = require('./instantiateLayersControl'),
-    layertool                = require('../../../templates/layertool');
+    addLayerToLayerControl   = require('./addLayerToLayerControl');
 
 module.exports = function () {
     // only build up map if not yet done
@@ -75,18 +75,18 @@ module.exports = function () {
         // start listening for changes on the layers
         // TODO: change layertool
         layers = map.getLayers();
-        layers.on('add', function (layer) {
-            console.log('layer added: ', layer);
+        layers.on('add', function (response) {
+            var checked = true;
+
             window.oi.olMap.layerControl.setMap(window.oi.olMap.map);
+            addLayerToLayerControl(response.element, checked);
         });
-        layers.on('remove', function (layer) {
-            console.log('layer removed: ', layer);
+        layers.on('remove', function (response) {
+            console.log('layer removed: ', response.element);
             window.oi.olMap.layerControl.setMap(window.oi.olMap.map);
+            // TODO: remove layer from layertool
         });
 
         addLayers();
-
-        // try Layertool
-        $('#utilsLayertool').html(layertool());
     }
 };

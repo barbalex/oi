@@ -16,7 +16,8 @@ var $                     = require('jquery'),
     getObject             = require('../getObject'),
     getHierarchy          = require('../getHierarchy'),
     resizeTextareas       = require('./resizeTextareas'),
-    refreshScrollbar      = require('../refreshScrollbar');
+    refreshScrollbar      = require('../refreshScrollbar'),
+    capitalizeFirstLetter = require('../capitalizeFirstLetter');
 
 module.exports = function (id, type) {
     var html         = '',
@@ -47,6 +48,8 @@ module.exports = function (id, type) {
                     templateObject.object.label         = field.label;
                     templateObject.object.inputDataType = field.inputDataType      || null;
                     templateObject.object.value         = object.data[field.label] || null;
+                    templateObject.object.layerTitle    = hierarchy.name + ': ' + field.label;
+                    templateObject.object.layerName     = 'layer' + capitalizeFirstLetter(hierarchy.name) + capitalizeFirstLetter(field.label);
 
                     // Felder bauen
                     switch (field.inputType) {

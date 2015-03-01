@@ -227,3 +227,13 @@ body {
   border-bottom: 1px solid #ECECEC;
   border-top: 0;
 }
+
+#utils .lytListGroupLabelText {
+  font-size: 12px;
+  padding-top: 2px;
+}
+
+#utils .list-group .checkbox {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
