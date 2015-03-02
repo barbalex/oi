@@ -10,7 +10,8 @@ var $                      = require('jquery'),
     layertoolProjectPanel  = require('../../../templates/layertoolProjectPanel'),
     layertoolThemesPanel   = require('../../../templates/layertoolThemesPanel'),
     getObject              = require('../getObject'),
-    getHierarchy           = require('../getHierarchy');
+    getHierarchy           = require('../getHierarchy'),
+    capitalizeFirstLetter  = require('../capitalizeFirstLetter');
 
 module.exports = function (layer) {
     var dataObject = {},
@@ -28,11 +29,12 @@ module.exports = function (layer) {
 
     obj.layerTitle    = layer.get('layerTitle');
     obj.showControlId = 'show' + layer.get('layerName');
+    obj.editControlId = 'edit' + layer.get('layerName');
     obj.checked       = layer.getVisible() ? 'checked' : '';
     layerGroup        = layer.get('layerGroup');
     obj.inputType     = layerGroup === 'background' ? 'radio' : 'checkbox';
     // name attribute is needed for radios so only one can be choosen
-    obj.inputName     = layerGroup === 'background' ? 'lytBackground' : '';
+    obj.inputName     = 'lyt' + capitalizeFirstLetter(layerGroup);
     obj.isProject     = layerGroup === 'projects' ? true : false;
 
     // put obj in object, so it can be used as whole

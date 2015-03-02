@@ -15,7 +15,8 @@ var $                                    = require('jquery'),
     onClickSigninWithModalSignupCheckbox = require('./event/onClickSigninWithModalSignupCheckbox'),
     signInOrUp                           = require('./nav/signInOrUp'),
     onClickGeometryField                 = require('./event/onClickGeometryField'),
-    onChangeLytShowLayer                 = require('./event/onChangeLytShowLayer');
+    onChangeLytShowLayer                 = require('./event/onChangeLytShowLayer'),
+    onChangeLytEditLayer                 = require('./event/onChangeLytEditLayer');
 
 module.exports = function () {
     // scroll event doesn't buble up, so it cant be delegated from # to .
@@ -44,5 +45,6 @@ module.exports = function () {
         .on('change',      'input, textarea, select',        onChangeElement);
 
     $('#utils')
-        .on('change',      '.js-lytShowLayer',               onChangeLytShowLayer);
+        .on('change',      '.js-lytShowLayer',               onChangeLytShowLayer)
+        .on('change',      '.js-lytEditLayer',               onChangeLytEditLayer);
 };

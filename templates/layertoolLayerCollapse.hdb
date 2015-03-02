@@ -8,7 +8,7 @@
     {{#if object.isProject}}
         <div class="checkbox">
             <label>
-                <input type="checkbox" id="{{object.inputName}}Bearbeiten" class="js-lytEditLayer"><div class="lytListGroupLabelText">bearbeiten</div>
+                <input type="checkbox" id="{{object.editControlId}}" class="js-lytEditLayer"><div class="lytListGroupLabelText">bearbeiten</div>
             </label>
         </div>
     {{/if}}

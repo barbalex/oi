@@ -20,7 +20,7 @@ window.oi.hierarchies = [];
 window.PouchDB = PouchDB;
 
 initiateApp();
-},{"./modules/initiateApp":187,"bootstrap-validator":3,"pouchdb":106,"pouchdb-all-dbs":28,"pouchdb-authentication":55}],2:[function(require,module,exports){
+},{"./modules/initiateApp":188,"bootstrap-validator":3,"pouchdb":106,"pouchdb-all-dbs":28,"pouchdb-authentication":55}],2:[function(require,module,exports){
 (function (process){
 /*!
  * async
@@ -37950,7 +37950,7 @@ module.exports = function (object, hierarchy) {
     return newObject;
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./guid":183,"./nav/createChildHierarchiesOfObject":202,"./nav/createTreeNodeObject":205,"dateformat":8,"underscore":150}],156:[function(require,module,exports){
+},{"./guid":184,"./nav/createChildHierarchiesOfObject":203,"./nav/createTreeNodeObject":206,"dateformat":8,"underscore":150}],156:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -37984,7 +37984,7 @@ module.exports = function (hierarchyId, parentId) {
         console.log('error: no parent hierarchy found for hierarchy with id = ', hierarchyId);
     }
 };
-},{"./createNewObject":155,"./getHierarchy":181,"underscore":150}],157:[function(require,module,exports){
+},{"./createNewObject":155,"./getHierarchy":182,"underscore":150}],157:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -38010,7 +38010,7 @@ module.exports = function (objectId) {
         console.log('error: no hierarchy found for object with id = ', objectId);
     }
 };
-},{"./createNewObject":155,"./getHierarchy":181,"./getObject":182}],158:[function(require,module,exports){
+},{"./createNewObject":155,"./getHierarchy":182,"./getObject":183}],158:[function(require,module,exports){
 (function (global){
 /*
  * gets a node from the tree
@@ -38131,7 +38131,7 @@ module.exports = function ($node) {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./askYesNoWithModal":152,"./deleteObjectFromModel":159,"./getObject":182,"./tellWithModal":224,"dateformat":8,"pouchdb":106,"underscore":150}],159:[function(require,module,exports){
+},{"./askYesNoWithModal":152,"./deleteObjectFromModel":159,"./getObject":183,"./tellWithModal":225,"dateformat":8,"pouchdb":106,"underscore":150}],159:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -38161,7 +38161,36 @@ module.exports = function () {
     saveObjectValue(object, value);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../form/getValueAfterChange":174,"../form/saveObjectValue":180}],161:[function(require,module,exports){
+},{"../form/getValueAfterChange":175,"../form/saveObjectValue":181}],161:[function(require,module,exports){
+(function (global){
+/*jslint node: true, browser: true, nomen: true, todo: true */
+'use strict';
+
+var $ = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+    _ = require('underscore');
+
+module.exports = function () {
+    var layerTitle = $(this).closest('.list-group').data('object').layerTitle,
+        layers     = window.oi.olMap.map.getLayers().getArray(),
+        layer;
+
+    layer = _.filter(layers, function (layer) {
+        return layer.get('layerTitle') === layerTitle;
+    });
+    if (layer && layer[0]) {
+        layer = layer[0];
+
+        if (this.checked) {
+            $('#utilsEditLayer').show();
+            // TODO: call function that makes layer modifiable?
+        } else {
+            $('#utilsEditLayer').hide();
+            // TODO: call function that makes layer not modifiable?
+        }
+    }
+};
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"underscore":150}],162:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -38192,7 +38221,7 @@ module.exports = function () {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"underscore":150}],162:[function(require,module,exports){
+},{"underscore":150}],163:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -38205,7 +38234,7 @@ module.exports = function () {
     deleteObjectAndChildren(node);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../deleteObjectAndChildren":158}],163:[function(require,module,exports){
+},{"../deleteObjectAndChildren":158}],164:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -38232,7 +38261,7 @@ module.exports = function () {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../createNewObjectFromHierarchy":156,"../createNewObjectFromObject":157}],164:[function(require,module,exports){
+},{"../createNewObjectFromHierarchy":156,"../createNewObjectFromObject":157}],165:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -38264,7 +38293,7 @@ module.exports = function () {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../getObject":182,"../map/zoomToFeature":201,"../setWidthOfTabs":219,"../toggleTab":225,"openlayers":27}],165:[function(require,module,exports){
+},{"../getObject":183,"../map/zoomToFeature":202,"../setWidthOfTabs":220,"../toggleTab":226,"openlayers":27}],166:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -38328,7 +38357,7 @@ module.exports = function () {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../form/saveHierarchy":179,"../getObject":182,"underscore":150}],166:[function(require,module,exports){
+},{"../form/saveHierarchy":180,"../getObject":183,"underscore":150}],167:[function(require,module,exports){
 (function (global){
 // klickt man in der Mobilansicht des Menus auf den Titel, soll es schliessen
 
@@ -38343,7 +38372,7 @@ module.exports = function () {
     $('.navbar').find('.navbar-collapse').collapse('hide');
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],167:[function(require,module,exports){
+},{}],168:[function(require,module,exports){
 (function (global){
 // wählt man in der Mobilansicht einen Menu-Eintrag, soll das Menu schliessen
 
@@ -38358,7 +38387,7 @@ module.exports = function () {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],168:[function(require,module,exports){
+},{}],169:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -38375,7 +38404,7 @@ module.exports = function () {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],169:[function(require,module,exports){
+},{}],170:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -38388,7 +38417,7 @@ module.exports = function (event) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],170:[function(require,module,exports){
+},{}],171:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -38402,7 +38431,7 @@ module.exports = function () {
     $separator.css('height', $content.height() + 40);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],171:[function(require,module,exports){
+},{}],172:[function(require,module,exports){
 /*
  * erstellt aus einer possibleValues einen Array von Objekten
  * mit value und checked
@@ -38475,7 +38504,7 @@ module.exports = function (possibleValues, setValues, type) {
         return valueObject;
     });
 };
-},{"underscore":150}],172:[function(require,module,exports){
+},{"underscore":150}],173:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus: true, white: true*/
 'use strict';
 
@@ -38492,7 +38521,7 @@ module.exports = function (feldWert) {
 
     return feldWert;
 };
-},{"./myTypeOf":176}],173:[function(require,module,exports){
+},{"./myTypeOf":177}],174:[function(require,module,exports){
 // setzt die Höhe von textareas so, dass der Text genau rein passt
 
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus: true*/
@@ -38544,7 +38573,7 @@ module.exports = function (id, maxHeight) {
         text.style.height = adjustedHeight + 'px';
     }
 };
-},{}],174:[function(require,module,exports){
+},{}],175:[function(require,module,exports){
 (function (global){
 /*
  * holt sich nach einer Änderung in einem Feld die Daten
@@ -38588,7 +38617,7 @@ module.exports = function (that) {
     return value;
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./convertToCorrectType":172,"underscore":150}],175:[function(require,module,exports){
+},{"./convertToCorrectType":173,"underscore":150}],176:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -38712,7 +38741,7 @@ module.exports = function (id, type) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../../templates/checkbox":227,"../../../templates/checkboxGroup":228,"../../../templates/formButtonToolbar":229,"../../../templates/geoJson":230,"../../../templates/input":231,"../../../templates/optionGroup":235,"../../../templates/select":236,"../../../templates/textarea":237,"../capitalizeFirstLetter":153,"../getHierarchy":181,"../getObject":182,"../refreshScrollbar":218,"./addCheckedToValueList":171,"./positionFormBtngroup":177,"./resizeTextareas":178,"underscore":150}],176:[function(require,module,exports){
+},{"../../../templates/checkbox":228,"../../../templates/checkboxGroup":229,"../../../templates/formButtonToolbar":230,"../../../templates/geoJson":231,"../../../templates/input":232,"../../../templates/optionGroup":236,"../../../templates/select":237,"../../../templates/textarea":238,"../capitalizeFirstLetter":153,"../getHierarchy":182,"../getObject":183,"../refreshScrollbar":219,"./addCheckedToValueList":172,"./positionFormBtngroup":178,"./resizeTextareas":179,"underscore":150}],177:[function(require,module,exports){
 // Hilfsfunktion, die typeof ersetzt und ergänzt
 // typeof gibt bei input-Feldern immer String zurück!
 
@@ -38753,7 +38782,7 @@ module.exports = function (wert) {
     if (wert === undefined)          { return 'undefined'; }
     if (typeof wert === 'function')  { return 'function'; }
 };
-},{}],177:[function(require,module,exports){
+},{}],178:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus: true, white: true*/
 'use strict';
@@ -38764,7 +38793,7 @@ module.exports = function () {
     $('#form').find('.btn-group').css('margin-left', $('#formContent').width() - 120);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],178:[function(require,module,exports){
+},{}],179:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -38779,7 +38808,7 @@ module.exports = function () {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./fitTextareaToContent":173,"underscore":150}],179:[function(require,module,exports){
+},{"./fitTextareaToContent":174,"underscore":150}],180:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -38822,7 +38851,7 @@ module.exports = function (hierarchy) {
         });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../getHierarchy":181,"../nav/getLabelForObject":209,"dateformat":8,"pouchdb":106,"underscore":150}],180:[function(require,module,exports){
+},{"../getHierarchy":182,"../nav/getLabelForObject":210,"dateformat":8,"pouchdb":106,"underscore":150}],181:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -38907,7 +38936,7 @@ module.exports = function (passedObject, value) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../getObject":182,"../nav/getLabelForObject":209,"../syncWithRemoteDb":221,"dateformat":8,"pouchdb":106,"underscore":150}],181:[function(require,module,exports){
+},{"../getObject":183,"../nav/getLabelForObject":210,"../syncWithRemoteDb":222,"dateformat":8,"pouchdb":106,"underscore":150}],182:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -38921,7 +38950,7 @@ module.exports = function (hierarchyId) {
 
     return hierarchy || null;
 };
-},{"underscore":150}],182:[function(require,module,exports){
+},{"underscore":150}],183:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -38935,7 +38964,7 @@ module.exports = function (id) {
 
     return object || null;
 };
-},{"underscore":150}],183:[function(require,module,exports){
+},{"underscore":150}],184:[function(require,module,exports){
 /*
 * generiert eine uuid
 * Quelle: http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
@@ -38954,7 +38983,7 @@ module.exports = function () {
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
         s4() + '-' + s4() + s4() + s4();
 };
-},{}],184:[function(require,module,exports){
+},{}],185:[function(require,module,exports){
 /*
  * leitet je nach Typ des Dokuments an die zuständige Funktion weiter
  */
@@ -38981,7 +39010,7 @@ module.exports = function (change) {
         }
     }
 };
-},{"./handleExternalObjectChanges":185,"./handleUsersChanges":186,"pouchdb":106}],185:[function(require,module,exports){
+},{"./handleExternalObjectChanges":186,"./handleUsersChanges":187,"pouchdb":106}],186:[function(require,module,exports){
 (function (global){
 /*
  * passt model und wenn nötig die ui an,
@@ -39078,7 +39107,7 @@ module.exports = function (doc) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./form/initiateForm":175,"./nav/createTree":204,"./nav/createTreeNodeObject":205,"./nav/createTreeNodeRootObject":206,"./nav/getLabelForObject":209,"underscore":150}],186:[function(require,module,exports){
+},{"./form/initiateForm":176,"./nav/createTree":205,"./nav/createTreeNodeObject":206,"./nav/createTreeNodeRootObject":207,"./nav/getLabelForObject":210,"underscore":150}],187:[function(require,module,exports){
 /*
  * When the active user's _users-object is changed, it checks it's roles:
  * - if a role has been deleted, the corresponding project is removed and syncing stopped 
@@ -39116,7 +39145,7 @@ module.exports = function (user) {
         console.log('projectsToAdd: ', projectsToAdd);
     }
 };
-},{"underscore":150}],187:[function(require,module,exports){
+},{"underscore":150}],188:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -39145,7 +39174,7 @@ module.exports = function () {
         return JSON.stringify(context);
     });
 };
-},{"./initiateResizables":188,"./nav/getLogin":210,"./setupEvents":220,"handlebars":24}],188:[function(require,module,exports){
+},{"./initiateResizables":189,"./nav/getLogin":211,"./setupEvents":221,"handlebars":24}],189:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -39233,7 +39262,7 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./alsoResizeReverse":151,"./form/positionFormBtngroup":177,"./form/resizeTextareas":178,"./map/refreshMap":198,"./refreshScrollbar":218,"./setWidthOfTabs":219,"./toggleTab":225,"underscore":150}],189:[function(require,module,exports){
+},{"./alsoResizeReverse":151,"./form/positionFormBtngroup":178,"./form/resizeTextareas":179,"./map/refreshMap":199,"./refreshScrollbar":219,"./setWidthOfTabs":220,"./toggleTab":226,"underscore":150}],190:[function(require,module,exports){
 (function (global){
 /*
  * adds a layer to the layercontrol
@@ -39247,11 +39276,12 @@ var $                      = (typeof window !== "undefined" ? window.$ : typeof 
     layertoolProjectPanel  = require('../../../templates/layertoolProjectPanel'),
     layertoolThemesPanel   = require('../../../templates/layertoolThemesPanel'),
     getObject              = require('../getObject'),
-    getHierarchy           = require('../getHierarchy');
+    getHierarchy           = require('../getHierarchy'),
+    capitalizeFirstLetter  = require('../capitalizeFirstLetter');
 
 module.exports = function (layer) {
     var dataObject = {},
-        obj     = {},
+        obj        = {},
         layerGroup,
         project,
         projId,
@@ -39265,11 +39295,12 @@ module.exports = function (layer) {
 
     obj.layerTitle    = layer.get('layerTitle');
     obj.showControlId = 'show' + layer.get('layerName');
+    obj.editControlId = 'edit' + layer.get('layerName');
     obj.checked       = layer.getVisible() ? 'checked' : '';
     layerGroup        = layer.get('layerGroup');
     obj.inputType     = layerGroup === 'background' ? 'radio' : 'checkbox';
     // name attribute is needed for radios so only one can be choosen
-    obj.inputName     = layerGroup === 'background' ? 'lytBackground' : '';
+    obj.inputName     = 'lyt' + capitalizeFirstLetter(layerGroup);
     obj.isProject     = layerGroup === 'projects' ? true : false;
 
     // put obj in object, so it can be used as whole
@@ -39317,7 +39348,7 @@ module.exports = function (layer) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../../templates/layertoolLayerCollapse":232,"../../../templates/layertoolProjectPanel":233,"../../../templates/layertoolThemesPanel":234,"../getHierarchy":181,"../getObject":182}],190:[function(require,module,exports){
+},{"../../../templates/layertoolLayerCollapse":233,"../../../templates/layertoolProjectPanel":234,"../../../templates/layertoolThemesPanel":235,"../capitalizeFirstLetter":153,"../getHierarchy":182,"../getObject":183}],191:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -39338,7 +39369,7 @@ module.exports = function () {
     window.oi.olMap.map.addLayer(createLayerSwisstopoAerial());
     addProjectLayers();
 };
-},{"./addProjectLayers":191,"./createLayerSwisstopoAerial":193,"./createLayerSwisstopoPixelFarbe":194,"openlayers":27,"underscore":150}],191:[function(require,module,exports){
+},{"./addProjectLayers":192,"./createLayerSwisstopoAerial":194,"./createLayerSwisstopoPixelFarbe":195,"openlayers":27,"underscore":150}],192:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -39373,7 +39404,7 @@ module.exports = function () {
         }
     });
 };
-},{"../capitalizeFirstLetter":153,"./createLayerForData":192,"underscore":150}],192:[function(require,module,exports){
+},{"../capitalizeFirstLetter":153,"./createLayerForData":193,"underscore":150}],193:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -39440,7 +39471,7 @@ module.exports = function (passedData) {
 
     window.oi.olMap.map.addLayer(vectorLayer);
 };
-},{"./extendExtent":195,"openlayers":27,"underscore":150}],193:[function(require,module,exports){
+},{"./extendExtent":196,"openlayers":27,"underscore":150}],194:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -39488,7 +39519,7 @@ module.exports = function () {
     return wmtsS3Swissimage;
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./wmtsSource":200,"openlayers":27}],194:[function(require,module,exports){
+},{"./wmtsSource":201,"openlayers":27}],195:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -39537,7 +39568,7 @@ module.exports = function () {
     return wmtsS3PixelFarbe;
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./wmtsSource":200,"openlayers":27}],195:[function(require,module,exports){
+},{"./wmtsSource":201,"openlayers":27}],196:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -39554,7 +39585,7 @@ module.exports = function (extent, meters) {
 
     return extendedExtent;
 };
-},{"underscore":150}],196:[function(require,module,exports){
+},{"underscore":150}],197:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -39621,7 +39652,7 @@ module.exports = function () {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./addLayerToLayertool":189,"./addLayers":190,"./mousePositionControl":197,"./removeLayerFromLayertool":199,"openlayers":27}],197:[function(require,module,exports){
+},{"./addLayerToLayertool":190,"./addLayers":191,"./mousePositionControl":198,"./removeLayerFromLayertool":200,"openlayers":27}],198:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -39644,7 +39675,7 @@ module.exports = function () {
     });
     return mousePositionControl;
 };
-},{"openlayers":27}],198:[function(require,module,exports){
+},{"openlayers":27}],199:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -39653,7 +39684,7 @@ module.exports = function () {
         window.oi.olMap.map.updateSize();
     }
 };
-},{}],199:[function(require,module,exports){
+},{}],200:[function(require,module,exports){
 (function (global){
 /*
  * removes a layer from the layercontrol
@@ -39686,7 +39717,7 @@ module.exports = function (layer) {
     $listGroupDiv.remove();
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],200:[function(require,module,exports){
+},{}],201:[function(require,module,exports){
 /*
  * Bekommt layername und layerConfig
  *
@@ -39786,7 +39817,7 @@ module.exports = function (layer, options) {
         requestEncoding: 'REST'
     }));
 };
-},{"openlayers":27}],201:[function(require,module,exports){
+},{"openlayers":27}],202:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -39804,7 +39835,7 @@ module.exports = function (feature, buffer) {
     ol.extent.extend(featuresExtent, featureExtentEnlarged);
     window.oi.olMap.map.getView().fitExtent(featuresExtent, window.oi.olMap.map.getSize());
 };
-},{"./extendExtent":195,"openlayers":27}],202:[function(require,module,exports){
+},{"./extendExtent":196,"openlayers":27}],203:[function(require,module,exports){
 // creates descendant hierarchical objects of single objects
 // adds them to an array
 
@@ -39841,7 +39872,7 @@ module.exports = function (object) {
     }
     return [];
 };
-},{"underscore":150}],203:[function(require,module,exports){
+},{"underscore":150}],204:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -39851,7 +39882,7 @@ module.exports = function () {
     }
     window.oi.databaseId = localStorage.databaseId;
 };
-},{}],204:[function(require,module,exports){
+},{}],205:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -39902,7 +39933,7 @@ module.exports = function () {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../form/initiateForm":175,"../refreshScrollbar":218,"./generateDataForTree":207,"./treeContextmenuItems":217,"jstree":26}],205:[function(require,module,exports){
+},{"../form/initiateForm":176,"../refreshScrollbar":219,"./generateDataForTree":208,"./treeContextmenuItems":218,"jstree":26}],206:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -39935,7 +39966,7 @@ module.exports = function (object) {
 
     return jstreeObject;
 };
-},{"./getLabelForObject":209,"underscore":150}],206:[function(require,module,exports){
+},{"./getLabelForObject":210,"underscore":150}],207:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -39948,7 +39979,7 @@ module.exports = function (object) {
     jstreeObject.parent = '#';
     return jstreeObject;
 };
-},{"./createTreeNodeObject":205}],207:[function(require,module,exports){
+},{"./createTreeNodeObject":206}],208:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -39981,7 +40012,7 @@ module.exports = function () {
 
     return _.union(objectsData, childHierarchiesData);
 };
-},{"./createChildHierarchiesOfObject":202,"./createTreeNodeObject":205,"./createTreeNodeRootObject":206,"underscore":150}],208:[function(require,module,exports){
+},{"./createChildHierarchiesOfObject":203,"./createTreeNodeObject":206,"./createTreeNodeRootObject":207,"underscore":150}],209:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -40031,7 +40062,7 @@ module.exports = function (firstSync, projectName, callback) {
         callback(error, false);
     });
 };
-},{"../configuration":154,"pouchdb":106,"underscore":150}],209:[function(require,module,exports){
+},{"../configuration":154,"pouchdb":106,"underscore":150}],210:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -40062,7 +40093,7 @@ module.exports = function (object, correspondingHierarchy) {
     label      = '<strong>' + labelValue + '</strong>';
     return label;
 };
-},{"underscore":150}],210:[function(require,module,exports){
+},{"underscore":150}],211:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -40082,7 +40113,7 @@ module.exports = function () {
     }
 
 };
-},{"./initiateNav":212,"./openSigninModal":213}],211:[function(require,module,exports){
+},{"./initiateNav":213,"./openSigninModal":214}],212:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -40111,7 +40142,7 @@ module.exports = function (firstSync, projectNames, callback) {
         });
     });
 };
-},{"./getDataFromDb":208,"underscore":150}],212:[function(require,module,exports){
+},{"./getDataFromDb":209,"underscore":150}],213:[function(require,module,exports){
 (function (global){
 /*
  * initiiert die nav
@@ -40173,7 +40204,7 @@ module.exports = function (projectNames) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../syncWithRemoteDbs":222,"../syncWithRemoteUserDb":223,"./createDatabaseId":203,"./createTree":204,"./getModelData":211,"async":2,"pouchdb":106,"pouchdb-all-dbs":28,"underscore":150}],213:[function(require,module,exports){
+},{"../syncWithRemoteDbs":223,"../syncWithRemoteUserDb":224,"./createDatabaseId":204,"./createTree":205,"./getModelData":212,"async":2,"pouchdb":106,"pouchdb-all-dbs":28,"underscore":150}],214:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -40193,7 +40224,7 @@ module.exports = function () {
         });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],214:[function(require,module,exports){
+},{}],215:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -40233,7 +40264,7 @@ module.exports = function (signindata) {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../configuration":154,"../tellWithModal":224,"./initiateNav":212,"pouchdb":106}],215:[function(require,module,exports){
+},{"../configuration":154,"../tellWithModal":225,"./initiateNav":213,"pouchdb":106}],216:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -40296,7 +40327,7 @@ module.exports = function () {
     signIn(signindata);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../tellWithModal":224,"../validateEmail":226,"./signIn":214,"./signUp":216}],216:[function(require,module,exports){
+},{"../tellWithModal":225,"../validateEmail":227,"./signIn":215,"./signUp":217}],217:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -40326,7 +40357,7 @@ module.exports = function (signindata) {
         tellWithModal('Das Konto konnte nicht erstellt werden', 'Die Datenbank meldete: ' + error);
     });
 };
-},{"../configuration":154,"../tellWithModal":224,"./signIn":214,"pouchdb":106}],217:[function(require,module,exports){
+},{"../configuration":154,"../tellWithModal":225,"./signIn":215,"pouchdb":106}],218:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -40362,7 +40393,7 @@ module.exports = function ($node) {
     };
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../createNewObjectFromHierarchy":156,"../createNewObjectFromObject":157,"../deleteObjectAndChildren":158}],218:[function(require,module,exports){
+},{"../createNewObjectFromHierarchy":156,"../createNewObjectFromObject":157,"../deleteObjectAndChildren":158}],219:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -40373,7 +40404,7 @@ module.exports = function () {
     $('.scrollbar').perfectScrollbar('update');
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],219:[function(require,module,exports){
+},{}],220:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus*/
 'use strict';
@@ -40422,7 +40453,7 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./form/positionFormBtngroup":177,"./map/refreshMap":198,"underscore":150}],220:[function(require,module,exports){
+},{"./form/positionFormBtngroup":178,"./map/refreshMap":199,"underscore":150}],221:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -40441,7 +40472,8 @@ var $                                    = (typeof window !== "undefined" ? wind
     onClickSigninWithModalSignupCheckbox = require('./event/onClickSigninWithModalSignupCheckbox'),
     signInOrUp                           = require('./nav/signInOrUp'),
     onClickGeometryField                 = require('./event/onClickGeometryField'),
-    onChangeLytShowLayer                 = require('./event/onChangeLytShowLayer');
+    onChangeLytShowLayer                 = require('./event/onChangeLytShowLayer'),
+    onChangeLytEditLayer                 = require('./event/onChangeLytEditLayer');
 
 module.exports = function () {
     // scroll event doesn't buble up, so it cant be delegated from # to .
@@ -40470,10 +40502,11 @@ module.exports = function () {
         .on('change',      'input, textarea, select',        onChangeElement);
 
     $('#utils')
-        .on('change',      '.js-lytShowLayer',               onChangeLytShowLayer);
+        .on('change',      '.js-lytShowLayer',               onChangeLytShowLayer)
+        .on('change',      '.js-lytEditLayer',               onChangeLytEditLayer);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./event/onChangeElement":160,"./event/onChangeLytShowLayer":161,"./event/onClickFormDelete":162,"./event/onClickFormNew":163,"./event/onClickGeometryField":164,"./event/onClickNavFormSort":165,"./event/onClickNavbarBrand":166,"./event/onClickNavbarCollapse":167,"./event/onClickSigninWithModalSignupCheckbox":168,"./event/onKeypressSigninWithModal":169,"./event/onScrollTab":170,"./form/fitTextareaToContent":173,"./nav/signInOrUp":215,"underscore":150}],221:[function(require,module,exports){
+},{"./event/onChangeElement":160,"./event/onChangeLytEditLayer":161,"./event/onChangeLytShowLayer":162,"./event/onClickFormDelete":163,"./event/onClickFormNew":164,"./event/onClickGeometryField":165,"./event/onClickNavFormSort":166,"./event/onClickNavbarBrand":167,"./event/onClickNavbarCollapse":168,"./event/onClickSigninWithModalSignupCheckbox":169,"./event/onKeypressSigninWithModal":170,"./event/onScrollTab":171,"./form/fitTextareaToContent":174,"./nav/signInOrUp":216,"underscore":150}],222:[function(require,module,exports){
 /**
  * synchronisiert die Daten aus einer CouchDB in PouchDB
  */
@@ -40518,7 +40551,7 @@ module.exports = function (couchName) {
     }
 };
 
-},{"./configuration":154,"./handleChanges":184,"pouchdb":106}],222:[function(require,module,exports){
+},{"./configuration":154,"./handleChanges":185,"pouchdb":106}],223:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -40531,7 +40564,7 @@ module.exports = function (projectDbs) {
     });
 };
 
-},{"./syncWithRemoteDb":221,"underscore":150}],223:[function(require,module,exports){
+},{"./syncWithRemoteDb":222,"underscore":150}],224:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -40549,7 +40582,7 @@ module.exports = function () {
         include_docs: true
     }).on('change', handleUsersChanges);
 };
-},{"./configuration":154,"./handleUsersChanges":186,"pouchdb":106}],224:[function(require,module,exports){
+},{"./configuration":154,"./handleUsersChanges":187,"pouchdb":106}],225:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -40572,7 +40605,7 @@ module.exports = function (title, text) {
     $modal.modal(options);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],225:[function(require,module,exports){
+},{}],226:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -40603,7 +40636,7 @@ module.exports = function (tab, show) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./map/initiateMap":196}],226:[function(require,module,exports){
+},{"./map/initiateMap":197}],227:[function(require,module,exports){
 /*
  * prüft, ob ein String eine email-Adressen sein könnte
  * Quelle: http://stackoverflow.com/questions/46155/validate-email-address-in-javascript
@@ -40616,7 +40649,7 @@ module.exports = function (string) {
     var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(string);
 };
-},{}],227:[function(require,module,exports){
+},{}],228:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, helper, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing, functionType="function";
   return "<div class=\"form-group js-form-group\">\r\n    <label class=\"control-label\">"
@@ -40630,7 +40663,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(((helper = (helper = helpers.checked || (depth0 != null ? depth0.checked : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"checked","hash":{},"data":data}) : helper)))
     + ">\r\n            </label>\r\n        </div>\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":24}],228:[function(require,module,exports){
+},{"handlebars":24}],229:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,depths) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "            <div class=\"checkbox\">\r\n                <label>\r\n                    <input type=\"checkbox\" id=\""
@@ -40657,11 +40690,11 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "    </div>\r\n</div>";
 },"useData":true,"useDepths":true});
-},{"handlebars":24}],229:[function(require,module,exports){
+},{"handlebars":24}],230:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   return "<div class=\"btn-toolbar\" role=\"toolbar\" aria-label=\"Daten Toolbar\">\r\n    <div class=\"btn-group pull-right\" role=\"group\" aria-label=\"Daten Button group\">\r\n        <button id=\"formNew\" class=\"btn btn-default\">neu</button>\r\n        <button id=\"formDelete\" class=\"btn btn-default\">löschen</button>\r\n    </div>\r\n</div>";
   },"useData":true});
-},{"handlebars":24}],230:[function(require,module,exports){
+},{"handlebars":24}],231:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "<div class=\"form-group js-form-group\">\r\n    <label for=\""
@@ -40678,7 +40711,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.value : stack1), depth0))
     + "</textarea>\r\n    <button class=\"js-geometryField\" class=\"btn btn-default\">Karte</button>\r\n</div>";
 },"useData":true});
-},{"handlebars":24}],231:[function(require,module,exports){
+},{"handlebars":24}],232:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "<div class=\"form-group js-form-group\">\r\n    <label for=\""
@@ -40697,12 +40730,12 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.value : stack1), depth0))
     + "\">\r\n</div>";
 },"useData":true});
-},{"handlebars":24}],232:[function(require,module,exports){
+},{"handlebars":24}],233:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression;
   return "        <div class=\"checkbox\">\r\n            <label>\r\n                <input type=\"checkbox\" id=\""
-    + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.inputName : stack1), depth0))
-    + "Bearbeiten\" class=\"js-lytEditLayer\"><div class=\"lytListGroupLabelText\">bearbeiten</div>\r\n            </label>\r\n        </div>\r\n";
+    + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.editControlId : stack1), depth0))
+    + "\" class=\"js-lytEditLayer\"><div class=\"lytListGroupLabelText\">bearbeiten</div>\r\n            </label>\r\n        </div>\r\n";
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, lambda=this.lambda, buffer = "<div class=\"list-group\" data-object=\""
     + escapeExpression(((helpers.json || (depth0 && depth0.json) || helperMissing).call(depth0, (depth0 != null ? depth0.object : depth0), {"name":"json","hash":{},"data":data})))
@@ -40723,7 +40756,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "</div>";
 },"useData":true});
-},{"handlebars":24}],233:[function(require,module,exports){
+},{"handlebars":24}],234:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression;
   return "<div id=\"lytProject"
@@ -40740,11 +40773,11 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.projId : stack1), depth0))
     + "\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingProjekte\">\r\n        <!--insert layer collapses-->\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":24}],234:[function(require,module,exports){
+},{"handlebars":24}],235:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   return "<div id=\"lytThemes\" class=\"panel panel-default js-layerPanel\">\r\n    <div class=\"panel-heading\" role=\"tab\" id=\"headingThemen\">\r\n        <h4 class=\"panel-title\">\r\n            <a class=\"collapsed\" data-toggle=\"collapse\" data-parent=\"#utilsLayertoolAccordion\" href=\"#collapseThemes\" aria-expanded=\"false\" aria-controls=\"collapseThemes\">\r\n              Themen\r\n            </a>\r\n        </h4>\r\n    </div>\r\n    <div id=\"collapseThemes\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingThemen\">\r\n        <!--insert list-groups-->\r\n    </div>\r\n</div>";
   },"useData":true});
-},{"handlebars":24}],235:[function(require,module,exports){
+},{"handlebars":24}],236:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,depths) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "            <div class=\"radio\">\r\n                <label>\r\n                    <input type=\"radio\" name=\""
@@ -40771,7 +40804,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "    </div>\r\n</div>";
 },"useData":true,"useDepths":true});
-},{"handlebars":24}],236:[function(require,module,exports){
+},{"handlebars":24}],237:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, buffer = "                <option value=";
   stack1 = lambda((depth0 != null ? depth0.value : depth0), depth0);
@@ -40794,7 +40827,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "        </select>\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":24}],237:[function(require,module,exports){
+},{"handlebars":24}],238:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "<div class=\"form-group js-form-group\">\r\n    <label for=\""

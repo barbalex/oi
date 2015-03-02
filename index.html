@@ -70,26 +70,26 @@
                 <div class="tabTitleContainer">
                     <div class="tabTitle">Werkzeuge</div>
                 </div>
-                <div id="utilsLayertool">
+                <div id="utilsLayertool" class="utilsAccordion">
                     <div class="panel-group" id="utilsLayertoolPanelGroup" role="tablist" aria-multiselectable="true">
-                        <div class="panel panel-default js-layerToolTitel">
-                            <div class="panel-heading" role="tab" id="panelGroupHeading">
+                        <div class="panel panel-default js-utilsPanelGroupTitel">
+                            <div class="panel-heading" role="tab" id="utilsLayertoolPanelGroupHeading">
                                 <h4 class="panel-title">
                                     <a data-toggle="collapse" data-parent="#utilsLayertoolPanelGroup" href="#utilsLayertoolAccordion" aria-expanded="true" aria-controls="utilsLayertoolAccordion">
                                         Layer
                                     </a>
                                 </h4>
                             </div>
-                            <div id="utilsLayertoolAccordion" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="panelGroupHeading">
+                            <div id="utilsLayertoolAccordion" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="utilsLayertoolPanelGroupHeading">
                                 <div id="lytBackground" class="panel panel-default js-layerPanel">
-                                    <div class="panel-heading" role="tab" id="headingHintergrund">
+                                    <div class="panel-heading" role="tab" id="utilsLayertoolPanelGroupHeadingHintergrund">
                                         <h4 class="panel-title">
                                             <a data-toggle="collapse" data-parent="#utilsLayertoolAccordion" href="#collapseBackground" aria-expanded="true" aria-controls="collapseBackground">
                                                 Hintergrund
                                             </a>
                                         </h4>
                                     </div>
-                                    <div id="collapseBackground" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingHintergrund">
+                                    <div id="collapseBackground" class="panel-collapse collapse" role="tabpanel" aria-labelledby="utilsLayertoolPanelGroupHeadingHintergrund">
                                         <!--insert list-groups-->
                                     </div>
                                 </div>
@@ -97,7 +97,44 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div><!-- #utilsLayertool -->
+                <div id="utilsEditLayer" class="utilsAccordion">
+                    <div class="panel-group" id="utilsEditLayerPanelGroup" role="tablist" aria-multiselectable="true">
+                        <div class="panel panel-default js-utilsPanelGroupTitel">
+                            <div class="panel-heading" role="tab" id="utilsEditPanelGroupHeading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#utilsEditLayerPanelGroup" href="#utilsEditAccordion" aria-expanded="true" aria-controls="utilsEditAccordion">
+                                        Layer bearbeiten
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="utilsEditAccordion" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="utilsEditPanelGroupHeading">
+                                <div class="list-group">
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" id="utilsEditChoose" name="utilsEditEditType" class="js-utilsEditLayerType"><div class="lytListGroupLabelText">auswählen</div>
+                                        </label>
+                                    </div>
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" id="utilsEditDrawPoint" name="utilsEditEditType" class="js-utilsEditLayerType"><div class="lytListGroupLabelText">Punkt zeichnen</div>
+                                        </label>
+                                    </div>
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" id="utilsEditDrawLine" name="utilsEditEditType" class="js-utilsEditLayerType"><div class="lytListGroupLabelText">Linie zeichnen</div>
+                                        </label>
+                                    </div>
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" id="utilsEditDrawPolygon" name="utilsEditEditType" class="js-utilsEditLayerType"><div class="lytListGroupLabelText">Fläche zeichnen</div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- #utilsEditLayer -->
             </div>
         </div><!-- #content -->
 

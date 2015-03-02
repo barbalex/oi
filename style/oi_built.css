@@ -9382,6 +9382,10 @@ body {
   display: none;
 }
 
+.utilsAccordion {
+  margin-bottom: -10px;
+}
+
 #utils .panel-group .panel + .panel {
   margin-top: 0;
 }
@@ -9410,7 +9414,7 @@ body {
   word-wrap: break-word;
 }
 
-#utils .js-layerToolTitel > .panel-heading {
+#utils .js-utilsPanelGroupTitel > .panel-heading {
   background-color: #CFCFCF;
   border-radius: 0;
 }
@@ -9447,6 +9451,10 @@ body {
 #utils .list-group .radio {
   margin-top: 0;
   margin-bottom: 2px;
+}
+
+#utilsEditLayer {
+  display: none;
 }
 
 /*# sourceMappingURL=oi_built.css.map */
