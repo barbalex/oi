@@ -38,7 +38,7 @@ module.exports = function () {
         layerName:   'swissimage',
         layerGroup:  'background',
         visible:     false,
-        source: srcWmtsS3Swissimage
+        source:      srcWmtsS3Swissimage
     });
 
     return wmtsS3Swissimage;
