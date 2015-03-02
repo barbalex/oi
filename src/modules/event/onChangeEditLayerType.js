@@ -1,20 +1,35 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
+var ol                    = require('openlayers'),
+    _                     = require('underscore'),
+    removeAllInteractions = require('../map/removeAllInteractions'),
+    addModifyInteraction  = require('../map/addModifyInteraction'),
+    addDrawInteraction    = require('../map/addDrawInteraction');
+
 module.exports = function () {
-    //console.log('edit layer type changed, this.id: ', this.id);
-    switch (this.id) {
-    case 'utilsEditChoose':
-        // TODO: add modify interaction
-        break;
-    case 'utilsEditDrawPoint':
-        // TODO: add draw interaction
-        break;
-    case 'utilsEditDrawLine':
-        // TODO: add draw interaction
-        break;
-    case 'utilsEditDrawPolygon':
-        // TODO: add draw interaction
-        break;
+    var map,
+        layer,
+        layers,
+        geometryType;
+
+    map    = window.oi.olMap.map;
+    layers = map.getLayers().getArray();
+    layer  = _.filter(layers, function (layer) {
+        return layer.get('editing') === true;
+    })[0];
+
+    // first remove all remaining interactions
+    removeAllInteractions();
+
+    if (layer) {
+        if (this.id === 'utilsEditChoose') {
+            // add modify interaction
+            addModifyInteraction(layer);
+        } else {
+            // add draw interaction
+            geometryType = this.value;
+            addDrawInteraction(layer, geometryType);
+        }
     }
 };

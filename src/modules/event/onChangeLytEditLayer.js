@@ -1,9 +1,10 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $         = require('jquery'),
-    _         = require('underscore'),
-    editLayer = require('../map/editLayer');
+var ol                    = require('openlayers'),
+    $                     = require('jquery'),
+    _                     = require('underscore'),
+    removeAllInteractions = require('../map/removeAllInteractions');
 
 module.exports = function () {
     var layerTitle = $(this).closest('.list-group').data('object').layerTitle,
@@ -12,18 +13,18 @@ module.exports = function () {
 
     layer = _.filter(layers, function (layer) {
         return layer.get('layerTitle') === layerTitle;
-    });
-    if (layer && layer[0]) {
-        layer = layer[0];
-
+    })[0];
+    if (layer) {
         if (this.checked) {
+            layer.set('editing', true);
             $('#utilsEditLayer').show();
+            // trigger changing of edit-modus (starts modify-interaction)
             $('#utilsEditChoose').trigger('click');
-            editLayer(layer);
         } else {
+            layer.set('editing', false);
             $('#utilsEditLayer').hide();
-            // TODO: call function that makes layer not modifiable?
-            
+            // TODO: call function that cancels modifications
+            removeAllInteractions();
         }
     }
 };
