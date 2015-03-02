@@ -4,11 +4,11 @@
 var _                              = require('underscore'),
     ol                             = require('openlayers'),
     createLayerSwisstopoPixelFarbe = require('./createLayerSwisstopoPixelFarbe'),
-    createLayerSwisstopoAerial     = require('./createLayerSwisstopoAerial');
+    createLayerSwisstopoAerial     = require('./createLayerSwisstopoAerial'),
+    addProjectLayers               = require('./addProjectLayers');
 
 module.exports = function () {
-    var layers = [],
-        mapQuestSat;
+    var mapQuestSat;
 
     mapQuestSat = new ol.layer.Tile({
         source: new ol.source.MapQuest({layer: 'sat'})
@@ -16,4 +16,5 @@ module.exports = function () {
 
     window.oi.olMap.map.addLayer(createLayerSwisstopoPixelFarbe());
     window.oi.olMap.map.addLayer(createLayerSwisstopoAerial());
+    addProjectLayers();
 };

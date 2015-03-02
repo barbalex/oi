@@ -19,6 +19,7 @@ module.exports = function (tab, show) {
                 if (tab === 'map') {
                     initiateMap();
                     $('#utils').show();
+                    $('#utilsMenu').addClass('active');
                 }
             }
         }

@@ -5,19 +5,15 @@ var _            = require('underscore'),
     ol           = require('openlayers'),
     extendExtent = require('./extendExtent');
 
-module.exports = function (selectedObject) {
+module.exports = function (passedData) {
     var vectorLayer,
         vectorSource,
         vectorSourceObjects,
         olFeatureArray = [],
-        hId            = selectedObject.hId,
-        label          = selectedObject.label,
-        layerName      = selectedObject.layerName,
-        layerTitle     = selectedObject.layerTitle,
-        selectedFeature,
-        featuresExtent,
-        selectedFeatureExtent,
-        selectedFeatureExtentEnlarged;
+        hId            = passedData.hId,
+        label          = passedData.label,
+        layerName      = passedData.layerName,
+        layerTitle     = passedData.layerTitle;
 
     // extract all objects with this hId from Model
     vectorSourceObjects = _.filter(window.oi.objects, function (object) {
@@ -33,9 +29,6 @@ module.exports = function (selectedObject) {
             feature  = new ol.Feature();
             feature.setGeometry(new ol.geom[geomData.type](geomData.coordinates));
             olFeatureArray.push(feature);
-            if (object._id === selectedObject._id) {
-                selectedFeature = feature;
-            }
         }
     });
 
@@ -46,7 +39,8 @@ module.exports = function (selectedObject) {
         layerTitle:  layerTitle,
         layerName:   layerName,
         layerGroup:  'projects',
-        objId:       selectedObject._id,
+        objId:       passedData._id,
+        projId:      passedData.projId || null,
         visible:     true,
         source:      vectorSource,
         style: new ol.style.Style({
@@ -69,11 +63,4 @@ module.exports = function (selectedObject) {
     });
 
     window.oi.olMap.map.addLayer(vectorLayer);
-
-    // zoom to selected
-    featuresExtent                = ol.extent.createEmpty();
-    selectedFeatureExtent         = selectedFeature.getGeometry().getExtent();
-    selectedFeatureExtentEnlarged = extendExtent(selectedFeatureExtent, 200);
-    ol.extent.extend(featuresExtent, selectedFeatureExtentEnlarged);
-    window.oi.olMap.map.getView().fitExtent(featuresExtent, window.oi.olMap.map.getSize());
 };

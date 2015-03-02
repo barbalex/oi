@@ -1,12 +1,12 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var ol                          = require('openlayers'),
-    proj4                       = require('proj4'),
-    addLayers                   = require('./addLayers'),
-    mousePositionControl        = require('./mousePositionControl'),
-    addLayerToLayerControl      = require('./addLayerToLayerControl'),
-    removeLayerFromLayerControl = require('./removeLayerFromLayerControl');
+var ol                       = require('openlayers'),
+    proj4                    = require('proj4'),
+    addLayers                = require('./addLayers'),
+    mousePositionControl     = require('./mousePositionControl'),
+    addLayerToLayertool      = require('./addLayerToLayertool'),
+    removeLayerFromLayertool = require('./removeLayerFromLayertool');
 
 module.exports = function () {
     // only build up map if not yet done
@@ -53,10 +53,10 @@ module.exports = function () {
         // change layertool
         layers = map.getLayers();
         layers.on('add', function (response) {
-            addLayerToLayerControl(response.element);
+            addLayerToLayertool(response.element);
         });
         layers.on('remove', function (response) {
-            removeLayerFromLayerControl(response.element);
+            removeLayerFromLayertool(response.element);
         });
 
         addLayers();

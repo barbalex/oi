@@ -14,7 +14,7 @@ var $                      = require('jquery'),
 
 module.exports = function (layer) {
     var dataObject = {},
-        obj     = {},
+        obj        = {},
         layerGroup,
         project,
         projId,
@@ -44,6 +44,7 @@ module.exports = function (layer) {
         $('#collapseBackground').append(layertoolLayerCollapse(dataObject));
         break;
     case 'themes':
+        // check if themes-panel exists
         if (!$('#lytThemes').length) {
             // add themes-panel first
             $('#lytBackground').after(layertoolThemesPanel(dataObject));
@@ -51,20 +52,30 @@ module.exports = function (layer) {
         $('#collapseThemes').append(layertoolLayerCollapse(dataObject));
         break;
     case 'projects':
-        objId                         = layer.get('objId');
-        object                        = getObject(objId);
-        projId                        = object.projId;
-        project                       = getObject(projId);
-        projectHierarchy              = getHierarchy(project.hId);
-        projectName                   = project.data[projectHierarchy.nameField];
-        dataObject.object.projectName = projectName;
-        dataObject.object.projId      = projId;
-
-        if (!$('#lytProject' + projId).length) {
-            // add project-panel first
-            $('#utilsLayertoolAccordion').append(layertoolProjectPanel(dataObject));
+        // je nach Herkunft gibt es objId aber keine projId
+        // oder projId, dafür keine objId
+        objId = layer.get('objId');
+        if (objId) {
+            object = getObject(objId);
+            projId = object.projId;
+        } else {
+            projId = layer.get('projId');
         }
-        $('#collapseProject' + projId).append(layertoolLayerCollapse(dataObject));
+
+        if (projId) {
+            project                       = getObject(projId);
+            projectHierarchy              = getHierarchy(project.hId);
+            projectName                   = project.data[projectHierarchy.nameField];
+            dataObject.object.projectName = projectName;
+            dataObject.object.projId      = projId;
+
+            // check if this project's panel exists
+            if (!$('#lytProject' + projId).length) {
+                // add project-panel first
+                $('#utilsLayertoolAccordion').append(layertoolProjectPanel(dataObject));
+            }
+            $('#collapseProject' + projId).append(layertoolLayerCollapse(dataObject));
+        }
         break;
     }
 };
