@@ -1,8 +1,9 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $ = require('jquery'),
-    _ = require('underscore');
+var $         = require('jquery'),
+    _         = require('underscore'),
+    editLayer = require('../map/editLayer');
 
 module.exports = function () {
     var layerTitle = $(this).closest('.list-group').data('object').layerTitle,
@@ -18,10 +19,11 @@ module.exports = function () {
         if (this.checked) {
             $('#utilsEditLayer').show();
             $('#utilsEditChoose').trigger('click');
-            // TODO: call function that makes layer modifiable?
+            editLayer(layer);
         } else {
             $('#utilsEditLayer').hide();
             // TODO: call function that makes layer not modifiable?
+            
         }
     }
 };
