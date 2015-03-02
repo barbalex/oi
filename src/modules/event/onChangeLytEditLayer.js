@@ -17,6 +17,7 @@ module.exports = function () {
 
         if (this.checked) {
             $('#utilsEditLayer').show();
+            $('#utilsEditChoose').trigger('click');
             // TODO: call function that makes layer modifiable?
         } else {
             $('#utilsEditLayer').hide();
