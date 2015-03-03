@@ -9473,4 +9473,9 @@ body {
             column-break-inside: avoid;
 }
 
+#utilsLayertool a:focus,
+#utilsEditLayer a:focus {
+  text-decoration: none;
+}
+
 /*# sourceMappingURL=oi_built.css.map */

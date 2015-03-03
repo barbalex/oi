@@ -266,3 +266,8 @@ body {
         -ms-column-break-inside: avoid;
             column-break-inside: avoid;
 }
+
+#utilsLayertool a:focus,
+#utilsEditLayer a:focus {
+  text-decoration: none;
+}
