@@ -17,8 +17,6 @@ module.exports = function (layer) {
         feature,
         selectedLayer = layer;
 
-    console.log('addModifyInteraction to layer: ', layer.get('layerTitle'));
-
     // create select interaction
     selectInteraction = new ol.interaction.Select({
         // make sure only the desired layer can be selected
@@ -37,9 +35,10 @@ module.exports = function (layer) {
     selectedFeatures.on('add', function (event) {
         // grab the feature
         feature = event.element;
+
         // ...listen for changes and save them
         feature.on('change', function () {
-            saveFeatureData(feature);
+            saveFeatureData(this);
         });
         // listen to pressing of delete key, then delete selected features
         $(document).on('keyup', function (event) {

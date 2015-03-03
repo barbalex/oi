@@ -44,9 +44,6 @@ module.exports = function (passedObject, value) {
         // write to pouch
         localDb.put(object)
             .then(function (response) {
-
-                console.log('response from saving object: ', response);
-
                 // check if this was a new project
                 if (!object._rev) {
                     // TODO: new project: start syncing

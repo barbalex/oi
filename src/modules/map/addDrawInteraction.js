@@ -57,5 +57,7 @@ module.exports = function (layer, geometryType) {
             // ...save the changed data
             saveFeatureData(feature);
         }
+        // jetzt auf auswählen wechseln
+        $('#utilsEditChoose').trigger('click');
     });
 };

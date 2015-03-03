@@ -38934,9 +38934,6 @@ module.exports = function (passedObject, value) {
         // write to pouch
         localDb.put(object)
             .then(function (response) {
-
-                console.log('response from saving object: ', response);
-
                 // check if this was a new project
                 if (!object._rev) {
                     // TODO: new project: start syncing
@@ -39358,6 +39355,8 @@ module.exports = function (layer, geometryType) {
             // ...save the changed data
             saveFeatureData(feature);
         }
+        // jetzt auf auswählen wechseln
+        $('#utilsEditChoose').trigger('click');
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
@@ -39489,8 +39488,6 @@ module.exports = function (layer) {
         feature,
         selectedLayer = layer;
 
-    console.log('addModifyInteraction to layer: ', layer.get('layerTitle'));
-
     // create select interaction
     selectInteraction = new ol.interaction.Select({
         // make sure only the desired layer can be selected
@@ -39509,9 +39506,10 @@ module.exports = function (layer) {
     selectedFeatures.on('add', function (event) {
         // grab the feature
         feature = event.element;
+
         // ...listen for changes and save them
         feature.on('change', function () {
-            saveFeatureData(feature);
+            saveFeatureData(this);
         });
         // listen to pressing of delete key, then delete selected features
         $(document).on('keyup', function (event) {
@@ -40033,8 +40031,7 @@ module.exports = function (feature) {
         // update field in ui
         geomElem = $('#' + objId + label);
         geomElem.val(JSON.stringify(data, null, 4));
-        fitTextareaToContent(geomElem);
-        //fitTextareaToContent(objId + label);
+        fitTextareaToContent(objId + label);
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
