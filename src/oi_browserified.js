@@ -39936,8 +39936,7 @@ module.exports = function (feature) {
         passingObject,
         objId,
         object,
-        label,
-        geomElem;
+        label;
 
     layer  = getEditingLayer();
     objId  = feature.getId();
@@ -39954,8 +39953,7 @@ module.exports = function (feature) {
         passingObject.inputType = null;
         saveObjectValue(passingObject, null);
         // update field in ui
-        geomElem = $('#' + objId + label);
-        geomElem.val('');
+        $('#' + objId + label).val('');
         fitTextareaToContent(objId + label);
     }
 };
@@ -40035,7 +40033,8 @@ module.exports = function (feature) {
         // update field in ui
         geomElem = $('#' + objId + label);
         geomElem.val(JSON.stringify(data, null, 4));
-        fitTextareaToContent(objId + label);
+        fitTextareaToContent(geomElem);
+        //fitTextareaToContent(objId + label);
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})

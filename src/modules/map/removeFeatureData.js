@@ -14,8 +14,7 @@ module.exports = function (feature) {
         passingObject,
         objId,
         object,
-        label,
-        geomElem;
+        label;
 
     layer  = getEditingLayer();
     objId  = feature.getId();
@@ -32,8 +31,7 @@ module.exports = function (feature) {
         passingObject.inputType = null;
         saveObjectValue(passingObject, null);
         // update field in ui
-        geomElem = $('#' + objId + label);
-        geomElem.val('');
+        $('#' + objId + label).val('');
         fitTextareaToContent(objId + label);
     }
 };
