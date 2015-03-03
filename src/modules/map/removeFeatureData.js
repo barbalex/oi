@@ -4,28 +4,19 @@
 var ol              = require('openlayers'),
     $               = require('jquery'),
     _               = require('underscore'),
+    getEditingLayer = require('./getEditingLayer'),
+    getObject       = require('../getObject'),
     saveObjectValue = require('../form/saveObjectValue');
 
 module.exports = function (feature) {
-    var map,
-        layers,
-        layer,
+    var layer,
         passingObject,
         objId,
         object;
 
-    map    = window.oi.olMap.map;
-    layers = map.getLayers().getArray();
-    layer  = _.find(layers, function (layer) {
-        return layer.get('editing') === true;
-    });
-
-    objId = feature.getId();
-    object = _.find(window.oi.objects, function (object) {
-        return object._id === objId;
-    });
-
-    console.log('removeFeatureData: objId: ', objId);
+    layer  = getEditingLayer();
+    objId  = feature.getId();
+    object = getObject(objId);
 
     if (object) {
         // create object to pass to saveObjectValue

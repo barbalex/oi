@@ -3,21 +3,16 @@
 
 var ol                    = require('openlayers'),
     _                     = require('underscore'),
+    getEditingLayer       = require('../map/getEditingLayer'),
     removeAllInteractions = require('../map/removeAllInteractions'),
     addModifyInteraction  = require('../map/addModifyInteraction'),
     addDrawInteraction    = require('../map/addDrawInteraction');
 
 module.exports = function () {
-    var map,
-        layer,
-        layers,
+    var layer,
         geometryType;
 
-    map    = window.oi.olMap.map;
-    layers = map.getLayers().getArray();
-    layer  = _.filter(layers, function (layer) {
-        return layer.get('editing') === true;
-    })[0];
+    layer = getEditingLayer();
 
     // first remove all remaining interactions
     removeAllInteractions();

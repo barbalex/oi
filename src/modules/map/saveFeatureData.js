@@ -4,34 +4,25 @@
 var ol              = require('openlayers'),
     $               = require('jquery'),
     _               = require('underscore'),
+    getEditingLayer = require('./getEditingLayer'),
+    getObject       = require('../getObject'),
     saveObjectValue = require('../form/saveObjectValue');
 
 module.exports = function (feature) {
     var format = new ol.format.GeoJSON(),
         // this will be the data in the chosen format
         data,
-        map,
-        layers,
         layer,
         passingObject,
         objId,
         object;
 
-    map    = window.oi.olMap.map;
-    layers = map.getLayers().getArray();
-    layer  = _.find(layers, function (layer) {
-        return layer.get('editing') === true;
-    });
+    layer  = getEditingLayer();
+    // convert the data of the feature into GeoJson
+    data   = JSON.parse(format.writeFeature(feature)).geometry;
+    objId  = feature.getId();
+    object = getObject(objId);
 
-    // convert the data of the layer into GeoJson
-    data = JSON.parse(format.writeFeature(feature));
-
-    console.log('saveFeatureData: data: ', data);
-
-    objId = feature.getId();
-    object = _.find(window.oi.objects, function (object) {
-        return object._id === objId;
-    });
     if (object) {
         // create object to pass to saveObjectValue
         passingObject           = {};
@@ -39,8 +30,8 @@ module.exports = function (feature) {
         passingObject.projId    = object.projId;
         passingObject.label     = layer.get('fieldLabel');
         passingObject.inputType = 'GeoJson';
-        saveObjectValue(passingObject, data.geometry);
+        saveObjectValue(passingObject, data);
         // update field in ui
-        $('#' + objId + passingObject.label).val(JSON.stringify(data.geometry), null, 4);
+        $('#' + objId + passingObject.label).val(JSON.stringify(data), null, 4);
     }
 };

@@ -22,11 +22,22 @@ module.exports = function (layer, geometryType) {
 
     // when a new feature has been drawn...
     drawInteraction.on('drawend', function (event) {
-        // create a unique id
+        // Two cases:
+        // 1. changing geometry of existing object that is shown in form
+        //    how to tell: geoJson Field of modifiable layer is empty
+        //    - get guid from jstree active node
+        //    - set id of feature
+        //    - save feature data
+        // 2. TODO: creating new geometry for new object
+        //    how to tell: geoJson Field of modifiable layer is not empty
+        //    - create new guid
+        //    - create new doc with sensible nameField and geometry
+        //    - refresh jstree and form
+        
+        
+        // give the feature an id
         // it is later needed to delete features
-        var id = guid();
-        // give the feature this id
-        event.feature.setId(id);
+        event.feature.setId(guid());
         // ...save the changed data
         saveFeatureData(event.feature);
     });
