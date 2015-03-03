@@ -20,7 +20,7 @@ module.exports = function (feature) {
     })[0];
 
     // convert the data of the layer into GeoJson
-    data = format.writeFeatures(feature);
+    data = format.writeFeatures([feature]);
     console.log('saveFeature: data: ', data);
     //$('#data').val(JSON.stringify(data, null, 4));
 };

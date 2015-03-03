@@ -23,7 +23,7 @@ module.exports = function () {
         } else {
             layer.set('editing', false);
             $('#utilsEditLayer').hide();
-            // TODO: call function that cancels modifications
+            // cancel modify-interaction
             removeAllInteractions();
         }
     }

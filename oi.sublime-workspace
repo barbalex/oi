@@ -451,23 +451,7 @@
 			"file": "index.html",
 			"settings":
 			{
-				"buffer_size": 14878,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/modules/setupEvents.js",
-			"settings":
-			{
-				"buffer_size": 2925,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/modules/event/onChangeEditLayerType.js",
-			"settings":
-			{
-				"buffer_size": 155,
+				"buffer_size": 14927,
 				"line_ending": "Windows"
 			}
 		},
@@ -475,15 +459,39 @@
 			"file": "src/modules/event/onChangeLytEditLayer.js",
 			"settings":
 			{
-				"buffer_size": 824,
+				"buffer_size": 1070,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/modules/event/onClickGeometryField.js",
+			"file": "src/modules/event/onChangeEditLayerType.js",
 			"settings":
 			{
-				"buffer_size": 1037,
+				"buffer_size": 1045,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/modules/map/saveFeature.js",
+			"settings":
+			{
+				"buffer_size": 739,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/modules/map/addDrawInteraction.js",
+			"settings":
+			{
+				"buffer_size": 907,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/modules/map/addModifyInteraction.js",
+			"settings":
+			{
+				"buffer_size": 3403,
 				"line_ending": "Windows"
 			}
 		},
@@ -493,6 +501,15 @@
 			{
 				"buffer_size": 19449,
 				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "var raster = new ol.layer.Tile({\n  source: new ol.source.MapQuest({layer: 'sat'})\n});\n\nvar map = new ol.Map({\n  layers: [raster],\n  target: 'map',\n  view: new ol.View({\n    center: [-11000000, 4600000],\n    zoom: 4\n  })\n});\n\n// The features are not added to a regular vector layer/source,\n// but to a feature overlay which holds a collection of features.\n// This collection is passed to the modify and also the draw\n// interaction, so that both can add or modify features.\nvar featureOverlay = new ol.FeatureOverlay({\n  style: new ol.style.Style({\n    fill: new ol.style.Fill({\n      color: 'rgba(255, 255, 255, 0.2)'\n    }),\n    stroke: new ol.style.Stroke({\n      color: '#ffcc33',\n      width: 2\n    }),\n    image: new ol.style.Circle({\n      radius: 7,\n      fill: new ol.style.Fill({\n        color: '#ffcc33'\n      })\n    })\n  })\n});\nfeatureOverlay.setMap(map);\n\nvar modify = new ol.interaction.Modify({\n  features: featureOverlay.getFeatures(),\n  // the SHIFT key must be pressed to delete vertices, so\n  // that new vertices can be drawn at the same position\n  // of existing vertices\n  deleteCondition: function(event) {\n    return ol.events.condition.shiftKeyOnly(event) &&\n        ol.events.condition.singleClick(event);\n  }\n});\nmap.addInteraction(modify);\n\nvar draw; // global so we can remove it later\nfunction addInteraction() {\n  draw = new ol.interaction.Draw({\n    features: featureOverlay.getFeatures(),\n    type: /** @type {ol.geom.GeometryType} */ (typeSelect.value)\n  });\n  map.addInteraction(draw);\n}\n\nvar typeSelect = document.getElementById('type');\n\n\n/**\n * Let user change the geometry type.\n * @param {Event} e Change event.\n */\ntypeSelect.onchange = function(e) {\n  map.removeInteraction(draw);\n  addInteraction();\n};\n\naddInteraction();",
+			"settings":
+			{
+				"buffer_size": 1763,
+				"line_ending": "Windows",
+				"name": "var raster = new ol.layer.Tile({"
 			}
 		}
 	],
@@ -545,12 +562,15 @@
 		"/C/Users/alex/oi",
 		"/C/Users/alex/oi/src",
 		"/C/Users/alex/oi/src/modules",
-		"/C/Users/alex/oi/src/modules/event",
-		"/C/Users/alex/oi/src/modules/map",
-		"/C/Users/alex/oi/templates"
+		"/C/Users/alex/oi/src/modules/map"
 	],
 	"file_history":
 	[
+		"/C/Users/alex/oi/src/oi_browserified.js",
+		"/C/Users/alex/oi/src/modules/map/removeAllInteractions.js",
+		"/C/Users/alex/oi/src/modules/map/createLayerSwisstopoAerial.js",
+		"/C/Users/alex/oi/src/modules/setupEvents.js",
+		"/C/Users/alex/oi/src/modules/event/onClickGeometryField.js",
 		"/C/Users/alex/oi/src/modules/map/addLayerToLayertool.js",
 		"/C/Users/alex/oi/src/modules/event/onChangeLytShowLayer.js",
 		"/C/Users/alex/oi/templates/layertoolLayerCollapse.hdb",
@@ -564,10 +584,7 @@
 		"/C/Users/alex/oi/src/modules/map/initiateMap.js",
 		"/C/Users/alex/oi/src/modules/setWidthOfTabs.js",
 		"/C/Users/alex/oi/templates/layertoolProjectPanel.hdb",
-		"/C/Users/alex/oi/src/oi_browserified.js",
 		"/C/Users/alex/oi/templates/layertoolThemesPanel.hdb",
-		"/C/Users/alex/oi/src/modules/map/createLayerSwisstopoAerial.js",
-		"/C/Users/alex/oi/src/modules/setupEvents.js",
 		"/C/Users/alex/oi/src/modules/form/getValueAfterChange.js",
 		"/C/Users/alex/oi/templates/layertoolListGroup.hdb",
 		"/C/Users/alex/oi/src/modules/map/removeLayerFromLayerControl.js",
@@ -578,7 +595,6 @@
 		"/C/Users/alex/oi/src/modules/capitalizeFirstLetter.js",
 		"/C/Users/alex/oi/src/capitalizeFirstLetter.js",
 		"/C/Users/alex/oi/templates/layertool.hdb",
-		"/C/Users/alex/oi/src/modules/event/onClickGeometryField.js",
 		"/C/Users/alex/oi/src/modules/map/wmtsSource.js",
 		"/C/Users/alex/oi/src/modules/map/extendExtent.js",
 		"/C/Users/alex/oi/templates/layertool.js",
@@ -677,12 +693,11 @@
 		"/C/Users/alex/oi/gulp-tasks/dev_when_watch_1.js",
 		"/C/Users/alex/oi/gulp-tasks/dev_when_watch_2.js",
 		"/C/Users/alex/oi/gulp-tasks/dev_3.js",
-		"/C/Users/alex/oi/gulp-tasks/dev_2.js",
-		"/C/Users/alex/oi/gulp-tasks/manifest.js"
+		"/C/Users/alex/oi/gulp-tasks/dev_2.js"
 	],
 	"find":
 	{
-		"height": 45.0
+		"height": 74.0
 	},
 	"find_in_files":
 	{
@@ -773,6 +788,28 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"drawInteraction = new ol.interaction.Draw({\n        source: layer.getSource(),",
+			"drawInteraction",
+			"addDrawInteraction",
+			"selectInteraction",
+			"saveData",
+			"addDrawInteraction",
+			"addModifyInteraction",
+			"drawInteraction",
+			"selected_feature",
+			"selected_feature_id",
+			"source_feature",
+			"source_feature_id",
+			"vectorlayer_features",
+			"selected_features",
+			"addDrawInteraction",
+			"interaction_type",
+			"modify_interaction",
+			"draw_interaction",
+			"select_interaction",
+			"vector_layer",
+			"layer",
+			"vector_layer",
 			"layertoolLayerCollapse",
 			"utilsLayertoolPanelGroup",
 			"utilsLayertool",
@@ -878,29 +915,7 @@
 			"<Value>",
 			"</Value>",
 			"</Default>",
-			"<Default>",
-			"$('.js-tab')",
-			"Handlebars",
-			"^",
-			"RESOLUTIONS",
-			"projection",
-			"updateSize",
-			"$('.scrollbar').perfectScrollbar('update')",
-			"fitTextareaToContent",
-			"window.oi.olMap.map.updateSize();",
-			"$('.scrollbar').perfectScrollbar('update')",
-			"fitTextareaToContent",
-			"js-geometryMap",
-			"saveObjectValue",
-			"showTab",
-			"mapMenu",
-			"formButtonToolbar",
-			"btn-toolbar",
-			"h121",
-			"data",
-			"swisstopoPixel",
-			"createWmtsLayer",
-			"require('ol')"
+			"<Default>"
 		],
 		"highlight": false,
 		"in_selection": false,
@@ -908,6 +923,16 @@
 		"regex": false,
 		"replace_history":
 		[
+			"selectedFeature",
+			"selectedFeatureId",
+			"sourceFeature",
+			"sourceFeatureId",
+			"layerFeatures",
+			"selectedFeatures",
+			"modifyInteraction",
+			"drawInteraction",
+			"selectInteraction",
+			"layer",
 			"utilsEditLayerType",
 			"utilsEditPanelGroupHeading",
 			"utilsEditAccordion",
@@ -1025,28 +1050,18 @@
 			"getObject",
 			"getHierarchy",
 			"deleteObjectFromModel",
-			"createNewObjectFromObject",
-			"createNewObjectFromHierarchy",
-			"$formContent",
-			"tree",
-			"deleteObjectAndChildren",
-			"pouchDbOptions",
-			"",
-			"newObjectNode",
-			"./fonts",
-			"hierarchyId",
-			"objectId"
+			"createNewObjectFromObject"
 		],
 		"reverse": false,
 		"show_context": true,
 		"use_buffer2": true,
-		"whole_word": true,
+		"whole_word": false,
 		"wrap": false
 	},
 	"groups":
 	[
 		{
-			"selected": 5,
+			"selected": 7,
 			"sheets":
 			[
 				{
@@ -1074,7 +1089,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 8,
+					"stack_index": 10,
 					"type": "text"
 				},
 				{
@@ -1101,10 +1116,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 4872.0,
+						"translation.y": 4554.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 7,
 					"type": "text"
 				},
 				{
@@ -1113,15 +1128,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 14878,
+						"buffer_size": 14927,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								5854,
-								5868
+								8269,
+								8269
 							]
 						],
 						"settings":
@@ -1131,27 +1146,27 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 2253.0,
+						"translation.y": 2882.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 5,
 					"type": "text"
 				},
 				{
 					"buffer": 3,
-					"file": "src/modules/setupEvents.js",
+					"file": "src/modules/event/onChangeLytEditLayer.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2925,
+						"buffer_size": 1070,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1647,
-								1647
+								635,
+								635
 							]
 						],
 						"settings":
@@ -1161,10 +1176,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 319.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 4,
 					"type": "text"
 				},
 				{
@@ -1173,15 +1188,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 155,
+						"buffer_size": 1045,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								155,
-								155
+								556,
+								486
 							]
 						],
 						"settings":
@@ -1192,24 +1207,52 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 3,
 					"type": "text"
 				},
 				{
 					"buffer": 5,
-					"file": "src/modules/event/onChangeLytEditLayer.js",
+					"file": "src/modules/map/saveFeature.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 824,
+						"buffer_size": 739,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								615,
-								615
+								544,
+								544
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 54.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "src/modules/map/addDrawInteraction.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 907,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								894,
+								894
 							]
 						],
 						"settings":
@@ -1222,24 +1265,24 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
-					"buffer": 6,
-					"file": "src/modules/event/onClickGeometryField.js",
+					"buffer": 7,
+					"file": "src/modules/map/addModifyInteraction.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1037,
+						"buffer_size": 3403,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								485,
-								485
+								1404,
+								1404
 							]
 						],
 						"settings":
@@ -1249,14 +1292,14 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 58.0,
+						"translation.y": 757.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
-					"buffer": 7,
+					"buffer": 8,
 					"file": "/C/Users/alex/oi_testdata/index.js",
 					"semi_transient": false,
 					"settings":
@@ -1279,14 +1322,14 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 4002.0,
+						"translation.y": 3850.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 6,
+					"stack_index": 8,
 					"type": "text"
 				},
 				{
-					"buffer": 7,
+					"buffer": 8,
 					"file": "/C/Users/alex/oi_testdata/index.js",
 					"semi_transient": false,
 					"settings":
@@ -1309,10 +1352,40 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 7366.0,
+						"translation.y": 6870.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 7,
+					"stack_index": 9,
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1763,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1519,
+								1519
+							]
+						],
+						"settings":
+						{
+							"auto_name": "var raster = new ol.layer.Tile({",
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 81.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
 					"type": "text"
 				}
 			]
@@ -1356,7 +1429,7 @@
 	"project": "oi.sublime-project",
 	"replace":
 	{
-		"height": 84.0
+		"height": 142.0
 	},
 	"save_all_on_build": true,
 	"select_file":

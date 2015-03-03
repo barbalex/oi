@@ -16,12 +16,15 @@ module.exports = function (layer) {
         feature,
         selectedLayer = layer;
 
+    console.log('addModifyInteraction to layer: ', layer.get('layerTitle'));
+
     // create select interaction
     selectInteraction = new ol.interaction.Select({
         // make sure only the desired layer can be selected
-        layers: function (layer) {
+        /*layers: function (layer) {
             return layer === selectedLayer;
-        }
+        },*/
+        condition: ol.events.condition.click
     });
     // make interactions global so they can later be removed
     window.oi.olMap.map.selectInteraction = selectInteraction;
@@ -35,30 +38,30 @@ module.exports = function (layer) {
         feature = event.element;
         // ...listen for changes and save them
         feature.on('change', function () {
-            console.log('on add feature: event: ', event);
-            console.log('on add feature: feature: ', feature);
             saveFeature(feature);
         });
         // listen to pressing of delete key, then delete selected features
         $(document).on('keyup', function (event) {
-            var selectedFeatureId,
-                layerFeatures;
             if (event.keyCode === 46) {
                 // remove all selected features from selectInteraction and layer
                 selectedFeatures.forEach(function (selectedFeature) {
+                    var selectedFeatureId,
+                        layerFeatures;
+
                     selectedFeatureId = selectedFeature.getId();
+
                     // remove from selectInteraction
                     selectedFeatures.remove(selectedFeature);
-                    // features aus vectorlayer entfernen
+
+                    // remove features from vectorlayer
                     layerFeatures = layer.getSource().getFeatures();
                     layerFeatures.forEach(function (sourceFeature) {
                         var sourceFeatureId = sourceFeature.getId();
+
                         if (sourceFeatureId === selectedFeatureId) {
-                            // remove from layer
                             layer.getSource().removeFeature(sourceFeature);
-                            // TODO: Delete the Feature
-                            console.log('delete sourceFeature: ', sourceFeature);
-                            //saveFeature(sourceFeature);
+                            // TODO: delete feature in DB
+                            //saveData();
                         }
                     });
                 });

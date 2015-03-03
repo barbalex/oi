@@ -28,6 +28,8 @@ module.exports = function (passedData) {
         if (geomData) {
             feature  = new ol.Feature();
             feature.setGeometry(new ol.geom[geomData.type](geomData.coordinates));
+            // give features an id to be able to manipulate them later
+            feature.setId(object._id);
             olFeatureArray.push(feature);
         }
     });

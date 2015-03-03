@@ -38224,7 +38224,7 @@ module.exports = function () {
         } else {
             layer.set('editing', false);
             $('#utilsEditLayer').hide();
-            // TODO: call function that cancels modifications
+            // cancel modify-interaction
             removeAllInteractions();
         }
     }
@@ -39309,32 +39309,36 @@ module.exports = function () {
 
 var ol          = require('openlayers'),
     $           = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+    guid        = require('../guid'),
     saveFeature = require('./saveFeature');
 
 module.exports = function (layer, geometryType) {
     var map = window.oi.olMap.map,
         drawInteraction;
 
-    console.log('addDrawInteraction: layer: ', layer);
-
     // create the interaction
     drawInteraction = new ol.interaction.Draw({
         source: layer.getSource(),
         type: /** @type {ol.geom.GeometryType} */ (geometryType)
     });
-        // add it to the map
+    // add it to the map
     map.addInteraction(drawInteraction);
+    // make it global so it can be cancelled
+    window.oi.olMap.map.drawInteraction = drawInteraction;
 
     // when a new feature has been drawn...
     drawInteraction.on('drawend', function (event) {
-        // save the changed data
-        console.log('drawend: event: ', event);
-        console.log('drawend: feature: ', event.feature);
+        // create a unique id
+        // it is later needed to delete features
+        var id = guid();
+        // give the feature this id
+        event.feature.setId(id);
+        // ...save the changed data
         saveFeature(event.feature);
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./saveFeature":205,"openlayers":27}],192:[function(require,module,exports){
+},{"../guid":185,"./saveFeature":205,"openlayers":27}],192:[function(require,module,exports){
 (function (global){
 /*
  * adds a layer to the layercontrol
@@ -39461,12 +39465,15 @@ module.exports = function (layer) {
         feature,
         selectedLayer = layer;
 
+    console.log('addModifyInteraction to layer: ', layer.get('layerTitle'));
+
     // create select interaction
     selectInteraction = new ol.interaction.Select({
         // make sure only the desired layer can be selected
-        layers: function (layer) {
+        /*layers: function (layer) {
             return layer === selectedLayer;
-        }
+        },*/
+        condition: ol.events.condition.click
     });
     // make interactions global so they can later be removed
     window.oi.olMap.map.selectInteraction = selectInteraction;
@@ -39480,30 +39487,30 @@ module.exports = function (layer) {
         feature = event.element;
         // ...listen for changes and save them
         feature.on('change', function () {
-            console.log('on add feature: event: ', event);
-            console.log('on add feature: feature: ', feature);
             saveFeature(feature);
         });
         // listen to pressing of delete key, then delete selected features
         $(document).on('keyup', function (event) {
-            var selectedFeatureId,
-                layerFeatures;
             if (event.keyCode === 46) {
                 // remove all selected features from selectInteraction and layer
                 selectedFeatures.forEach(function (selectedFeature) {
+                    var selectedFeatureId,
+                        layerFeatures;
+
                     selectedFeatureId = selectedFeature.getId();
+
                     // remove from selectInteraction
                     selectedFeatures.remove(selectedFeature);
-                    // features aus vectorlayer entfernen
+
+                    // remove features from vectorlayer
                     layerFeatures = layer.getSource().getFeatures();
                     layerFeatures.forEach(function (sourceFeature) {
                         var sourceFeatureId = sourceFeature.getId();
+
                         if (sourceFeatureId === selectedFeatureId) {
-                            // remove from layer
                             layer.getSource().removeFeature(sourceFeature);
-                            // TODO: Delete the Feature
-                            console.log('delete sourceFeature: ', sourceFeature);
-                            //saveFeature(sourceFeature);
+                            // TODO: delete feature in DB
+                            //saveData();
                         }
                     });
                 });
@@ -39594,6 +39601,8 @@ module.exports = function (passedData) {
         if (geomData) {
             feature  = new ol.Feature();
             feature.setGeometry(new ol.geom[geomData.type](geomData.coordinates));
+            // give features an id to be able to manipulate them later
+            feature.setId(object._id);
             olFeatureArray.push(feature);
         }
     });
@@ -39844,18 +39853,27 @@ module.exports = function () {
     }
 };
 },{}],203:[function(require,module,exports){
+(function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var ol = require('openlayers');
+var ol = require('openlayers'),
+    $  = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null);
 
 module.exports = function () {
     var map = window.oi.olMap.map;
 
     if (map.drawInteraction)   { map.removeInteraction(map.drawInteraction); }
+    //map.drawInteraction.off('drawend');
     if (map.modifyInteraction) { map.removeInteraction(map.modifyInteraction); }
-    if (map.selectInteraction) { map.removeInteraction(map.selectInteraction); }
+    //$(document).off('keyup');
+    if (map.selectInteraction) {
+        map.removeInteraction(map.selectInteraction);
+        // remove listener
+        $(document).off('keyup');
+    }
 };
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"openlayers":27}],204:[function(require,module,exports){
 (function (global){
 /*
@@ -39913,7 +39931,7 @@ module.exports = function (feature) {
     })[0];
 
     // convert the data of the layer into GeoJson
-    data = format.writeFeatures(feature);
+    data = format.writeFeatures([feature]);
     console.log('saveFeature: data: ', data);
     //$('#data').val(JSON.stringify(data, null, 4));
 };
