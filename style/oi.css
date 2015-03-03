@@ -153,7 +153,7 @@ body {
 
 #map .ol-attribution {
   top: 0;
-  right: 0;
+  right: 7px;
   border-radius: 0 4px 0;
 }
 
@@ -249,4 +249,20 @@ body {
 
 #utilsEditLayer {
   display: none;
+}
+
+#utils .utilsEditColumns,
+#utils .lytLayerColumns {
+      /* Breite */
+       -moz-column-width: 110px;
+    -webkit-column-width: 110px;
+            column-width: 110px;
+    /* bootstrap setzt -15px */
+    /*margin-left: 0;*/
+    /* Trennung */
+    -webkit-column-break-inside: avoid;
+       -moz-column-break-inside: avoid;
+         -o-column-break-inside: avoid;
+        -ms-column-break-inside: avoid;
+            column-break-inside: avoid;
 }
