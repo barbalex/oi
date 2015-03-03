@@ -40,6 +40,7 @@ module.exports = function (passedData) {
     vectorLayer = new ol.layer.Vector({
         layerTitle:  layerTitle,
         layerName:   layerName,
+        fieldLabel:  passedData.label,
         layerGroup:  'projects',
         objId:       passedData._id,
         projId:      passedData.projId || null,

@@ -4,9 +4,10 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var ol          = require('openlayers'),
-    $           = require('jquery'),
-    saveFeature = require('./saveFeature');
+var ol                = require('openlayers'),
+    $                 = require('jquery'),
+    saveFeatureData   = require('./saveFeatureData'),
+    removeFeatureData = require('./removeFeatureData');
 
 module.exports = function (layer) {
     var map = window.oi.olMap.map,
@@ -38,7 +39,7 @@ module.exports = function (layer) {
         feature = event.element;
         // ...listen for changes and save them
         feature.on('change', function () {
-            saveFeature(feature);
+            saveFeatureData(feature);
         });
         // listen to pressing of delete key, then delete selected features
         $(document).on('keyup', function (event) {
@@ -60,8 +61,8 @@ module.exports = function (layer) {
 
                         if (sourceFeatureId === selectedFeatureId) {
                             layer.getSource().removeFeature(sourceFeature);
-                            // TODO: delete feature in DB
-                            //saveData();
+                            // remove feature-data in DB
+                            removeFeatureData(sourceFeature);
                         }
                     });
                 });

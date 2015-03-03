@@ -1,10 +1,10 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var ol          = require('openlayers'),
-    $           = require('jquery'),
-    guid        = require('../guid'),
-    saveFeature = require('./saveFeature');
+var ol              = require('openlayers'),
+    $               = require('jquery'),
+    guid            = require('../guid'),
+    saveFeatureData = require('./saveFeatureData');
 
 module.exports = function (layer, geometryType) {
     var map = window.oi.olMap.map,
@@ -28,6 +28,6 @@ module.exports = function (layer, geometryType) {
         // give the feature this id
         event.feature.setId(id);
         // ...save the changed data
-        saveFeature(event.feature);
+        saveFeatureData(event.feature);
     });
 };
