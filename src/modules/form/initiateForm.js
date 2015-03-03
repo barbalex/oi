@@ -17,14 +17,17 @@ var $                     = require('jquery'),
     getHierarchy          = require('../getHierarchy'),
     resizeTextareas       = require('./resizeTextareas'),
     refreshScrollbar      = require('../refreshScrollbar'),
-    capitalizeFirstLetter = require('../capitalizeFirstLetter');
+    capitalizeFirstLetter = require('../capitalizeFirstLetter'),
+    toggleTab             = require('../toggleTab'),
+    setWidthOfTabs        = require('../setWidthOfTabs');
 
 module.exports = function (id, type) {
     var html         = '',
         textareaIds  = [],
         object,
         hierarchy,
-        $formContent = $('#formContent');
+        $formContent = $('#formContent'),
+        hasGeometry  = false;
 
     switch (type) {
     case 'object':
@@ -90,6 +93,7 @@ module.exports = function (id, type) {
                         templateObject.object.hId   = object.hId;
                         html += geoJson(templateObject);
                         textareaIds.push(id + field.label);
+                        hasGeometry = true;
                         break;
                     default:
                         html += input(templateObject);
@@ -105,6 +109,13 @@ module.exports = function (id, type) {
                 positionFormBtngroup();
                 resizeTextareas();
                 refreshScrollbar();
+
+                // wenn Geometrie existiert, entsprechenden Layer im Layertool öffnen
+                if (hasGeometry) {
+                    toggleTab('map', true);
+                    setWidthOfTabs();
+                    $('#collapseProject' + object.projId).collapse('show');
+                }
             } else {
                 console.log('error: found hierarchy for object with id ', id);
             }

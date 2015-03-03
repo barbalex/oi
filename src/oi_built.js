@@ -67246,14 +67246,17 @@ var $                     = (typeof window !== "undefined" ? window.$ : typeof g
     getHierarchy          = require('../getHierarchy'),
     resizeTextareas       = require('./resizeTextareas'),
     refreshScrollbar      = require('../refreshScrollbar'),
-    capitalizeFirstLetter = require('../capitalizeFirstLetter');
+    capitalizeFirstLetter = require('../capitalizeFirstLetter'),
+    toggleTab             = require('../toggleTab'),
+    setWidthOfTabs        = require('../setWidthOfTabs');
 
 module.exports = function (id, type) {
     var html         = '',
         textareaIds  = [],
         object,
         hierarchy,
-        $formContent = $('#formContent');
+        $formContent = $('#formContent'),
+        hasGeometry  = false;
 
     switch (type) {
     case 'object':
@@ -67319,6 +67322,7 @@ module.exports = function (id, type) {
                         templateObject.object.hId   = object.hId;
                         html += geoJson(templateObject);
                         textareaIds.push(id + field.label);
+                        hasGeometry = true;
                         break;
                     default:
                         html += input(templateObject);
@@ -67334,6 +67338,13 @@ module.exports = function (id, type) {
                 positionFormBtngroup();
                 resizeTextareas();
                 refreshScrollbar();
+
+                // wenn Geometrie existiert, entsprechenden Layer im Layertool öffnen
+                if (hasGeometry) {
+                    toggleTab('map', true);
+                    setWidthOfTabs();
+                    $('#collapseProject' + object.projId).collapse('show');
+                }
             } else {
                 console.log('error: found hierarchy for object with id ', id);
             }
@@ -67349,7 +67360,7 @@ module.exports = function (id, type) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../../templates/checkbox":235,"../../../templates/checkboxGroup":236,"../../../templates/formButtonToolbar":237,"../../../templates/geoJson":238,"../../../templates/input":239,"../../../templates/optionGroup":243,"../../../templates/select":244,"../../../templates/textarea":245,"../capitalizeFirstLetter":153,"../getHierarchy":183,"../getObject":184,"../refreshScrollbar":226,"./addCheckedToValueList":173,"./positionFormBtngroup":179,"./resizeTextareas":180,"underscore":150}],178:[function(require,module,exports){
+},{"../../../templates/checkbox":235,"../../../templates/checkboxGroup":236,"../../../templates/formButtonToolbar":237,"../../../templates/geoJson":238,"../../../templates/input":239,"../../../templates/optionGroup":243,"../../../templates/select":244,"../../../templates/textarea":245,"../capitalizeFirstLetter":153,"../getHierarchy":183,"../getObject":184,"../refreshScrollbar":226,"../setWidthOfTabs":227,"../toggleTab":233,"./addCheckedToValueList":173,"./positionFormBtngroup":179,"./resizeTextareas":180,"underscore":150}],178:[function(require,module,exports){
 // Hilfsfunktion, die typeof ersetzt und ergänzt
 // typeof gibt bei input-Feldern immer String zurück!
 
