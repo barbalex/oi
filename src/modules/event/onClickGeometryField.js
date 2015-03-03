@@ -3,20 +3,17 @@
 
 var $              = require('jquery'),
     ol             = require('openlayers'),
-    toggleTab      = require('../toggleTab'),
-    setWidthOfTabs = require('../setWidthOfTabs'),
+    showTab        = require('../showTab'),
     zoomToFeature  = require('../map/zoomToFeature'),
     getObject      = require('../getObject');
 
 module.exports = function () {
     var objectData = $(this).prev().data('object'),
         object,
-        show       = true,
         feature;
 
     // open map
-    toggleTab('map', show);
-    setWidthOfTabs();
+    showTab('map');
     // zoom to feature
     if (objectData) {
         object = getObject(objectData._id);

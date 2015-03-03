@@ -57,7 +57,6 @@ module.exports = function () {
 
         event.preventDefault();
         toggleTab(tab);
-        setWidthOfTabs();
     });
 
     // zählt, wieviele male .on('change') ausgelöst wurde

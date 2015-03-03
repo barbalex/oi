@@ -18,8 +18,7 @@ var $                     = require('jquery'),
     resizeTextareas       = require('./resizeTextareas'),
     refreshScrollbar      = require('../refreshScrollbar'),
     capitalizeFirstLetter = require('../capitalizeFirstLetter'),
-    toggleTab             = require('../toggleTab'),
-    setWidthOfTabs        = require('../setWidthOfTabs');
+    showTab               = require('../showTab');
 
 module.exports = function (id, type) {
     var html         = '',
@@ -112,8 +111,7 @@ module.exports = function (id, type) {
 
                 // wenn Geometrie existiert, entsprechenden Layer im Layertool öffnen
                 if (hasGeometry) {
-                    toggleTab('map', true);
-                    setWidthOfTabs();
+                    showTab('map');
                     $('#collapseProject' + object.projId).collapse('show');
                 }
             } else {
