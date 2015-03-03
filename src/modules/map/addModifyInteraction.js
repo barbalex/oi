@@ -15,7 +15,8 @@ module.exports = function (layer) {
         modifyInteraction,
         selectedFeatures,
         feature,
-        selectedLayer = layer;
+        selectedLayer = layer,
+        $jstree = $('#navContent').jstree(true);
 
     // create select interaction
     selectInteraction = new ol.interaction.Select({
@@ -33,8 +34,17 @@ module.exports = function (layer) {
     selectedFeatures = selectInteraction.getFeatures();
     // when a feature is selected...
     selectedFeatures.on('add', function (event) {
+        var objId,
+            selectedObjId;
         // grab the feature
         feature = event.element;
+        // dieses Objekt in tree und Formular anzeigen
+        objId = feature.getId();
+        selectedObjId = $jstree.get_selected(true)[0].id;
+        if (objId !== selectedObjId) {
+            $jstree.deselect_all();
+            $jstree.select_node('#' + objId);
+        }
 
         // ...listen for changes and save them
         feature.on('change', function () {
