@@ -39304,6 +39304,7 @@ module.exports = function () {
 
 var ol              = require('openlayers'),
     $               = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+    getEditingLayer = require('./getEditingLayer'),
     guid            = require('../guid'),
     saveFeatureData = require('./saveFeatureData');
 
@@ -39334,17 +39335,33 @@ module.exports = function (layer, geometryType) {
         //    - create new guid
         //    - create new doc with sensible nameField and geometry
         //    - refresh jstree and form
-        
-        
-        // give the feature an id
-        // it is later needed to delete features
-        event.feature.setId(guid());
-        // ...save the changed data
-        saveFeatureData(event.feature);
+        var feature,
+            layer,
+            objId,
+            label,
+            geomElemVal;
+
+        feature     = event.feature;
+        layer       = getEditingLayer();
+        objId       = $('#navContent').jstree(true).get_selected(true)[0].id;
+        label       = layer.get('fieldLabel');
+        geomElemVal = objId ? $('#' + objId + label).val() : null;  // if no object is active, create new one
+
+        if (geomElemVal) {
+            // TODO
+            console.log('oops: a new object should be created here. This functionality is not yet implemented');
+            //feature.setId(guid());
+        } else {
+            // give the feature an id
+            // it is later needed to delete features
+            feature.setId(objId);
+            // ...save the changed data
+            saveFeatureData(feature);
+        }
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../guid":185,"./saveFeatureData":207,"openlayers":27}],192:[function(require,module,exports){
+},{"../guid":185,"./getEditingLayer":200,"./saveFeatureData":207,"openlayers":27}],192:[function(require,module,exports){
 (function (global){
 /*
  * adds a layer to the layercontrol
@@ -39906,38 +39923,44 @@ module.exports = function () {
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var ol              = require('openlayers'),
-    $               = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
-    _               = require('underscore'),
-    getEditingLayer = require('./getEditingLayer'),
-    getObject       = require('../getObject'),
-    saveObjectValue = require('../form/saveObjectValue');
+var ol                   = require('openlayers'),
+    $                    = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+    _                    = require('underscore'),
+    getEditingLayer      = require('./getEditingLayer'),
+    getObject            = require('../getObject'),
+    saveObjectValue      = require('../form/saveObjectValue'),
+    fitTextareaToContent = require('../form/fitTextareaToContent');
 
 module.exports = function (feature) {
     var layer,
         passingObject,
         objId,
-        object;
+        object,
+        label,
+        geomElem;
 
     layer  = getEditingLayer();
     objId  = feature.getId();
     object = getObject(objId);
+    label  = layer.get('fieldLabel');
 
     if (object) {
         // create object to pass to saveObjectValue
         passingObject        = {};
         passingObject._id    = objId;
         passingObject.projId = object.projId;
-        passingObject.label  = layer.get('fieldLabel');
+        passingObject.label  = label;
         // dont pass inputType - it's not necessary to convert the GeoJson to an Object
         passingObject.inputType = null;
         saveObjectValue(passingObject, null);
         // update field in ui
-        $('#' + objId + passingObject.label).val('');
+        geomElem = $('#' + objId + label);
+        geomElem.val('');
+        fitTextareaToContent(objId + label);
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../form/saveObjectValue":182,"../getObject":184,"./getEditingLayer":200,"openlayers":27,"underscore":150}],206:[function(require,module,exports){
+},{"../form/fitTextareaToContent":175,"../form/saveObjectValue":182,"../getObject":184,"./getEditingLayer":200,"openlayers":27,"underscore":150}],206:[function(require,module,exports){
 (function (global){
 /*
  * removes a layer from the layercontrol
@@ -39975,12 +39998,13 @@ module.exports = function (layer) {
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var ol              = require('openlayers'),
-    $               = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
-    _               = require('underscore'),
-    getEditingLayer = require('./getEditingLayer'),
-    getObject       = require('../getObject'),
-    saveObjectValue = require('../form/saveObjectValue');
+var ol                   = require('openlayers'),
+    $                    = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+    _                    = require('underscore'),
+    getEditingLayer      = require('./getEditingLayer'),
+    getObject            = require('../getObject'),
+    saveObjectValue      = require('../form/saveObjectValue'),
+    fitTextareaToContent = require('../form/fitTextareaToContent');
 
 module.exports = function (feature) {
     var format = new ol.format.GeoJSON(),
@@ -39989,28 +40013,33 @@ module.exports = function (feature) {
         layer,
         passingObject,
         objId,
-        object;
+        object,
+        label,
+        geomElem;
 
     layer  = getEditingLayer();
     // convert the data of the feature into GeoJson
     data   = JSON.parse(format.writeFeature(feature)).geometry;
     objId  = feature.getId();
     object = getObject(objId);
+    label  = layer.get('fieldLabel');
 
     if (object) {
         // create object to pass to saveObjectValue
         passingObject           = {};
         passingObject._id       = objId;
         passingObject.projId    = object.projId;
-        passingObject.label     = layer.get('fieldLabel');
+        passingObject.label     = label;
         passingObject.inputType = 'GeoJson';
         saveObjectValue(passingObject, data);
         // update field in ui
-        $('#' + objId + passingObject.label).val(JSON.stringify(data), null, 4);
+        geomElem = $('#' + objId + label);
+        geomElem.val(JSON.stringify(data, null, 4));
+        fitTextareaToContent(objId + label);
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../form/saveObjectValue":182,"../getObject":184,"./getEditingLayer":200,"openlayers":27,"underscore":150}],208:[function(require,module,exports){
+},{"../form/fitTextareaToContent":175,"../form/saveObjectValue":182,"../getObject":184,"./getEditingLayer":200,"openlayers":27,"underscore":150}],208:[function(require,module,exports){
 /*
  * Bekommt layername und layerConfig
  *
