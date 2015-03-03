@@ -67320,7 +67320,7 @@ module.exports = function (id, type) {
                         break;
                     case 'geoJson':
                         // Daten als JSON in textarea schreiben
-                        templateObject.object.value = JSON.stringify(object.data[field.label]);
+                        templateObject.object.value = object.data[field.label] ? JSON.stringify(object.data[field.label], null, 4) : '';
                         templateObject.object.hId   = object.hId;
                         html += geoJson(templateObject);
                         textareaIds.push(id + field.label);
@@ -68490,7 +68490,7 @@ module.exports = function (feature) {
         passingObject.inputType = null;
         saveObjectValue(passingObject, null);
         // update field in ui
-        $('#' + objId + passingObject.label).val(null);
+        $('#' + objId + passingObject.label).val('');
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
@@ -68565,15 +68565,14 @@ module.exports = function (feature) {
     });
     if (object) {
         // create object to pass to saveObjectValue
-        passingObject        = {};
-        passingObject._id    = objId;
-        passingObject.projId = object.projId;
-        passingObject.label  = layer.get('fieldLabel');
-        // dont pass inputType - it's not necessary to convert the GeoJson to an Object
+        passingObject           = {};
+        passingObject._id       = objId;
+        passingObject.projId    = object.projId;
+        passingObject.label     = layer.get('fieldLabel');
         passingObject.inputType = 'GeoJson';
         saveObjectValue(passingObject, data.geometry);
         // update field in ui
-        $('#' + objId + passingObject.label).val(JSON.stringify(data.geometry));
+        $('#' + objId + passingObject.label).val(JSON.stringify(data.geometry), null, 4);
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})

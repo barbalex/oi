@@ -37,6 +37,6 @@ module.exports = function (feature) {
         passingObject.inputType = null;
         saveObjectValue(passingObject, null);
         // update field in ui
-        $('#' + objId + passingObject.label).val(null);
+        $('#' + objId + passingObject.label).val('');
     }
 };

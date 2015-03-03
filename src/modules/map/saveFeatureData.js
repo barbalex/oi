@@ -34,14 +34,13 @@ module.exports = function (feature) {
     });
     if (object) {
         // create object to pass to saveObjectValue
-        passingObject        = {};
-        passingObject._id    = objId;
-        passingObject.projId = object.projId;
-        passingObject.label  = layer.get('fieldLabel');
-        // dont pass inputType - it's not necessary to convert the GeoJson to an Object
+        passingObject           = {};
+        passingObject._id       = objId;
+        passingObject.projId    = object.projId;
+        passingObject.label     = layer.get('fieldLabel');
         passingObject.inputType = 'GeoJson';
         saveObjectValue(passingObject, data.geometry);
         // update field in ui
-        $('#' + objId + passingObject.label).val(JSON.stringify(data.geometry));
+        $('#' + objId + passingObject.label).val(JSON.stringify(data.geometry), null, 4);
     }
 };
