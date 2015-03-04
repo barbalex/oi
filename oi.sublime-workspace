@@ -4,6 +4,18 @@
 		"selected_items":
 		[
 			[
+				"pr",
+				"previousConfig"
+			],
+			[
+				"sel",
+				"selectedObjId"
+			],
+			[
+				"ge",
+				"geometryType"
+			],
+			[
 				"str",
 				"stringify"
 			],
@@ -30,10 +42,6 @@
 			[
 				"coll",
 				"collapseSelector"
-			],
-			[
-				"sel",
-				"selectedObject"
 			],
 			[
 				"sele",
@@ -443,7 +451,7 @@
 			"file": "style/oi.css",
 			"settings":
 			{
-				"buffer_size": 4278,
+				"buffer_size": 4808,
 				"line_ending": "Windows"
 			}
 		},
@@ -451,47 +459,55 @@
 			"file": "index.html",
 			"settings":
 			{
-				"buffer_size": 14927,
+				"buffer_size": 14944,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/modules/event/onChangeLytEditLayer.js",
+			"file": "src/modules/setWidthOfTabs.js",
 			"settings":
 			{
-				"buffer_size": 1070,
+				"buffer_size": 1765,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/modules/event/onChangeEditLayerType.js",
+			"file": "src/modules/saveResizablesConfig.js",
 			"settings":
 			{
-				"buffer_size": 1045,
+				"buffer_size": 1959,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/modules/map/saveFeature.js",
+			"file": "src/modules/toggleTab.js",
 			"settings":
 			{
-				"buffer_size": 739,
+				"buffer_size": 609,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/modules/map/addDrawInteraction.js",
+			"file": "src/modules/showTab.js",
 			"settings":
 			{
-				"buffer_size": 907,
+				"buffer_size": 641,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/modules/map/addModifyInteraction.js",
+			"file": "src/modules/setWidthOfTabsWithoutPrevious.js",
 			"settings":
 			{
-				"buffer_size": 3403,
+				"buffer_size": 1492,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/modules/initiateResizables.js",
+			"settings":
+			{
+				"buffer_size": 2905,
 				"line_ending": "Windows"
 			}
 		},
@@ -499,17 +515,8 @@
 			"file": "/C/Users/alex/oi_testdata/index.js",
 			"settings":
 			{
-				"buffer_size": 19449,
+				"buffer_size": 19428,
 				"line_ending": "Windows"
-			}
-		},
-		{
-			"contents": "var raster = new ol.layer.Tile({\n  source: new ol.source.MapQuest({layer: 'sat'})\n});\n\nvar map = new ol.Map({\n  layers: [raster],\n  target: 'map',\n  view: new ol.View({\n    center: [-11000000, 4600000],\n    zoom: 4\n  })\n});\n\n// The features are not added to a regular vector layer/source,\n// but to a feature overlay which holds a collection of features.\n// This collection is passed to the modify and also the draw\n// interaction, so that both can add or modify features.\nvar featureOverlay = new ol.FeatureOverlay({\n  style: new ol.style.Style({\n    fill: new ol.style.Fill({\n      color: 'rgba(255, 255, 255, 0.2)'\n    }),\n    stroke: new ol.style.Stroke({\n      color: '#ffcc33',\n      width: 2\n    }),\n    image: new ol.style.Circle({\n      radius: 7,\n      fill: new ol.style.Fill({\n        color: '#ffcc33'\n      })\n    })\n  })\n});\nfeatureOverlay.setMap(map);\n\nvar modify = new ol.interaction.Modify({\n  features: featureOverlay.getFeatures(),\n  // the SHIFT key must be pressed to delete vertices, so\n  // that new vertices can be drawn at the same position\n  // of existing vertices\n  deleteCondition: function(event) {\n    return ol.events.condition.shiftKeyOnly(event) &&\n        ol.events.condition.singleClick(event);\n  }\n});\nmap.addInteraction(modify);\n\nvar draw; // global so we can remove it later\nfunction addInteraction() {\n  draw = new ol.interaction.Draw({\n    features: featureOverlay.getFeatures(),\n    type: /** @type {ol.geom.GeometryType} */ (typeSelect.value)\n  });\n  map.addInteraction(draw);\n}\n\nvar typeSelect = document.getElementById('type');\n\n\n/**\n * Let user change the geometry type.\n * @param {Event} e Change event.\n */\ntypeSelect.onchange = function(e) {\n  map.removeInteraction(draw);\n  addInteraction();\n};\n\naddInteraction();",
-			"settings":
-			{
-				"buffer_size": 1763,
-				"line_ending": "Windows",
-				"name": "var raster = new ol.layer.Tile({"
 			}
 		}
 	],
@@ -562,27 +569,44 @@
 		"/C/Users/alex/oi",
 		"/C/Users/alex/oi/src",
 		"/C/Users/alex/oi/src/modules",
-		"/C/Users/alex/oi/src/modules/map"
+		"/C/Users/alex/oi/templates"
 	],
 	"file_history":
 	[
-		"/C/Users/alex/oi/src/oi_browserified.js",
-		"/C/Users/alex/oi/src/modules/map/removeAllInteractions.js",
-		"/C/Users/alex/oi/src/modules/map/createLayerSwisstopoAerial.js",
+		"/C/Users/alex/oi/src/modules/initiateResizables.js",
+		"/C/Users/alex/oi/src/modules/setWidthOfTabs.js",
+		"/C/Users/alex/oi/src/modules/map/saveFeatureData.js",
+		"/C/Users/alex/oi/src/modules/map/removeFeatureData.js",
+		"/C/Users/alex/oi/src/modules/map/addModifyInteraction.js",
+		"/C/Users/alex/oi/src/modules/form/initiateForm.js",
 		"/C/Users/alex/oi/src/modules/setupEvents.js",
-		"/C/Users/alex/oi/src/modules/event/onClickGeometryField.js",
-		"/C/Users/alex/oi/src/modules/map/addLayerToLayertool.js",
-		"/C/Users/alex/oi/src/modules/event/onChangeLytShowLayer.js",
+		"/C/Users/alex/oi/src/modules/showTab.js",
 		"/C/Users/alex/oi/templates/layertoolLayerCollapse.hdb",
 		"/C/Users/alex/oi/src/modules/toggleTab.js",
-		"/C/Users/alex/oi/src/modules/map/zoomToFeature.js",
-		"/C/Users/alex/oi/src/modules/form/initiateForm.js",
-		"/C/Users/alex/oi/src/modules/map/addProjectLayers.js",
-		"/C/Users/alex/oi/src/modules/map/createLayerForData.js",
+		"/C/Users/alex/oi/src/modules/hideTab.js",
+		"/C/Users/alex/oi/src/modules/event/onClickGeometryField.js",
+		"/C/Users/alex/oi/src/modules/nav/createTree.js",
+		"/C/Users/alex/oi/src/modules/map/addDrawInteraction.js",
 		"/C/Users/alex/oi/src/modules/form/saveObjectValue.js",
+		"/C/Users/alex/oi/src/modules/deleteObjectAndChildren.js",
+		"/C/Users/alex/oi/src/modules/form/fitTextareaToContent.js",
+		"/C/Users/alex/oi/src/modules/event/onClickFormNew.js",
+		"/C/Users/alex/oi/src/modules/map/getEditingLayer.js",
+		"/C/Users/alex/oi/src/modules/event/onChangeEditLayerType.js",
+		"/C/Users/alex/oi/src/oi_browserified.js",
+		"/C/Users/alex/oi/src/modules/map/createLayerForData.js",
+		"/C/Users/alex/oi/src/modules/map/addProjectLayers.js",
+		"/C/Users/alex/oi/src/modules/handleExternalObjectChanges.js",
+		"/C/Users/alex/oi/src/modules/handleChanges.js",
+		"/C/Users/alex/oi/src/modules/event/onChangeLytEditLayer.js",
+		"/C/Users/alex/oi/src/modules/map/addSelectInteraction.js",
+		"/C/Users/alex/oi/src/modules/map/removeAllInteractions.js",
+		"/C/Users/alex/oi/src/modules/map/createLayerSwisstopoAerial.js",
+		"/C/Users/alex/oi/src/modules/map/addLayerToLayertool.js",
+		"/C/Users/alex/oi/src/modules/event/onChangeLytShowLayer.js",
+		"/C/Users/alex/oi/src/modules/map/zoomToFeature.js",
 		"/C/Users/alex/oi/src/modules/map/addLayers.js",
 		"/C/Users/alex/oi/src/modules/map/initiateMap.js",
-		"/C/Users/alex/oi/src/modules/setWidthOfTabs.js",
 		"/C/Users/alex/oi/templates/layertoolProjectPanel.hdb",
 		"/C/Users/alex/oi/templates/layertoolThemesPanel.hdb",
 		"/C/Users/alex/oi/src/modules/form/getValueAfterChange.js",
@@ -610,10 +634,7 @@
 		"/C/Users/alex/AppData/Local/Temp/Temp1_proj4js-proj4js-2.2.3-3-gf6f3c00.zip/proj4js-proj4js-f6f3c00/dist/proj4.js",
 		"/C/Users/alex/oi/src/modules/map/refreshMap.js",
 		"/C/Users/alex/oi/src/modules/refreshScrollbar.js",
-		"/C/Users/alex/oi/src/modules/nav/createTree.js",
-		"/C/Users/alex/oi/src/modules/form/fitTextareaToContent.js",
 		"/C/Users/alex/oi/src/modules/form/resizeTextareas.js",
-		"/C/Users/alex/oi/src/modules/initiateResizables.js",
 		"/C/Users/alex/oi_testdata/index.js",
 		"/C/Users/alex/oi/src/modules/map/createLayerSwisstopoPixelkarteFarbe.js",
 		"/C/Users/alex/oi/templates/geoJson.hdb",
@@ -623,10 +644,8 @@
 		"/C/Users/alex/oi/src/modules/form/convertToCorrectType.js",
 		"/C/Users/alex/oi/index.html",
 		"/C/Users/alex/oi/templates/textarea.hdb",
-		"/C/Users/alex/oi/src/modules/showTab.js",
 		"/C/Users/alex/oi/src/modules/map/createWmtsLayer.js",
 		"/C/Users/alex/oi/src/modules/syncWithRemoteDb.js",
-		"/C/Users/alex/oi/src/modules/handleExternalObjectChanges.js",
 		"/C/Users/alex/oi/src/modules/createNewObject.js",
 		"/C/Users/alex/oi/src/oi.js",
 		"/C/Users/alex/oi/gulp-tasks/dev.js",
@@ -638,9 +657,7 @@
 		"/C/Users/alex/oi/src/modules/nav/generateDataForTree.js",
 		"/C/Users/alex/oi/gulp-tasks/createManifest.js",
 		"/C/Users/alex/oi/server.js",
-		"/C/Users/alex/oi/src/modules/handleChanges.js",
 		"/C/Users/alex/oi/src/modules/syncWithRemoteDbs.js",
-		"/C/Users/alex/oi/src/modules/deleteObjectAndChildren.js",
 		"/C/Users/alex/oi/src/modules/event/onClickFormDelete.js",
 		"/C/Users/alex/oi/src/modules/deleteObjectFromModel.js",
 		"/C/Users/alex/oi_pg/index.js",
@@ -683,21 +700,11 @@
 		"/C/Users/alex/oi/src/modules/form/saveHierarchy.js",
 		"/C/Users/alex/oi/src/modules/event/onClickSigninWithModalSignupCheckbox.js",
 		"/C/Users/alex/oi/src/modules/getHierarchyOfObject.js",
-		"/C/Users/alex/oi/templates/optionGroup.hdb",
-		"/C/Users/alex/oi/templates/select.hdb",
-		"/C/Users/alex/oi/templates/input.hdb",
-		"/C/Users/alex/oi/templates/checkbox.hdb",
-		"/C/Users/alex/oi/src/modules/nav/createObjectsByUserTypeIndex.js",
-		"/C/Users/alex/oi/src/modules/nav/signUp.js",
-		"/C/Users/alex/oi/src/modules/nav/getLogin.js",
-		"/C/Users/alex/oi/gulp-tasks/dev_when_watch_1.js",
-		"/C/Users/alex/oi/gulp-tasks/dev_when_watch_2.js",
-		"/C/Users/alex/oi/gulp-tasks/dev_3.js",
-		"/C/Users/alex/oi/gulp-tasks/dev_2.js"
+		"/C/Users/alex/oi/templates/optionGroup.hdb"
 	],
 	"find":
 	{
-		"height": 74.0
+		"height": 43.0
 	},
 	"find_in_files":
 	{
@@ -788,6 +795,51 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"showTab",
+			"toggleTab",
+			"setWidthOfTabs",
+			"previous",
+			"now.name",
+			"form",
+			"object",
+			",",
+			"c",
+			"c0000",
+			"c1000",
+			"c1010",
+			"c1100",
+			"c1110",
+			"c1111",
+			"config",
+			"attribution",
+			"setWidthOfTabs",
+			"toggleTab",
+			"#map .ol-mouse-position",
+			"mapMenu",
+			"$('#mapMenu')",
+			"$('#mapMenu').trigger",
+			"initiateForm",
+			"$('#navContent').jstree(true)",
+			"$('#navContent').jstree()",
+			"select_node",
+			"get_selected",
+			"response from saving object:",
+			"addModifyInteraction to layer:",
+			"get_selected",
+			"get('id')",
+			"get_selected",
+			"map",
+			"layer.get('editing') === true",
+			"initiateForm",
+			"feature.setGeometry(new ol.geom[geomData.type](geomData.coordinates));",
+			"./saveObjectValue",
+			"saveFeature",
+			"createLayerForData",
+			"source_feature_id",
+			"source_feature",
+			"vectorlayer_features",
+			"addDrawInteraction",
+			"saveFeature: data:",
 			"drawInteraction = new ol.interaction.Draw({\n        source: layer.getSource(),",
 			"drawInteraction",
 			"addDrawInteraction",
@@ -870,52 +922,7 @@
 			"../../../templates/layertool",
 			"input",
 			"checkbox",
-			"geoJson",
-			"../templates",
-			"layertool",
-			"enlargenExtent",
-			"enlangenedExtent",
-			"object",
-			"collapseThree",
-			"headingThree",
-			"collapseTwo",
-			"headingTwo",
-			"collapseOne",
-			"headingOne",
-			"utilsLayertoolTitel",
-			"layerTitel",
-			"accordion",
-			"  <",
-			"    <",
-			"      <",
-			"/t      <",
-			"/n      <",
-			"      <",
-			"      ",
-			"        ",
-			"    ",
-			"      ",
-			"        ",
-			"panel-body",
-			"js-geometryField",
-			"textarea",
-			"createLayers",
-			"*",
-			"js-geometryField",
-			"ol-mouse-position",
-			"mousePositionControl",
-			"addMousePositionControl",
-			"wmts_s3_swissimage",
-			"src_wmts_s3_swissimage",
-			"wmts_s3_swissimage",
-			"src_wmts_s3_swissimage",
-			"createLayerSwisstopoPixelkarteFarbe",
-			"<Value>",
-			"</Value>",
-			"<Value>",
-			"</Value>",
-			"</Default>",
-			"<Default>"
+			"geoJson"
 		],
 		"highlight": false,
 		"in_selection": false,
@@ -923,6 +930,20 @@
 		"regex": false,
 		"replace_history":
 		[
+			"nowName",
+			"utils",
+			"map",
+			"previous",
+			";",
+			"object.c",
+			"c",
+			"",
+			"showTab",
+			"$jstree",
+			"saveFeatureData",
+			"sourceFeatureId",
+			"sourceFeature",
+			"layerFeatures",
 			"selectedFeature",
 			"selectedFeatureId",
 			"sourceFeature",
@@ -1036,32 +1057,18 @@
 			"error",
 			"signin",
 			"email",
-			"error",
-			"$navContent",
-			"",
-			"onScrollTab",
-			"onClickFormDelete",
-			"onClickFormNew",
-			"id",
-			"tree",
-			"onTabScroll",
-			"$formContent",
-			"handleExternalObjectChanges",
-			"getObject",
-			"getHierarchy",
-			"deleteObjectFromModel",
-			"createNewObjectFromObject"
+			"error"
 		],
 		"reverse": false,
 		"show_context": true,
 		"use_buffer2": true,
-		"whole_word": false,
+		"whole_word": true,
 		"wrap": false
 	},
 	"groups":
 	[
 		{
-			"selected": 7,
+			"selected": 4,
 			"sheets":
 			[
 				{
@@ -1098,15 +1105,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 4278,
+						"buffer_size": 4808,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								3168,
-								3168
+								4731,
+								4731
 							]
 						],
 						"settings":
@@ -1116,7 +1123,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 4554.0,
+						"translation.y": 6346.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 7,
@@ -1128,15 +1135,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 14927,
+						"buffer_size": 14944,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								8269,
-								8269
+								6794,
+								6810
 							]
 						],
 						"settings":
@@ -1146,113 +1153,27 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 2882.0,
+						"translation.y": 2720.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 6,
 					"type": "text"
 				},
 				{
 					"buffer": 3,
-					"file": "src/modules/event/onChangeLytEditLayer.js",
+					"file": "src/modules/setWidthOfTabs.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1070,
+						"buffer_size": 1765,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								635,
-								635
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 4,
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "src/modules/event/onChangeEditLayerType.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1045,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								556,
-								486
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "src/modules/map/saveFeature.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 739,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								544,
-								544
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 54.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "src/modules/map/addDrawInteraction.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 907,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								894,
-								894
+								1676,
+								1676
 							]
 						],
 						"settings":
@@ -1269,50 +1190,48 @@
 					"type": "text"
 				},
 				{
-					"buffer": 7,
-					"file": "src/modules/map/addModifyInteraction.js",
+					"buffer": 4,
+					"file": "src/modules/saveResizablesConfig.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3403,
+						"buffer_size": 1959,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1404,
-								1404
+								986,
+								986
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 757.0,
+						"translation.y": 810.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
 					"type": "text"
 				},
 				{
-					"buffer": 8,
-					"file": "/C/Users/alex/oi_testdata/index.js",
+					"buffer": 5,
+					"file": "src/modules/toggleTab.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 19449,
+						"buffer_size": 609,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								4087,
-								4087
+								609,
+								609
 							]
 						],
 						"settings":
@@ -1322,27 +1241,87 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 3850.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 8,
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "src/modules/showTab.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 641,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								344,
+								356
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "src/modules/setWidthOfTabsWithoutPrevious.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1492,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								305,
+								305
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
 					"type": "text"
 				},
 				{
 					"buffer": 8,
-					"file": "/C/Users/alex/oi_testdata/index.js",
+					"file": "src/modules/initiateResizables.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 19449,
+						"buffer_size": 2905,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								7653,
-								7657
+								1407,
+								1407
 							]
 						],
 						"settings":
@@ -1352,7 +1331,37 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 6870.0,
+						"translation.y": 675.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "/C/Users/alex/oi_testdata/index.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 19428,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4038,
+								4038
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 6723.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 9,
@@ -1360,32 +1369,32 @@
 				},
 				{
 					"buffer": 9,
+					"file": "/C/Users/alex/oi_testdata/index.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1763,
+						"buffer_size": 19428,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1519,
-								1519
+								4168,
+								4172
 							]
 						],
 						"settings":
 						{
-							"auto_name": "var raster = new ol.layer.Tile({",
 							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 2,
+							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 81.0,
+						"translation.y": 3900.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 6,
+					"stack_index": 8,
 					"type": "text"
 				}
 			]
@@ -1429,7 +1438,7 @@
 	"project": "oi.sublime-project",
 	"replace":
 	{
-		"height": 142.0
+		"height": 80.0
 	},
 	"save_all_on_build": true,
 	"select_file":
