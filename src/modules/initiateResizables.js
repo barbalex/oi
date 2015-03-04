@@ -9,7 +9,8 @@ var $                    = require('jquery'),
     positionFormBtngroup = require('./form/positionFormBtngroup'),
     resizeTextareas      = require('./form/resizeTextareas'),
     refreshMap           = require('./map/refreshMap'),
-    refreshScrollbar     = require('./refreshScrollbar');
+    refreshScrollbar     = require('./refreshScrollbar'),
+    saveResizablesConfig = require('./saveResizablesConfig');
 
 module.exports = function () {
     var zaehler;
@@ -25,6 +26,7 @@ module.exports = function () {
             positionFormBtngroup();
             refreshMap();
             resizeTextareas();
+            saveResizablesConfig();
         }
     });
 
@@ -36,6 +38,7 @@ module.exports = function () {
             positionFormBtngroup();
             refreshMap();
             resizeTextareas();
+            saveResizablesConfig();
         }
     });
     // obiger Code überschreibt display:none aus css
@@ -48,6 +51,7 @@ module.exports = function () {
         resize: function () {
             refreshMap();
             resizeTextareas();
+            saveResizablesConfig();
         }
     });
 

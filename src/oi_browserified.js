@@ -38131,7 +38131,7 @@ module.exports = function ($node) {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./askYesNoWithModal":152,"./deleteObjectFromModel":159,"./getObject":184,"./tellWithModal":234,"dateformat":8,"pouchdb":106,"underscore":150}],159:[function(require,module,exports){
+},{"./askYesNoWithModal":152,"./deleteObjectFromModel":159,"./getObject":184,"./tellWithModal":236,"dateformat":8,"pouchdb":106,"underscore":150}],159:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -38325,7 +38325,7 @@ module.exports = function () {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../getObject":184,"../map/zoomToFeature":210,"../showTab":230,"openlayers":27}],167:[function(require,module,exports){
+},{"../getObject":184,"../map/zoomToFeature":210,"../showTab":232,"openlayers":27}],167:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -38782,7 +38782,7 @@ module.exports = function (id, type) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../../templates/checkbox":237,"../../../templates/checkboxGroup":238,"../../../templates/formButtonToolbar":239,"../../../templates/geoJson":240,"../../../templates/input":241,"../../../templates/optionGroup":245,"../../../templates/select":246,"../../../templates/textarea":247,"../capitalizeFirstLetter":153,"../getHierarchy":183,"../getObject":184,"../refreshScrollbar":227,"../showTab":230,"./addCheckedToValueList":173,"./positionFormBtngroup":179,"./resizeTextareas":180,"underscore":150}],178:[function(require,module,exports){
+},{"../../../templates/checkbox":239,"../../../templates/checkboxGroup":240,"../../../templates/formButtonToolbar":241,"../../../templates/geoJson":242,"../../../templates/input":243,"../../../templates/optionGroup":247,"../../../templates/select":248,"../../../templates/textarea":249,"../capitalizeFirstLetter":153,"../getHierarchy":183,"../getObject":184,"../refreshScrollbar":227,"../showTab":232,"./addCheckedToValueList":173,"./positionFormBtngroup":179,"./resizeTextareas":180,"underscore":150}],178:[function(require,module,exports){
 // Hilfsfunktion, die typeof ersetzt und ergänzt
 // typeof gibt bei input-Feldern immer String zurück!
 
@@ -38974,7 +38974,7 @@ module.exports = function (passedObject, value) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../getObject":184,"../nav/getLabelForObject":218,"../syncWithRemoteDb":231,"dateformat":8,"pouchdb":106,"underscore":150}],183:[function(require,module,exports){
+},{"../getObject":184,"../nav/getLabelForObject":218,"../syncWithRemoteDb":233,"dateformat":8,"pouchdb":106,"underscore":150}],183:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -39203,7 +39203,7 @@ module.exports = function (tab, setTabsWidth) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./setWidthOfTabs":228}],190:[function(require,module,exports){
+},{"./setWidthOfTabs":229}],190:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -39232,7 +39232,7 @@ module.exports = function () {
         return JSON.stringify(context);
     });
 };
-},{"./initiateResizables":191,"./nav/getLogin":219,"./setupEvents":229,"handlebars":24}],191:[function(require,module,exports){
+},{"./initiateResizables":191,"./nav/getLogin":219,"./setupEvents":231,"handlebars":24}],191:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -39245,7 +39245,8 @@ var $                    = (typeof window !== "undefined" ? window.$ : typeof gl
     positionFormBtngroup = require('./form/positionFormBtngroup'),
     resizeTextareas      = require('./form/resizeTextareas'),
     refreshMap           = require('./map/refreshMap'),
-    refreshScrollbar     = require('./refreshScrollbar');
+    refreshScrollbar     = require('./refreshScrollbar'),
+    saveResizablesConfig = require('./saveResizablesConfig');
 
 module.exports = function () {
     var zaehler;
@@ -39261,6 +39262,7 @@ module.exports = function () {
             positionFormBtngroup();
             refreshMap();
             resizeTextareas();
+            saveResizablesConfig();
         }
     });
 
@@ -39272,6 +39274,7 @@ module.exports = function () {
             positionFormBtngroup();
             refreshMap();
             resizeTextareas();
+            saveResizablesConfig();
         }
     });
     // obiger Code überschreibt display:none aus css
@@ -39284,6 +39287,7 @@ module.exports = function () {
         resize: function () {
             refreshMap();
             resizeTextareas();
+            saveResizablesConfig();
         }
     });
 
@@ -39319,7 +39323,7 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./alsoResizeReverse":151,"./form/positionFormBtngroup":179,"./form/resizeTextareas":180,"./map/refreshMap":204,"./refreshScrollbar":227,"./setWidthOfTabs":228,"./toggleTab":235,"underscore":150}],192:[function(require,module,exports){
+},{"./alsoResizeReverse":151,"./form/positionFormBtngroup":179,"./form/resizeTextareas":180,"./map/refreshMap":204,"./refreshScrollbar":227,"./saveResizablesConfig":228,"./setWidthOfTabs":229,"./toggleTab":237,"underscore":150}],192:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -39471,7 +39475,7 @@ module.exports = function (layer) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../../templates/layertoolLayerCollapse":242,"../../../templates/layertoolProjectPanel":243,"../../../templates/layertoolThemesPanel":244,"../capitalizeFirstLetter":153,"../getHierarchy":183,"../getObject":184}],194:[function(require,module,exports){
+},{"../../../templates/layertoolLayerCollapse":244,"../../../templates/layertoolProjectPanel":245,"../../../templates/layertoolThemesPanel":246,"../capitalizeFirstLetter":153,"../getHierarchy":183,"../getObject":184}],194:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -40557,7 +40561,7 @@ module.exports = function (projectNames) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../syncWithRemoteDbs":232,"../syncWithRemoteUserDb":233,"./createDatabaseId":212,"./createTree":213,"./getModelData":220,"async":2,"pouchdb":106,"pouchdb-all-dbs":28,"underscore":150}],222:[function(require,module,exports){
+},{"../syncWithRemoteDbs":234,"../syncWithRemoteUserDb":235,"./createDatabaseId":212,"./createTree":213,"./getModelData":220,"async":2,"pouchdb":106,"pouchdb-all-dbs":28,"underscore":150}],222:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -40617,7 +40621,7 @@ module.exports = function (signindata) {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../configuration":154,"../tellWithModal":234,"./initiateNav":221,"pouchdb":106}],224:[function(require,module,exports){
+},{"../configuration":154,"../tellWithModal":236,"./initiateNav":221,"pouchdb":106}],224:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -40680,7 +40684,7 @@ module.exports = function () {
     signIn(signindata);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../tellWithModal":234,"../validateEmail":236,"./signIn":223,"./signUp":225}],225:[function(require,module,exports){
+},{"../tellWithModal":236,"../validateEmail":238,"./signIn":223,"./signUp":225}],225:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -40710,7 +40714,7 @@ module.exports = function (signindata) {
         tellWithModal('Das Konto konnte nicht erstellt werden', 'Die Datenbank meldete: ' + error);
     });
 };
-},{"../configuration":154,"../tellWithModal":234,"./signIn":223,"pouchdb":106}],226:[function(require,module,exports){
+},{"../configuration":154,"../tellWithModal":236,"./signIn":223,"pouchdb":106}],226:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -40759,6 +40763,126 @@ module.exports = function () {
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],228:[function(require,module,exports){
 (function (global){
+/*
+ * saves previous nav configurations
+ * Goal: User sets width of navs
+ * the next time he blends the same navs, 
+ * they are shown with the same widths as before
+ *
+ * idea: previous configurations are saved 
+ * - in an object ("previous")
+ * - inside a key named "w" + window.width
+ *   this is to make sure, configurations are only saved for same window widths
+ * - in a key named "c" + <a series of 4 0's and 1's representing the 4 tabs and their status>
+ * - example: object.w1920.c1110
+ *
+ * when a tab is shown/hidden, the app searches for a previous configuration to apply
+ * if there is none, it uses the function "setWidthOfTabs"
+ */
+
+/*jslint node: true, browser: true, nomen: true, todo: true */
+'use strict';
+
+var $ = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null);
+
+module.exports = function () {
+    var now      = {},
+        nowName  = 'c',
+        $nav     = $('#nav'),
+        $form    = $('#form'),
+        $map     = $('#map'),
+        $utils   = $('#utils'),
+        windowWidth = $(document).width();
+
+    window.oi.previousTabConfig = window.oi.previousTabConfig || {};
+    window.oi.previousTabConfig['w' + windowWidth] = window.oi.previousTabConfig['w' + windowWidth] || {};
+
+    if ($nav.is(':visible')) {
+        nowName   = nowName + '1';
+        now.nav   = $nav.width();
+    } else {
+        nowName   = nowName + '0';
+        now.nav   = 0;
+    }
+    if ($form.is(':visible')) {
+        nowName   = nowName + '1';
+        now.form  = $form.width();
+    } else {
+        nowName   = nowName + '0';
+        now.form  = 0;
+    }
+    if ($map.is(':visible')) {
+        nowName   = nowName + '1';
+        now.map   = $map.width();
+    } else {
+        nowName   = nowName + '0';
+        now.map   = 0;
+    }
+    if ($utils.is(':visible')) {
+        nowName   = nowName + '1';
+        now.utils = $utils.width();
+    } else {
+        nowName   = nowName + '0';
+        now.utils = 0;
+    }
+
+    window.oi.previousTabConfig['w' + windowWidth][nowName] = now;
+};
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],229:[function(require,module,exports){
+(function (global){
+/*jslint node: true, browser: true, nomen: true, todo: true, plusplus*/
+'use strict';
+
+var _                             = require('underscore'),
+    $                             = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+    setWidthOfTabsWithoutPrevious = require('./setWidthOfTabsWithoutPrevious'),
+    positionFormBtngroup          = require('./form/positionFormBtngroup'),
+    refreshMap                    = require('./map/refreshMap');
+
+module.exports = function () {
+    var previousConfig,
+        nowName     = 'c',
+        windowWidth = $(document).width(),
+        $nav        = $('#nav'),
+        $form       = $('#form'),
+        $map        = $('#map'),
+        $utils      = $('#utils'),
+        possibleKey,
+        useKey;
+
+    console.log('setWidthOfTabs: windowWidth: ', windowWidth);
+
+    if (window.oi.previousTabConfig && window.oi.previousTabConfig['w' + windowWidth]) {
+        nowName = $nav.is(':visible')   ? nowName + '1' : nowName + '0';
+        nowName = $form.is(':visible')  ? nowName + '1' : nowName + '0';
+        nowName = $map.is(':visible')   ? nowName + '1' : nowName + '0';
+        nowName = $utils.is(':visible') ? nowName + '1' : nowName + '0';
+
+        previousConfig = window.oi.previousTabConfig['w' + windowWidth][nowName];
+
+        console.log('previousConfig: ', previousConfig);
+        console.log('nowName: ', nowName);
+
+        if (previousConfig) {
+            $nav.width(previousConfig.nav);
+            $form.width(previousConfig.form);
+            $map.width(previousConfig.map);
+            $utils.width(previousConfig.utils);
+            refreshMap();
+            positionFormBtngroup();
+        } else {
+            setWidthOfTabsWithoutPrevious();
+        }
+    } else {
+        setWidthOfTabsWithoutPrevious();
+    }
+    
+};
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./form/positionFormBtngroup":179,"./map/refreshMap":204,"./setWidthOfTabsWithoutPrevious":230,"underscore":150}],230:[function(require,module,exports){
+(function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus*/
 'use strict';
 
@@ -40806,7 +40930,7 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./form/positionFormBtngroup":179,"./map/refreshMap":204,"underscore":150}],229:[function(require,module,exports){
+},{"./form/positionFormBtngroup":179,"./map/refreshMap":204,"underscore":150}],231:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -40861,7 +40985,7 @@ module.exports = function () {
         .on('change',      '.js-utilsEditLayerType',         onChangeEditLayerType);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./event/onChangeEditLayerType":160,"./event/onChangeElement":161,"./event/onChangeLytEditLayer":162,"./event/onChangeLytShowLayer":163,"./event/onClickFormDelete":164,"./event/onClickFormNew":165,"./event/onClickGeometryField":166,"./event/onClickNavFormSort":167,"./event/onClickNavbarBrand":168,"./event/onClickNavbarCollapse":169,"./event/onClickSigninWithModalSignupCheckbox":170,"./event/onKeypressSigninWithModal":171,"./event/onScrollTab":172,"./form/fitTextareaToContent":175,"./nav/signInOrUp":224,"underscore":150}],230:[function(require,module,exports){
+},{"./event/onChangeEditLayerType":160,"./event/onChangeElement":161,"./event/onChangeLytEditLayer":162,"./event/onChangeLytShowLayer":163,"./event/onClickFormDelete":164,"./event/onClickFormNew":165,"./event/onClickGeometryField":166,"./event/onClickNavFormSort":167,"./event/onClickNavbarBrand":168,"./event/onClickNavbarCollapse":169,"./event/onClickSigninWithModalSignupCheckbox":170,"./event/onKeypressSigninWithModal":171,"./event/onScrollTab":172,"./form/fitTextareaToContent":175,"./nav/signInOrUp":224,"underscore":150}],232:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -40886,7 +41010,7 @@ module.exports = function (tab, setTabsWidth) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./map/initiateMap":202,"./setWidthOfTabs":228}],231:[function(require,module,exports){
+},{"./map/initiateMap":202,"./setWidthOfTabs":229}],233:[function(require,module,exports){
 /**
  * synchronisiert die Daten aus einer CouchDB in PouchDB
  */
@@ -40931,7 +41055,7 @@ module.exports = function (couchName) {
     }
 };
 
-},{"./configuration":154,"./handleChanges":186,"pouchdb":106}],232:[function(require,module,exports){
+},{"./configuration":154,"./handleChanges":186,"pouchdb":106}],234:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -40944,7 +41068,7 @@ module.exports = function (projectDbs) {
     });
 };
 
-},{"./syncWithRemoteDb":231,"underscore":150}],233:[function(require,module,exports){
+},{"./syncWithRemoteDb":233,"underscore":150}],235:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -40962,7 +41086,7 @@ module.exports = function () {
         include_docs: true
     }).on('change', handleUsersChanges);
 };
-},{"./configuration":154,"./handleUsersChanges":188,"pouchdb":106}],234:[function(require,module,exports){
+},{"./configuration":154,"./handleUsersChanges":188,"pouchdb":106}],236:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -40985,7 +41109,7 @@ module.exports = function (title, text) {
     $modal.modal(options);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],235:[function(require,module,exports){
+},{}],237:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -40995,21 +41119,23 @@ var $              = (typeof window !== "undefined" ? window.$ : typeof global !
     hideTab        = require('./hideTab'),
     setWidthOfTabs = require('./setWidthOfTabs');
 
-module.exports = function (tab, show) {
+module.exports = function (tab) {
     $('.js-tab').each(function () {
         if ($(this).attr('id') === tab) {
-            if ($(this).is(':visible') && !show) {
-                hideTab(tab, false);
+            if ($(this).is(':visible')) {
+                hideTab(tab, true);
             } else {
-                showTab(tab, false);
+                showTab(tab, true);
             }
         }
     });
-    setWidthOfTabs();
+    //setTimeout(function () {
+        setWidthOfTabs();
+    //}, 500);
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./hideTab":189,"./setWidthOfTabs":228,"./showTab":230}],236:[function(require,module,exports){
+},{"./hideTab":189,"./setWidthOfTabs":229,"./showTab":232}],238:[function(require,module,exports){
 /*
  * prüft, ob ein String eine email-Adressen sein könnte
  * Quelle: http://stackoverflow.com/questions/46155/validate-email-address-in-javascript
@@ -41022,7 +41148,7 @@ module.exports = function (string) {
     var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(string);
 };
-},{}],237:[function(require,module,exports){
+},{}],239:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, helper, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing, functionType="function";
   return "<div class=\"form-group js-form-group\">\r\n    <label class=\"control-label\">"
@@ -41036,7 +41162,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(((helper = (helper = helpers.checked || (depth0 != null ? depth0.checked : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"checked","hash":{},"data":data}) : helper)))
     + ">\r\n            </label>\r\n        </div>\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":24}],238:[function(require,module,exports){
+},{"handlebars":24}],240:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,depths) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "            <div class=\"checkbox\">\r\n                <label>\r\n                    <input type=\"checkbox\" id=\""
@@ -41063,11 +41189,11 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "    </div>\r\n</div>";
 },"useData":true,"useDepths":true});
-},{"handlebars":24}],239:[function(require,module,exports){
+},{"handlebars":24}],241:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   return "<div class=\"btn-toolbar\" role=\"toolbar\" aria-label=\"Daten Toolbar\">\r\n    <div class=\"btn-group pull-right\" role=\"group\" aria-label=\"Daten Button group\">\r\n        <button id=\"formNew\" class=\"btn btn-default\">neu</button>\r\n        <button id=\"formDelete\" class=\"btn btn-default\">löschen</button>\r\n    </div>\r\n</div>";
   },"useData":true});
-},{"handlebars":24}],240:[function(require,module,exports){
+},{"handlebars":24}],242:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "<div class=\"form-group js-form-group\">\r\n    <label for=\""
@@ -41084,7 +41210,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.value : stack1), depth0))
     + "</textarea>\r\n    <button class=\"js-geometryField\" class=\"btn btn-default\">Karte</button>\r\n</div>";
 },"useData":true});
-},{"handlebars":24}],241:[function(require,module,exports){
+},{"handlebars":24}],243:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "<div class=\"form-group js-form-group\">\r\n    <label for=\""
@@ -41103,7 +41229,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.value : stack1), depth0))
     + "\">\r\n</div>";
 },"useData":true});
-},{"handlebars":24}],242:[function(require,module,exports){
+},{"handlebars":24}],244:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression;
   return "            <div class=\"checkbox\">\r\n                <label>\r\n                    <input type=\"checkbox\" id=\""
@@ -41129,7 +41255,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":24}],243:[function(require,module,exports){
+},{"handlebars":24}],245:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression;
   return "<div id=\"lytProject"
@@ -41146,11 +41272,11 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.projId : stack1), depth0))
     + "\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingProjekte\">\r\n        <!--insert layer collapses-->\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":24}],244:[function(require,module,exports){
+},{"handlebars":24}],246:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   return "<div id=\"lytThemes\" class=\"panel panel-default js-layerPanel\">\r\n    <div class=\"panel-heading\" role=\"tab\" id=\"headingThemen\">\r\n        <h4 class=\"panel-title\">\r\n            <a class=\"collapsed\" data-toggle=\"collapse\" data-parent=\"#utilsLayertoolAccordion\" href=\"#collapseThemes\" aria-expanded=\"false\" aria-controls=\"collapseThemes\">\r\n              Themen\r\n            </a>\r\n        </h4>\r\n    </div>\r\n    <div id=\"collapseThemes\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingThemen\">\r\n        <!--insert list-groups-->\r\n    </div>\r\n</div>";
   },"useData":true});
-},{"handlebars":24}],245:[function(require,module,exports){
+},{"handlebars":24}],247:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,depths) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "            <div class=\"radio\">\r\n                <label>\r\n                    <input type=\"radio\" name=\""
@@ -41177,7 +41303,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "    </div>\r\n</div>";
 },"useData":true,"useDepths":true});
-},{"handlebars":24}],246:[function(require,module,exports){
+},{"handlebars":24}],248:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, buffer = "                <option value=";
   stack1 = lambda((depth0 != null ? depth0.value : depth0), depth0);
@@ -41200,7 +41326,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "        </select>\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":24}],247:[function(require,module,exports){
+},{"handlebars":24}],249:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "<div class=\"form-group js-form-group\">\r\n    <label for=\""

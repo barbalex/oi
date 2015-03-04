@@ -1,45 +1,48 @@
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus*/
 'use strict';
 
-var _                    = require('underscore'),
-    $                    = require('jquery'),
-    positionFormBtngroup = require('./form/positionFormBtngroup'),
-    refreshMap           = require('./map/refreshMap');
+var _                             = require('underscore'),
+    $                             = require('jquery'),
+    setWidthOfTabsWithoutPrevious = require('./setWidthOfTabsWithoutPrevious'),
+    positionFormBtngroup          = require('./form/positionFormBtngroup'),
+    refreshMap                    = require('./map/refreshMap');
 
 module.exports = function () {
-    var widths         = [],
-        parentWidth    = parseInt($('#content').width(), 10),
-        tabsTotalWidth = 0,
-        totalWidthNew  = 0;
+    var previousConfig,
+        nowName     = 'c',
+        windowWidth = $(document).width(),
+        $nav        = $('#nav'),
+        $form       = $('#form'),
+        $map        = $('#map'),
+        $utils      = $('#utils'),
+        possibleKey,
+        useKey;
 
-    $('.tab:visible').each(function () {
-        var width       = parseInt($(this).width(), 10),
-            widthObject = {};
+    console.log('setWidthOfTabs: windowWidth: ', windowWidth);
 
-        widthObject.id    = $(this).attr('id');
-        widthObject.width = width;
+    if (window.oi.previousTabConfig && window.oi.previousTabConfig['w' + windowWidth]) {
+        nowName = $nav.is(':visible')   ? nowName + '1' : nowName + '0';
+        nowName = $form.is(':visible')  ? nowName + '1' : nowName + '0';
+        nowName = $map.is(':visible')   ? nowName + '1' : nowName + '0';
+        nowName = $utils.is(':visible') ? nowName + '1' : nowName + '0';
 
-        widths.push(widthObject);
+        previousConfig = window.oi.previousTabConfig['w' + windowWidth][nowName];
 
-        tabsTotalWidth += width;
-    });
+        console.log('previousConfig: ', previousConfig);
+        console.log('nowName: ', nowName);
 
-    _.each(widths, function (widthObject, index) {
-        var widthAfter = (parentWidth - tabsTotalWidth) * (widthObject.width / tabsTotalWidth) + widthObject.width;
-
-        if (index === widths.length -1) {
-            // den letzten Tab aufrunden, damit kein einzelner Pixel unbenutzt bleibt
-            widthAfter = parentWidth - totalWidthNew;
-            $('#' + widthObject.id + 'Separator').hide();
+        if (previousConfig) {
+            $nav.width(previousConfig.nav);
+            $form.width(previousConfig.form);
+            $map.width(previousConfig.map);
+            $utils.width(previousConfig.utils);
+            refreshMap();
+            positionFormBtngroup();
         } else {
-            widthAfter     = Math.floor(widthAfter);
-            totalWidthNew += Math.floor(widthAfter);
-            $('#' + widthObject.id + 'Separator').show();
+            setWidthOfTabsWithoutPrevious();
         }
-
-        $('#' + widthObject.id).css('width', widthAfter);
-    });
-
-    refreshMap();
-    positionFormBtngroup();
+    } else {
+        setWidthOfTabsWithoutPrevious();
+    }
+    
 };

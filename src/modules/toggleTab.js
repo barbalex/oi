@@ -6,15 +6,17 @@ var $              = require('jquery'),
     hideTab        = require('./hideTab'),
     setWidthOfTabs = require('./setWidthOfTabs');
 
-module.exports = function (tab, show) {
+module.exports = function (tab) {
     $('.js-tab').each(function () {
         if ($(this).attr('id') === tab) {
-            if ($(this).is(':visible') && !show) {
-                hideTab(tab, false);
+            if ($(this).is(':visible')) {
+                hideTab(tab, true);
             } else {
-                showTab(tab, false);
+                showTab(tab, true);
             }
         }
     });
-    setWidthOfTabs();
+    //setTimeout(function () {
+        setWidthOfTabs();
+    //}, 500);
 };
