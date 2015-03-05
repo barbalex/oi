@@ -1,7 +1,7 @@
 // build up modify interaction
 // needs a select and a modify interaction working together
 
-/*jslint node: true, browser: true, nomen: true, todo: true */
+/*jslint node: true, browser: true, nomen: true, todo: true, plusplus */
 'use strict';
 
 var ol                = require('openlayers'),
@@ -46,9 +46,24 @@ module.exports = function (layer) {
             $jstree.select_node('#' + objId);
         }
 
+        // problem: change happens for every pixel that a point is dragged!
+        // need to call it only on dragend. But there is no such event
+        // counts how often .on('change') happened
+        window.oi.eventCounter = 0;
         // ...listen for changes and save them
         feature.on('change', function () {
-            saveFeatureData(this);
+            var counter,
+                that = this;
+
+            window.oi.eventCounter++;
+            // registers how often .on('change') happened before end of timeout
+            counter = window.oi.eventCounter;
+            setTimeout(function () {
+                if (counter === window.oi.eventCounter) {
+                    // during the timeout no further change happened > do it!
+                    saveFeatureData(that);
+                }
+            }, 200);
         });
         // listen to pressing of delete key, then delete selected features
         $(document).on('keyup', function (event) {
