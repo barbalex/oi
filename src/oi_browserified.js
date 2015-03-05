@@ -38786,10 +38786,13 @@ module.exports = function (id, type) {
                     }
 
                     // sie selectieren
-                    // TODO: das bewirkt, dass im Tree der node nicht mehr markiert ist. WIE????
                     selectedFeatures = window.oi.olMap.map.selectInteraction.getFeatures();
+                    // bestehende Selektion aufheben
+                    selectedFeatures.clear();
                     _.each(geomFeatures, function (geomFeature) {
-                        //selectedFeatures.push(geomFeature);
+                        // make sure, selectInteraction doesn't select in tree
+                        window.oi.dontSelectTree = true;
+                        selectedFeatures.push(geomFeature);
                     });
                     // Layer im Layertool öffnen
                     $('#collapseProject' + object.projId).collapse('show');
@@ -39715,10 +39718,14 @@ module.exports = function () {
         // show this feature in tree und Formular anzeigen
         objId = feature.getId();
         selectedObj = $jstree.get_selected(true)[0];
-        if (!selectedObj || objId !== selectedObj.id) {
-            $jstree.deselect_all();
-            window.oi.olMap.dontZoom = true;
-            $jstree.select_node('#' + objId);
+        if (!window.oi.dontSelectTree) {
+            if (!selectedObj || objId !== selectedObj.id) {
+                $jstree.deselect_all();
+                window.oi.olMap.dontZoom = true;
+                $jstree.select_node('#' + objId);
+            }
+        } else {
+            delete window.oi.dontSelectTree;
         }
     });
 };

@@ -32,10 +32,14 @@ module.exports = function () {
         // show this feature in tree und Formular anzeigen
         objId = feature.getId();
         selectedObj = $jstree.get_selected(true)[0];
-        if (!selectedObj || objId !== selectedObj.id) {
-            $jstree.deselect_all();
-            window.oi.olMap.dontZoom = true;
-            $jstree.select_node('#' + objId);
+        if (!window.oi.dontSelectTree) {
+            if (!selectedObj || objId !== selectedObj.id) {
+                $jstree.deselect_all();
+                window.oi.olMap.dontZoom = true;
+                $jstree.select_node('#' + objId);
+            }
+        } else {
+            delete window.oi.dontSelectTree;
         }
     });
 };

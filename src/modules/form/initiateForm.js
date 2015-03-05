@@ -131,10 +131,13 @@ module.exports = function (id, type) {
                     }
 
                     // sie selectieren
-                    // TODO: das bewirkt, dass im Tree der node nicht mehr markiert ist. WIE????
                     selectedFeatures = window.oi.olMap.map.selectInteraction.getFeatures();
+                    // bestehende Selektion aufheben
+                    selectedFeatures.clear();
                     _.each(geomFeatures, function (geomFeature) {
-                        //selectedFeatures.push(geomFeature);
+                        // make sure, selectInteraction doesn't select in tree
+                        window.oi.dontSelectTree = true;
+                        selectedFeatures.push(geomFeature);
                     });
                     // Layer im Layertool öffnen
                     $('#collapseProject' + object.projId).collapse('show');
