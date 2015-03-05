@@ -20,6 +20,7 @@ module.exports = function () {
     if (layer) {
         if (this.id === 'utilsEditChoose') {
             // add modify interaction
+            // and pass selected features
             addModifyInteraction(layer);
         } else {
             // add draw interaction

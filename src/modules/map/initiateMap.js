@@ -6,7 +6,8 @@ var ol                       = require('openlayers'),
     addLayers                = require('./addLayers'),
     mousePositionControl     = require('./mousePositionControl'),
     addLayerToLayertool      = require('./addLayerToLayertool'),
-    removeLayerFromLayertool = require('./removeLayerFromLayertool');
+    removeLayerFromLayertool = require('./removeLayerFromLayertool'),
+    addSelectInteraction     = require('./addSelectInteraction');
 
 module.exports = function () {
     // only build up map if not yet done
@@ -48,6 +49,8 @@ module.exports = function () {
 
         // make map global
         window.oi.olMap.map = map;
+
+        addSelectInteraction();
 
         // start listening for changes on the layers
         // change layertool

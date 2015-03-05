@@ -26,6 +26,7 @@ module.exports = function (layer) {
         },*/
         condition: ol.events.condition.click
     });
+
     // make interactions global so they can later be removed
     window.oi.olMap.map.selectInteraction = selectInteraction;
     map.addInteraction(selectInteraction);
@@ -35,13 +36,13 @@ module.exports = function (layer) {
     // when a feature is selected...
     selectedFeatures.on('add', function (event) {
         var objId,
-            selectedObjId;
+            selectedObj;
         // grab the feature
         feature = event.element;
         // dieses Objekt in tree und Formular anzeigen
         objId = feature.getId();
-        selectedObjId = $jstree.get_selected(true)[0].id;
-        if (objId !== selectedObjId) {
+        selectedObj = $jstree.get_selected(true)[0];
+        if (!selectedObj || objId !== selectedObj.id) {
             $jstree.deselect_all();
             $jstree.select_node('#' + objId);
         }

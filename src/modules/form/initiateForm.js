@@ -29,7 +29,8 @@ module.exports = function (id, type) {
         hierarchy,
         $formContent = $('#formContent'),
         geomFeatures,
-        geomFeature;
+        geomFeature,
+        selectedFeatures;
 
     switch (type) {
     case 'object':
@@ -122,7 +123,19 @@ module.exports = function (id, type) {
                     // Karte anzeigen
                     showTab('map');
                     // zu den Geometrien zoomen
-                    zoomToFeatures(geomFeatures, 200);
+                    // wenn ausgelöst duch Klick auf Geometrie auf Karte, soll nicht gezoomt werden
+                    if (!window.oi.olMap.dontZoom) {
+                        zoomToFeatures(geomFeatures, 200);
+                    } else {
+                        delete window.oi.olMap.dontZoom;
+                    }
+
+                    // sie selectieren
+                    // TODO: das bewirkt, dass im Tree der node nicht mehr markiert ist. WIE????
+                    selectedFeatures = window.oi.olMap.map.selectInteraction.getFeatures();
+                    _.each(geomFeatures, function (geomFeature) {
+                        //selectedFeatures.push(geomFeature);
+                    });
                     // Layer im Layertool öffnen
                     $('#collapseProject' + object.projId).collapse('show');
                 }

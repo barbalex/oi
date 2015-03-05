@@ -4,7 +4,8 @@
 var ol                    = require('openlayers'),
     $                     = require('jquery'),
     _                     = require('underscore'),
-    removeAllInteractions = require('../map/removeAllInteractions');
+    removeAllInteractions = require('../map/removeAllInteractions'),
+    addSelectInteraction  = require('../map/addSelectInteraction');
 
 module.exports = function () {
     var layerTitle = $(this).closest('.list-group').data('object').layerTitle,
@@ -23,8 +24,8 @@ module.exports = function () {
         } else {
             layer.set('editing', false);
             $('#utilsEditLayer').hide();
-            // cancel modify-interaction
             removeAllInteractions();
+            addSelectInteraction();
         }
     }
 };
