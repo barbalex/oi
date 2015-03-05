@@ -4,21 +4,20 @@
 var _                             = require('underscore'),
     $                             = require('jquery'),
     setWidthOfTabsWithoutPrevious = require('./setWidthOfTabsWithoutPrevious'),
+    setVisibilityOfTabSeparators  = require('./setVisibilityOfTabSeparators'),
     positionFormBtngroup          = require('./form/positionFormBtngroup'),
     refreshMap                    = require('./map/refreshMap');
 
 module.exports = function () {
     var previousConfig,
         nowName     = 'c',
-        windowWidth = $(document).width(),
+        windowWidth = $(window).width(),
         $nav        = $('#nav'),
         $form       = $('#form'),
         $map        = $('#map'),
         $utils      = $('#utils'),
         possibleKey,
         useKey;
-
-    console.log('setWidthOfTabs: windowWidth: ', windowWidth);
 
     if (window.oi.previousTabConfig && window.oi.previousTabConfig['w' + windowWidth]) {
         nowName = $nav.is(':visible')   ? nowName + '1' : nowName + '0';
@@ -28,9 +27,6 @@ module.exports = function () {
 
         previousConfig = window.oi.previousTabConfig['w' + windowWidth][nowName];
 
-        console.log('previousConfig: ', previousConfig);
-        console.log('nowName: ', nowName);
-
         if (previousConfig) {
             $nav.width(previousConfig.nav);
             $form.width(previousConfig.form);
@@ -38,6 +34,7 @@ module.exports = function () {
             $utils.width(previousConfig.utils);
             refreshMap();
             positionFormBtngroup();
+            setVisibilityOfTabSeparators();
         } else {
             setWidthOfTabsWithoutPrevious();
         }

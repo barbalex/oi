@@ -12,7 +12,7 @@ module.exports = function () {
         tabsTotalWidth = 0,
         totalWidthNew  = 0;
 
-    $('.tab:visible').each(function () {
+    $('.js-tab:visible').each(function () {
         var width       = parseInt($(this).width(), 10),
             widthObject = {};
 

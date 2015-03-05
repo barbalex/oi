@@ -16,7 +16,5 @@ module.exports = function (tab) {
             }
         }
     });
-    //setTimeout(function () {
-        setWidthOfTabs();
-    //}, 500);
+    setWidthOfTabs();
 };

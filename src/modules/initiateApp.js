@@ -25,4 +25,9 @@ module.exports = function () {
     window.Handlebars.registerHelper('json', function (context) {
         return JSON.stringify(context);
     });
+
+    // letzte Konfiguration für die Tabs holen
+    if (localStorage.previousTabConfig) {
+        window.oi.previousTabConfig = JSON.parse(localStorage.previousTabConfig);
+    }
 };

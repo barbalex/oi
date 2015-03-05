@@ -27,7 +27,7 @@ module.exports = function () {
         $form    = $('#form'),
         $map     = $('#map'),
         $utils   = $('#utils'),
-        windowWidth = $(document).width();
+        windowWidth = $(window).width();
 
     window.oi.previousTabConfig = window.oi.previousTabConfig || {};
     window.oi.previousTabConfig['w' + windowWidth] = window.oi.previousTabConfig['w' + windowWidth] || {};
@@ -62,4 +62,6 @@ module.exports = function () {
     }
 
     window.oi.previousTabConfig['w' + windowWidth][nowName] = now;
+    // save in localStorage so it can be loaded on next app start
+    localStorage.previousTabConfig = JSON.stringify(window.oi.previousTabConfig);
 };

@@ -2,6 +2,7 @@ body {
   background-color: #222;
   margin: 0;
   padding-top: 50px;
+  overflow: hidden;
 }
 .navbar-nav>.active>a {
   border: 1px solid #333;
