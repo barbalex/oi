@@ -3,6 +3,7 @@
 
 var $                     = require('jquery'),
     _                     = require('underscore'),
+    ol                    = require('openlayers'),
     input                 = require('../../../templates/input'),
     textarea              = require('../../../templates/textarea'),
     checkbox              = require('../../../templates/checkbox'),
@@ -18,7 +19,8 @@ var $                     = require('jquery'),
     resizeTextareas       = require('./resizeTextareas'),
     refreshScrollbar      = require('../refreshScrollbar'),
     capitalizeFirstLetter = require('../capitalizeFirstLetter'),
-    showTab               = require('../showTab');
+    showTab               = require('../showTab'),
+    zoomToFeatures        = require('../map/zoomToFeatures');
 
 module.exports = function (id, type) {
     var html         = '',
@@ -26,7 +28,8 @@ module.exports = function (id, type) {
         object,
         hierarchy,
         $formContent = $('#formContent'),
-        hasGeometry  = false;
+        geomFeatures,
+        geomFeature;
 
     switch (type) {
     case 'object':
@@ -52,6 +55,8 @@ module.exports = function (id, type) {
                     templateObject.object.value         = object.data[field.label] || null;
                     templateObject.object.layerTitle    = hierarchy.name + ': ' + field.label;
                     templateObject.object.layerName     = 'layer' + capitalizeFirstLetter(hierarchy.name) + capitalizeFirstLetter(field.label);
+
+                    geomFeatures = [];
 
                     // Felder bauen
                     switch (field.inputType) {
@@ -92,7 +97,10 @@ module.exports = function (id, type) {
                         templateObject.object.hId   = object.hId;
                         html += geoJson(templateObject);
                         textareaIds.push(id + field.label);
-                        hasGeometry = true;
+                        // prepare feature to zoom the map to
+                        geomFeature = new ol.Feature();
+                        geomFeature.setGeometry(new ol.geom[object.data[field.label].type](object.data[field.label].coordinates));
+                        geomFeatures.push(geomFeature);
                         break;
                     default:
                         html += input(templateObject);
@@ -110,8 +118,12 @@ module.exports = function (id, type) {
                 refreshScrollbar();
 
                 // wenn Geometrie existiert, entsprechenden Layer im Layertool öffnen
-                if (hasGeometry) {
+                if (geomFeatures && geomFeatures.length > 0) {
+                    // Karte anzeigen
                     showTab('map');
+                    // zu den Geometrien zoomen
+                    zoomToFeatures(geomFeatures, 200);
+                    // Layer im Layertool öffnen
                     $('#collapseProject' + object.projId).collapse('show');
                 }
             } else {
