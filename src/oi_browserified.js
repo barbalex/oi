@@ -38927,6 +38927,17 @@ module.exports = function (hierarchy) {
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../getHierarchy":183,"../nav/getLabelForObject":222,"dateformat":8,"pouchdb":106,"underscore":150}],182:[function(require,module,exports){
 (function (global){
+/*
+ * when a value is changed in the form
+ * it is passed together with other information wrapped in an object
+ * this function manages:
+ * - saving the value to the database
+ * - updating the navigation tree
+ * - updating the map when geometries were changed
+ * - creating new project-databases and starting syncing with them
+ -   when a new project was created
+ */
+
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -38976,8 +38987,8 @@ module.exports = function (passedObject, value) {
         object.lastEdited  = lastEdited;
         // write to pouch
 
-        console.log('localDb: ', localDb);
-        console.log('object: ', object);
+        //console.log('object: ', object);
+        //console.log('object stringified: ', JSON.stringify(object, null, 4));
 
         localDb.put(object)
             .then(function (response) {
@@ -38988,6 +38999,8 @@ module.exports = function (passedObject, value) {
                     featureGeom,
                     featureCoordinates,
                     correspondingHierarchy;
+
+                console.log('response from put: ', response);
 
                 // check if this was a new project
                 if (!object._rev) {
@@ -39018,16 +39031,23 @@ module.exports = function (passedObject, value) {
                 if (inputType === 'geoJson') {
                     // get layer
                     layerName          = 'layer' + capitalizeFirstLetter(correspondingHierarchy.name) + capitalizeFirstLetter(passedObject.label);
+                    //console.log('layerName: ', layerName);
                     layer              = getLayerByName(layerName);
-                    feature            = getFeatureById(object._id);
+                    //console.log('layer: ', layer);
+                    console.log('layer.getSource(): ', layer.getSource());
+
+                    feature            = getFeatureById(layer, object._id);
+                    console.log('feature: ', feature);
                     geomType           = value.type;
+                    console.log('geomType: ', geomType);
                     featureCoordinates = value.coordinates;
+                    console.log('featureCoordinates: ', featureCoordinates);
                     featureGeom        = new ol.geom[geomType](featureCoordinates);
                     feature.setGeometry(featureGeom);
                 }
             })
             .catch(function (err) {
-                console.log('error: ', err);
+                console.log('saveObjectValue: error: ', err);
             });
     } else {
         console.log('Änderung wurde nicht gespeichert');
