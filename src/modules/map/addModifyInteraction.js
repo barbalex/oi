@@ -4,12 +4,13 @@
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus */
 'use strict';
 
-var ol                = require('openlayers'),
-    $                 = require('jquery'),
-    saveFeatureData   = require('./saveFeatureData'),
-    removeFeatureData = require('./removeFeatureData'),
-    toggleEditButtons = require('./toggleEditButtons'),
-    removeAllInteractions = require('./removeAllInteractions');
+var ol                    = require('openlayers'),
+    $                     = require('jquery'),
+    saveFeatureData       = require('./saveFeatureData'),
+    removeFeatureData     = require('./removeFeatureData'),
+    toggleEditButtons     = require('./toggleEditButtons'),
+    removeAllInteractions = require('./removeAllInteractions'),
+    selectObjectNode      = require('../nav/selectObjectNode');
 
 module.exports = function (layer) {
     var map = window.oi.olMap.map,
@@ -56,11 +57,7 @@ module.exports = function (layer) {
         feature = event.element;
         // dieses Objekt in tree und Formular anzeigen
         objId = feature.getId();
-        selectedObj = $jstree.get_selected(true)[0];
-        if (!selectedObj || objId !== selectedObj.id) {
-            $jstree.deselect_all();
-            $jstree.select_node('#' + objId);
-        }
+        selectObjectNode(objId);
 
         // problem: change happens for every pixel that a point is dragged!
         // need to call it only on dragend. But there is no such event

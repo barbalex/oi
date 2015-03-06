@@ -6,7 +6,8 @@
 var ol                    = require('openlayers'),
     $                     = require('jquery'),
     _                     = require('underscore'),
-    removeAllInteractions = require('../map/removeAllInteractions');
+    removeAllInteractions = require('../map/removeAllInteractions'),
+    selectObjectNode      = require('../nav/selectObjectNode');
 
 module.exports = function () {
     var map = window.oi.olMap.map,
@@ -47,11 +48,8 @@ module.exports = function () {
         objId = feature.getId();
         selectedObj = $jstree.get_selected(true)[0];
         if (!window.oi.dontSelectTree) {
-            if (!selectedObj || objId !== selectedObj.id) {
-                $jstree.deselect_all();
-                window.oi.olMap.dontZoom = true;
-                $jstree.select_node('#' + objId);
-            }
+            selectObjectNode(objId);
+            window.oi.olMap.dontZoom = true;
         } else {
             delete window.oi.dontSelectTree;
         }

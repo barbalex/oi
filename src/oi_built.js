@@ -66704,7 +66704,7 @@ module.exports = function ($node) {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./askYesNoWithModal":152,"./deleteObjectFromModel":159,"./getObject":184,"./tellWithModal":242,"dateformat":8,"pouchdb":106,"underscore":150}],159:[function(require,module,exports){
+},{"./askYesNoWithModal":152,"./deleteObjectFromModel":159,"./getObject":184,"./tellWithModal":243,"dateformat":8,"pouchdb":106,"underscore":150}],159:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -66898,7 +66898,7 @@ module.exports = function () {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../getObject":184,"../map/zoomToFeature":214,"../showTab":238,"openlayers":27}],167:[function(require,module,exports){
+},{"../getObject":184,"../map/zoomToFeature":214,"../showTab":239,"openlayers":27}],167:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -67386,7 +67386,7 @@ module.exports = function (id, type) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../../templates/checkbox":245,"../../../templates/checkboxGroup":246,"../../../templates/formButtonToolbar":247,"../../../templates/geoJson":248,"../../../templates/input":249,"../../../templates/optionGroup":253,"../../../templates/select":254,"../../../templates/textarea":255,"../capitalizeFirstLetter":153,"../getHierarchy":183,"../getObject":184,"../map/zoomToFeatures":215,"../refreshScrollbar":232,"../showTab":238,"./addCheckedToValueList":173,"./positionFormBtngroup":179,"./resizeTextareas":180,"openlayers":27,"underscore":150}],178:[function(require,module,exports){
+},{"../../../templates/checkbox":246,"../../../templates/checkboxGroup":247,"../../../templates/formButtonToolbar":248,"../../../templates/geoJson":249,"../../../templates/input":250,"../../../templates/optionGroup":254,"../../../templates/select":255,"../../../templates/textarea":256,"../capitalizeFirstLetter":153,"../getHierarchy":183,"../getObject":184,"../map/zoomToFeatures":215,"../refreshScrollbar":233,"../showTab":239,"./addCheckedToValueList":173,"./positionFormBtngroup":179,"./resizeTextareas":180,"openlayers":27,"underscore":150}],178:[function(require,module,exports){
 // Hilfsfunktion, die typeof ersetzt und ergänzt
 // typeof gibt bei input-Feldern immer String zurück!
 
@@ -67638,7 +67638,7 @@ module.exports = function (passedObject, value) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../capitalizeFirstLetter":153,"../getObject":184,"../map/getFeatureById":203,"../map/getLayerByName":204,"../nav/getLabelForObject":223,"../syncWithRemoteDb":239,"dateformat":8,"openlayers":27,"pouchdb":106,"underscore":150}],183:[function(require,module,exports){
+},{"../capitalizeFirstLetter":153,"../getObject":184,"../map/getFeatureById":203,"../map/getLayerByName":204,"../nav/getLabelForObject":223,"../syncWithRemoteDb":240,"dateformat":8,"openlayers":27,"pouchdb":106,"underscore":150}],183:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -67867,7 +67867,7 @@ module.exports = function (tab, setTabsWidth) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./setWidthOfTabs":235}],190:[function(require,module,exports){
+},{"./setWidthOfTabs":236}],190:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -67901,7 +67901,7 @@ module.exports = function () {
         window.oi.previousTabConfig = JSON.parse(localStorage.previousTabConfig);
     }
 };
-},{"./initiateResizables":191,"./nav/getLogin":224,"./setupEvents":237,"handlebars":24}],191:[function(require,module,exports){
+},{"./initiateResizables":191,"./nav/getLogin":224,"./setupEvents":238,"handlebars":24}],191:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -67992,7 +67992,7 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./alsoResizeReverse":151,"./form/positionFormBtngroup":179,"./form/resizeTextareas":180,"./map/refreshMap":207,"./refreshScrollbar":232,"./saveResizablesConfig":233,"./setWidthOfTabs":235,"./toggleTab":243,"underscore":150}],192:[function(require,module,exports){
+},{"./alsoResizeReverse":151,"./form/positionFormBtngroup":179,"./form/resizeTextareas":180,"./map/refreshMap":207,"./refreshScrollbar":233,"./saveResizablesConfig":234,"./setWidthOfTabs":236,"./toggleTab":244,"underscore":150}],192:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -68145,7 +68145,7 @@ module.exports = function (layer) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../../templates/layertoolLayerCollapse":250,"../../../templates/layertoolProjectPanel":251,"../../../templates/layertoolThemesPanel":252,"../capitalizeFirstLetter":153,"../getHierarchy":183,"../getObject":184}],194:[function(require,module,exports){
+},{"../../../templates/layertoolLayerCollapse":251,"../../../templates/layertoolProjectPanel":252,"../../../templates/layertoolThemesPanel":253,"../capitalizeFirstLetter":153,"../getHierarchy":183,"../getObject":184}],194:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -68174,12 +68174,13 @@ module.exports = function () {
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus */
 'use strict';
 
-var ol                = require('openlayers'),
-    $                 = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
-    saveFeatureData   = require('./saveFeatureData'),
-    removeFeatureData = require('./removeFeatureData'),
-    toggleEditButtons = require('./toggleEditButtons'),
-    removeAllInteractions = require('./removeAllInteractions');
+var ol                    = require('openlayers'),
+    $                     = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+    saveFeatureData       = require('./saveFeatureData'),
+    removeFeatureData     = require('./removeFeatureData'),
+    toggleEditButtons     = require('./toggleEditButtons'),
+    removeAllInteractions = require('./removeAllInteractions'),
+    selectObjectNode      = require('../nav/selectObjectNode');
 
 module.exports = function (layer) {
     var map = window.oi.olMap.map,
@@ -68226,11 +68227,7 @@ module.exports = function (layer) {
         feature = event.element;
         // dieses Objekt in tree und Formular anzeigen
         objId = feature.getId();
-        selectedObj = $jstree.get_selected(true)[0];
-        if (!selectedObj || objId !== selectedObj.id) {
-            $jstree.deselect_all();
-            $jstree.select_node('#' + objId);
-        }
+        selectObjectNode(objId);
 
         // problem: change happens for every pixel that a point is dragged!
         // need to call it only on dragend. But there is no such event
@@ -68299,7 +68296,7 @@ module.exports = function (layer) {
     toggleEditButtons(true);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./removeAllInteractions":208,"./removeFeatureData":209,"./saveFeatureData":211,"./toggleEditButtons":212,"openlayers":27}],196:[function(require,module,exports){
+},{"../nav/selectObjectNode":228,"./removeAllInteractions":208,"./removeFeatureData":209,"./saveFeatureData":211,"./toggleEditButtons":212,"openlayers":27}],196:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -68344,7 +68341,8 @@ module.exports = function () {
 var ol                    = require('openlayers'),
     $                     = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
     _                     = require('underscore'),
-    removeAllInteractions = require('../map/removeAllInteractions');
+    removeAllInteractions = require('../map/removeAllInteractions'),
+    selectObjectNode      = require('../nav/selectObjectNode');
 
 module.exports = function () {
     var map = window.oi.olMap.map,
@@ -68385,11 +68383,8 @@ module.exports = function () {
         objId = feature.getId();
         selectedObj = $jstree.get_selected(true)[0];
         if (!window.oi.dontSelectTree) {
-            if (!selectedObj || objId !== selectedObj.id) {
-                $jstree.deselect_all();
-                window.oi.olMap.dontZoom = true;
-                $jstree.select_node('#' + objId);
-            }
+            selectObjectNode(objId);
+            window.oi.olMap.dontZoom = true;
         } else {
             delete window.oi.dontSelectTree;
         }
@@ -68417,7 +68412,7 @@ module.exports = function () {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../map/removeAllInteractions":208,"openlayers":27,"underscore":150}],198:[function(require,module,exports){
+},{"../map/removeAllInteractions":208,"../nav/selectObjectNode":228,"openlayers":27,"underscore":150}],198:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -69155,7 +69150,7 @@ module.exports = function () {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../form/initiateForm":177,"../refreshScrollbar":232,"./generateDataForTree":221,"./treeContextmenuItems":231,"jstree":26}],219:[function(require,module,exports){
+},{"../form/initiateForm":177,"../refreshScrollbar":233,"./generateDataForTree":221,"./treeContextmenuItems":232,"jstree":26}],219:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -69426,7 +69421,7 @@ module.exports = function (projectNames) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../syncWithRemoteDbs":240,"../syncWithRemoteUserDb":241,"./createDatabaseId":217,"./createTree":218,"./getModelData":225,"async":2,"pouchdb":106,"pouchdb-all-dbs":28,"underscore":150}],227:[function(require,module,exports){
+},{"../syncWithRemoteDbs":241,"../syncWithRemoteUserDb":242,"./createDatabaseId":217,"./createTree":218,"./getModelData":225,"async":2,"pouchdb":106,"pouchdb-all-dbs":28,"underscore":150}],227:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -69447,6 +69442,26 @@ module.exports = function () {
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],228:[function(require,module,exports){
+(function (global){
+/*jslint node: true, browser: true, nomen: true, todo: true */
+'use strict';
+
+var $ = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null);
+
+module.exports = function (objId) {
+    var selectedObj,
+        $jstree = $('#navContent').jstree(true);
+
+    selectedObj = $jstree.get_selected(true)[0];
+    // dont select if it is already selected
+    if (!selectedObj || objId !== selectedObj.id) {
+        // make sure only one node is selected
+        $jstree.deselect_all();
+        $jstree.select_node('#' + objId);
+    }
+};
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],229:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -69486,7 +69501,7 @@ module.exports = function (signindata) {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../configuration":154,"../tellWithModal":242,"./initiateNav":226,"pouchdb":106}],229:[function(require,module,exports){
+},{"../configuration":154,"../tellWithModal":243,"./initiateNav":226,"pouchdb":106}],230:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -69549,7 +69564,7 @@ module.exports = function () {
     signIn(signindata);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../tellWithModal":242,"../validateEmail":244,"./signIn":228,"./signUp":230}],230:[function(require,module,exports){
+},{"../tellWithModal":243,"../validateEmail":245,"./signIn":229,"./signUp":231}],231:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -69579,7 +69594,7 @@ module.exports = function (signindata) {
         tellWithModal('Das Konto konnte nicht erstellt werden', 'Die Datenbank meldete: ' + error);
     });
 };
-},{"../configuration":154,"../tellWithModal":242,"./signIn":228,"pouchdb":106}],231:[function(require,module,exports){
+},{"../configuration":154,"../tellWithModal":243,"./signIn":229,"pouchdb":106}],232:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -69615,7 +69630,7 @@ module.exports = function ($node) {
     };
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../createNewObjectFromHierarchy":156,"../createNewObjectFromObject":157,"../deleteObjectAndChildren":158}],232:[function(require,module,exports){
+},{"../createNewObjectFromHierarchy":156,"../createNewObjectFromObject":157,"../deleteObjectAndChildren":158}],233:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -69626,7 +69641,7 @@ module.exports = function () {
     $('.scrollbar').perfectScrollbar('update');
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],233:[function(require,module,exports){
+},{}],234:[function(require,module,exports){
 (function (global){
 /*
  * saves previous nav configurations
@@ -69696,7 +69711,7 @@ module.exports = function () {
     localStorage.previousTabConfig = JSON.stringify(window.oi.previousTabConfig);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],234:[function(require,module,exports){
+},{}],235:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus*/
 'use strict';
@@ -69722,7 +69737,7 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"underscore":150}],235:[function(require,module,exports){
+},{"underscore":150}],236:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus*/
 'use strict';
@@ -69771,7 +69786,7 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./form/positionFormBtngroup":179,"./map/refreshMap":207,"./setVisibilityOfTabSeparators":234,"./setWidthOfTabsWithoutPrevious":236,"underscore":150}],236:[function(require,module,exports){
+},{"./form/positionFormBtngroup":179,"./map/refreshMap":207,"./setVisibilityOfTabSeparators":235,"./setWidthOfTabsWithoutPrevious":237,"underscore":150}],237:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus*/
 'use strict';
@@ -69820,7 +69835,7 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./form/positionFormBtngroup":179,"./map/refreshMap":207,"underscore":150}],237:[function(require,module,exports){
+},{"./form/positionFormBtngroup":179,"./map/refreshMap":207,"underscore":150}],238:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -69875,7 +69890,7 @@ module.exports = function () {
         .on('change',      '.js-utilsEditLayerType',         onChangeEditLayerType);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./event/onChangeEditLayerType":160,"./event/onChangeElement":161,"./event/onChangeLytEditLayer":162,"./event/onChangeLytShowLayer":163,"./event/onClickFormDelete":164,"./event/onClickFormNew":165,"./event/onClickGeometryField":166,"./event/onClickNavFormSort":167,"./event/onClickNavbarBrand":168,"./event/onClickNavbarCollapse":169,"./event/onClickSigninWithModalSignupCheckbox":170,"./event/onKeypressSigninWithModal":171,"./event/onScrollTab":172,"./form/fitTextareaToContent":175,"./nav/signInOrUp":229,"underscore":150}],238:[function(require,module,exports){
+},{"./event/onChangeEditLayerType":160,"./event/onChangeElement":161,"./event/onChangeLytEditLayer":162,"./event/onChangeLytShowLayer":163,"./event/onClickFormDelete":164,"./event/onClickFormNew":165,"./event/onClickGeometryField":166,"./event/onClickNavFormSort":167,"./event/onClickNavbarBrand":168,"./event/onClickNavbarCollapse":169,"./event/onClickSigninWithModalSignupCheckbox":170,"./event/onKeypressSigninWithModal":171,"./event/onScrollTab":172,"./form/fitTextareaToContent":175,"./nav/signInOrUp":230,"underscore":150}],239:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -69900,7 +69915,7 @@ module.exports = function (tab, setTabsWidth) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./map/initiateMap":205,"./setWidthOfTabs":235}],239:[function(require,module,exports){
+},{"./map/initiateMap":205,"./setWidthOfTabs":236}],240:[function(require,module,exports){
 /**
  * synchronisiert die Daten aus einer CouchDB in PouchDB
  */
@@ -69945,7 +69960,7 @@ module.exports = function (couchName) {
     }
 };
 
-},{"./configuration":154,"./handleChanges":186,"pouchdb":106}],240:[function(require,module,exports){
+},{"./configuration":154,"./handleChanges":186,"pouchdb":106}],241:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -69958,7 +69973,7 @@ module.exports = function (projectDbs) {
     });
 };
 
-},{"./syncWithRemoteDb":239,"underscore":150}],241:[function(require,module,exports){
+},{"./syncWithRemoteDb":240,"underscore":150}],242:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -69976,7 +69991,7 @@ module.exports = function () {
         include_docs: true
     }).on('change', handleUsersChanges);
 };
-},{"./configuration":154,"./handleUsersChanges":188,"pouchdb":106}],242:[function(require,module,exports){
+},{"./configuration":154,"./handleUsersChanges":188,"pouchdb":106}],243:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -69999,7 +70014,7 @@ module.exports = function (title, text) {
     $modal.modal(options);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],243:[function(require,module,exports){
+},{}],244:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -70023,7 +70038,7 @@ module.exports = function (tab) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./hideTab":189,"./setWidthOfTabs":235,"./showTab":238}],244:[function(require,module,exports){
+},{"./hideTab":189,"./setWidthOfTabs":236,"./showTab":239}],245:[function(require,module,exports){
 /*
  * prüft, ob ein String eine email-Adressen sein könnte
  * Quelle: http://stackoverflow.com/questions/46155/validate-email-address-in-javascript
@@ -70036,7 +70051,7 @@ module.exports = function (string) {
     var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(string);
 };
-},{}],245:[function(require,module,exports){
+},{}],246:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, helper, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing, functionType="function";
   return "<div class=\"form-group js-form-group\">\r\n    <label class=\"control-label\">"
@@ -70050,7 +70065,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(((helper = (helper = helpers.checked || (depth0 != null ? depth0.checked : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"checked","hash":{},"data":data}) : helper)))
     + ">\r\n            </label>\r\n        </div>\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":24}],246:[function(require,module,exports){
+},{"handlebars":24}],247:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,depths) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "            <div class=\"checkbox\">\r\n                <label>\r\n                    <input type=\"checkbox\" id=\""
@@ -70077,11 +70092,11 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "    </div>\r\n</div>";
 },"useData":true,"useDepths":true});
-},{"handlebars":24}],247:[function(require,module,exports){
+},{"handlebars":24}],248:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   return "<div class=\"btn-toolbar\" role=\"toolbar\" aria-label=\"Daten Toolbar\">\r\n    <div class=\"btn-group pull-right\" role=\"group\" aria-label=\"Daten Button group\">\r\n        <button id=\"formNew\" class=\"btn btn-default\">neu</button>\r\n        <button id=\"formDelete\" class=\"btn btn-default\">löschen</button>\r\n    </div>\r\n</div>";
   },"useData":true});
-},{"handlebars":24}],248:[function(require,module,exports){
+},{"handlebars":24}],249:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "<div class=\"form-group js-form-group\">\r\n    <label for=\""
@@ -70098,7 +70113,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.value : stack1), depth0))
     + "</textarea>\r\n    <button class=\"js-geometryField\" class=\"btn btn-default\">Karte</button>\r\n</div>";
 },"useData":true});
-},{"handlebars":24}],249:[function(require,module,exports){
+},{"handlebars":24}],250:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "<div class=\"form-group js-form-group\">\r\n    <label for=\""
@@ -70117,7 +70132,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.value : stack1), depth0))
     + "\">\r\n</div>";
 },"useData":true});
-},{"handlebars":24}],250:[function(require,module,exports){
+},{"handlebars":24}],251:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression;
   return "            <div class=\"checkbox\">\r\n                <label>\r\n                    <input type=\"checkbox\" id=\""
@@ -70143,7 +70158,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":24}],251:[function(require,module,exports){
+},{"handlebars":24}],252:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression;
   return "<div id=\"lytProject"
@@ -70160,11 +70175,11 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.projId : stack1), depth0))
     + "\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingProjekte\">\r\n        <!--insert layer collapses-->\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":24}],252:[function(require,module,exports){
+},{"handlebars":24}],253:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   return "<div id=\"lytThemes\" class=\"panel panel-default js-layerPanel\">\r\n    <div class=\"panel-heading\" role=\"tab\" id=\"headingThemen\">\r\n        <h4 class=\"panel-title\">\r\n            <a class=\"collapsed\" data-toggle=\"collapse\" data-parent=\"#utilsLayertoolAccordion\" href=\"#collapseThemes\" aria-expanded=\"false\" aria-controls=\"collapseThemes\">\r\n              Themen\r\n            </a>\r\n        </h4>\r\n    </div>\r\n    <div id=\"collapseThemes\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingThemen\">\r\n        <!--insert list-groups-->\r\n    </div>\r\n</div>";
   },"useData":true});
-},{"handlebars":24}],253:[function(require,module,exports){
+},{"handlebars":24}],254:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,depths) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "            <div class=\"radio\">\r\n                <label>\r\n                    <input type=\"radio\" name=\""
@@ -70191,7 +70206,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "    </div>\r\n</div>";
 },"useData":true,"useDepths":true});
-},{"handlebars":24}],254:[function(require,module,exports){
+},{"handlebars":24}],255:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, buffer = "                <option value=";
   stack1 = lambda((depth0 != null ? depth0.value : depth0), depth0);
@@ -70214,7 +70229,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "        </select>\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":24}],255:[function(require,module,exports){
+},{"handlebars":24}],256:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "<div class=\"form-group js-form-group\">\r\n    <label for=\""
