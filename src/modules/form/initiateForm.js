@@ -100,7 +100,7 @@ module.exports = function (id, type) {
                         html += geoJson(templateObject);
                         textareaIds.push(id + field.label);
                         // prepare feature to zoom the map to
-                        if (value.type && value.coordinates) {
+                        if (value && value.type && value.coordinates) {
                             geomFeature = new ol.Feature();
                             geomFeature.setGeometry(new ol.geom[value.type](value.coordinates));
                             geomFeatures.push(geomFeature);

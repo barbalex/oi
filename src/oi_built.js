@@ -67328,7 +67328,7 @@ module.exports = function (id, type) {
                         html += geoJson(templateObject);
                         textareaIds.push(id + field.label);
                         // prepare feature to zoom the map to
-                        if (value.type && value.coordinates) {
+                        if (value && value.type && value.coordinates) {
                             geomFeature = new ol.Feature();
                             geomFeature.setGeometry(new ol.geom[value.type](value.coordinates));
                             geomFeatures.push(geomFeature);
@@ -67540,7 +67540,8 @@ module.exports = function (passedObject, value) {
                 password: window.oi.me.password
             }
         },
-        localDb     = new PouchDB(projectName, options);
+        localDb     = new PouchDB(projectName, options),
+        featureCoordinatesBefore;
 
     // get data for object
     object              = getObject(id);
@@ -67552,6 +67553,10 @@ module.exports = function (passedObject, value) {
     // bei geoJson: Value in Objekt verwandeln
     if (inputType === 'geoJson') {
         value = JSON.parse(value);
+        // remember coordinates so you can later move selection
+        if (object.data[field] && object.data[field].coordinates) {
+            featureCoordinatesBefore = object.data[field].coordinates;
+        }
     }
 
     if (object) {
@@ -67559,10 +67564,6 @@ module.exports = function (passedObject, value) {
         object.data[field] = value || null;
         object.lastEdited  = lastEdited;
         // write to pouch
-
-        //console.log('object: ', object);
-        //console.log('object stringified: ', JSON.stringify(object, null, 4));
-
         localDb.put(object)
             .then(function (response) {
                 var layer,
@@ -67571,9 +67572,8 @@ module.exports = function (passedObject, value) {
                     geomType,
                     featureGeom,
                     featureCoordinates,
-                    correspondingHierarchy;
-
-                console.log('response from put: ', response);
+                    correspondingHierarchy,
+                    selectionFeature;
 
                 // check if this was a new project
                 if (!object._rev) {
@@ -67610,7 +67610,17 @@ module.exports = function (passedObject, value) {
                     featureGeom        = new ol.geom[geomType](featureCoordinates);
                     feature.setGeometry(featureGeom);
                     // if feature is selected, move selection feature too
-                    
+                    // find feature in select interaction with same coordinates
+                    if (featureCoordinatesBefore) {
+                        selectionFeature = _.find(window.oi.olMap.map.selectInteraction.getFeatures().getArray(), function (selectFeature) {
+                            // need to stringify the arrays to test if they are equal
+                            return JSON.stringify(selectFeature.getGeometry().getCoordinates()) === JSON.stringify(featureCoordinatesBefore);
+                        });
+                        // move it
+                        if (selectionFeature) {
+                            selectionFeature.setGeometry(featureGeom);
+                        }
+                    }
                 }
             })
             .catch(function (err) {
