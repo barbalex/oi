@@ -45,7 +45,10 @@ module.exports = function (id, type) {
                     return field.order || 0;
                 });
                 _.each(hierarchy.fields, function (field) {
-                    var templateObject                  = {};
+                    var value,
+                        templateObject                  = {};
+
+                    value                               = object.data[field.label];
                     templateObject.object               = {};
                     templateObject.object._id           = id;
                     templateObject.object.type          = type;
@@ -53,7 +56,7 @@ module.exports = function (id, type) {
                     templateObject.object.projId        = object.projId            || null;
                     templateObject.object.label         = field.label;
                     templateObject.object.inputDataType = field.inputDataType      || null;
-                    templateObject.object.value         = object.data[field.label] || null;
+                    templateObject.object.value         = value;
                     templateObject.object.layerTitle    = hierarchy.name + ': ' + field.label;
                     templateObject.object.layerName     = 'layer' + capitalizeFirstLetter(hierarchy.name) + capitalizeFirstLetter(field.label);
 
@@ -69,16 +72,16 @@ module.exports = function (id, type) {
                         switch (field.inputDataType) {
                         case 'checkbox':
                             // es ist eine einzelne checkbox. Mitgeben, ob sie checked ist
-                            templateObject.checked = object.data[field.label] ? 'checked' : '';
+                            templateObject.checked = value ? 'checked' : '';
                             html += checkbox(templateObject);
                             break;
                         case 'checkboxGroup':
                             // checkboxGroup erstellen
-                            templateObject.object.valueList = addCheckedToValueList(field.valueList, object.data[field.label], 'checkboxGroup');
+                            templateObject.object.valueList = addCheckedToValueList(field.valueList, value, 'checkboxGroup');
                             html += checkboxGroup(templateObject);
                             break;
                         case 'optionGroup':
-                            templateObject.object.valueList = addCheckedToValueList(field.valueList, object.data[field.label], 'optionGroup');
+                            templateObject.object.valueList = addCheckedToValueList(field.valueList, value, 'optionGroup');
                             html += optionGroup(templateObject);
                             break;
                         case 'text':
@@ -89,19 +92,21 @@ module.exports = function (id, type) {
                         break;
                     case 'select':
                         // object.data muss Array sein - ist bei select nicht so, weil eh nur ein Wert gesetzt werden kann > Wert in Array setzen
-                        templateObject.object.valueList = addCheckedToValueList(field.valueList, object.data[field.label], 'select');
+                        templateObject.object.valueList = addCheckedToValueList(field.valueList, value, 'select');
                         html += select(templateObject);
                         break;
                     case 'geoJson':
                         // Daten als JSON in textarea schreiben
-                        templateObject.object.value = object.data[field.label] ? JSON.stringify(object.data[field.label], null, 4) : '';
+                        templateObject.object.value = value ? JSON.stringify(value, null, 4) : '';
                         templateObject.object.hId   = object.hId;
                         html += geoJson(templateObject);
                         textareaIds.push(id + field.label);
                         // prepare feature to zoom the map to
-                        geomFeature = new ol.Feature();
-                        geomFeature.setGeometry(new ol.geom[object.data[field.label].type](object.data[field.label].coordinates));
-                        geomFeatures.push(geomFeature);
+                        if (value.type && value.coordinates) {
+                            geomFeature = new ol.Feature();
+                            geomFeature.setGeometry(new ol.geom[value.type](value.coordinates));
+                            geomFeatures.push(geomFeature);
+                        }
                         break;
                     default:
                         html += input(templateObject);

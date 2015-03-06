@@ -1,13 +1,17 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $                 = require('jquery'),
-    dateformat        = require('dateformat'),
-    _                 = require('underscore'),
-    PouchDB           = require('pouchdb'),
-    getLabelForObject = require('../nav/getLabelForObject'),
-    getObject         = require('../getObject'),
-    syncWithRemoteDb  = require('../syncWithRemoteDb');
+var $                     = require('jquery'),
+    dateformat            = require('dateformat'),
+    _                     = require('underscore'),
+    ol                    = require('openlayers'),
+    PouchDB               = require('pouchdb'),
+    getLabelForObject     = require('../nav/getLabelForObject'),
+    getObject             = require('../getObject'),
+    syncWithRemoteDb      = require('../syncWithRemoteDb'),
+    capitalizeFirstLetter = require('../capitalizeFirstLetter'),
+    getLayerByName        = require('../map/getLayerByName'),
+    getFeatureById        = require('../map/getFeatureById');
 
 module.exports = function (passedObject, value) {
     var projId      = passedObject.projId,
@@ -42,8 +46,20 @@ module.exports = function (passedObject, value) {
         object.data[field] = value || null;
         object.lastEdited  = lastEdited;
         // write to pouch
+
+        console.log('localDb: ', localDb);
+        console.log('object: ', object);
+
         localDb.put(object)
             .then(function (response) {
+                var layer,
+                    layerName,
+                    feature,
+                    geomType,
+                    featureGeom,
+                    featureCoordinates,
+                    correspondingHierarchy;
+
                 // check if this was a new project
                 if (!object._rev) {
                     // TODO: new project: start syncing
@@ -63,11 +79,22 @@ module.exports = function (passedObject, value) {
                 object._rev = response.rev;
 
                 // if field is nameField, update name in tree
-                var correspondingHierarchy = _.find(window.oi.hierarchies, function (hierarchy) {
+                correspondingHierarchy = _.find(window.oi.hierarchies, function (hierarchy) {
                     return hierarchy._id === object.hId;
                 });
                 if (object.data && correspondingHierarchy && correspondingHierarchy.nameField && correspondingHierarchy.nameField === field) {
                     $('#navContent').jstree().rename_node('#' + object._id, getLabelForObject(object, correspondingHierarchy));
+                }
+                // TODO: if field is geoGson, update feature on map
+                if (inputType === 'geoJson') {
+                    // get layer
+                    layerName          = 'layer' + capitalizeFirstLetter(correspondingHierarchy.name) + capitalizeFirstLetter(passedObject.label);
+                    layer              = getLayerByName(layerName);
+                    feature            = getFeatureById(object._id);
+                    geomType           = value.type;
+                    featureCoordinates = value.coordinates;
+                    featureGeom        = new ol.geom[geomType](featureCoordinates);
+                    feature.setGeometry(featureGeom);
                 }
             })
             .catch(function (err) {
