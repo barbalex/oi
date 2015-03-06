@@ -41,18 +41,16 @@ module.exports = function (layer) {
 
     // when features are changed
     selectedFeatures.on('remove', function (event) {
-
-        console.log('feature unselected');
-
+        toggleEditButtons();
     });
 
     // when a feature is selected...
     selectedFeatures.on('add', function (event) {
-        
-        console.log('feature selected');
-
         var objId,
             selectedObj;
+
+        toggleEditButtons();
+
         // grab the feature
         feature = event.element;
         // dieses Objekt in tree und Formular anzeigen
@@ -123,5 +121,5 @@ module.exports = function (layer) {
     // add it to the map
     map.addInteraction(modifyInteraction);
     // enable buttons
-    toggleEditButtons(true);
+    toggleEditButtons();
 };

@@ -1,8 +1,8 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var ol = require('openlayers'),
-    $  = require('jquery'),
+var ol                = require('openlayers'),
+    $                 = require('jquery'),
     toggleEditButtons = require('./toggleEditButtons');
 
 module.exports = function () {
@@ -14,6 +14,5 @@ module.exports = function () {
         map.removeInteraction(map.selectInteraction);
         $(document).off('keyup');
     }
-    // disable buttons
     toggleEditButtons(false);
 };

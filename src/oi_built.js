@@ -67997,15 +67997,18 @@ module.exports = function () {
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var ol              = require('openlayers'),
-    $               = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
-    getEditingLayer = require('./getEditingLayer'),
-    guid            = require('../guid'),
-    saveFeatureData = require('./saveFeatureData');
+var ol                = require('openlayers'),
+    $                 = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+    getEditingLayer   = require('./getEditingLayer'),
+    guid              = require('../guid'),
+    saveFeatureData   = require('./saveFeatureData'),
+    toggleEditButtons = require('./toggleEditButtons');
 
 module.exports = function (layer, geometryType) {
     var map = window.oi.olMap.map,
         drawInteraction;
+
+    toggleEditButtons();
 
     // create the interaction
     drawInteraction = new ol.interaction.Draw({
@@ -68058,7 +68061,7 @@ module.exports = function (layer, geometryType) {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../guid":185,"./getEditingLayer":202,"./saveFeatureData":211,"openlayers":27}],193:[function(require,module,exports){
+},{"../guid":185,"./getEditingLayer":202,"./saveFeatureData":211,"./toggleEditButtons":212,"openlayers":27}],193:[function(require,module,exports){
 (function (global){
 /*
  * adds a layer to the layercontrol
@@ -68211,18 +68214,16 @@ module.exports = function (layer) {
 
     // when features are changed
     selectedFeatures.on('remove', function (event) {
-
-        console.log('feature unselected');
-
+        toggleEditButtons();
     });
 
     // when a feature is selected...
     selectedFeatures.on('add', function (event) {
-        
-        console.log('feature selected');
-
         var objId,
             selectedObj;
+
+        toggleEditButtons();
+
         // grab the feature
         feature = event.element;
         // dieses Objekt in tree und Formular anzeigen
@@ -68293,7 +68294,7 @@ module.exports = function (layer) {
     // add it to the map
     map.addInteraction(modifyInteraction);
     // enable buttons
-    toggleEditButtons(true);
+    toggleEditButtons();
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../nav/selectObjectNode":228,"./removeAllInteractions":208,"./removeFeatureData":209,"./saveFeatureData":211,"./toggleEditButtons":212,"openlayers":27}],196:[function(require,module,exports){
@@ -68764,8 +68765,8 @@ module.exports = function () {
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var ol = require('openlayers'),
-    $  = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+var ol                = require('openlayers'),
+    $                 = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
     toggleEditButtons = require('./toggleEditButtons');
 
 module.exports = function () {
@@ -68777,7 +68778,6 @@ module.exports = function () {
         map.removeInteraction(map.selectInteraction);
         $(document).off('keyup');
     }
-    // disable buttons
     toggleEditButtons(false);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
@@ -68907,9 +68907,13 @@ module.exports = function (feature) {
 
 var $ = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null);
 
-module.exports = function (trueOrFalse) {
-    $('#utilsEditDeleteFeature').prop('disabled', !trueOrFalse);
-    $('#utilsEditDeletePoint').prop('disabled', !trueOrFalse);
+module.exports = function (trueOrFalseForced) {
+    var featuresSelected = false;
+    if (window.oi.olMap.map.selectInteraction && window.oi.olMap.map.selectInteraction.getFeatures().getArray()) {
+        featuresSelected = window.oi.olMap.map.selectInteraction.getFeatures().getArray().length > 0;
+    }
+    $('#utilsEditDeleteFeature').prop('disabled', trueOrFalseForced || !featuresSelected);
+    $('#utilsEditDeletePoint').prop('disabled', trueOrFalseForced || !featuresSelected);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],213:[function(require,module,exports){

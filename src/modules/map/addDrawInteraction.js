@@ -1,15 +1,18 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var ol              = require('openlayers'),
-    $               = require('jquery'),
-    getEditingLayer = require('./getEditingLayer'),
-    guid            = require('../guid'),
-    saveFeatureData = require('./saveFeatureData');
+var ol                = require('openlayers'),
+    $                 = require('jquery'),
+    getEditingLayer   = require('./getEditingLayer'),
+    guid              = require('../guid'),
+    saveFeatureData   = require('./saveFeatureData'),
+    toggleEditButtons = require('./toggleEditButtons');
 
 module.exports = function (layer, geometryType) {
     var map = window.oi.olMap.map,
         drawInteraction;
+
+    toggleEditButtons();
 
     // create the interaction
     drawInteraction = new ol.interaction.Draw({
