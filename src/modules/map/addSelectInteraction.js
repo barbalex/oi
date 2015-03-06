@@ -3,9 +3,10 @@
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus */
 'use strict';
 
-var ol = require('openlayers'),
-    $  = require('jquery'),
-    _  = require('underscore');
+var ol                    = require('openlayers'),
+    $                     = require('jquery'),
+    _                     = require('underscore'),
+    removeAllInteractions = require('../map/removeAllInteractions');
 
 module.exports = function () {
     var map = window.oi.olMap.map,
@@ -16,6 +17,8 @@ module.exports = function () {
         layerName,
         correspondingHierarchy,
         $jstree = $('#navContent').jstree(true);
+
+    removeAllInteractions();
 
     // create select interaction
     selectInteraction = new ol.interaction.Select({

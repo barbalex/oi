@@ -7,7 +7,9 @@
 var ol                = require('openlayers'),
     $                 = require('jquery'),
     saveFeatureData   = require('./saveFeatureData'),
-    removeFeatureData = require('./removeFeatureData');
+    removeFeatureData = require('./removeFeatureData'),
+    toggleEditButtons = require('./toggleEditButtons'),
+    removeAllInteractions = require('./removeAllInteractions');
 
 module.exports = function (layer) {
     var map = window.oi.olMap.map,
@@ -15,15 +17,17 @@ module.exports = function (layer) {
         modifyInteraction,
         selectedFeatures,
         feature,
-        selectedLayer = layer,
+        layerName = layer.get('layerName'),
         $jstree = $('#navContent').jstree(true);
+
+    removeAllInteractions();
 
     // create select interaction
     selectInteraction = new ol.interaction.Select({
         // make sure only the desired layer can be selected
-        /*layers: function (layer) {
-            return layer === selectedLayer;
-        },*/
+        layers: function (layer) {
+            return layer.get('layerName') === layerName;
+        },
         condition: ol.events.condition.click
     });
 
@@ -33,8 +37,19 @@ module.exports = function (layer) {
 
     // grab the features from the select interaction to use in the modify interaction
     selectedFeatures = selectInteraction.getFeatures();
+
+    // when features are changed
+    selectedFeatures.on('remove', function (event) {
+
+        console.log('feature unselected');
+
+    });
+
     // when a feature is selected...
     selectedFeatures.on('add', function (event) {
+        
+        console.log('feature selected');
+
         var objId,
             selectedObj;
         // grab the feature
@@ -110,4 +125,6 @@ module.exports = function (layer) {
     window.oi.olMap.map.modifyInteraction = modifyInteraction;
     // add it to the map
     map.addInteraction(modifyInteraction);
+    // enable buttons
+    toggleEditButtons(true);
 };

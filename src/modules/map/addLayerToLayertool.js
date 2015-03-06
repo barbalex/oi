@@ -28,6 +28,7 @@ module.exports = function (layer) {
     $layerGroups = $('#utilsLayertoolAccordion').children();
 
     obj.layerTitle    = layer.get('layerTitle');
+    obj.layerName     = layer.get('layerName');
     obj.showControlId = 'show' + layer.get('layerName');
     obj.editControlId = 'edit' + layer.get('layerName');
     obj.checked       = layer.getVisible() ? 'checked' : '';

@@ -272,3 +272,11 @@ body {
 #utilsEditLayer a:focus {
   text-decoration: none;
 }
+
+#utils .btn-block:last-child {
+  margin-bottom: 5px;
+}
+
+#utils .btn-block:first-child {
+  margin-bottom: 5px;
+}

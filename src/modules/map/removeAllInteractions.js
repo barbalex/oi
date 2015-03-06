@@ -2,18 +2,18 @@
 'use strict';
 
 var ol = require('openlayers'),
-    $  = require('jquery');
+    $  = require('jquery'),
+    toggleEditButtons = require('./toggleEditButtons');
 
 module.exports = function () {
     var map = window.oi.olMap.map;
 
     if (map.drawInteraction)   { map.removeInteraction(map.drawInteraction); }
-    //map.drawInteraction.off('drawend');
     if (map.modifyInteraction) { map.removeInteraction(map.modifyInteraction); }
-    //$(document).off('keyup');
     if (map.selectInteraction) {
         map.removeInteraction(map.selectInteraction);
-        // remove listener
         $(document).off('keyup');
     }
+    // disable buttons
+    toggleEditButtons(false);
 };

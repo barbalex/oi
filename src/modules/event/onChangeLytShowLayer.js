@@ -5,13 +5,13 @@ var $ = require('jquery'),
     _ = require('underscore');
 
 module.exports = function () {
-    var layerTitle = $(this).closest('.list-group').data('object').layerTitle,
-        layers     = window.oi.olMap.map.getLayers().getArray(),
+    var layerName = $(this).closest('.list-group').data('object').layerName,
+        layers    = window.oi.olMap.map.getLayers().getArray(),
         layer,
         backgroundLayers;
 
     layer = _.filter(layers, function (layer) {
-        return layer.get('layerTitle') === layerTitle;
+        return layer.get('layerName') === layerName;
     });
     if (layer && layer[0]) {
         if (layer[0].get('layerGroup') === 'background') {

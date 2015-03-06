@@ -50,7 +50,7 @@ module.exports = function (passedObject, value) {
 
     // bei geoJson: Value in Objekt verwandeln
     if (inputType === 'geoJson') {
-        value = JSON.parse(value);
+        value = value ? JSON.parse(value) : null;
         // remember coordinates so you can later move selection
         if (object.data[field] && object.data[field].coordinates) {
             featureCoordinatesBefore = object.data[field].coordinates;
@@ -103,10 +103,15 @@ module.exports = function (passedObject, value) {
                     layerName          = 'layer' + capitalizeFirstLetter(correspondingHierarchy.name) + capitalizeFirstLetter(passedObject.label);
                     layer              = getLayerByName(layerName);
                     feature            = getFeatureById(layer, object._id);
-                    geomType           = value.type;
-                    featureCoordinates = value.coordinates;
-                    featureGeom        = new ol.geom[geomType](featureCoordinates);
-                    feature.setGeometry(featureGeom);
+                    if (value) {
+                        geomType           = value.type;
+                        featureCoordinates = value.coordinates;
+                        featureGeom        = new ol.geom[geomType](featureCoordinates);
+                        feature.setGeometry(featureGeom);
+                    } else {
+                        // remove feature
+                        layer.getSource().removeFeature(feature);
+                    }
                     // if feature is selected, move selection feature too
                     // find feature in select interaction with same coordinates
                     if (featureCoordinatesBefore) {
@@ -116,7 +121,11 @@ module.exports = function (passedObject, value) {
                         });
                         // move it
                         if (selectionFeature) {
-                            selectionFeature.setGeometry(featureGeom);
+                            if (value) {
+                                selectionFeature.setGeometry(featureGeom);
+                            } else {
+                                window.oi.olMap.map.selectInteraction.getFeatures().remove(selectionFeature);
+                            }
                         }
                     }
                 }
