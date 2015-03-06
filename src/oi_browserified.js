@@ -39027,23 +39027,17 @@ module.exports = function (passedObject, value) {
                 if (object.data && correspondingHierarchy && correspondingHierarchy.nameField && correspondingHierarchy.nameField === field) {
                     $('#navContent').jstree().rename_node('#' + object._id, getLabelForObject(object, correspondingHierarchy));
                 }
-                // TODO: if field is geoGson, update feature on map
+                // if field is geoGson, update feature on map
                 if (inputType === 'geoJson') {
-                    // get layer
                     layerName          = 'layer' + capitalizeFirstLetter(correspondingHierarchy.name) + capitalizeFirstLetter(passedObject.label);
-                    //console.log('layerName: ', layerName);
                     layer              = getLayerByName(layerName);
-                    //console.log('layer: ', layer);
-                    console.log('layer.getSource(): ', layer.getSource());
-
                     feature            = getFeatureById(layer, object._id);
-                    console.log('feature: ', feature);
                     geomType           = value.type;
-                    console.log('geomType: ', geomType);
                     featureCoordinates = value.coordinates;
-                    console.log('featureCoordinates: ', featureCoordinates);
                     featureGeom        = new ol.geom[geomType](featureCoordinates);
                     feature.setGeometry(featureGeom);
+                    // if feature is selected, move selection feature too
+                    
                 }
             })
             .catch(function (err) {
@@ -39740,13 +39734,17 @@ module.exports = function () {
 'use strict';
 
 var ol = require('openlayers'),
-    $  = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null);
+    $  = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+    _  = require('underscore');
 
 module.exports = function () {
     var map = window.oi.olMap.map,
         selectInteraction,
         selectedFeatures,
         feature,
+        layer,
+        layerName,
+        correspondingHierarchy,
         $jstree = $('#navContent').jstree(true);
 
     // create select interaction
@@ -39762,7 +39760,14 @@ module.exports = function () {
     // when a feature is selected...
     selectedFeatures.on('add', function (event) {
         var objId,
-            selectedObj;
+            selectedObj,
+            vectorLayerFeature,
+            vectorLayerFeatureCoordinates,
+            featureCoordinates,
+            layers,
+            projectLayers,
+            projectLayersFeatures = [];
+
         // grab the feature
         feature = event.element;
         // show this feature in tree und Formular anzeigen
@@ -39777,10 +39782,31 @@ module.exports = function () {
         } else {
             delete window.oi.dontSelectTree;
         }
+        // bind features geometry to vector features geometry
+        // problem: if object has several geometry fields, layername can not be found as feature only has object._id
+        // so search in the combined features of all layers with layerGroup === 'projects'
+        // bindTo is not documented
+        // this breaks at the bindTo line
+        /*
+        layers = window.oi.olMap.map.getLayers().getArray();
+        projectLayers = _.filter(layers, function (layer) {
+            return layer.get('layerGroup') === 'projects';
+        });
+        _.each(projectLayers, function (layer) {
+            projectLayersFeatures = projectLayersFeatures.concat(layer.getSource().getFeatures());
+        });
+        featureCoordinates = JSON.stringify(feature.getGeometry().getCoordinates());
+        vectorLayerFeature = _.find(projectLayersFeatures, function (projectLayersFeature) {
+            vectorLayerFeatureCoordinates = JSON.stringify(projectLayersFeature.getGeometry().getCoordinates());
+            return vectorLayerFeatureCoordinates === featureCoordinates;
+        });
+        if (vectorLayerFeature) {
+            feature.getGeometry().bindTo(vectorLayerFeature.getGeometry());
+        }*/
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"openlayers":27}],198:[function(require,module,exports){
+},{"openlayers":27,"underscore":150}],198:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 

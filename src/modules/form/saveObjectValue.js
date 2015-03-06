@@ -98,21 +98,17 @@ module.exports = function (passedObject, value) {
                 if (object.data && correspondingHierarchy && correspondingHierarchy.nameField && correspondingHierarchy.nameField === field) {
                     $('#navContent').jstree().rename_node('#' + object._id, getLabelForObject(object, correspondingHierarchy));
                 }
-                // TODO: if field is geoGson, update feature on map
+                // if field is geoGson, update feature on map
                 if (inputType === 'geoJson') {
-                    // get layer
                     layerName          = 'layer' + capitalizeFirstLetter(correspondingHierarchy.name) + capitalizeFirstLetter(passedObject.label);
-                    //console.log('layerName: ', layerName);
                     layer              = getLayerByName(layerName);
-                    //console.log('layer: ', layer);
                     feature            = getFeatureById(layer, object._id);
-                    console.log('feature: ', feature);
                     geomType           = value.type;
-                    console.log('geomType: ', geomType);
                     featureCoordinates = value.coordinates;
-                    console.log('featureCoordinates: ', featureCoordinates);
                     featureGeom        = new ol.geom[geomType](featureCoordinates);
                     feature.setGeometry(featureGeom);
+                    // if feature is selected, move selection feature too
+                    
                 }
             })
             .catch(function (err) {
