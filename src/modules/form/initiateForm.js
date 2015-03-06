@@ -28,7 +28,7 @@ module.exports = function (id, type) {
         object,
         hierarchy,
         $formContent = $('#formContent'),
-        geomFeatures,
+        geomFeatures = [],
         geomFeature,
         selectedFeatures;
 
@@ -59,8 +59,6 @@ module.exports = function (id, type) {
                     templateObject.object.value         = value;
                     templateObject.object.layerTitle    = hierarchy.name + ': ' + field.label;
                     templateObject.object.layerName     = 'layer' + capitalizeFirstLetter(hierarchy.name) + capitalizeFirstLetter(field.label);
-
-                    geomFeatures = [];
 
                     // Felder bauen
                     switch (field.inputType) {
