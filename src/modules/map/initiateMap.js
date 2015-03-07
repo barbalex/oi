@@ -44,7 +44,10 @@ module.exports = function () {
                 center: [2701719, 1173560],
                 zoom: 16,
                 resolutions: RESOLUTIONS
-            })
+            }),
+            interactions: ol.interaction.defaults({
+                doubleClickZoom: false
+            });
         });
 
         // make map global

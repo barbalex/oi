@@ -4,13 +4,15 @@
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus */
 'use strict';
 
-var ol                    = require('openlayers'),
-    $                     = require('jquery'),
-    saveFeatureData       = require('./saveFeatureData'),
-    removeFeatureData     = require('./removeFeatureData'),
-    toggleEditButtons     = require('./toggleEditButtons'),
-    removeAllInteractions = require('./removeAllInteractions'),
-    selectObjectNode      = require('../nav/selectObjectNode');
+var ol                     = require('openlayers'),
+    $                      = require('jquery'),
+    saveFeatureData        = require('./saveFeatureData'),
+    removeFeatureData      = require('./removeFeatureData'),
+    toggleEditButtons      = require('./toggleEditButtons'),
+    removeAllInteractions  = require('./removeAllInteractions'),
+    selectObjectNode       = require('../nav/selectObjectNode'),
+    addDragboxInteraction  = require('./addDragboxInteraction'),
+    deleteSelectedFeatures = require('./deleteSelectedFeatures');
 
 module.exports = function (layer) {
     var map = window.oi.olMap.map,
@@ -36,11 +38,16 @@ module.exports = function (layer) {
     window.oi.olMap.map.selectInteraction = selectInteraction;
     map.addInteraction(selectInteraction);
 
+    addDragboxInteraction();
+
     // grab the features from the select interaction to use in the modify interaction
     selectedFeatures = selectInteraction.getFeatures();
 
     // when features are changed
     selectedFeatures.on('remove', function (event) {
+
+        console.log('feature removed from select interaction');
+
         toggleEditButtons();
     });
 
@@ -48,6 +55,8 @@ module.exports = function (layer) {
     selectedFeatures.on('add', function (event) {
         var objId,
             selectedObj;
+
+        console.log('feature added to select interaction');
 
         toggleEditButtons();
 
@@ -80,27 +89,7 @@ module.exports = function (layer) {
         $(document).on('keyup', function (event) {
             if (event.keyCode === 46) {
                 // remove all selected features from selectInteraction and layer
-                selectedFeatures.forEach(function (selectedFeature) {
-                    var selectedFeatureId,
-                        layerFeatures;
-
-                    selectedFeatureId = selectedFeature.getId();
-
-                    // remove from selectInteraction
-                    selectedFeatures.remove(selectedFeature);
-
-                    // remove features from vectorlayer
-                    layerFeatures = layer.getSource().getFeatures();
-                    layerFeatures.forEach(function (sourceFeature) {
-                        var sourceFeatureId = sourceFeature.getId();
-
-                        if (sourceFeatureId === selectedFeatureId) {
-                            layer.getSource().removeFeature(sourceFeature);
-                            // remove feature-data in DB
-                            removeFeatureData(sourceFeature);
-                        }
-                    });
-                });
+                deleteSelectedFeatures();
                 // remove listener
                 $(document).off('keyup');
             }

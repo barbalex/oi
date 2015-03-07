@@ -4,10 +4,22 @@
 var $ = require('jquery');
 
 module.exports = function (trueOrFalseForced) {
-    var featuresSelected = false;
-    if (window.oi.olMap.map.selectInteraction && window.oi.olMap.map.selectInteraction.getFeatures().getArray()) {
-        featuresSelected = window.oi.olMap.map.selectInteraction.getFeatures().getArray().length > 0;
+    var selectInteraction = window.oi.olMap.map.selectInteraction,
+        featuresSelected  = false,
+        featuresLength,
+        deleteButtonText;
+
+    console.log('toggleEditButtons');
+
+    if (selectInteraction && selectInteraction.getFeatures().getArray()) {
+        featuresLength   = selectInteraction.getFeatures().getLength();
+        featuresSelected = featuresLength > 0;
+        deleteButtonText = featuresLength + ' Geometrien löschen';
+        $('#utilsEditDeleteFeature').text(deleteButtonText);
+
+        console.log('featuresLength: ', featuresLength);
+
     }
     $('#utilsEditDeleteFeature').prop('disabled', trueOrFalseForced || !featuresSelected);
-    $('#utilsEditDeletePoint').prop('disabled', trueOrFalseForced || !featuresSelected);
+    $('#utilsEditDeletePoint').prop('disabled',   trueOrFalseForced || !featuresSelected);
 };

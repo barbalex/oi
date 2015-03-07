@@ -1,8 +1,8 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var ol              = require('openlayers'),
-    _               = require('underscore');
+var ol = require('openlayers'),
+    _  = require('underscore');
 
 module.exports = function () {
     var map,

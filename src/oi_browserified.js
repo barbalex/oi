@@ -37950,7 +37950,7 @@ module.exports = function (object, hierarchy) {
     return newObject;
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./guid":185,"./nav/createChildHierarchiesOfObject":216,"./nav/createTreeNodeObject":219,"dateformat":8,"underscore":150}],156:[function(require,module,exports){
+},{"./guid":185,"./nav/createChildHierarchiesOfObject":218,"./nav/createTreeNodeObject":221,"dateformat":8,"underscore":150}],156:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -38131,7 +38131,7 @@ module.exports = function ($node) {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./askYesNoWithModal":152,"./deleteObjectFromModel":159,"./getObject":184,"./tellWithModal":243,"dateformat":8,"pouchdb":106,"underscore":150}],159:[function(require,module,exports){
+},{"./askYesNoWithModal":152,"./deleteObjectFromModel":159,"./getObject":184,"./tellWithModal":245,"dateformat":8,"pouchdb":106,"underscore":150}],159:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -38177,7 +38177,7 @@ module.exports = function () {
         }
     }
 };
-},{"../map/addDrawInteraction":192,"../map/addModifyInteraction":195,"../map/getEditingLayer":202,"../map/removeAllInteractions":208,"openlayers":27,"underscore":150}],161:[function(require,module,exports){
+},{"../map/addDrawInteraction":193,"../map/addModifyInteraction":196,"../map/getEditingLayer":204,"../map/removeAllInteractions":210,"openlayers":27,"underscore":150}],161:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -38225,7 +38225,7 @@ module.exports = function () {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../map/addSelectInteraction":197,"openlayers":27,"underscore":150}],163:[function(require,module,exports){
+},{"../map/addSelectInteraction":198,"openlayers":27,"underscore":150}],163:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -38325,7 +38325,7 @@ module.exports = function () {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../getObject":184,"../map/zoomToFeature":214,"../showTab":239,"openlayers":27}],167:[function(require,module,exports){
+},{"../getObject":184,"../map/zoomToFeature":216,"../showTab":241,"openlayers":27}],167:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -38813,7 +38813,7 @@ module.exports = function (id, type) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../../templates/checkbox":246,"../../../templates/checkboxGroup":247,"../../../templates/formButtonToolbar":248,"../../../templates/geoJson":249,"../../../templates/input":250,"../../../templates/optionGroup":254,"../../../templates/select":255,"../../../templates/textarea":256,"../capitalizeFirstLetter":153,"../getHierarchy":183,"../getObject":184,"../map/zoomToFeatures":215,"../refreshScrollbar":233,"../showTab":239,"./addCheckedToValueList":173,"./positionFormBtngroup":179,"./resizeTextareas":180,"openlayers":27,"underscore":150}],178:[function(require,module,exports){
+},{"../../../templates/checkbox":248,"../../../templates/checkboxGroup":249,"../../../templates/formButtonToolbar":250,"../../../templates/geoJson":251,"../../../templates/input":252,"../../../templates/optionGroup":256,"../../../templates/select":257,"../../../templates/textarea":258,"../capitalizeFirstLetter":153,"../getHierarchy":183,"../getObject":184,"../map/zoomToFeatures":217,"../refreshScrollbar":235,"../showTab":241,"./addCheckedToValueList":173,"./positionFormBtngroup":179,"./resizeTextareas":180,"openlayers":27,"underscore":150}],178:[function(require,module,exports){
 // Hilfsfunktion, die typeof ersetzt und ergänzt
 // typeof gibt bei input-Feldern immer String zurück!
 
@@ -38923,7 +38923,7 @@ module.exports = function (hierarchy) {
         });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../getHierarchy":183,"../nav/getLabelForObject":223,"dateformat":8,"pouchdb":106,"underscore":150}],182:[function(require,module,exports){
+},{"../getHierarchy":183,"../nav/getLabelForObject":225,"dateformat":8,"pouchdb":106,"underscore":150}],182:[function(require,module,exports){
 (function (global){
 /*
  * when a value is changed in the form
@@ -39065,7 +39065,7 @@ module.exports = function (passedObject, value) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../capitalizeFirstLetter":153,"../getObject":184,"../map/getFeatureById":203,"../map/getLayerByName":204,"../nav/getLabelForObject":223,"../syncWithRemoteDb":240,"dateformat":8,"openlayers":27,"pouchdb":106,"underscore":150}],183:[function(require,module,exports){
+},{"../capitalizeFirstLetter":153,"../getObject":184,"../map/getFeatureById":205,"../map/getLayerByName":206,"../nav/getLabelForObject":225,"../syncWithRemoteDb":242,"dateformat":8,"openlayers":27,"pouchdb":106,"underscore":150}],183:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -39236,7 +39236,7 @@ module.exports = function (doc) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./form/initiateForm":177,"./nav/createTree":218,"./nav/createTreeNodeObject":219,"./nav/createTreeNodeRootObject":220,"./nav/getLabelForObject":223,"underscore":150}],188:[function(require,module,exports){
+},{"./form/initiateForm":177,"./nav/createTree":220,"./nav/createTreeNodeObject":221,"./nav/createTreeNodeRootObject":222,"./nav/getLabelForObject":225,"underscore":150}],188:[function(require,module,exports){
 /*
  * When the active user's _users-object is changed, it checks it's roles:
  * - if a role has been deleted, the corresponding project is removed and syncing stopped 
@@ -39294,7 +39294,7 @@ module.exports = function (tab, setTabsWidth) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./setWidthOfTabs":236}],190:[function(require,module,exports){
+},{"./setWidthOfTabs":238}],190:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -39328,7 +39328,7 @@ module.exports = function () {
         window.oi.previousTabConfig = JSON.parse(localStorage.previousTabConfig);
     }
 };
-},{"./initiateResizables":191,"./nav/getLogin":224,"./setupEvents":238,"handlebars":24}],191:[function(require,module,exports){
+},{"./initiateResizables":191,"./nav/getLogin":226,"./setupEvents":240,"handlebars":24}],191:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -39419,7 +39419,35 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./alsoResizeReverse":151,"./form/positionFormBtngroup":179,"./form/resizeTextareas":180,"./map/refreshMap":207,"./refreshScrollbar":233,"./saveResizablesConfig":234,"./setWidthOfTabs":236,"./toggleTab":244,"underscore":150}],192:[function(require,module,exports){
+},{"./alsoResizeReverse":151,"./form/positionFormBtngroup":179,"./form/resizeTextareas":180,"./map/refreshMap":209,"./refreshScrollbar":235,"./saveResizablesConfig":236,"./setWidthOfTabs":238,"./toggleTab":246,"underscore":150}],192:[function(require,module,exports){
+/*
+ * add a DragBox interaction used to select features by drawing boxes
+ * while holding the shift key
+ */
+
+/*jslint node: true, browser: true, nomen: true, todo: true, plusplus */
+'use strict';
+
+var ol = require('openlayers');
+
+module.exports = function () {
+    var map = window.oi.olMap.map,
+        dragBox;
+
+    dragBox = new ol.interaction.DragBox({
+        condition: ol.events.condition.shiftKeyOnly,
+        style: new ol.style.Style({
+            stroke: new ol.style.Stroke({
+                color: [0, 0, 255, 1]
+            })
+        })
+    });
+
+    map.addInteraction(dragBox);
+    // make dragbox global so it can be removed later
+    window.oi.olMap.map.dragBoxInteraction = dragBox;
+};
+},{"openlayers":27}],193:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -39488,7 +39516,7 @@ module.exports = function (layer, geometryType) {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../guid":185,"./getEditingLayer":202,"./saveFeatureData":211,"./toggleEditButtons":212,"openlayers":27}],193:[function(require,module,exports){
+},{"../guid":185,"./getEditingLayer":204,"./saveFeatureData":213,"./toggleEditButtons":214,"openlayers":27}],194:[function(require,module,exports){
 (function (global){
 /*
  * adds a layer to the layercontrol
@@ -39575,7 +39603,7 @@ module.exports = function (layer) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../../templates/layertoolLayerCollapse":251,"../../../templates/layertoolProjectPanel":252,"../../../templates/layertoolThemesPanel":253,"../capitalizeFirstLetter":153,"../getHierarchy":183,"../getObject":184}],194:[function(require,module,exports){
+},{"../../../templates/layertoolLayerCollapse":253,"../../../templates/layertoolProjectPanel":254,"../../../templates/layertoolThemesPanel":255,"../capitalizeFirstLetter":153,"../getHierarchy":183,"../getObject":184}],195:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -39596,7 +39624,7 @@ module.exports = function () {
     window.oi.olMap.map.addLayer(createLayerSwisstopoAerial());
     addProjectLayers();
 };
-},{"./addProjectLayers":196,"./createLayerSwisstopoAerial":199,"./createLayerSwisstopoPixelFarbe":200,"openlayers":27,"underscore":150}],195:[function(require,module,exports){
+},{"./addProjectLayers":197,"./createLayerSwisstopoAerial":200,"./createLayerSwisstopoPixelFarbe":201,"openlayers":27,"underscore":150}],196:[function(require,module,exports){
 (function (global){
 // build up modify interaction
 // needs a select and a modify interaction working together
@@ -39604,13 +39632,15 @@ module.exports = function () {
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus */
 'use strict';
 
-var ol                    = require('openlayers'),
-    $                     = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
-    saveFeatureData       = require('./saveFeatureData'),
-    removeFeatureData     = require('./removeFeatureData'),
-    toggleEditButtons     = require('./toggleEditButtons'),
-    removeAllInteractions = require('./removeAllInteractions'),
-    selectObjectNode      = require('../nav/selectObjectNode');
+var ol                     = require('openlayers'),
+    $                      = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+    saveFeatureData        = require('./saveFeatureData'),
+    removeFeatureData      = require('./removeFeatureData'),
+    toggleEditButtons      = require('./toggleEditButtons'),
+    removeAllInteractions  = require('./removeAllInteractions'),
+    selectObjectNode       = require('../nav/selectObjectNode'),
+    addDragboxInteraction  = require('./addDragboxInteraction'),
+    deleteSelectedFeatures = require('./deleteSelectedFeatures');
 
 module.exports = function (layer) {
     var map = window.oi.olMap.map,
@@ -39636,11 +39666,16 @@ module.exports = function (layer) {
     window.oi.olMap.map.selectInteraction = selectInteraction;
     map.addInteraction(selectInteraction);
 
+    addDragboxInteraction();
+
     // grab the features from the select interaction to use in the modify interaction
     selectedFeatures = selectInteraction.getFeatures();
 
     // when features are changed
     selectedFeatures.on('remove', function (event) {
+
+        console.log('feature removed from select interaction');
+
         toggleEditButtons();
     });
 
@@ -39648,6 +39683,8 @@ module.exports = function (layer) {
     selectedFeatures.on('add', function (event) {
         var objId,
             selectedObj;
+
+        console.log('feature added to select interaction');
 
         toggleEditButtons();
 
@@ -39680,27 +39717,7 @@ module.exports = function (layer) {
         $(document).on('keyup', function (event) {
             if (event.keyCode === 46) {
                 // remove all selected features from selectInteraction and layer
-                selectedFeatures.forEach(function (selectedFeature) {
-                    var selectedFeatureId,
-                        layerFeatures;
-
-                    selectedFeatureId = selectedFeature.getId();
-
-                    // remove from selectInteraction
-                    selectedFeatures.remove(selectedFeature);
-
-                    // remove features from vectorlayer
-                    layerFeatures = layer.getSource().getFeatures();
-                    layerFeatures.forEach(function (sourceFeature) {
-                        var sourceFeatureId = sourceFeature.getId();
-
-                        if (sourceFeatureId === selectedFeatureId) {
-                            layer.getSource().removeFeature(sourceFeature);
-                            // remove feature-data in DB
-                            removeFeatureData(sourceFeature);
-                        }
-                    });
-                });
+                deleteSelectedFeatures();
                 // remove listener
                 $(document).off('keyup');
             }
@@ -39724,7 +39741,7 @@ module.exports = function (layer) {
     toggleEditButtons();
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../nav/selectObjectNode":228,"./removeAllInteractions":208,"./removeFeatureData":209,"./saveFeatureData":211,"./toggleEditButtons":212,"openlayers":27}],196:[function(require,module,exports){
+},{"../nav/selectObjectNode":230,"./addDragboxInteraction":192,"./deleteSelectedFeatures":202,"./removeAllInteractions":210,"./removeFeatureData":211,"./saveFeatureData":213,"./toggleEditButtons":214,"openlayers":27}],197:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -39759,7 +39776,7 @@ module.exports = function () {
         }
     });
 };
-},{"../capitalizeFirstLetter":153,"./createLayerForData":198,"underscore":150}],197:[function(require,module,exports){
+},{"../capitalizeFirstLetter":153,"./createLayerForData":199,"underscore":150}],198:[function(require,module,exports){
 (function (global){
 // build up select interaction
 
@@ -39840,7 +39857,7 @@ module.exports = function () {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../map/removeAllInteractions":208,"../nav/selectObjectNode":228,"openlayers":27,"underscore":150}],198:[function(require,module,exports){
+},{"../map/removeAllInteractions":210,"../nav/selectObjectNode":230,"openlayers":27,"underscore":150}],199:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -39910,7 +39927,7 @@ module.exports = function (passedData) {
 
     window.oi.olMap.map.addLayer(vectorLayer);
 };
-},{"./extendExtent":201,"openlayers":27,"underscore":150}],199:[function(require,module,exports){
+},{"./extendExtent":203,"openlayers":27,"underscore":150}],200:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -39958,7 +39975,7 @@ module.exports = function () {
     return wmtsS3Swissimage;
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./wmtsSource":213,"openlayers":27}],200:[function(require,module,exports){
+},{"./wmtsSource":215,"openlayers":27}],201:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -40007,7 +40024,51 @@ module.exports = function () {
     return wmtsS3PixelFarbe;
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./wmtsSource":213,"openlayers":27}],201:[function(require,module,exports){
+},{"./wmtsSource":215,"openlayers":27}],202:[function(require,module,exports){
+/*
+ * deletes all the selected features from the select interaction
+ * removes the also from the vector layer
+ * then removes their geometry data in the corresponding objects
+ */
+
+/*jslint node: true, browser: true, nomen: true, todo: true, plusplus */
+'use strict';
+
+var removeFeatureData = require('./removeFeatureData'),
+    getEditingLayer   = require('./getEditingLayer');
+
+module.exports = function () {
+    var map,
+        layer,
+        selectedFeatures;
+
+    map              = window.oi.olMap.map;
+    selectedFeatures = map.selectInteraction.getFeatures();
+
+    selectedFeatures.forEach(function (selectedFeature) {
+        var selectedFeatureId,
+            layerFeatures;
+
+        selectedFeatureId = selectedFeature.getId();
+
+        // remove from selectInteraction
+        selectedFeatures.remove(selectedFeature);
+
+        // remove features from vectorlayer
+        layer         = getEditingLayer();
+        layerFeatures = layer.getSource().getFeatures();
+        layerFeatures.forEach(function (sourceFeature) {
+            var sourceFeatureId = sourceFeature.getId();
+
+            if (sourceFeatureId === selectedFeatureId) {
+                layer.getSource().removeFeature(sourceFeature);
+                // remove feature-data in DB
+                removeFeatureData(sourceFeature);
+            }
+        });
+    });
+};
+},{"./getEditingLayer":204,"./removeFeatureData":211}],203:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -40024,12 +40085,12 @@ module.exports = function (extent, meters) {
 
     return extendedExtent;
 };
-},{"underscore":150}],202:[function(require,module,exports){
+},{"underscore":150}],204:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var ol              = require('openlayers'),
-    _               = require('underscore');
+var ol = require('openlayers'),
+    _  = require('underscore');
 
 module.exports = function () {
     var map,
@@ -40043,7 +40104,7 @@ module.exports = function () {
     });
     return layer;
 };
-},{"openlayers":27,"underscore":150}],203:[function(require,module,exports){
+},{"openlayers":27,"underscore":150}],205:[function(require,module,exports){
 /*
  * is passed a layer and a feature id
  * returns the corresponding feature
@@ -40063,7 +40124,7 @@ module.exports = function (layer, featureId) {
     feature = source.getFeatureById(featureId);
     return feature;
 };
-},{"openlayers":27,"underscore":150}],204:[function(require,module,exports){
+},{"openlayers":27,"underscore":150}],206:[function(require,module,exports){
 /*
  * is passed a layerName
  * returns the corresponding layer
@@ -40085,7 +40146,7 @@ module.exports = function (layerName) {
     });
     return layer;
 };
-},{"openlayers":27,"underscore":150}],205:[function(require,module,exports){
+},{"openlayers":27,"underscore":150}],207:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -40155,7 +40216,7 @@ module.exports = function () {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./addLayerToLayertool":193,"./addLayers":194,"./addSelectInteraction":197,"./mousePositionControl":206,"./removeLayerFromLayertool":210,"openlayers":27}],206:[function(require,module,exports){
+},{"./addLayerToLayertool":194,"./addLayers":195,"./addSelectInteraction":198,"./mousePositionControl":208,"./removeLayerFromLayertool":212,"openlayers":27}],208:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -40178,7 +40239,7 @@ module.exports = function () {
     });
     return mousePositionControl;
 };
-},{"openlayers":27}],207:[function(require,module,exports){
+},{"openlayers":27}],209:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -40187,9 +40248,9 @@ module.exports = function () {
         window.oi.olMap.map.updateSize();
     }
 };
-},{}],208:[function(require,module,exports){
+},{}],210:[function(require,module,exports){
 (function (global){
-/*jslint node: true, browser: true, nomen: true, todo: true */
+/*jslint node: true, browser: true, nomen: true, todo: true*/
 'use strict';
 
 var ol                = require('openlayers'),
@@ -40199,16 +40260,17 @@ var ol                = require('openlayers'),
 module.exports = function () {
     var map = window.oi.olMap.map;
 
-    if (map.drawInteraction)   { map.removeInteraction(map.drawInteraction); }
-    if (map.modifyInteraction) { map.removeInteraction(map.modifyInteraction); }
-    if (map.selectInteraction) {
+    if (map.drawInteraction)    { map.removeInteraction(map.drawInteraction); }
+    if (map.modifyInteraction)  { map.removeInteraction(map.modifyInteraction); }
+    if (map.selectInteraction)  {
         map.removeInteraction(map.selectInteraction);
         $(document).off('keyup');
     }
+    if (map.dragBoxInteraction) { map.removeInteraction(map.dragBoxInteraction); }
     toggleEditButtons(false);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./toggleEditButtons":212,"openlayers":27}],209:[function(require,module,exports){
+},{"./toggleEditButtons":214,"openlayers":27}],211:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -40248,7 +40310,7 @@ module.exports = function (feature) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../form/fitTextareaToContent":175,"../form/saveObjectValue":182,"../getObject":184,"./getEditingLayer":202,"openlayers":27,"underscore":150}],210:[function(require,module,exports){
+},{"../form/fitTextareaToContent":175,"../form/saveObjectValue":182,"../getObject":184,"./getEditingLayer":204,"openlayers":27,"underscore":150}],212:[function(require,module,exports){
 (function (global){
 /*
  * removes a layer from the layercontrol
@@ -40281,7 +40343,7 @@ module.exports = function (layer) {
     $listGroupDiv.remove();
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],211:[function(require,module,exports){
+},{}],213:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -40327,7 +40389,7 @@ module.exports = function (feature) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../form/fitTextareaToContent":175,"../form/saveObjectValue":182,"../getObject":184,"./getEditingLayer":202,"openlayers":27,"underscore":150}],212:[function(require,module,exports){
+},{"../form/fitTextareaToContent":175,"../form/saveObjectValue":182,"../getObject":184,"./getEditingLayer":204,"openlayers":27,"underscore":150}],214:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -40335,15 +40397,27 @@ module.exports = function (feature) {
 var $ = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null);
 
 module.exports = function (trueOrFalseForced) {
-    var featuresSelected = false;
-    if (window.oi.olMap.map.selectInteraction && window.oi.olMap.map.selectInteraction.getFeatures().getArray()) {
-        featuresSelected = window.oi.olMap.map.selectInteraction.getFeatures().getArray().length > 0;
+    var selectInteraction = window.oi.olMap.map.selectInteraction,
+        featuresSelected  = false,
+        featuresLength,
+        deleteButtonText;
+
+    console.log('toggleEditButtons');
+
+    if (selectInteraction && selectInteraction.getFeatures().getArray()) {
+        featuresLength   = selectInteraction.getFeatures().getLength();
+        featuresSelected = featuresLength > 0;
+        deleteButtonText = featuresLength + ' Geometrien löschen';
+        $('#utilsEditDeleteFeature').text(deleteButtonText);
+
+        console.log('featuresLength: ', featuresLength);
+
     }
     $('#utilsEditDeleteFeature').prop('disabled', trueOrFalseForced || !featuresSelected);
-    $('#utilsEditDeletePoint').prop('disabled', trueOrFalseForced || !featuresSelected);
+    $('#utilsEditDeletePoint').prop('disabled',   trueOrFalseForced || !featuresSelected);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],213:[function(require,module,exports){
+},{}],215:[function(require,module,exports){
 /*
  * Bekommt layername und layerConfig
  *
@@ -40443,7 +40517,7 @@ module.exports = function (layer, options) {
         requestEncoding: 'REST'
     }));
 };
-},{"openlayers":27}],214:[function(require,module,exports){
+},{"openlayers":27}],216:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -40461,7 +40535,7 @@ module.exports = function (feature, buffer) {
     ol.extent.extend(featuresExtent, featureExtentEnlarged);
     window.oi.olMap.map.getView().fitExtent(featuresExtent, window.oi.olMap.map.getSize());
 };
-},{"./extendExtent":201,"openlayers":27}],215:[function(require,module,exports){
+},{"./extendExtent":203,"openlayers":27}],217:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -40483,7 +40557,7 @@ module.exports = function (features, buffer) {
     ol.extent.extend(featuresExtent, featuresExtentEnlarged);
     window.oi.olMap.map.getView().fitExtent(featuresExtent, window.oi.olMap.map.getSize());
 };
-},{"./extendExtent":201,"openlayers":27,"underscore":150}],216:[function(require,module,exports){
+},{"./extendExtent":203,"openlayers":27,"underscore":150}],218:[function(require,module,exports){
 // creates descendant hierarchical objects of single objects
 // adds them to an array
 
@@ -40520,7 +40594,7 @@ module.exports = function (object) {
     }
     return [];
 };
-},{"underscore":150}],217:[function(require,module,exports){
+},{"underscore":150}],219:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -40530,7 +40604,7 @@ module.exports = function () {
     }
     window.oi.databaseId = localStorage.databaseId;
 };
-},{}],218:[function(require,module,exports){
+},{}],220:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -40581,7 +40655,7 @@ module.exports = function () {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../form/initiateForm":177,"../refreshScrollbar":233,"./generateDataForTree":221,"./treeContextmenuItems":232,"jstree":26}],219:[function(require,module,exports){
+},{"../form/initiateForm":177,"../refreshScrollbar":235,"./generateDataForTree":223,"./treeContextmenuItems":234,"jstree":26}],221:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -40614,7 +40688,7 @@ module.exports = function (object) {
 
     return jstreeObject;
 };
-},{"./getLabelForObject":223,"underscore":150}],220:[function(require,module,exports){
+},{"./getLabelForObject":225,"underscore":150}],222:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -40627,7 +40701,7 @@ module.exports = function (object) {
     jstreeObject.parent = '#';
     return jstreeObject;
 };
-},{"./createTreeNodeObject":219}],221:[function(require,module,exports){
+},{"./createTreeNodeObject":221}],223:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -40660,7 +40734,7 @@ module.exports = function () {
 
     return _.union(objectsData, childHierarchiesData);
 };
-},{"./createChildHierarchiesOfObject":216,"./createTreeNodeObject":219,"./createTreeNodeRootObject":220,"underscore":150}],222:[function(require,module,exports){
+},{"./createChildHierarchiesOfObject":218,"./createTreeNodeObject":221,"./createTreeNodeRootObject":222,"underscore":150}],224:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -40710,7 +40784,7 @@ module.exports = function (firstSync, projectName, callback) {
         callback(error, false);
     });
 };
-},{"../configuration":154,"pouchdb":106,"underscore":150}],223:[function(require,module,exports){
+},{"../configuration":154,"pouchdb":106,"underscore":150}],225:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -40741,7 +40815,7 @@ module.exports = function (object, correspondingHierarchy) {
     label      = '<strong>' + labelValue + '</strong>';
     return label;
 };
-},{"underscore":150}],224:[function(require,module,exports){
+},{"underscore":150}],226:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -40761,7 +40835,7 @@ module.exports = function () {
     }
 
 };
-},{"./initiateNav":226,"./openSigninModal":227}],225:[function(require,module,exports){
+},{"./initiateNav":228,"./openSigninModal":229}],227:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -40790,7 +40864,7 @@ module.exports = function (firstSync, projectNames, callback) {
         });
     });
 };
-},{"./getDataFromDb":222,"underscore":150}],226:[function(require,module,exports){
+},{"./getDataFromDb":224,"underscore":150}],228:[function(require,module,exports){
 (function (global){
 /*
  * initiiert die nav
@@ -40852,7 +40926,7 @@ module.exports = function (projectNames) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../syncWithRemoteDbs":241,"../syncWithRemoteUserDb":242,"./createDatabaseId":217,"./createTree":218,"./getModelData":225,"async":2,"pouchdb":106,"pouchdb-all-dbs":28,"underscore":150}],227:[function(require,module,exports){
+},{"../syncWithRemoteDbs":243,"../syncWithRemoteUserDb":244,"./createDatabaseId":219,"./createTree":220,"./getModelData":227,"async":2,"pouchdb":106,"pouchdb-all-dbs":28,"underscore":150}],229:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -40872,7 +40946,7 @@ module.exports = function () {
         });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],228:[function(require,module,exports){
+},{}],230:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -40892,7 +40966,7 @@ module.exports = function (objId) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],229:[function(require,module,exports){
+},{}],231:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -40932,7 +41006,7 @@ module.exports = function (signindata) {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../configuration":154,"../tellWithModal":243,"./initiateNav":226,"pouchdb":106}],230:[function(require,module,exports){
+},{"../configuration":154,"../tellWithModal":245,"./initiateNav":228,"pouchdb":106}],232:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -40995,7 +41069,7 @@ module.exports = function () {
     signIn(signindata);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../tellWithModal":243,"../validateEmail":245,"./signIn":229,"./signUp":231}],231:[function(require,module,exports){
+},{"../tellWithModal":245,"../validateEmail":247,"./signIn":231,"./signUp":233}],233:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -41025,7 +41099,7 @@ module.exports = function (signindata) {
         tellWithModal('Das Konto konnte nicht erstellt werden', 'Die Datenbank meldete: ' + error);
     });
 };
-},{"../configuration":154,"../tellWithModal":243,"./signIn":229,"pouchdb":106}],232:[function(require,module,exports){
+},{"../configuration":154,"../tellWithModal":245,"./signIn":231,"pouchdb":106}],234:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -41061,7 +41135,7 @@ module.exports = function ($node) {
     };
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../createNewObjectFromHierarchy":156,"../createNewObjectFromObject":157,"../deleteObjectAndChildren":158}],233:[function(require,module,exports){
+},{"../createNewObjectFromHierarchy":156,"../createNewObjectFromObject":157,"../deleteObjectAndChildren":158}],235:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -41072,7 +41146,7 @@ module.exports = function () {
     $('.scrollbar').perfectScrollbar('update');
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],234:[function(require,module,exports){
+},{}],236:[function(require,module,exports){
 (function (global){
 /*
  * saves previous nav configurations
@@ -41142,7 +41216,7 @@ module.exports = function () {
     localStorage.previousTabConfig = JSON.stringify(window.oi.previousTabConfig);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],235:[function(require,module,exports){
+},{}],237:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus*/
 'use strict';
@@ -41168,7 +41242,7 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"underscore":150}],236:[function(require,module,exports){
+},{"underscore":150}],238:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus*/
 'use strict';
@@ -41217,7 +41291,7 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./form/positionFormBtngroup":179,"./map/refreshMap":207,"./setVisibilityOfTabSeparators":235,"./setWidthOfTabsWithoutPrevious":237,"underscore":150}],237:[function(require,module,exports){
+},{"./form/positionFormBtngroup":179,"./map/refreshMap":209,"./setVisibilityOfTabSeparators":237,"./setWidthOfTabsWithoutPrevious":239,"underscore":150}],239:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus*/
 'use strict';
@@ -41266,7 +41340,7 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./form/positionFormBtngroup":179,"./map/refreshMap":207,"underscore":150}],238:[function(require,module,exports){
+},{"./form/positionFormBtngroup":179,"./map/refreshMap":209,"underscore":150}],240:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -41321,7 +41395,7 @@ module.exports = function () {
         .on('change',      '.js-utilsEditLayerType',         onChangeEditLayerType);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./event/onChangeEditLayerType":160,"./event/onChangeElement":161,"./event/onChangeLytEditLayer":162,"./event/onChangeLytShowLayer":163,"./event/onClickFormDelete":164,"./event/onClickFormNew":165,"./event/onClickGeometryField":166,"./event/onClickNavFormSort":167,"./event/onClickNavbarBrand":168,"./event/onClickNavbarCollapse":169,"./event/onClickSigninWithModalSignupCheckbox":170,"./event/onKeypressSigninWithModal":171,"./event/onScrollTab":172,"./form/fitTextareaToContent":175,"./nav/signInOrUp":230,"underscore":150}],239:[function(require,module,exports){
+},{"./event/onChangeEditLayerType":160,"./event/onChangeElement":161,"./event/onChangeLytEditLayer":162,"./event/onChangeLytShowLayer":163,"./event/onClickFormDelete":164,"./event/onClickFormNew":165,"./event/onClickGeometryField":166,"./event/onClickNavFormSort":167,"./event/onClickNavbarBrand":168,"./event/onClickNavbarCollapse":169,"./event/onClickSigninWithModalSignupCheckbox":170,"./event/onKeypressSigninWithModal":171,"./event/onScrollTab":172,"./form/fitTextareaToContent":175,"./nav/signInOrUp":232,"underscore":150}],241:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -41346,7 +41420,7 @@ module.exports = function (tab, setTabsWidth) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./map/initiateMap":205,"./setWidthOfTabs":236}],240:[function(require,module,exports){
+},{"./map/initiateMap":207,"./setWidthOfTabs":238}],242:[function(require,module,exports){
 /**
  * synchronisiert die Daten aus einer CouchDB in PouchDB
  */
@@ -41391,7 +41465,7 @@ module.exports = function (couchName) {
     }
 };
 
-},{"./configuration":154,"./handleChanges":186,"pouchdb":106}],241:[function(require,module,exports){
+},{"./configuration":154,"./handleChanges":186,"pouchdb":106}],243:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -41404,7 +41478,7 @@ module.exports = function (projectDbs) {
     });
 };
 
-},{"./syncWithRemoteDb":240,"underscore":150}],242:[function(require,module,exports){
+},{"./syncWithRemoteDb":242,"underscore":150}],244:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -41422,7 +41496,7 @@ module.exports = function () {
         include_docs: true
     }).on('change', handleUsersChanges);
 };
-},{"./configuration":154,"./handleUsersChanges":188,"pouchdb":106}],243:[function(require,module,exports){
+},{"./configuration":154,"./handleUsersChanges":188,"pouchdb":106}],245:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -41445,7 +41519,7 @@ module.exports = function (title, text) {
     $modal.modal(options);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],244:[function(require,module,exports){
+},{}],246:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -41469,7 +41543,7 @@ module.exports = function (tab) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./hideTab":189,"./setWidthOfTabs":236,"./showTab":239}],245:[function(require,module,exports){
+},{"./hideTab":189,"./setWidthOfTabs":238,"./showTab":241}],247:[function(require,module,exports){
 /*
  * prüft, ob ein String eine email-Adressen sein könnte
  * Quelle: http://stackoverflow.com/questions/46155/validate-email-address-in-javascript
@@ -41482,7 +41556,7 @@ module.exports = function (string) {
     var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(string);
 };
-},{}],246:[function(require,module,exports){
+},{}],248:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, helper, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing, functionType="function";
   return "<div class=\"form-group js-form-group\">\r\n    <label class=\"control-label\">"
@@ -41496,7 +41570,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(((helper = (helper = helpers.checked || (depth0 != null ? depth0.checked : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"checked","hash":{},"data":data}) : helper)))
     + ">\r\n            </label>\r\n        </div>\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":24}],247:[function(require,module,exports){
+},{"handlebars":24}],249:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,depths) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "            <div class=\"checkbox\">\r\n                <label>\r\n                    <input type=\"checkbox\" id=\""
@@ -41523,11 +41597,11 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "    </div>\r\n</div>";
 },"useData":true,"useDepths":true});
-},{"handlebars":24}],248:[function(require,module,exports){
+},{"handlebars":24}],250:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   return "<div class=\"btn-toolbar\" role=\"toolbar\" aria-label=\"Daten Toolbar\">\r\n    <div class=\"btn-group pull-right\" role=\"group\" aria-label=\"Daten Button group\">\r\n        <button id=\"formNew\" class=\"btn btn-default\">neu</button>\r\n        <button id=\"formDelete\" class=\"btn btn-default\">löschen</button>\r\n    </div>\r\n</div>";
   },"useData":true});
-},{"handlebars":24}],249:[function(require,module,exports){
+},{"handlebars":24}],251:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "<div class=\"form-group js-form-group\">\r\n    <label for=\""
@@ -41544,7 +41618,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.value : stack1), depth0))
     + "</textarea>\r\n    <button class=\"js-geometryField\" class=\"btn btn-default\">Karte</button>\r\n</div>";
 },"useData":true});
-},{"handlebars":24}],250:[function(require,module,exports){
+},{"handlebars":24}],252:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "<div class=\"form-group js-form-group\">\r\n    <label for=\""
@@ -41563,7 +41637,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.value : stack1), depth0))
     + "\">\r\n</div>";
 },"useData":true});
-},{"handlebars":24}],251:[function(require,module,exports){
+},{"handlebars":24}],253:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression;
   return "            <div class=\"checkbox\">\r\n                <label>\r\n                    <input type=\"checkbox\" id=\""
@@ -41589,7 +41663,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":24}],252:[function(require,module,exports){
+},{"handlebars":24}],254:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression;
   return "<div id=\"lytProject"
@@ -41606,11 +41680,11 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.projId : stack1), depth0))
     + "\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingProjekte\">\r\n        <!--insert layer collapses-->\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":24}],253:[function(require,module,exports){
+},{"handlebars":24}],255:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   return "<div id=\"lytThemes\" class=\"panel panel-default js-layerPanel\">\r\n    <div class=\"panel-heading\" role=\"tab\" id=\"headingThemen\">\r\n        <h4 class=\"panel-title\">\r\n            <a class=\"collapsed\" data-toggle=\"collapse\" data-parent=\"#utilsLayertoolAccordion\" href=\"#collapseThemes\" aria-expanded=\"false\" aria-controls=\"collapseThemes\">\r\n              Themen\r\n            </a>\r\n        </h4>\r\n    </div>\r\n    <div id=\"collapseThemes\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingThemen\">\r\n        <!--insert list-groups-->\r\n    </div>\r\n</div>";
   },"useData":true});
-},{"handlebars":24}],254:[function(require,module,exports){
+},{"handlebars":24}],256:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,depths) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "            <div class=\"radio\">\r\n                <label>\r\n                    <input type=\"radio\" name=\""
@@ -41637,7 +41711,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "    </div>\r\n</div>";
 },"useData":true,"useDepths":true});
-},{"handlebars":24}],255:[function(require,module,exports){
+},{"handlebars":24}],257:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, buffer = "                <option value=";
   stack1 = lambda((depth0 != null ? depth0.value : depth0), depth0);
@@ -41660,7 +41734,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   if (stack1 != null) { buffer += stack1; }
   return buffer + "        </select>\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":24}],256:[function(require,module,exports){
+},{"handlebars":24}],258:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
   return "<div class=\"form-group js-form-group\">\r\n    <label for=\""
