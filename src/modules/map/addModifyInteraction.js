@@ -12,7 +12,9 @@ var ol                     = require('openlayers'),
     removeAllInteractions  = require('./removeAllInteractions'),
     selectObjectNode       = require('../nav/selectObjectNode'),
     addDragboxInteraction  = require('./addDragboxInteraction'),
-    deleteSelectedFeatures = require('./deleteSelectedFeatures');
+    deleteSelectedFeatures = require('./deleteSelectedFeatures'),
+    styleSelected          = require('./styleSelected'),
+    styleRed               = require('./styleRed');
 
 module.exports = function (layer) {
     var map = window.oi.olMap.map,
@@ -48,6 +50,9 @@ module.exports = function (layer) {
 
         console.log('feature removed from select interaction');
 
+        // set different style
+        feature.setStyle(styleRed());
+
         toggleEditButtons();
     });
 
@@ -65,6 +70,9 @@ module.exports = function (layer) {
         // dieses Objekt in tree und Formular anzeigen
         objId = feature.getId();
         selectObjectNode(objId);
+
+        // set different style
+        feature.setStyle(styleSelected());
 
         // problem: change happens for every pixel that a point is dragged!
         // need to call it only on dragend. But there is no such event

@@ -276,5 +276,8 @@ body {
 }
 
 #utils .radio + button {
-  margin-bottom: 5px;
+  margin-top: 5px;
+}
+#utils input:disabled + .lytListGroupLabelText {
+  color: #9C9C9C;
 }

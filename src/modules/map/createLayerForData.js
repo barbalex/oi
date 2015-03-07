@@ -3,7 +3,8 @@
 
 var _            = require('underscore'),
     ol           = require('openlayers'),
-    extendExtent = require('./extendExtent');
+    extendExtent = require('./extendExtent'),
+    styleRed     = require('./styleRed');
 
 module.exports = function (passedData) {
     var vectorLayer,
@@ -46,23 +47,7 @@ module.exports = function (passedData) {
         projId:      passedData.projId || null,
         visible:     true,
         source:      vectorSource,
-        style: new ol.style.Style({
-            stroke: new ol.style.Stroke({
-                color: 'red',
-                width: 4
-            }),
-            fill: new ol.style.Fill({
-                color: 'red'
-            }),
-            image: new ol.style.Circle({
-                radius: 5,
-                fill: null,
-                stroke: new ol.style.Stroke({
-                    color: 'red',
-                    width: 4
-                })
-            })
-        })
+        style:       styleRed()
     });
 
     window.oi.olMap.map.addLayer(vectorLayer);
