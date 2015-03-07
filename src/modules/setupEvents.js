@@ -17,7 +17,8 @@ var $                                    = require('jquery'),
     onClickGeometryField                 = require('./event/onClickGeometryField'),
     onChangeLytShowLayer                 = require('./event/onChangeLytShowLayer'),
     onChangeLytEditLayer                 = require('./event/onChangeLytEditLayer'),
-    onChangeEditLayerType                = require('./event/onChangeEditLayerType');
+    onChangeEditLayerType                = require('./event/onChangeEditLayerType'),
+    deleteSelectedFeatures               = require('./map/deleteSelectedFeatures');
 
 module.exports = function () {
     // scroll event doesn't buble up, so it cant be delegated from # to .
@@ -48,5 +49,6 @@ module.exports = function () {
     $('#utils')
         .on('change',      '.js-lytShowLayer',               onChangeLytShowLayer)
         .on('change',      '.js-lytEditLayer',               onChangeLytEditLayer)
-        .on('change',      '.js-utilsEditLayerType',         onChangeEditLayerType);
+        .on('change',      '.js-utilsEditLayerType',         onChangeEditLayerType)
+        .on('click',       '#utilsEditDeleteFeature',        deleteSelectedFeatures);
 };

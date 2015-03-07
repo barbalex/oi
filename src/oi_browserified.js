@@ -41364,7 +41364,8 @@ var $                                    = (typeof window !== "undefined" ? wind
     onClickGeometryField                 = require('./event/onClickGeometryField'),
     onChangeLytShowLayer                 = require('./event/onChangeLytShowLayer'),
     onChangeLytEditLayer                 = require('./event/onChangeLytEditLayer'),
-    onChangeEditLayerType                = require('./event/onChangeEditLayerType');
+    onChangeEditLayerType                = require('./event/onChangeEditLayerType'),
+    deleteSelectedFeatures               = require('./map/deleteSelectedFeatures');
 
 module.exports = function () {
     // scroll event doesn't buble up, so it cant be delegated from # to .
@@ -41395,10 +41396,11 @@ module.exports = function () {
     $('#utils')
         .on('change',      '.js-lytShowLayer',               onChangeLytShowLayer)
         .on('change',      '.js-lytEditLayer',               onChangeLytEditLayer)
-        .on('change',      '.js-utilsEditLayerType',         onChangeEditLayerType);
+        .on('change',      '.js-utilsEditLayerType',         onChangeEditLayerType)
+        .on('click',       '#utilsEditDeleteFeature',        deleteSelectedFeatures);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./event/onChangeEditLayerType":160,"./event/onChangeElement":161,"./event/onChangeLytEditLayer":162,"./event/onChangeLytShowLayer":163,"./event/onClickFormDelete":164,"./event/onClickFormNew":165,"./event/onClickGeometryField":166,"./event/onClickNavFormSort":167,"./event/onClickNavbarBrand":168,"./event/onClickNavbarCollapse":169,"./event/onClickSigninWithModalSignupCheckbox":170,"./event/onKeypressSigninWithModal":171,"./event/onScrollTab":172,"./form/fitTextareaToContent":175,"./nav/signInOrUp":232,"underscore":150}],241:[function(require,module,exports){
+},{"./event/onChangeEditLayerType":160,"./event/onChangeElement":161,"./event/onChangeLytEditLayer":162,"./event/onChangeLytShowLayer":163,"./event/onClickFormDelete":164,"./event/onClickFormNew":165,"./event/onClickGeometryField":166,"./event/onClickNavFormSort":167,"./event/onClickNavbarBrand":168,"./event/onClickNavbarCollapse":169,"./event/onClickSigninWithModalSignupCheckbox":170,"./event/onKeypressSigninWithModal":171,"./event/onScrollTab":172,"./form/fitTextareaToContent":175,"./map/deleteSelectedFeatures":202,"./nav/signInOrUp":232,"underscore":150}],241:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
