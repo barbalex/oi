@@ -7,7 +7,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
   var stack1, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, lambda=this.lambda, buffer = "<div class=\"list-group\" data-object=\""
     + escapeExpression(((helpers.json || (depth0 && depth0.json) || helperMissing).call(depth0, (depth0 != null ? depth0.object : depth0), {"name":"json","hash":{},"data":data})))
     + "\">\r\n    <div class=\"layerName\">"
-    + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.layerName : stack1), depth0))
+    + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.layerTitle : stack1), depth0))
     + "</div>\r\n    <div class=\"lytLayerColumns\">\r\n        <div class=\""
     + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.inputType : stack1), depth0))
     + "\">\r\n            <label>\r\n                <input type=\""

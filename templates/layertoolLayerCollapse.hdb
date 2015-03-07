@@ -1,5 +1,5 @@
 <div class="list-group" data-object="{{json object}}">
-    <div class="layerName">{{object.layerName}}</div>
+    <div class="layerName">{{object.layerTitle}}</div>
     <div class="lytLayerColumns">
         <div class="{{object.inputType}}">
             <label>
