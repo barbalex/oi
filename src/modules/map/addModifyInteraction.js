@@ -101,7 +101,7 @@ module.exports = function (layer) {
         features: selectedFeatures,
         // delete vertices by pressing the SHIFT key
         deleteCondition: function (event) {
-            return ol.events.condition.shiftKeyOnly(event) &&
+            return (ol.events.condition.shiftKeyOnly(event) || $('#utilsEditDeletePoint').is(':checked')) &&
                 ol.events.condition.singleClick(event);
         }
     });

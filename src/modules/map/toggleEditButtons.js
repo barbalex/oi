@@ -14,7 +14,7 @@ module.exports = function (trueOrFalseForced) {
     if (selectInteraction && selectInteraction.getFeatures().getArray()) {
         featuresLength   = selectInteraction.getFeatures().getLength();
         featuresSelected = featuresLength > 0;
-        deleteButtonText = featuresLength + ' Geometrien löschen';
+        deleteButtonText = featuresLength === 1 ? featuresLength + ' Geometrie löschen' : featuresLength + ' Geometrien löschen';
         $('#utilsEditDeleteFeature').text(deleteButtonText);
 
         console.log('featuresLength: ', featuresLength);

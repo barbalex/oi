@@ -9439,6 +9439,7 @@ body {
   border-top: 0;
   font-size: 12px;
   padding-top: 3px;
+  padding-bottom: 3px;
 }
 
 #utils .list-group .layerTitle {
@@ -9480,11 +9481,7 @@ body {
   text-decoration: none;
 }
 
-#utils .btn-block:last-child {
-  margin-bottom: 5px;
-}
-
-#utils .btn-block:first-child {
+#utils .radio + button {
   margin-bottom: 5px;
 }
 

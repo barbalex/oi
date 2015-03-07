@@ -68302,7 +68302,7 @@ module.exports = function (layer) {
         features: selectedFeatures,
         // delete vertices by pressing the SHIFT key
         deleteCondition: function (event) {
-            return ol.events.condition.shiftKeyOnly(event) &&
+            return (ol.events.condition.shiftKeyOnly(event) || $('#utilsEditDeletePoint').is(':checked')) &&
                 ol.events.condition.singleClick(event);
         }
     });
@@ -68983,7 +68983,7 @@ module.exports = function (trueOrFalseForced) {
     if (selectInteraction && selectInteraction.getFeatures().getArray()) {
         featuresLength   = selectInteraction.getFeatures().getLength();
         featuresSelected = featuresLength > 0;
-        deleteButtonText = featuresLength + ' Geometrien löschen';
+        deleteButtonText = featuresLength === 1 ? featuresLength + ' Geometrie löschen' : featuresLength + ' Geometrien löschen';
         $('#utilsEditDeleteFeature').text(deleteButtonText);
 
         console.log('featuresLength: ', featuresLength);
