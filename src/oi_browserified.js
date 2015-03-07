@@ -40194,6 +40194,9 @@ module.exports = function () {
                 center: [2701719, 1173560],
                 zoom: 16,
                 resolutions: RESOLUTIONS
+            }),
+            interactions: ol.interaction.defaults({
+                doubleClickZoom: false
             })
         });
 
@@ -41616,7 +41619,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + escapeExpression(((helpers.json || (depth0 && depth0.json) || helperMissing).call(depth0, (depth0 != null ? depth0.object : depth0), {"name":"json","hash":{},"data":data})))
     + "\">"
     + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.value : stack1), depth0))
-    + "</textarea>\r\n    <button class=\"js-geometryField\" class=\"btn btn-default\">Karte</button>\r\n</div>";
+    + "</textarea>\r\n    <button class=\"js-geometryField btn btn-default btn-xs\">zoomen</button>\r\n</div>";
 },"useData":true});
 },{"handlebars":24}],252:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {

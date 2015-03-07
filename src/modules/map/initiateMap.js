@@ -47,7 +47,7 @@ module.exports = function () {
             }),
             interactions: ol.interaction.defaults({
                 doubleClickZoom: false
-            });
+            })
         });
 
         // make map global
