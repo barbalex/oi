@@ -9438,10 +9438,11 @@ body {
   border-bottom: 1px solid #ECECEC;
   border-top: 0;
   font-size: 12px;
+  padding-top: 3px;
 }
 
 #utils .list-group .layerTitle {
-  padding-top: 3px;
+  font-size: 14px;
 }
 
 #utils .lytListGroupLabelText {

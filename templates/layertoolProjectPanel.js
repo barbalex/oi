@@ -9,7 +9,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + "\" aria-expanded=\"false\" aria-controls=\"collapseProject"
     + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.projId : stack1), depth0))
     + "\">\r\n              "
-    + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.layerTitle : stack1), depth0))
+    + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.projectName : stack1), depth0))
     + "\r\n            </a>\r\n        </h4>\r\n    </div>\r\n    <div id=\"collapseProject"
     + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.projId : stack1), depth0))
     + "\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingProjekte\">\r\n        <!--insert layer collapses-->\r\n    </div>\r\n</div>";

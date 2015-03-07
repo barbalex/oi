@@ -70224,7 +70224,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, lambda=this.lambda, buffer = "<div class=\"list-group\" data-object=\""
     + escapeExpression(((helpers.json || (depth0 && depth0.json) || helperMissing).call(depth0, (depth0 != null ? depth0.object : depth0), {"name":"json","hash":{},"data":data})))
-    + "\">\r\n    <div class=\"layerName\">"
+    + "\">\r\n    <div class=\"layerTitle\">"
     + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.layerTitle : stack1), depth0))
     + "</div>\r\n    <div class=\"lytLayerColumns\">\r\n        <div class=\""
     + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.inputType : stack1), depth0))
@@ -70253,7 +70253,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + "\" aria-expanded=\"false\" aria-controls=\"collapseProject"
     + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.projId : stack1), depth0))
     + "\">\r\n              "
-    + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.layerTitle : stack1), depth0))
+    + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.projectName : stack1), depth0))
     + "\r\n            </a>\r\n        </h4>\r\n    </div>\r\n    <div id=\"collapseProject"
     + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.projId : stack1), depth0))
     + "\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingProjekte\">\r\n        <!--insert layer collapses-->\r\n    </div>\r\n</div>";

@@ -2,7 +2,7 @@
     <div class="panel-heading" role="tab" id="headingProjekte">
         <h4 class="panel-title">
             <a class="collapsed" data-toggle="collapse" data-parent="#utilsLayertoolAccordion" href="#collapseProject{{object.projId}}" aria-expanded="false" aria-controls="collapseProject{{object.projId}}">
-              {{object.layerTitle}}
+              {{object.projectName}}
             </a>
         </h4>
     </div>
