@@ -14,7 +14,7 @@ return gulp.task('dev', function () {
     runSequence(
         'templates',
         'browserify',
-        ['dev_style', 'dev_src'],
+        ['dev_style', 'dev_src', 'generate-service-worker'],
         'watch',
         'dev_notify'
     );
