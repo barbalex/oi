@@ -27,8 +27,13 @@ module.exports = function (signindata) {
         $('#signinWithModal').modal('hide');
     }).catch(function (error) {
         if (error.name === 'unauthorized') {
+            console.log('unauthorized');
             // name or password incorrect
-            tellWithModal('Anmeldung gescheitert', 'Sie haben Email und/oder Passwort falsch eingegeben. Oder müssen Sie ein Konto erstellen?');
+            $('#signinAlert')
+                .html('Anmeldung gescheitert:<br>Sie haben Email und/oder Passwort falsch eingegeben.<br>Oder müssen Sie ein Konto erstellen?')
+                //.alert()
+                .show();
+            //tellWithModal('Anmeldung gescheitert', 'Sie haben Email und/oder Passwort falsch eingegeben. Oder müssen Sie ein Konto erstellen?');
         } else {
             // cosmic rays, a meteor, etc.
             tellWithModal('Anmeldung gescheitert', 'Oh je. Die Anwendung ist offenbar schlecht gelaunt. Bitte versuchen Sie es nochmals. Gemeldeter Fehler: ' + JSON.stringify(error));

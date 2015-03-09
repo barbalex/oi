@@ -9,7 +9,7 @@ module.exports = function (trueOrFalseForced) {
         featuresLength,
         deleteButtonText;
 
-    console.log('toggleEditButtons');
+    //console.log('toggleEditButtons');
 
     if (selectInteraction && selectInteraction.getFeatures().getArray()) {
         featuresLength   = selectInteraction.getFeatures().getLength();

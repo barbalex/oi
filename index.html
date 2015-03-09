@@ -1,5 +1,6 @@
 <!doctype html>
-<html lang="de" manifest="oi.appcache">
+<!--html lang="de" manifest="oi.appcache"-->
+<html lang="de">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0 maximum-scale=1.0">
@@ -7,8 +8,6 @@
         <link rel="SHORTCUT ICON" href="images/favicon.ico">
         <link rel="stylesheet" href="style/jstree.css">
         <link rel="stylesheet" href="style/oi_built.css">
-        <!--script src="http://api3.geo.admin.ch/loader.js?lang=de"></script-->
-        <!--script src="http://api3.geo.admin.ch/loader.js?lang=de&mode=debug"></script-->
         <script src="src/oi_built.js"></script>
         <title>ortinfo</title>
     </head>
@@ -22,10 +21,15 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a href="/" class="navbar-brand">ortinfo</a>
                 </div>
                 <div id="bs-example-navbar-collapse-1" class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
+                        <li id="navUser" class="dropdown">
+                          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span id="navUserText">Dropdown </span><span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li id="navLogin"><a href="/">neu anmelden</a></li>
+                            </ul>
+                        </li>
                         <li id="navFormSort">
                             <a href="/">Felder sortieren</a>
                         </li>
@@ -216,6 +220,7 @@
                                             <input type="checkbox" id="signinWithModalSignupCheckbox"> Neues Konto erstellen
                                         </label>
                                     </div>
+                                    <div id="signinAlert" class="alert alert-danger" role="alert"></div>
                                     <button id="signinWithModalSigninButton" class="btn btn-default btn-block">anmelden</button>
                                 </div>
                             </div>
@@ -233,11 +238,9 @@
                 window.oi.initiateResizables();
                 window.oi.getLogin();
 
-                // query $.hook('xx') instead of $('[data-hook="xx"]')
-                //$.extend({hook:function (h) { return $('[data-hook'+(!h||h=='*'?'':'~="'+h+'"')+']'); }});
-
                 //register event to cache site for offline use
-                function cacheUpdatereadyListener() {
+                // ausgeschaltet, funktioniert nicht
+                /*function cacheUpdatereadyListener() {
                     window.applicationCache.update();
                     window.applicationCache.swapCache();
                 }
@@ -246,10 +249,7 @@
                 }
                 cache = window.applicationCache;
                 cache.addEventListener('updateready', cacheUpdatereadyListener, false);
-                cache.addEventListener('error', cacheErrorListener, false);
-
-                // globale Variabeln
-                proj4.defs("EPSG:21781", "+proj=somerc +lat_0=46.95240555555556 +lon_0=7.439583333333333 +k_0=1 +x_0=600000 +y_0=200000 +ellps=bessel +towgs84=674.4,15.1,405.3,0,0,0,0 +units=m +no_defs");
+                cache.addEventListener('error', cacheErrorListener, false);*/
             });
         </script>
     </body>

@@ -41,6 +41,10 @@ function initiate(projectNames, firstSync) {
 module.exports = function (projectNames) {
     var firstSync = projectNames ? true : false;
 
+    // set navUser
+    // add a space to space the caret
+    $('#navUserText').text(window.oi.me.name + ' ');
+
     if (!projectNames) {
         //PouchDB.plugin(require('pouchdb-all-dbs'));
         require('pouchdb-all-dbs')(PouchDB);

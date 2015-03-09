@@ -9,7 +9,7 @@ var $                                    = require('jquery'),
     onClickFormDelete                    = require('./event/onClickFormDelete'),
     onChangeElement                      = require('./event/onChangeElement'),
     onClickNavbarCollapse                = require('./event/onClickNavbarCollapse'),
-    onClickNavbarBrand                   = require('./event/onClickNavbarBrand'),
+    onClickNavLogin                      = require('./event/onClickNavLogin'),
     onClickNavFormSort                   = require('./event/onClickNavFormSort'),
     onKeypressSigninWithModal            = require('./event/onKeypressSigninWithModal'),
     onClickSigninWithModalSignupCheckbox = require('./event/onClickSigninWithModalSignupCheckbox'),
@@ -29,7 +29,7 @@ module.exports = function () {
         .on('click',       '#signinWithModalSignupCheckbox', onClickSigninWithModalSignupCheckbox)
         .on('click',       '#signinWithModalSigninButton',   signInOrUp)
         .on('click.nav',   '.navbar-collapse.in',            onClickNavbarCollapse)
-        .on('click.nav',   '.navbar-brand',                  onClickNavbarBrand);
+        .on('click.nav',   '#navLogin',                      onClickNavLogin);
 
     $('#signinWithModal')
         .on('keypress',                                      onKeypressSigninWithModal);

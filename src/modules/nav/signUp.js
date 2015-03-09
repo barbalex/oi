@@ -10,6 +10,10 @@ var PouchDB       = require('pouchdb'),
 module.exports = function (signindata) {
     var remoteDb = new PouchDB('http://' + couchUrl + '/oi');
     // signup, then call signin
+
+    console.log('signindata.name: ', signindata.name);
+    console.log('signindata.password: ', signindata.password);
+
     remoteDb.signup(signindata.name, signindata.password, {
         metadata: {
             // bei signup weitere Felder ausfüllen lassen
@@ -21,6 +25,7 @@ module.exports = function (signindata) {
             Ort: 'ort'*/
         }
     }).then(function (response) {
+        console.log('signed up, response: ', response);
         signIn(signindata);
     }).catch(function (error) {
         // Fehler melden

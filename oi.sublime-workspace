@@ -468,18 +468,10 @@
 	"buffers":
 	[
 		{
-			"file": "/F/Google Drive/ortinfo/admin.txt",
-			"settings":
-			{
-				"buffer_size": 878,
-				"line_ending": "Windows"
-			}
-		},
-		{
 			"file": "style/oi.css",
 			"settings":
 			{
-				"buffer_size": 4941,
+				"buffer_size": 5015,
 				"line_ending": "Windows"
 			}
 		},
@@ -487,57 +479,65 @@
 			"file": "index.html",
 			"settings":
 			{
-				"buffer_size": 15258,
+				"buffer_size": 15614,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/modules/map/addModifyInteraction.js",
+			"file": "src/modules/nav/signin.js",
 			"settings":
 			{
-				"buffer_size": 4660,
+				"buffer_size": 1906,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"contents": "Searching 170 files for \"toggleEditButtons\" (case sensitive, whole word)\n\nC:\\Users\\alex\\oi\\src\\modules\\map\\addModifyInteraction.js:\n    9      saveFeatureData       = require('./saveFeatureData'),\n   10      removeFeatureData     = require('./removeFeatureData'),\n   11:     toggleEditButtons     = require('./toggleEditButtons'),\n   12      removeAllInteractions = require('./removeAllInteractions'),\n   13      selectObjectNode      = require('../nav/selectObjectNode');\n   ..\n   44          // if no features left, disable edit buttons\n   45          if (window.oi.olMap.map.selectInteraction.getFeatures().getArray().length === 0) {\n   46:             toggleEditButtons(false);\n   47          }\n   48      });\n   ..\n   53              selectedObj;\n   54  \n   55:         toggleEditButtons(true);\n   56  \n   57          // grab the feature\n   ..\n  125      map.addInteraction(modifyInteraction);\n  126      // enable buttons\n  127:     toggleEditButtons(true);\n  128  };\n\nC:\\Users\\alex\\oi\\src\\modules\\map\\removeAllInteractions.js:\n    4  var ol = require('openlayers'),\n    5      $  = require('jquery'),\n    6:     toggleEditButtons = require('./toggleEditButtons');\n    7  \n    8  module.exports = function () {\n    .\n   16      }\n   17      // disable buttons\n   18:     toggleEditButtons(false);\n   19  };\n\n8 matches across 2 files\n",
+			"contents": "Searching 21882 files for \"tellWithModal\" (case sensitive, whole word)\n\nC:\\Users\\Alexander\\oi\\index.html:\n  150          </div><!-- #content -->\n  151  \n  152:         <div id=\"tellWithModal\" class=\"modal fade\">\n  153              <div class=\"modal-dialog modal-sm\">\n  154                  <div class=\"modal-content\">\n\nC:\\Users\\Alexander\\oi\\src\\modules\\deleteObjectAndChildren.js:\n   17      getObject             = require('./getObject'),\n   18      askYesNoWithModal     = require('./askYesNoWithModal'),\n   19:     tellWithModal         = require('./tellWithModal');\n   20  \n   21  module.exports = function ($node) {\n   ..\n   47      // wenn keine Objekte betroffen sind: mitteilen und aussteigen\n   48      if (objectsToDelete.length === 0 && childrenToDelete.length === 0) {\n   49:         tellWithModal('uups', 'es gibt keine Objekte, die gelöscht werden könnten');\n   50          return;\n   51      }\n\nC:\\Users\\Alexander\\oi\\src\\modules\\nav\\signin.js:\n    6      configuration = require('../configuration'),\n    7      couchUrl      = configuration.couch.dbUrl,\n    8:     tellWithModal = require('../tellWithModal'),\n    9      initiateNav   = require('./initiateNav');\n   10  \n   ..\n   30              console.log('unauthorized');\n   31              // name or password incorrect\n   32:             tellWithModal('Anmeldung gescheitert', 'Sie haben Email und/oder Passwort falsch eingegeben. Oder müssen Sie ein Konto erstellen?');\n   33          } else {\n   34              // cosmic rays, a meteor, etc.\n   35:             tellWithModal('Anmeldung gescheitert', 'Oh je. Die Anwendung ist offenbar schlecht gelaunt. Bitte versuchen Sie es nochmals. Gemeldeter Fehler: ' + JSON.stringify(error));\n   36          }\n   37      });\n\nC:\\Users\\Alexander\\oi\\src\\modules\\nav\\signInOrUp.js:\n    5      signIn        = require('./signIn'),\n    6      signUp        = require('./signUp'),\n    7:     tellWithModal = require('../tellWithModal'),\n    8      validateEmail = require('../validateEmail');\n    9  \n   ..\n   43      // Eingabe von Name und Passwort validieren\n   44      if (!validSignin(signindata)) {\n   45:         tellWithModal('Anmeldung gescheitert', 'Bitte prüfen Sie Ihre Eingaben');\n   46          return;\n   47      }\n   ..\n   51          // Eigabe der Metadaten validieren\n   52          if (!validSignup(signindata)) {\n   53:             tellWithModal('Anmeldung gescheitert', 'Bitte prüfen Sie Ihre Eingaben');\n   54              return;\n   55          }\n\nC:\\Users\\Alexander\\oi\\src\\modules\\nav\\signUp.js:\n    6      couchUrl      = configuration.couch.dbUrl,\n    7      signIn        = require('./signIn'),\n    8:     tellWithModal = require('../tellWithModal');\n    9  \n   10  module.exports = function (signindata) {\n   ..\n   30      }).catch(function (error) {\n   31          // Fehler melden\n   32:         tellWithModal('Das Konto konnte nicht erstellt werden', 'Die Datenbank meldete: ' + error);\n   33      });\n   34  };\n\nC:\\Users\\Alexander\\oi\\src\\modules\\tellWithModal.js:\n    5  \n    6  module.exports = function (title, text) {\n    7:     var $modal = $('#tellWithModal'),\n    8          options;\n    9  \n\n16 matches across 6 files\n",
 			"settings":
 			{
-				"buffer_size": 1339,
+				"buffer_size": 3164,
 				"line_ending": "Windows",
 				"name": "Find Results",
 				"scratch": true
 			}
 		},
 		{
-			"file": "src/modules/map/addSelectInteraction.js",
+			"file": "src/modules/nav/signUp.js",
 			"settings":
 			{
-				"buffer_size": 3079,
+				"buffer_size": 1196,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/modules/setupEvents.js",
+			"file": "src/modules/event/onClickNavLogin.js",
 			"settings":
 			{
-				"buffer_size": 2925,
+				"buffer_size": 220,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/modules/event/onChangeEditLayerType.js",
+			"file": "src/modules/nav/initiateNav.js",
 			"settings":
 			{
-				"buffer_size": 971,
+				"buffer_size": 2081,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/modules/event/onChangeLytEditLayer.js",
+			"file": "src/modules/nav/getModelData.js",
 			"settings":
 			{
-				"buffer_size": 1001,
+				"buffer_size": 890,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/modules/handleChanges.js",
+			"settings":
+			{
+				"buffer_size": 683,
 				"line_ending": "Windows"
 			}
 		},
@@ -550,42 +550,34 @@
 			}
 		},
 		{
-			"file": "src/modules/map/addLayerToLayertool.js",
+			"file": "src/modules/syncWithRemoteDb.js",
 			"settings":
 			{
-				"buffer_size": 3106,
+				"buffer_size": 1224,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/modules/map/removeAllInteractions.js",
+			"file": "src/modules/handleUsersChanges.js",
 			"settings":
 			{
-				"buffer_size": 611,
+				"buffer_size": 1309,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/modules/map/toggleEditButtons.js",
+			"file": "src/modules/handleExternalObjectChanges.js",
 			"settings":
 			{
-				"buffer_size": 593,
+				"buffer_size": 3555,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/modules/map/addDrawInteraction.js",
+			"file": "/C/Users/Alexander/oi_testdata/index.js",
 			"settings":
 			{
-				"buffer_size": 2464,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/C/Users/alex/oi_testdata/index.js",
-			"settings":
-			{
-				"buffer_size": 19813,
+				"buffer_size": 18978,
 				"line_ending": "Windows"
 			}
 		}
@@ -636,17 +628,40 @@
 	},
 	"expanded_folders":
 	[
-		"/C/Users/alex/oi",
-		"/C/Users/alex/oi/src",
-		"/C/Users/alex/oi/src/modules",
-		"/C/Users/alex/oi/src/modules/event",
-		"/C/Users/alex/oi/src/modules/form",
-		"/C/Users/alex/oi/src/modules/map",
-		"/C/Users/alex/oi/src/modules/nav",
-		"/C/Users/alex/oi/templates"
+		"/C/Users/Alexander/oi",
+		"/C/Users/Alexander/oi/src",
+		"/C/Users/Alexander/oi/src/modules",
+		"/C/Users/Alexander/oi/src/modules/event",
+		"/C/Users/Alexander/oi/src/modules/form",
+		"/C/Users/Alexander/oi/src/modules/nav"
 	],
 	"file_history":
 	[
+		"/C/Users/Alexander/oi/src/modules/initiateApp.js",
+		"/C/Users/Alexander/oi/src/modules/setupEvents.js",
+		"/C/Users/Alexander/oi/src/modules/tellWithModal.js",
+		"/C/Users/Alexander/oi/src/modules/nav/signInOrUp.js",
+		"/C/Users/Alexander/oi/src/modules/map/toggleEditButtons.js",
+		"/C/Users/Alexander/oi/src/modules/nav/getDataFromDb.js",
+		"/C/Users/Alexander/oi/src/modules/map/addModifyInteraction.js",
+		"/C/Users/Alexander/oi/src/modules/map/addSelectInteraction.js",
+		"/C/Users/Alexander/oi/src/modules/map/addLayers.js",
+		"/C/Users/Alexander/oi/src/modules/map/addDrawInteraction.js",
+		"/C/Users/Alexander/oi/src/modules/map/removeAllInteractions.js",
+		"/C/Users/Alexander/oi/src/modules/map/addLayerToLayertool.js",
+		"/C/Users/Alexander/oi/src/modules/form/saveObjectValue.js",
+		"/C/Users/Alexander/oi/src/modules/event/onChangeLytEditLayer.js",
+		"/C/Users/Alexander/oi/src/modules/event/onChangeEditLayerType.js",
+		"/C/Users/Alexander/oi/gulp-tasks/watch.js",
+		"/C/Users/Alexander/oi/gulp-tasks/generate-service-worker.js",
+		"/C/Users/Alexander/oi/gulp-tasks/dev.js",
+		"/C/Users/Alexander/oi/gulp-tasks/dev_notify.js",
+		"/C/Users/Alexander/oi/gulp-tasks/default.js",
+		"/C/Users/Alexander/oi/gulp-tasks/createManifest.js",
+		"/C/Windows/System32/shutdown.exe",
+		"/C/Users/Alexander/oi/package.json",
+		"/C/Users/alex/oi_testdata/index.js",
+		"/F/Google Drive/ortinfo/admin.txt",
 		"/C/Users/alex/oi/templates/layertoolLayerCollapse.hdb",
 		"/C/Users/alex/oi/src/modules/map/toggleEditButtons.js",
 		"/C/Users/alex/oi/src/modules/nav/selectObjectNode.js",
@@ -718,7 +733,6 @@
 		"/C/Users/alex/oi/src/modules/map/refreshMap.js",
 		"/C/Users/alex/oi/src/modules/refreshScrollbar.js",
 		"/C/Users/alex/oi/src/modules/form/resizeTextareas.js",
-		"/C/Users/alex/oi_testdata/index.js",
 		"/C/Users/alex/oi/src/modules/map/createLayerSwisstopoPixelkarteFarbe.js",
 		"/C/Users/alex/oi/templates/geoJson.hdb",
 		"/C/Users/alex/oi/templates/geoJson.js",
@@ -750,31 +764,7 @@
 		"/C/Users/alex/oi/src/modules/syncWithRemoteUserDb.js",
 		"/C/Users/alex/oi/src/modules/event/onScrollTab.js",
 		"/C/Users/alex/oi/src/modules/alsoResizeReverse.js",
-		"/C/Users/alex/oi/src/modules/nav/treeContextmenuItems.js",
-		"/C/Users/alex/oi/src/modules/nav/getModelData.js",
-		"/C/Users/alex/oi/src/modules/nav/getDataFromDb.js",
-		"/C/Users/alex/oi/oi.appcache",
-		"/C/Users/alex/oi/src/modules/event/onKeypressSigninWithModal.js",
-		"/C/Users/alex/oi/gulp-tasks/dev_1.js",
-		"/C/Users/alex/oi/.gitignore",
-		"/C/Users/alex/oi/src/modules/configuration.js",
-		"/C/Users/alex/oi/couchpass.json",
-		"/C/Users/alex/oi_pg/modules/handleProjectChangesInDb.js",
-		"/C/Users/alex/oi/src/modules/nav/createObjectsByTypeIndex.js",
-		"/C/Users/alex/oi/src/modules/nav/addDataOfProjectToModel.js",
-		"/C/Users/alex/oi/src/modules/nav/openSigninModal.js",
-		"/C/Users/alex/oi/src/modules/nav/signIn.js",
-		"/C/Users/alex/oi/src/modules/nav/objectsByTypeIndex.js",
-		"/C/Users/alex/oi_pg/package.json",
-		"/C/Users/alex/oi/src/modules/nav/getProjectNames.js",
-		"/C/Users/alex/oi_testdata/package.json",
-		"/C/Users/alex/oi/src/modules/nav/sync.js",
-		"/C/Users/alex/oi/src/modules/nav/syncWithRemoteUserDb.js",
-		"/C/Users/alex/oi/src/modules/nav/createDatabaseId.js",
-		"/C/Users/alex/Downloads/apber.sql",
-		"/C/Users/alex/Downloads/apber.csv",
-		"/C/Users/alex/oi/src/modules/nav/initiateChangeStreams.js",
-		"/C/Users/alex/oi/src/modules/nav/initiateChangeStream.js"
+		"/C/Users/alex/oi/src/modules/nav/treeContextmenuItems.js"
 	],
 	"find":
 	{
@@ -785,6 +775,7 @@
 		"height": 147.0,
 		"where_history":
 		[
+			"C:\\Users\\Alexander\\oi, -oi_browserified.js, -oi_built.js, -bootstrap.js, -jquery-ui.js, -jquery.js, -jstree.js, -bootstrap.css, -oi_built.css, -jstree.css, -perfect-scrollbar.css, -perfect-scrollbar.js, -npm-debug.log, -font-awesome.css, -jquery-ui.css, -jquery-ui.structure.css, -workspace.xml",
 			"C:\\Users\\alex\\oi, -oi_browserified.js, -oi_built.js, -bootstrap.js, -jquery-ui.js, -jquery.js, -jstree.js, -bootstrap.css, -oi_built.css, -jstree.css, -perfect-scrollbar.css, -perfect-scrollbar.js, -npm-debug.log, -font-awesome.css, -jquery-ui.css, -jquery-ui.structure.css, -workspace.xml",
 			"C:\\Users\\alex\\oi, -oi_browserified.js, -oi_built.js, -bootstrap.js, -jquery-ui.js, -jquery.js, -jstree.js, -bootstrap.css, -oi_built.css, -jstree.css, -perfect-scrollbar.css, -perfect-scrollbar.js, -npm-debug.log, -font-awesome.css, -jquery-ui.css, -jquery-ui.structure.css",
 			"C:\\Users\\alex\\oi, -oi_browserified.js, -oi_built.js, -bootstrap.js, -jquery-ui.js, -jquery.js, -jstree.js, -bootstrap.css, -oi_built.css, -jstree.css, -perfect-scrollbar.css, -perfect-scrollbar.js, -npm-debug.log, -font-awesome.css, -jquery-ui.css",
@@ -869,6 +860,11 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"tellWithModal",
+			"toggleEditButtons",
+			"./event/onClickNavbarBrand",
+			"openSigninModal",
+			"initiateNav",
 			"toggleEditButtons",
 			"if (!selectedObj || objId !== selectedObj.id) {",
 			"$(this).closest('.list-group').data('object').layerName",
@@ -991,12 +987,7 @@
 			"modify_interaction",
 			"draw_interaction",
 			"select_interaction",
-			"vector_layer",
-			"layer",
-			"vector_layer",
-			"layertoolLayerCollapse",
-			"utilsLayertoolPanelGroup",
-			"utilsLayertool"
+			"vector_layer"
 		],
 		"highlight": false,
 		"in_selection": false,
@@ -1142,52 +1133,24 @@
 	"groups":
 	[
 		{
-			"selected": 13,
+			"selected": 2,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "/F/Google Drive/ortinfo/admin.txt",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 878,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								878,
-								878
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 15,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
 					"file": "style/oi.css",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 4941,
+						"buffer_size": 5015,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								3922,
-								3922
+								976,
+								976
 							]
 						],
 						"settings":
@@ -1197,27 +1160,27 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 5568.0,
+						"translation.y": 378.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 12,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
-					"buffer": 2,
+					"buffer": 1,
 					"file": "index.html",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 15258,
+						"buffer_size": 15614,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								8644,
-								8664
+								14229,
+								14229
 							]
 						],
 						"settings":
@@ -1227,370 +1190,27 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 3036.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 11,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "src/modules/map/addModifyInteraction.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 4660,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								4655,
-								4655
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 2706.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 9,
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1339,
-						"regions":
-						{
-							"match":
-							{
-								"flags": 112,
-								"regions":
-								[
-									[
-										275,
-										292
-									],
-									[
-										310,
-										327
-									],
-									[
-										656,
-										673
-									],
-									[
-										775,
-										792
-									],
-									[
-										939,
-										956
-									],
-									[
-										1119,
-										1136
-									],
-									[
-										1150,
-										1167
-									],
-									[
-										1277,
-										1294
-									]
-								],
-								"scope": ""
-							}
-						},
-						"selection":
-						[
-							[
-								1291,
-								1291
-							]
-						],
-						"settings":
-						{
-							"detect_indentation": false,
-							"line_numbers": false,
-							"output_tag": 1,
-							"result_base_dir": "",
-							"result_file_regex": "^([A-Za-z\\\\/<].*):$",
-							"result_line_regex": "^ +([0-9]+):",
-							"scroll_past_end": true,
-							"syntax": "Packages/Default/Find Results.hidden-tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 8,
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "src/modules/map/addSelectInteraction.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 3079,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								398,
-								398
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 10,
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "src/modules/setupEvents.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2925,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2909,
-								2909
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 297.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 7,
-					"type": "text"
-				},
-				{
-					"buffer": 7,
-					"file": "src/modules/event/onChangeEditLayerType.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 971,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								444,
-								444
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 8,
-					"file": "src/modules/event/onChangeLytEditLayer.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1001,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								847,
-								847
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 6,
-					"type": "text"
-				},
-				{
-					"buffer": 9,
-					"file": "src/modules/form/saveObjectValue.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 6049,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2167,
-								2167
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 1755.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 5,
-					"type": "text"
-				},
-				{
-					"buffer": 10,
-					"file": "src/modules/map/addLayerToLayertool.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 3106,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1722,
-								1732
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 519.0,
+						"translation.y": 5427.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 2,
 					"type": "text"
 				},
 				{
-					"buffer": 11,
-					"file": "src/modules/map/removeAllInteractions.js",
+					"buffer": 2,
+					"file": "src/modules/nav/signin.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 611,
+						"buffer_size": 1906,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								606,
-								606
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
-					"type": "text"
-				},
-				{
-					"buffer": 12,
-					"file": "src/modules/map/toggleEditButtons.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 593,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								571,
-								571
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 4,
-					"type": "text"
-				},
-				{
-					"buffer": 13,
-					"file": "src/modules/map/addDrawInteraction.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2464,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								98,
-								98
+								1370,
+								1370
 							]
 						],
 						"settings":
@@ -1607,50 +1227,127 @@
 					"type": "text"
 				},
 				{
-					"buffer": 14,
-					"file": "/C/Users/alex/oi_testdata/index.js",
+					"buffer": 3,
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 19813,
+						"buffer_size": 3164,
 						"regions":
 						{
+							"match":
+							{
+								"flags": 112,
+								"regions":
+								[
+									[
+										177,
+										190
+									],
+									[
+										518,
+										531
+									],
+									[
+										553,
+										566
+									],
+									[
+										796,
+										809
+									],
+									[
+										1080,
+										1093
+									],
+									[
+										1108,
+										1121
+									],
+									[
+										1308,
+										1321
+									],
+									[
+										1534,
+										1547
+									],
+									[
+										1899,
+										1912
+									],
+									[
+										1927,
+										1940
+									],
+									[
+										2127,
+										2140
+									],
+									[
+										2359,
+										2372
+									],
+									[
+										2640,
+										2653
+									],
+									[
+										2668,
+										2681
+									],
+									[
+										2833,
+										2846
+									],
+									[
+										3088,
+										3101
+									]
+								],
+								"scope": ""
+							}
 						},
 						"selection":
 						[
 							[
-								8733,
-								8733
+								3096,
+								3096
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
+							"detect_indentation": false,
+							"line_numbers": false,
+							"output_tag": 1,
+							"result_base_dir": "",
+							"result_file_regex": "^([A-Za-z\\\\/<].*):$",
+							"result_line_regex": "^ +([0-9]+):",
+							"scroll_past_end": true,
+							"syntax": "Packages/Default/Find Results.hidden-tmLanguage",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 7101.0,
+						"translation.y": 1215.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 14,
+					"stack_index": 3,
 					"type": "text"
 				},
 				{
-					"buffer": 14,
-					"file": "/C/Users/alex/oi_testdata/index.js",
+					"buffer": 4,
+					"file": "src/modules/nav/signUp.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 19813,
+						"buffer_size": 1196,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								4116,
-								4120
+								1028,
+								1028
 							]
 						],
 						"settings":
@@ -1660,7 +1357,277 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 3753.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "src/modules/event/onClickNavLogin.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 220,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								220,
+								220
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "src/modules/nav/initiateNav.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2081,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1564,
+								1564
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 27.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "src/modules/nav/getModelData.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 890,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 12,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "src/modules/handleChanges.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 683,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								533,
+								551
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 9,
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "src/modules/form/saveObjectValue.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 6049,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2862,
+								2862
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1323.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 8,
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "src/modules/syncWithRemoteDb.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1224,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"file": "src/modules/handleUsersChanges.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1309,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 10,
+					"type": "text"
+				},
+				{
+					"buffer": 12,
+					"file": "src/modules/handleExternalObjectChanges.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3555,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3483,
+								3483
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1350.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 11,
+					"type": "text"
+				},
+				{
+					"buffer": 13,
+					"file": "/C/Users/Alexander/oi_testdata/index.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 18978,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4209,
+								4209
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 3348.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 13,
@@ -1742,7 +1709,7 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 434.0,
+	"side_bar_width": 290.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{

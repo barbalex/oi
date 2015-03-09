@@ -66963,21 +66963,16 @@ module.exports = function () {
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../form/saveHierarchy":181,"../getObject":184,"underscore":150}],168:[function(require,module,exports){
-(function (global){
-// klickt man in der Mobilansicht des Menus auf den Titel, soll es schliessen
-
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $ = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null);
+var openSigninModal = require('../nav/openSigninModal');
 
 module.exports = function () {
-    // verhindern, dass die Seite neu lädt
     event.preventDefault();
-    $('.navbar').find('.navbar-collapse').collapse('hide');
+    openSigninModal();
 };
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],169:[function(require,module,exports){
+},{"../nav/openSigninModal":231}],169:[function(require,module,exports){
 (function (global){
 // wählt man in der Mobilansicht einen Menu-Eintrag, soll das Menu schliessen
 
@@ -67900,6 +67895,8 @@ module.exports = function () {
     if (localStorage.previousTabConfig) {
         window.oi.previousTabConfig = JSON.parse(localStorage.previousTabConfig);
     }
+
+    proj4.defs("EPSG:21781", "+proj=somerc +lat_0=46.95240555555556 +lon_0=7.439583333333333 +k_0=1 +x_0=600000 +y_0=200000 +ellps=bessel +towgs84=674.4,15.1,405.3,0,0,0,0 +units=m +no_defs");
 };
 },{"./initiateResizables":191,"./nav/getLogin":228,"./setupEvents":242,"handlebars":24}],191:[function(require,module,exports){
 (function (global){
@@ -69039,7 +69036,7 @@ module.exports = function (trueOrFalseForced) {
         featuresLength,
         deleteButtonText;
 
-    console.log('toggleEditButtons');
+    //console.log('toggleEditButtons');
 
     if (selectInteraction && selectInteraction.getFeatures().getArray()) {
         featuresLength   = selectInteraction.getFeatures().getLength();
@@ -69546,6 +69543,10 @@ function initiate(projectNames, firstSync) {
 module.exports = function (projectNames) {
     var firstSync = projectNames ? true : false;
 
+    // set navUser
+    // add a space to space the caret
+    $('#navUserText').text(window.oi.me.name + ' ');
+
     if (!projectNames) {
         //PouchDB.plugin(require('pouchdb-all-dbs'));
         require('pouchdb-all-dbs')(PouchDB);
@@ -69634,8 +69635,13 @@ module.exports = function (signindata) {
         $('#signinWithModal').modal('hide');
     }).catch(function (error) {
         if (error.name === 'unauthorized') {
+            console.log('unauthorized');
             // name or password incorrect
-            tellWithModal('Anmeldung gescheitert', 'Sie haben Email und/oder Passwort falsch eingegeben. Oder müssen Sie ein Konto erstellen?');
+            $('#signinAlert')
+                .html('Anmeldung gescheitert:<br>Sie haben Email und/oder Passwort falsch eingegeben.<br>Oder müssen Sie ein Konto erstellen?')
+                //.alert()
+                .show();
+            //tellWithModal('Anmeldung gescheitert', 'Sie haben Email und/oder Passwort falsch eingegeben. Oder müssen Sie ein Konto erstellen?');
         } else {
             // cosmic rays, a meteor, etc.
             tellWithModal('Anmeldung gescheitert', 'Oh je. Die Anwendung ist offenbar schlecht gelaunt. Bitte versuchen Sie es nochmals. Gemeldeter Fehler: ' + JSON.stringify(error));
@@ -69719,6 +69725,10 @@ var PouchDB       = require('pouchdb'),
 module.exports = function (signindata) {
     var remoteDb = new PouchDB('http://' + couchUrl + '/oi');
     // signup, then call signin
+
+    console.log('signindata.name: ', signindata.name);
+    console.log('signindata.password: ', signindata.password);
+
     remoteDb.signup(signindata.name, signindata.password, {
         metadata: {
             // bei signup weitere Felder ausfüllen lassen
@@ -69730,6 +69740,7 @@ module.exports = function (signindata) {
             Ort: 'ort'*/
         }
     }).then(function (response) {
+        console.log('signed up, response: ', response);
         signIn(signindata);
     }).catch(function (error) {
         // Fehler melden
@@ -69990,7 +70001,7 @@ var $                                    = (typeof window !== "undefined" ? wind
     onClickFormDelete                    = require('./event/onClickFormDelete'),
     onChangeElement                      = require('./event/onChangeElement'),
     onClickNavbarCollapse                = require('./event/onClickNavbarCollapse'),
-    onClickNavbarBrand                   = require('./event/onClickNavbarBrand'),
+    onClickNavLogin                      = require('./event/onClickNavLogin'),
     onClickNavFormSort                   = require('./event/onClickNavFormSort'),
     onKeypressSigninWithModal            = require('./event/onKeypressSigninWithModal'),
     onClickSigninWithModalSignupCheckbox = require('./event/onClickSigninWithModalSignupCheckbox'),
@@ -70010,7 +70021,7 @@ module.exports = function () {
         .on('click',       '#signinWithModalSignupCheckbox', onClickSigninWithModalSignupCheckbox)
         .on('click',       '#signinWithModalSigninButton',   signInOrUp)
         .on('click.nav',   '.navbar-collapse.in',            onClickNavbarCollapse)
-        .on('click.nav',   '.navbar-brand',                  onClickNavbarBrand);
+        .on('click.nav',   '#navLogin',                      onClickNavLogin);
 
     $('#signinWithModal')
         .on('keypress',                                      onKeypressSigninWithModal);
@@ -70034,7 +70045,7 @@ module.exports = function () {
         .on('click',       '#utilsEditDeleteFeature',        deleteSelectedFeatures);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./event/onChangeEditLayerType":160,"./event/onChangeElement":161,"./event/onChangeLytEditLayer":162,"./event/onChangeLytShowLayer":163,"./event/onClickFormDelete":164,"./event/onClickFormNew":165,"./event/onClickGeometryField":166,"./event/onClickNavFormSort":167,"./event/onClickNavbarBrand":168,"./event/onClickNavbarCollapse":169,"./event/onClickSigninWithModalSignupCheckbox":170,"./event/onKeypressSigninWithModal":171,"./event/onScrollTab":172,"./form/fitTextareaToContent":175,"./map/deleteSelectedFeatures":202,"./nav/signInOrUp":234,"underscore":150}],243:[function(require,module,exports){
+},{"./event/onChangeEditLayerType":160,"./event/onChangeElement":161,"./event/onChangeLytEditLayer":162,"./event/onChangeLytShowLayer":163,"./event/onClickFormDelete":164,"./event/onClickFormNew":165,"./event/onClickGeometryField":166,"./event/onClickNavFormSort":167,"./event/onClickNavLogin":168,"./event/onClickNavbarCollapse":169,"./event/onClickSigninWithModalSignupCheckbox":170,"./event/onKeypressSigninWithModal":171,"./event/onScrollTab":172,"./form/fitTextareaToContent":175,"./map/deleteSelectedFeatures":202,"./nav/signInOrUp":234,"underscore":150}],243:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';

@@ -50,6 +50,10 @@ body {
   background-color: #D7E8D3;
 }
 
+.alert {
+  display: none;
+}
+
 /* 
  * NAV 
  */
