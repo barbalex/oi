@@ -11,4 +11,5 @@ module.exports = function () {
         $('#signinWithModalPassword2').parent().hide();
         $('#signinWithModalSigninButton').text('anmelden');
     }
+    $('#signinAlert').hide();
 };

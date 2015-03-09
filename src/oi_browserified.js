@@ -38429,6 +38429,7 @@ module.exports = function () {
         $('#signinWithModalPassword2').parent().hide();
         $('#signinWithModalSigninButton').text('anmelden');
     }
+    $('#signinAlert').hide();
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],171:[function(require,module,exports){
@@ -41064,10 +41065,8 @@ module.exports = function (signindata) {
         if (error.name === 'unauthorized') {
             console.log('unauthorized');
             // name or password incorrect
-            $('#signinAlertText')
-                .html('Anmeldung gescheitert:<br>Sie haben Email und/oder Passwort falsch eingegeben.<br>Oder müssen Sie ein Konto erstellen?');
-            $('#signinAlert')
-                .show();
+            $('#signinAlertText').html('Anmeldung gescheitert:<br>Sie haben Email und/oder Passwort falsch eingegeben.<br>Oder müssen Sie ein Konto erstellen?');
+            $('#signinAlert').show();
             //tellWithModal('Anmeldung gescheitert', 'Sie haben Email und/oder Passwort falsch eingegeben. Oder müssen Sie ein Konto erstellen?');
         } else {
             // cosmic rays, a meteor, etc.
