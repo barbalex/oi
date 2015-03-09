@@ -220,7 +220,12 @@
                                             <input type="checkbox" id="signinWithModalSignupCheckbox"> Neues Konto erstellen
                                         </label>
                                     </div>
-                                    <div id="signinAlert" class="alert alert-danger" role="alert"></div>
+                                    <div id="signinAlert" class="alert alert-danger" role="alert">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        <span id="signinAlertText"></span>
+                                    </div>
                                     <button id="signinWithModalSigninButton" class="btn btn-default btn-block">anmelden</button>
                                 </div>
                             </div>
