@@ -8,9 +8,13 @@ var $             = require('jquery'),
     initiateNav   = require('./initiateNav');
 
 module.exports = function (signindata) {
-    var remoteDb = new PouchDB('http://' + couchUrl + '/oi');
+    var remoteDb = new PouchDB('http://' + couchUrl + '/oi'),
+        firstsync;
     // signin
     remoteDb.login(signindata.name, signindata.password).then(function (response) {
+
+        console.log('login response: ', response);
+
         window.oi.me          = {};
         window.oi.me.name     = signindata.name;
         window.oi.me.password = signindata.password;
@@ -22,7 +26,8 @@ module.exports = function (signindata) {
         }
         // when first sync, pass roles
         // then data for model is fetched from remote db
-        initiateNav(response.roles);
+        firstsync = true;
+        initiateNav(response.roles, firstsync);
         $('#signinWithModal').modal('hide');
     }).catch(function (error) {
         if (error.name === 'unauthorized') {

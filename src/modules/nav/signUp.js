@@ -1,11 +1,11 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var PouchDB       = require('pouchdb'),
+var $             = require('jquery'),
+    PouchDB       = require('pouchdb'),
     configuration = require('../configuration'),
     couchUrl      = configuration.couch.dbUrl,
-    signIn        = require('./signIn'),
-    tellWithModal = require('../tellWithModal');
+    signIn        = require('./signIn');
 
 module.exports = function (signindata) {
     var remoteDb = new PouchDB('http://' + couchUrl + '/oi');
@@ -24,11 +24,11 @@ module.exports = function (signindata) {
             PLZ: 8000,
             Ort: 'ort'*/
         }
-    }).then(function (response) {
-        console.log('signed up, response: ', response);
+    }).then(function () {
         signIn(signindata);
     }).catch(function (error) {
         // Fehler melden
-        tellWithModal('Das Konto konnte nicht erstellt werden', 'Die Datenbank meldete: ' + error);
+        $('#signinAlertText').html('Das Konto konnte nicht erstellt werden.<br>Die Datenbank meldete:<br>' + error);
+        $('#signinAlert').show();
     });
 };

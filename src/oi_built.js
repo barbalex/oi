@@ -69255,6 +69255,8 @@ module.exports = function () {
     var treeData    = generateDataForTree(),
         $navContent = $('#navContent');
 
+    console.log('treeData: ', treeData);
+
     $navContent.jstree({
         'plugins': ['wholerow', 'state', 'contextmenu'],
         'core': {
@@ -69379,45 +69381,49 @@ var _             = require('underscore'),
     couchUrl      = configuration.couch.dbUrl;
 
 module.exports = function (firstSync, projectName, callback) {
-    // now open LOCAL localDb
-    var localDb         = new PouchDB(projectName),
-        remoteDbAddress = 'http://' + couchUrl + '/' + projectName,
-        remoteDb        = new PouchDB(remoteDbAddress),
-        // if is fist sync: get the modeldata from remoteDb
-        db              = firstSync ? remoteDb : localDb;
+    if (projectName) {
+        // now open LOCAL localDb
+        var localDb         = new PouchDB(projectName),
+            remoteDbAddress = 'http://' + couchUrl + '/' + projectName,
+            remoteDb        = new PouchDB(remoteDbAddress),
+            // if is fist sync: get the modeldata from remoteDb
+            db              = firstSync ? remoteDb : localDb;
 
-    db.allDocs({
-        include_docs: true,
-        auth: {
-            username: window.oi.me.name,
-            password: window.oi.me.password
-        }
-    }).then(function (result) {
-        var docs,
-            hierarchies,
-            objects;
+        db.allDocs({
+            include_docs: true,
+            auth: {
+                username: window.oi.me.name,
+                password: window.oi.me.password
+            }
+        }).then(function (result) {
+            var docs,
+                hierarchies,
+                objects;
 
-        docs = _.map(result.rows, function (row) {
-           return row.doc;
+            docs = _.map(result.rows, function (row) {
+               return row.doc;
+            });
+
+            hierarchies = _.filter(docs, function (doc) {
+                return doc.type === 'hierarchy';
+            });
+            if (hierarchies && hierarchies.length > 0) {
+                window.oi.hierarchies = _.union(window.oi.hierarchies, hierarchies);
+            }
+
+            objects = _.filter(docs, function (doc) {
+                return doc.type === 'object';
+            });
+            if (objects && objects.length > 0) {
+                window.oi.objects = _.union(window.oi.objects, objects);
+            }
+            callback(null, true);
+        }).catch(function (error) {
+            callback(error, false);
         });
-
-        hierarchies = _.filter(docs, function (doc) {
-            return doc.type === 'hierarchy';
-        });
-        if (hierarchies && hierarchies.length > 0) {
-            window.oi.hierarchies = _.union(window.oi.hierarchies, hierarchies);
-        }
-
-        objects = _.filter(docs, function (doc) {
-            return doc.type === 'object';
-        });
-        if (objects && objects.length > 0) {
-            window.oi.objects = _.union(window.oi.objects, objects);
-        }
-        callback(null, true);
-    }).catch(function (error) {
-        callback(error, false);
-    });
+    } else {
+        callback('getDataFromDb: no projectName passed', false);
+    }
 };
 },{"../configuration":154,"pouchdb":106,"underscore":150}],227:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
@@ -69471,7 +69477,7 @@ module.exports = function () {
 
 };
 },{"./initiateNav":230,"./openSigninModal":231}],229:[function(require,module,exports){
-/*jslint node: true, browser: true, nomen: true, todo: true */
+/*jslint node: true, browser: true, nomen: true, todo: true, plusplus */
 'use strict';
 
 var _             = require('underscore'),
@@ -69481,10 +69487,12 @@ module.exports = function (firstSync, projectNames, callback) {
     var projectsGotten = 0,
         errors = [];
 
+    console.log('getModelData: projectNames: ', projectNames);
+
     _.each(projectNames, function (projectName) {
         getDataFromDb(firstSync, projectName, function (error, done) {
             if (error) {
-                console.log('got an error: ', error);
+                console.log('got an error getting data from ' + projectName + ': ', error);
                 errors.push(error);
                 if (errors.length === projectNames.length) {
                     return callback(errors, false);
@@ -69498,6 +69506,14 @@ module.exports = function (firstSync, projectNames, callback) {
             }
         });
     });
+    // allways return the callback
+    // even if there are no project names
+    if (!projectNames || projectNames.length === 0) {
+
+        console.log('calling back after no projectNames');
+
+        return callback(null, false);
+    }
 };
 },{"./getDataFromDb":226,"underscore":150}],230:[function(require,module,exports){
 (function (global){
@@ -69520,9 +69536,19 @@ var $                        = (typeof window !== "undefined" ? window.$ : typeo
     getModelData             = require('./getModelData');
 
 function initiate(projectNames, firstSync) {
+    // empty model if exists
+    window.oi.objects     = [];
+    window.oi.hierarchies = [];
+
+    console.log('initiate, projectNames: ', projectNames);
+
     // build model
-    getModelData(firstSync, projectNames, function (errors, done) {
+    // model is added to window.oi.objects and window.oi.hierarchies
+    // so no response from getModelData
+    getModelData(firstSync, projectNames, function (errors) {
         if (errors && errors.length > 0) { console.log('got model data errors: ', errors); }
+
+        console.log('initiate, got model data');
 
         // every database gets a locally saved id
         // this id is added to every document changed
@@ -69541,15 +69567,15 @@ function initiate(projectNames, firstSync) {
     });
 }
 
-module.exports = function (projectNames) {
-    var firstSync = projectNames ? true : false;
+module.exports = function (projectNames, firstSync) {
+    // if not marked as firstSync treat it as that when no projectNames
+    firstSync = firstSync || projectNames ? true : false;
 
     // set navUser
     // add a space to space the caret
     $('#navUserText').text(window.oi.me.name + ' ');
 
-    if (!projectNames) {
-        //PouchDB.plugin(require('pouchdb-all-dbs'));
+    if (!projectNames && !firstSync) {
         require('pouchdb-all-dbs')(PouchDB);
 
         PouchDB.allDbs().then(function (dbs) {
@@ -69563,6 +69589,7 @@ module.exports = function (projectNames) {
     } else {
         initiate(projectNames, firstSync);
     }
+    return true;
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../syncWithRemoteDbs":245,"../syncWithRemoteUserDb":246,"./createDatabaseId":221,"./createTree":222,"./getModelData":229,"async":2,"pouchdb":106,"pouchdb-all-dbs":28,"underscore":150}],231:[function(require,module,exports){
@@ -69573,6 +69600,14 @@ module.exports = function (projectNames) {
 var $ = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null);
 
 module.exports = function () {
+    // Werte im Modal zurücksetzen, falls es schon mal offen war
+    $('#signinWithModal').find('input').each(function (index, element) {
+        if (this.type === 'checkbox') {
+            $(this).val(this.id === 'signinWithModalRemember');
+        } else {
+            $(this).val('');
+        }
+    });
     // modal öffnen
     // so, dass der Benutzer nicht daran vorbeikommt
     $('#signinWithModal')
@@ -69617,9 +69652,13 @@ var $             = (typeof window !== "undefined" ? window.$ : typeof global !=
     initiateNav   = require('./initiateNav');
 
 module.exports = function (signindata) {
-    var remoteDb = new PouchDB('http://' + couchUrl + '/oi');
+    var remoteDb = new PouchDB('http://' + couchUrl + '/oi'),
+        firstsync;
     // signin
     remoteDb.login(signindata.name, signindata.password).then(function (response) {
+
+        console.log('login response: ', response);
+
         window.oi.me          = {};
         window.oi.me.name     = signindata.name;
         window.oi.me.password = signindata.password;
@@ -69631,7 +69670,8 @@ module.exports = function (signindata) {
         }
         // when first sync, pass roles
         // then data for model is fetched from remote db
-        initiateNav(response.roles);
+        firstsync = true;
+        initiateNav(response.roles, firstsync);
         $('#signinWithModal').modal('hide');
     }).catch(function (error) {
         if (error.name === 'unauthorized') {
@@ -69655,7 +69695,6 @@ module.exports = function (signindata) {
 var $             = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
     signIn        = require('./signIn'),
     signUp        = require('./signUp'),
-    tellWithModal = require('../tellWithModal'),
     validateEmail = require('../validateEmail');
 
 function validSignin(signindata) {
@@ -69693,7 +69732,8 @@ module.exports = function () {
 
     // Eingabe von Name und Passwort validieren
     if (!validSignin(signindata)) {
-        tellWithModal('Anmeldung gescheitert', 'Bitte prüfen Sie Ihre Eingaben');
+        $('#signinAlertText').html('Anmeldung gescheitert<br>Bitte prüfen Sie Ihre Eingaben');
+        $('#signinAlert').show();
         return;
     }
 
@@ -69701,7 +69741,8 @@ module.exports = function () {
     if (signup) {
         // Eigabe der Metadaten validieren
         if (!validSignup(signindata)) {
-            tellWithModal('Anmeldung gescheitert', 'Bitte prüfen Sie Ihre Eingaben');
+            $('#signinAlertText').html('Anmeldung gescheitert<br>Bitte prüfen Sie Ihre Eingaben');
+            $('#signinAlert').show();
             return;
         }
         signUp(signindata);
@@ -69710,15 +69751,16 @@ module.exports = function () {
     signIn(signindata);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../tellWithModal":247,"../validateEmail":249,"./signIn":233,"./signUp":235}],235:[function(require,module,exports){
+},{"../validateEmail":249,"./signIn":233,"./signUp":235}],235:[function(require,module,exports){
+(function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var PouchDB       = require('pouchdb'),
+var $             = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+    PouchDB       = require('pouchdb'),
     configuration = require('../configuration'),
     couchUrl      = configuration.couch.dbUrl,
-    signIn        = require('./signIn'),
-    tellWithModal = require('../tellWithModal');
+    signIn        = require('./signIn');
 
 module.exports = function (signindata) {
     var remoteDb = new PouchDB('http://' + couchUrl + '/oi');
@@ -69737,15 +69779,16 @@ module.exports = function (signindata) {
             PLZ: 8000,
             Ort: 'ort'*/
         }
-    }).then(function (response) {
-        console.log('signed up, response: ', response);
+    }).then(function () {
         signIn(signindata);
     }).catch(function (error) {
         // Fehler melden
-        tellWithModal('Das Konto konnte nicht erstellt werden', 'Die Datenbank meldete: ' + error);
+        $('#signinAlertText').html('Das Konto konnte nicht erstellt werden.<br>Die Datenbank meldete:<br>' + error);
+        $('#signinAlert').show();
     });
 };
-},{"../configuration":154,"../tellWithModal":247,"./signIn":233,"pouchdb":106}],236:[function(require,module,exports){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../configuration":154,"./signIn":233,"pouchdb":106}],236:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';

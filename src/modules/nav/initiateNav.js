@@ -17,9 +17,19 @@ var $                        = require('jquery'),
     getModelData             = require('./getModelData');
 
 function initiate(projectNames, firstSync) {
+    // empty model if exists
+    window.oi.objects     = [];
+    window.oi.hierarchies = [];
+
+    console.log('initiate, projectNames: ', projectNames);
+
     // build model
-    getModelData(firstSync, projectNames, function (errors, done) {
+    // model is added to window.oi.objects and window.oi.hierarchies
+    // so no response from getModelData
+    getModelData(firstSync, projectNames, function (errors) {
         if (errors && errors.length > 0) { console.log('got model data errors: ', errors); }
+
+        console.log('initiate, got model data');
 
         // every database gets a locally saved id
         // this id is added to every document changed
@@ -38,15 +48,15 @@ function initiate(projectNames, firstSync) {
     });
 }
 
-module.exports = function (projectNames) {
-    var firstSync = projectNames ? true : false;
+module.exports = function (projectNames, firstSync) {
+    // if not marked as firstSync treat it as that when no projectNames
+    firstSync = firstSync || projectNames ? true : false;
 
     // set navUser
     // add a space to space the caret
     $('#navUserText').text(window.oi.me.name + ' ');
 
-    if (!projectNames) {
-        //PouchDB.plugin(require('pouchdb-all-dbs'));
+    if (!projectNames && !firstSync) {
         require('pouchdb-all-dbs')(PouchDB);
 
         PouchDB.allDbs().then(function (dbs) {
@@ -60,4 +70,5 @@ module.exports = function (projectNames) {
     } else {
         initiate(projectNames, firstSync);
     }
+    return true;
 };

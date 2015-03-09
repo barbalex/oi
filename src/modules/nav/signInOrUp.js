@@ -4,7 +4,6 @@
 var $             = require('jquery'),
     signIn        = require('./signIn'),
     signUp        = require('./signUp'),
-    tellWithModal = require('../tellWithModal'),
     validateEmail = require('../validateEmail');
 
 function validSignin(signindata) {
@@ -42,7 +41,8 @@ module.exports = function () {
 
     // Eingabe von Name und Passwort validieren
     if (!validSignin(signindata)) {
-        tellWithModal('Anmeldung gescheitert', 'Bitte prüfen Sie Ihre Eingaben');
+        $('#signinAlertText').html('Anmeldung gescheitert<br>Bitte prüfen Sie Ihre Eingaben');
+        $('#signinAlert').show();
         return;
     }
 
@@ -50,7 +50,8 @@ module.exports = function () {
     if (signup) {
         // Eigabe der Metadaten validieren
         if (!validSignup(signindata)) {
-            tellWithModal('Anmeldung gescheitert', 'Bitte prüfen Sie Ihre Eingaben');
+            $('#signinAlertText').html('Anmeldung gescheitert<br>Bitte prüfen Sie Ihre Eingaben');
+            $('#signinAlert').show();
             return;
         }
         signUp(signindata);
