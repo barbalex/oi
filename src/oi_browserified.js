@@ -41041,7 +41041,6 @@ var $             = (typeof window !== "undefined" ? window.$ : typeof global !=
     PouchDB       = require('pouchdb'),
     configuration = require('../configuration'),
     couchUrl      = configuration.couch.dbUrl,
-    tellWithModal = require('../tellWithModal'),
     initiateNav   = require('./initiateNav');
 
 module.exports = function (signindata) {
@@ -41067,7 +41066,6 @@ module.exports = function (signindata) {
             // name or password incorrect
             $('#signinAlertText').html('Anmeldung gescheitert:<br>Sie haben Email und/oder Passwort falsch eingegeben.<br>Oder müssen Sie ein Konto erstellen?');
             $('#signinAlert').show();
-            //tellWithModal('Anmeldung gescheitert', 'Sie haben Email und/oder Passwort falsch eingegeben. Oder müssen Sie ein Konto erstellen?');
         } else {
             // cosmic rays, a meteor, etc.
             $('#signinAlertText').html('Anmeldung gescheitert:<br>Oh je. Die Anwendung ist offenbar schlecht gelaunt. Bitte versuchen Sie es nochmals. Gemeldeter Fehler:<br>' + JSON.stringify(error));
@@ -41076,7 +41074,7 @@ module.exports = function (signindata) {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../configuration":154,"../tellWithModal":247,"./initiateNav":230,"pouchdb":106}],234:[function(require,module,exports){
+},{"../configuration":154,"./initiateNav":230,"pouchdb":106}],234:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
