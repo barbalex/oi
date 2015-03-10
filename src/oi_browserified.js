@@ -41079,10 +41079,10 @@ var $             = (typeof window !== "undefined" ? window.$ : typeof global !=
     initiateNav   = require('./initiateNav');
 
 module.exports = function (signindata) {
-    var remoteDb = new PouchDB('http://' + couchUrl + '/oi'),
+    var oiDb = new PouchDB('http://' + couchUrl + '/oi'),
         firstsync;
     // signin
-    remoteDb.login(signindata.name, signindata.password).then(function (response) {
+    oiDb.login(signindata.name, signindata.password).then(function (response) {
 
         console.log('login response: ', response);
 
