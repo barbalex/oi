@@ -2,37 +2,24 @@
 'use strict';
 
 var _             = require('underscore'),
-    getDataFromDb = require('./getDataFromDb');
+    getDataFromDb = require('./getDataFromDb'),
+    createTree    = require('./createTree');
 
-module.exports = function (firstSync, projectNames, callback) {
-    var projectsGotten = 0,
-        errors = [];
+module.exports = function (projectNames, login) {
 
     //console.log('getModelData: projectNames: ', projectNames);
 
+    // empty model if exists
+    window.oi.objects     = [];
+    window.oi.hierarchies = [];
+
     _.each(projectNames, function (projectName) {
-        getDataFromDb(firstSync, projectName, function (error, done) {
-            if (error) {
-                console.log('got an error getting data from ' + projectName + ': ', error);
-                errors.push(error);
-                if (errors.length === projectNames.length) {
-                    return callback(errors, false);
-                }
-            }
-            if (done) {
-                projectsGotten++;
-                if (projectsGotten === projectNames.length) {
-                    return callback(errors, true);
-                }
-            }
-        });
+        getDataFromDb(projectName, login);
     });
-    // allways return the callback
-    // even if there are no project names
+
+    createTree();
+
     if (!projectNames || projectNames.length === 0) {
-
-        console.log('calling back after no projectNames');
-
-        return callback(null, false);
+        console.log('no projectNames passed');
     }
 };

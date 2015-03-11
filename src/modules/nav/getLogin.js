@@ -6,13 +6,14 @@ var openSigninModal = require('./openSigninModal'),
     syncUserDb      = require('../syncUserDb');
 
 module.exports = function () {
-    var loginName  = localStorage.me_name;
+    var loginName = localStorage.me_name,
+        newSignup = false;
 
     if (loginName) {
         window.oi.me          = {};
         window.oi.me.name     = loginName;
         window.oi.me.password = localStorage.me_password;
-        initiateNav();
+        initiateNav(newSignup, null);
     } else {
         openSigninModal();
     }

@@ -1,6 +1,8 @@
 /**
  * syncs data from a user-db with a local user-db in the pouch
- * starts the changes listener
+ * syncs only once
+ * that is because the pause event is needed do know when syncing has happened to get the roles
+ * and the pause event fires repeatedly on persistant syncing
  */
 
 /*jslint node: true, browser: true, nomen: true, todo: true */
@@ -9,17 +11,17 @@
 var PouchDB       = require('pouchdb'),
     configuration = require('./configuration'),
     couchUrl      = configuration.couch.dbUrl,
-    handleChanges = require('./handleChanges'),
     getUserDbName = require('./getUserDbName');
 
 module.exports = function () {
     var dbOptions,
         syncOptions,
-        changeOptions,
         localDb,
         remoteDbAddress,
         remoteDb,
         userDbName;
+
+    console.log('replicateUserDbOnceFromRemoteToLocal');
 
     dbOptions = {
         auth: {
@@ -28,13 +30,8 @@ module.exports = function () {
         }
     };
     syncOptions = {
-        live:  true,
+        live:  false,
         retry: true
-    };
-    changeOptions = {
-        since:        'now',
-        live:         true,
-        include_docs: true
     };
     userDbName      = getUserDbName();
     localDb         = new PouchDB(userDbName);
@@ -42,9 +39,12 @@ module.exports = function () {
     remoteDb        = new PouchDB(remoteDbAddress, dbOptions);
 
     if (remoteDb) {
-        // sync
-        window.oi[userDbName + '_sync'] = PouchDB.sync(localDb, remoteDb, syncOptions);
-        // watch changes
-        remoteDb.changes(changeOptions).on('change', handleChanges);
+
+        console.log('replicateUserDbOnceFromRemoteToLocal: starting replication');
+
+        // sync once from remote to local
+        window.oi[userDbName + '_firstReplication'] = PouchDB.replicate(remoteDb, localDb, syncOptions);
+
+        console.log('replicateUserDbOnceFromRemoteToLocal: started replication');
     }
 };

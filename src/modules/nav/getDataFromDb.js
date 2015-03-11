@@ -1,3 +1,9 @@
+/*
+ * gets data from the db to populate the model
+ * on firstsync gets from couch
+ * otherwise from pouch
+ */
+
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -6,14 +12,28 @@ var _             = require('underscore'),
     configuration = require('../configuration'),
     couchUrl      = configuration.couch.dbUrl;
 
-module.exports = function (firstSync, projectName, callback) {
+module.exports = function (projectName, login) {
     if (projectName) {
-        // now open LOCAL localDb
-        var localDb         = new PouchDB(projectName),
-            remoteDbAddress = 'http://' + couchUrl + '/' + projectName,
-            remoteDb        = new PouchDB(remoteDbAddress),
-            // if is fist sync: get the modeldata from remoteDb
-            db              = firstSync ? remoteDb : localDb;
+        var localDb,
+            remoteDbUrl,
+            remoteDb,
+            db,
+            dbOptions;
+
+        dbOptions = {
+            auth: {
+                username: window.oi.me.name,
+                password: window.oi.me.password
+            }
+        };
+        localDb     = new PouchDB(projectName);
+        remoteDbUrl = 'http://' + couchUrl + '/' + projectName;
+        remoteDb    = new PouchDB(remoteDbUrl, dbOptions);
+        // on fist sync get model data from remoteDb
+        db          = login ? remoteDb : localDb;
+
+        console.log('getDataFromDb, projectName: ', projectName);
+        console.log('getDataFromDb, login: ', login);
 
         db.allDocs({
             include_docs: true,
@@ -26,8 +46,10 @@ module.exports = function (firstSync, projectName, callback) {
                 hierarchies,
                 objects;
 
+            console.log('getDataFromDb: result from db.allDocs: ', result);
+
             docs = _.map(result.rows, function (row) {
-               return row.doc;
+                return row.doc;
             });
 
             hierarchies = _.filter(docs, function (doc) {
@@ -43,11 +65,10 @@ module.exports = function (firstSync, projectName, callback) {
             if (objects && objects.length > 0) {
                 window.oi.objects = _.union(window.oi.objects, objects);
             }
-            callback(null, true);
         }).catch(function (error) {
-            callback(error, false);
+            console.log('got an error getting data from ' + projectName + ': ', error);
         });
     } else {
-        callback('getDataFromDb: no projectName passed', false);
+        console.log('getDataFromDb: no projectName passed');
     }
 };

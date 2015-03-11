@@ -11,11 +11,7 @@ var PouchDB       = require('pouchdb'),
     couchUrl      = configuration.couch.dbUrl,
     handleChanges = require('./handleChanges');
 
-function syncError(err) {
-    console.log('error syncing: ', err);
-}
-
-module.exports = function (couchName) {
+module.exports = function (projectName) {
     var dbOptions = {
             auth: {
                 username: window.oi.me.name,
@@ -23,7 +19,7 @@ module.exports = function (couchName) {
             }
         },
         syncOptions = {
-            live: true,
+            live:  true,
             retry: true
         },
         changeOptions = {
@@ -31,13 +27,15 @@ module.exports = function (couchName) {
             live:         true,
             include_docs: true
         },
-        localDb         = new PouchDB(couchName),
-        remoteDbAddress = 'http://' + couchUrl + '/' + couchName,
+        localDb         = new PouchDB(projectName),
+        remoteDbAddress = 'http://' + couchUrl + '/' + projectName,
         remoteDb        = new PouchDB(remoteDbAddress, dbOptions);
+
+    console.log('syncProjectDb: syncing project ', projectName);
 
     if (remoteDb) {
         // sync
-        window.oi[couchName + '_sync'] = PouchDB.sync(localDb, remoteDb, syncOptions);
+        window.oi[projectName + '_sync'] = PouchDB.sync(localDb, remoteDb, syncOptions);
         // watch changes
         remoteDb.changes(changeOptions).on('change', handleChanges);
     }

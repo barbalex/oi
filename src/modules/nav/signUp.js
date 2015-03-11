@@ -8,11 +8,12 @@ var $             = require('jquery'),
     signIn        = require('./signIn');
 
 module.exports = function (signindata) {
-    var remoteDb = new PouchDB('http://' + couchUrl + '/oi');
-    // signup, then call signin
+    var remoteDb = new PouchDB('http://' + couchUrl + '/oi'),
+        newSignup;
 
-    console.log('signindata.name: ', signindata.name);
-    console.log('signindata.password: ', signindata.password);
+    // when first sync data for model is fetched from remote db instead of locally
+    // better because data may not yet have arrived locally
+    newSignup = true;
 
     remoteDb.signup(signindata.name, signindata.password, {
         metadata: {
@@ -25,7 +26,7 @@ module.exports = function (signindata) {
             Ort: 'ort'*/
         }
     }).then(function () {
-        signIn(signindata);
+        signIn(signindata, newSignup);
     }).catch(function (error) {
         // Fehler melden
         $('#signinAlertText').html('Das Konto konnte nicht erstellt werden.<br>Die Datenbank meldete:<br>' + error);
