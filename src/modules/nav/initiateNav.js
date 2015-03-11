@@ -22,25 +22,12 @@ function initiate(projectNames, firstSync) {
     window.oi.objects     = [];
     window.oi.hierarchies = [];
 
-    console.log('initiate, projectNames: ', projectNames);
-
     // build model
     // model is added to window.oi.objects and window.oi.hierarchies
     // so no response from getModelData
     getModelData(firstSync, projectNames, function (errors) {
         if (errors && errors.length > 0) { console.log('got model data errors: ', errors); }
-
-        //console.log('initiate, got model data');
-
-        // every database gets a locally saved id
-        // this id is added to every document changed
-        // with it the changes feed can ignore locally changed documents
-        createDatabaseId();
-
         createTree();
-
-        // start syncing
-        syncProjectDbs(projectNames);
     });
 }
 
@@ -62,12 +49,16 @@ module.exports = function (firstSync) {
     userDb = new PouchDB(userDbName);
     userDb.get('org.couchdb.user:' + window.oi.me.name).then(function (userDoc) {
         projectNames = userDoc.roles;
-        console.log('projectNames: ', projectNames);
         initiate(projectNames, firstSync);
+        // start syncing projects
+        syncProjectDbs(projectNames);
+        // every database gets a locally saved id
+        // this id is added to every document changed
+        // with it the changes feed can ignore locally changed documents
+        createDatabaseId();
     }).catch(function (error) {
         console.log('error getting user from local userDb: ', error);
     });
-
 
     // set navUser
     // add a space to space the caret

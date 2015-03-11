@@ -8,7 +8,7 @@ module.exports = function (firstSync, projectNames, callback) {
     var projectsGotten = 0,
         errors = [];
 
-    console.log('getModelData: projectNames: ', projectNames);
+    //console.log('getModelData: projectNames: ', projectNames);
 
     _.each(projectNames, function (projectName) {
         getDataFromDb(firstSync, projectName, function (error, done) {

@@ -29,6 +29,13 @@ module.exports = function (userDoc) {
         // projects to be added:
         projectsToAdd    = _.difference(userDoc.roles, rootObjectsProjectNames);
 
+        // TODO: remove projectsToRemove?
+        // remove from model, map and nav
+        // remove db if no other user?
+
+        // TODO: add projectsToAdd?
+        // add to model, nav and map
+
         console.log('rootObjects: ', rootObjects);
         console.log('rootObjectsProjectNames: ', rootObjectsProjectNames);
         console.log('projectsToRemove: ', projectsToRemove);

@@ -38900,6 +38900,13 @@ module.exports = function (userDoc) {
         // projects to be added:
         projectsToAdd    = _.difference(userDoc.roles, rootObjectsProjectNames);
 
+        // TODO: remove projectsToRemove?
+        // remove from model, map and nav
+        // remove db if no other user?
+
+        // TODO: add projectsToAdd?
+        // add to model, nav and map
+
         console.log('rootObjects: ', rootObjects);
         console.log('rootObjectsProjectNames: ', rootObjectsProjectNames);
         console.log('projectsToRemove: ', projectsToRemove);
@@ -40551,7 +40558,7 @@ module.exports = function (firstSync, projectNames, callback) {
     var projectsGotten = 0,
         errors = [];
 
-    console.log('getModelData: projectNames: ', projectNames);
+    //console.log('getModelData: projectNames: ', projectNames);
 
     _.each(projectNames, function (projectName) {
         getDataFromDb(firstSync, projectName, function (error, done) {
@@ -40605,25 +40612,12 @@ function initiate(projectNames, firstSync) {
     window.oi.objects     = [];
     window.oi.hierarchies = [];
 
-    console.log('initiate, projectNames: ', projectNames);
-
     // build model
     // model is added to window.oi.objects and window.oi.hierarchies
     // so no response from getModelData
     getModelData(firstSync, projectNames, function (errors) {
         if (errors && errors.length > 0) { console.log('got model data errors: ', errors); }
-
-        //console.log('initiate, got model data');
-
-        // every database gets a locally saved id
-        // this id is added to every document changed
-        // with it the changes feed can ignore locally changed documents
-        createDatabaseId();
-
         createTree();
-
-        // start syncing
-        syncProjectDbs(projectNames);
     });
 }
 
@@ -40645,17 +40639,21 @@ module.exports = function (firstSync) {
     userDb = new PouchDB(userDbName);
     userDb.get('org.couchdb.user:' + window.oi.me.name).then(function (userDoc) {
         projectNames = userDoc.roles;
-        console.log('projectNames: ', projectNames);
         initiate(projectNames, firstSync);
+        // start syncing projects
+        syncProjectDbs(projectNames);
+        // every database gets a locally saved id
+        // this id is added to every document changed
+        // with it the changes feed can ignore locally changed documents
+        createDatabaseId();
     }).catch(function (error) {
         console.log('error getting user from local userDb: ', error);
     });
 
-
     // set navUser
     // add a space to space the caret
     $('#navUserText').text(window.oi.me.name + ' ');
-    
+
     return true;
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
