@@ -40622,37 +40622,38 @@ function initiate(projectNames, firstSync) {
 }
 
 module.exports = function (firstSync) {
-    var userDbName = getUserDbName(),
+    var userDbName,
         projectNames,
         userDb;
 
+    userDbName = getUserDbName();
+    userDb     = new PouchDB(userDbName);
+
     // get user roles and sync user db
     // TODO: wait until sync is paused?
-    syncUserDb();
-    window.oi[userDbName + '_sync'].on('paused', function (error) {
+    syncUserDb('firstOnceThenLive');
+
+    window.oi[userDbName + '_firstSync'].on('paused', function (error) {
         if (error) { console.log('error syncing with userDB ' + userDbName + ': ', error); }
-        console.log('syncing userDb paused');
+        console.log('first syncing userDb paused');
         // get project names from user roles
+        userDb.get('org.couchdb.user:' + window.oi.me.name).then(function (userDoc) {
+            projectNames = userDoc.roles;
+            initiate(projectNames, firstSync);
+            // start syncing projects
+            syncProjectDbs(projectNames);
+            // every database gets a locally saved id
+            // this id is added to every document changed
+            // with it the changes feed can ignore locally changed documents
+            createDatabaseId();
+        }).catch(function (error) {
+            console.log('error getting user from local userDb: ', error);
+        });
 
+        // set navUser
+        // add a space to space the caret
+        $('#navUserText').text(window.oi.me.name + ' ');
     });
-
-    userDb = new PouchDB(userDbName);
-    userDb.get('org.couchdb.user:' + window.oi.me.name).then(function (userDoc) {
-        projectNames = userDoc.roles;
-        initiate(projectNames, firstSync);
-        // start syncing projects
-        syncProjectDbs(projectNames);
-        // every database gets a locally saved id
-        // this id is added to every document changed
-        // with it the changes feed can ignore locally changed documents
-        createDatabaseId();
-    }).catch(function (error) {
-        console.log('error getting user from local userDb: ', error);
-    });
-
-    // set navUser
-    // add a space to space the caret
-    $('#navUserText').text(window.oi.me.name + ' ');
 
     return true;
 };
@@ -41239,6 +41240,9 @@ module.exports = function (projectDbs) {
 /**
  * syncs data from a user-db with a local user-db in the pouch
  * starts the changes listener
+ * syncs only once, then starts syncing persistently
+ * that is because the pause event is needet do know when syncing has happened to get roles
+ * and it fires repeatedly on persistant syncing
  */
 
 /*jslint node: true, browser: true, nomen: true, todo: true */
@@ -41254,16 +41258,20 @@ function syncError(err) {
     console.log('error syncing: ', err);
 }
 
-module.exports = function () {
+function syncUserDb(firstOnceThenLive) {
     var dbOptions,
         syncOptions,
         changeOptions,
         localDb,
         remoteDbAddress,
         remoteDb,
-        userDbName;
+        userDbName,
+        once,
+        live;
 
     userDbName = getUserDbName();
+    once       = firstOnceThenLive === 'firstOnceThenLive' ? true : false;
+    live       = once;
     dbOptions = {
         auth: {
             username: window.oi.me.name,
@@ -41271,7 +41279,7 @@ module.exports = function () {
         }
     };
     syncOptions = {
-        live: true,
+        live:  live,
         retry: true
     };
     changeOptions = {
@@ -41285,10 +41293,22 @@ module.exports = function () {
 
     if (remoteDb) {
         // sync
-        window.oi[userDbName + '_sync'] = PouchDB.sync(localDb, remoteDb, syncOptions);
-        // watch changes
-        remoteDb.changes(changeOptions).on('change', handleChanges);
+        if (once) {
+            // first sync
+            // only once
+            window.oi[userDbName + '_firstSync'] = PouchDB.sync(localDb, remoteDb, syncOptions);
+            // now start syncing persistently
+            syncUserDb();
+        } else {
+            window.oi[userDbName + '_sync'] = PouchDB.sync(localDb, remoteDb, syncOptions);
+            // watch changes
+            remoteDb.changes(changeOptions).on('change', handleChanges);
+        }
     }
+}
+
+module.exports = function (firstOnceThenLive) {
+    return syncUserDb(firstOnceThenLive);
 };
 
 },{"./configuration":130,"./getUserDbName":161,"./handleChanges":163,"pouchdb":82}],224:[function(require,module,exports){

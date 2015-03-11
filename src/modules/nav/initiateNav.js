@@ -32,37 +32,38 @@ function initiate(projectNames, firstSync) {
 }
 
 module.exports = function (firstSync) {
-    var userDbName = getUserDbName(),
+    var userDbName,
         projectNames,
         userDb;
 
+    userDbName = getUserDbName();
+    userDb     = new PouchDB(userDbName);
+
     // get user roles and sync user db
     // TODO: wait until sync is paused?
-    syncUserDb();
-    window.oi[userDbName + '_sync'].on('paused', function (error) {
+    syncUserDb('firstOnceThenLive');
+
+    window.oi[userDbName + '_firstSync'].on('paused', function (error) {
         if (error) { console.log('error syncing with userDB ' + userDbName + ': ', error); }
-        console.log('syncing userDb paused');
+        console.log('first syncing userDb paused');
         // get project names from user roles
+        userDb.get('org.couchdb.user:' + window.oi.me.name).then(function (userDoc) {
+            projectNames = userDoc.roles;
+            initiate(projectNames, firstSync);
+            // start syncing projects
+            syncProjectDbs(projectNames);
+            // every database gets a locally saved id
+            // this id is added to every document changed
+            // with it the changes feed can ignore locally changed documents
+            createDatabaseId();
+        }).catch(function (error) {
+            console.log('error getting user from local userDb: ', error);
+        });
 
+        // set navUser
+        // add a space to space the caret
+        $('#navUserText').text(window.oi.me.name + ' ');
     });
-
-    userDb = new PouchDB(userDbName);
-    userDb.get('org.couchdb.user:' + window.oi.me.name).then(function (userDoc) {
-        projectNames = userDoc.roles;
-        initiate(projectNames, firstSync);
-        // start syncing projects
-        syncProjectDbs(projectNames);
-        // every database gets a locally saved id
-        // this id is added to every document changed
-        // with it the changes feed can ignore locally changed documents
-        createDatabaseId();
-    }).catch(function (error) {
-        console.log('error getting user from local userDb: ', error);
-    });
-
-    // set navUser
-    // add a space to space the caret
-    $('#navUserText').text(window.oi.me.name + ' ');
 
     return true;
 };
