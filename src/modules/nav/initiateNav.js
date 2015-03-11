@@ -6,15 +6,16 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $                        = require('jquery'),
-    _                        = require('underscore'),
-    async                    = require('async'),
-    PouchDB                  = require('pouchdb'),
-    syncWithRemoteDbs        = require('../syncWithRemoteDbs'),
-    syncWithRemoteUserDb     = require('../syncWithRemoteUserDb'),
-    createTree               = require('./createTree'),
-    createDatabaseId         = require('./createDatabaseId'),
-    getModelData             = require('./getModelData');
+var $                = require('jquery'),
+    _                = require('underscore'),
+    async            = require('async'),
+    PouchDB          = require('pouchdb'),
+    syncProjectDbs   = require('../syncProjectDbs'),
+    syncUserDb       = require('../syncUserDb'),
+    createTree       = require('./createTree'),
+    createDatabaseId = require('./createDatabaseId'),
+    getModelData     = require('./getModelData'),
+    getUserDbName    = require('../getUserDbName');
 
 function initiate(projectNames, firstSync) {
     // empty model if exists
@@ -29,7 +30,7 @@ function initiate(projectNames, firstSync) {
     getModelData(firstSync, projectNames, function (errors) {
         if (errors && errors.length > 0) { console.log('got model data errors: ', errors); }
 
-        console.log('initiate, got model data');
+        //console.log('initiate, got model data');
 
         // every database gets a locally saved id
         // this id is added to every document changed
@@ -39,36 +40,38 @@ function initiate(projectNames, firstSync) {
         createTree();
 
         // start syncing
-        syncWithRemoteDbs(projectNames);
-
-        // not possible without admin rights
-        // so new projects will not turn up without login!
-        // TODO: make new projects turn up via oi_pg creating userDocs
-        //syncWithRemoteUserDb();
+        syncProjectDbs(projectNames);
     });
 }
 
-module.exports = function (projectNames, firstSync) {
-    // if not marked as firstSync treat it as that when no projectNames
-    firstSync = firstSync || projectNames ? true : false;
+module.exports = function (firstSync) {
+    var userDbName = getUserDbName(),
+        projectNames,
+        userDb;
+
+    // get user roles and sync user db
+    // TODO: wait until sync is paused?
+    syncUserDb();
+    window.oi[userDbName + '_sync'].on('paused', function (error) {
+        if (error) { console.log('error syncing with userDB ' + userDbName + ': ', error); }
+        console.log('syncing userDb paused');
+        // get project names from user roles
+
+    });
+
+    userDb = new PouchDB(userDbName);
+    userDb.get('org.couchdb.user:' + window.oi.me.name).then(function (userDoc) {
+        projectNames = userDoc.roles;
+        console.log('projectNames: ', projectNames);
+        initiate(projectNames, firstSync);
+    }).catch(function (error) {
+        console.log('error getting user from local userDb: ', error);
+    });
+
 
     // set navUser
     // add a space to space the caret
     $('#navUserText').text(window.oi.me.name + ' ');
 
-    if (!projectNames && !firstSync) {
-        require('pouchdb-all-dbs')(PouchDB);
-
-        PouchDB.allDbs().then(function (dbs) {
-            // dbs is an array of strings, e.g. ['mydb1', 'mydb2']
-            projectNames = dbs;
-            initiate(projectNames, firstSync);
-        }).catch(function (err) {
-            // handle err
-            console.log('error getting projects: ', err);
-        });
-    } else {
-        initiate(projectNames, firstSync);
-    }
     return true;
 };

@@ -7,7 +7,7 @@
 
 var PouchDB                     = require('pouchdb'),
     handleExternalObjectChanges = require('./handleExternalObjectChanges'),
-    handleUsersChanges          = require('./handleUsersChanges');
+    handleUserChanges           = require('./handleUserChanges');
 
 module.exports = function (change) {
     var doc;
@@ -16,7 +16,7 @@ module.exports = function (change) {
         doc = change.doc;
         switch (doc.type) {
         case 'user':
-            handleUsersChanges(doc);
+            handleUserChanges(doc);
             break;
         case 'object':
             handleExternalObjectChanges(doc);

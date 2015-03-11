@@ -19,7 +19,7 @@ var $                     = require('jquery'),
     PouchDB               = require('pouchdb'),
     getLabelForObject     = require('../nav/getLabelForObject'),
     getObject             = require('../getObject'),
-    syncWithRemoteDb      = require('../syncWithRemoteDb'),
+    syncProjectDb         = require('../syncProjectDb'),
     capitalizeFirstLetter = require('../capitalizeFirstLetter'),
     getLayerByName        = require('../map/getLayerByName'),
     getFeatureById        = require('../map/getFeatureById');
@@ -84,7 +84,7 @@ module.exports = function (passedObject, value) {
                     console.log('starting to sync with new db: ', projectName);
                     // give oi_pg time to create the new db
                     setTimeout(function () {
-                        syncWithRemoteDb(projectName);
+                        syncProjectDb(projectName);
                     }, 1000);
                 }
 

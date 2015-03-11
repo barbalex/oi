@@ -6,7 +6,6 @@ var initiateApp = require('./modules/initiateApp'),
 
 // set up pouchdb plugins
 require('bootstrap-validator');
-require('pouchdb-all-dbs')(PouchDB);
 PouchDB.plugin(require('pouchdb-authentication'));
 
 // benötigte globale Variabeln initialisieren

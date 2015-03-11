@@ -1,7 +1,7 @@
 /*
  * When the active user's _users-object is changed, it checks it's roles:
  * - if a role has been deleted, the corresponding project is removed and syncing stopped 
- * - if a role has been added, the corresponding project is added and syncing added 
+ * - if a role has been added, the corresponding project is added and syncing added
  */
 
 /*jslint node: true, browser: true, nomen: true, todo: true */
@@ -9,8 +9,8 @@
 
 var _ = require('underscore');
 
-module.exports = function (user) {
-    var userName = user.name,
+module.exports = function (userDoc) {
+    var userName = userDoc.name,
         rootObjects,
         rootObjectsProjectNames,
         projectsToAdd,
@@ -25,9 +25,9 @@ module.exports = function (user) {
         });
 
         // projects to be removed:
-        projectsToRemove = _.difference(rootObjectsProjectNames, user.roles);
+        projectsToRemove = _.difference(rootObjectsProjectNames, userDoc.roles);
         // projects to be added:
-        projectsToAdd    = _.difference(user.roles, rootObjectsProjectNames);
+        projectsToAdd    = _.difference(userDoc.roles, rootObjectsProjectNames);
 
         console.log('rootObjects: ', rootObjects);
         console.log('rootObjectsProjectNames: ', rootObjectsProjectNames);

@@ -1,5 +1,6 @@
 /**
- * synchronisiert die Daten aus einer CouchDB in PouchDB
+ * syncs data from a project-db with a local project-db in the pouch
+ * starts the changes listener
  */
 
 /*jslint node: true, browser: true, nomen: true, todo: true */

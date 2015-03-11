@@ -1,11 +1,11 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var _                = require('underscore'),
-    syncWithRemoteDb = require('./syncWithRemoteDb');
+var _             = require('underscore'),
+    syncProjectDb = require('./syncProjectDb');
 
 module.exports = function (projectDbs) {
     _.each(projectDbs, function (projectDb) {
-        syncWithRemoteDb(projectDb);
+        syncProjectDb(projectDb);
     });
 };

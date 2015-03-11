@@ -12,7 +12,7 @@ module.exports = function () {
     var treeData    = generateDataForTree(),
         $navContent = $('#navContent');
 
-    console.log('treeData: ', treeData);
+    //console.log('treeData: ', treeData);
 
     $navContent.jstree({
         'plugins': ['wholerow', 'state', 'contextmenu'],
