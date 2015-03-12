@@ -12,7 +12,7 @@ var _             = require('underscore'),
     configuration = require('../configuration'),
     couchUrl      = configuration.couch.dbUrl;
 
-module.exports = function (projectName, login) {
+module.exports = function (projectName, login, callback) {
     if (projectName) {
         var localDb,
             remoteDbUrl,
@@ -65,6 +65,7 @@ module.exports = function (projectName, login) {
             if (objects && objects.length > 0) {
                 window.oi.objects = _.union(window.oi.objects, objects);
             }
+            callback();
         }).catch(function (error) {
             console.log('got an error getting data from ' + projectName + ': ', error);
         });

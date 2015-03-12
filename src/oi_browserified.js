@@ -40325,7 +40325,9 @@ module.exports = function () {
     var treeData    = generateDataForTree(),
         $navContent = $('#navContent');
 
-    //console.log('treeData: ', treeData);
+    console.log('window.oi.objects: ', window.oi.objects);
+    console.log('window.oi.hierarchies: ', window.oi.hierarchies);
+    console.log('treeData: ', treeData);
 
     $navContent.jstree({
         'plugins': ['wholerow', 'state', 'contextmenu'],
@@ -40456,7 +40458,7 @@ var _             = require('underscore'),
     configuration = require('../configuration'),
     couchUrl      = configuration.couch.dbUrl;
 
-module.exports = function (projectName, login) {
+module.exports = function (projectName, login, callback) {
     if (projectName) {
         var localDb,
             remoteDbUrl,
@@ -40509,6 +40511,7 @@ module.exports = function (projectName, login) {
             if (objects && objects.length > 0) {
                 window.oi.objects = _.union(window.oi.objects, objects);
             }
+            callback();
         }).catch(function (error) {
             console.log('got an error getting data from ' + projectName + ': ', error);
         });
@@ -40577,6 +40580,7 @@ var _             = require('underscore'),
     createTree    = require('./createTree');
 
 module.exports = function (projectNames, login) {
+    var dbCount = 0;
 
     //console.log('getModelData: projectNames: ', projectNames);
 
@@ -40585,10 +40589,13 @@ module.exports = function (projectNames, login) {
     window.oi.hierarchies = [];
 
     _.each(projectNames, function (projectName) {
-        getDataFromDb(projectName, login);
+        getDataFromDb(projectName, login, function () {
+            dbCount++;
+            if (dbCount === projectNames.length) {
+                createTree();
+            }
+        });
     });
-
-    createTree();
 
     if (!projectNames || projectNames.length === 0) {
         console.log('no projectNames passed');

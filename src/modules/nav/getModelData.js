@@ -6,6 +6,7 @@ var _             = require('underscore'),
     createTree    = require('./createTree');
 
 module.exports = function (projectNames, login) {
+    var dbCount = 0;
 
     //console.log('getModelData: projectNames: ', projectNames);
 
@@ -14,10 +15,13 @@ module.exports = function (projectNames, login) {
     window.oi.hierarchies = [];
 
     _.each(projectNames, function (projectName) {
-        getDataFromDb(projectName, login);
+        getDataFromDb(projectName, login, function () {
+            dbCount++;
+            if (dbCount === projectNames.length) {
+                createTree();
+            }
+        });
     });
-
-    createTree();
 
     if (!projectNames || projectNames.length === 0) {
         console.log('no projectNames passed');
