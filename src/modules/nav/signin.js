@@ -7,8 +7,15 @@ var $             = require('jquery'),
     couchUrl      = configuration.couch.dbUrl,
     initiateNav   = require('./initiateNav');
 
+function comunicateError(html) {
+    $('#signinAlertText').html(html);
+    $('#signinAlert').show();
+}
+
 module.exports = function (signindata, newSignup) {
     var oiDb = new PouchDB('http://' + couchUrl + '/oi');
+
+    console.log('signin, signindata: ', signindata);
 
     // signin
     oiDb.login(signindata.name, signindata.password).then(function (response) {
@@ -35,12 +42,10 @@ module.exports = function (signindata, newSignup) {
         if (error.name === 'unauthorized') {
             console.log('unauthorized');
             // name or password incorrect
-            $('#signinAlertText').html('Anmeldung gescheitert:<br>Sie haben Email und/oder Passwort falsch eingegeben.<br>Oder müssen Sie ein Konto erstellen?');
-            $('#signinAlert').show();
+            comunicateError('Anmeldung gescheitert:<br>Sie haben Email und/oder Passwort falsch eingegeben.<br>Oder müssen Sie ein Konto erstellen?');
         } else {
             // cosmic rays, a meteor, etc.
-            $('#signinAlertText').html('Anmeldung gescheitert:<br>Oh je. Die Anwendung ist offenbar schlecht gelaunt. Bitte versuchen Sie es nochmals. Gemeldeter Fehler:<br>' + JSON.stringify(error));
-            $('#signinAlert').show();
+            comunicateError('Anmeldung gescheitert:<br>Oh je. Die Anwendung ist offenbar schlecht gelaunt. Bitte versuchen Sie es nochmals. Gemeldeter Fehler:<br>' + JSON.stringify(error));
         }
     });
 };
