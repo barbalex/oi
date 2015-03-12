@@ -1,8 +1,11 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $ = require('jquery');
+var $  = require('jquery'),
+    Ps = require('perfect-scrollbar');
 
 module.exports = function () {
-    $('.scrollbar').perfectScrollbar('update');
+    $('.scrollbar').each(function (index, element) {
+        Ps.update(element);
+    });
 };

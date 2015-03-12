@@ -3,6 +3,7 @@
 
 var $                    = require('jquery'),
     _                    = require('underscore'),
+    Ps                   = require('perfect-scrollbar'),
     alsoResizeReverse    = require('./alsoResizeReverse'),
     setWidthOfTabs       = require('./setWidthOfTabs'),
     toggleTab            = require('./toggleTab'),
@@ -83,5 +84,7 @@ module.exports = function () {
         }
     });
 
-    $('.scrollbar').perfectScrollbar();
+    $('.scrollbar').each(function (index, element) {
+        Ps.initialize(element, { suppressScrollX: true });
+    });
 };

@@ -42,7 +42,8 @@ body {
   background-image: linear-gradient(to left, #000 0%, rgba(84,84,84,0.8) 100%);
   z-index: 1;
 }
-.scrollbar .ps-scrollbar-y-rail {
+#nav.scrollbar .ps-scrollbar-y-rail,
+#form.scrollbar .ps-scrollbar-y-rail {
   right: 10px;
 }
 

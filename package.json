@@ -27,6 +27,7 @@
     "jquery-ui": "1.10.5",
     "jstree": "3.0.9",
     "openlayers": "3.3.0",
+    "perfect-scrollbar": "0.6.1",
     "pouchdb": "3.3.1",
     "pouchdb-authentication": "0.3.6",
     "underscore": "1.8.2"
