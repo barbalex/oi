@@ -58886,6 +58886,35 @@ function init(api, opts, callback) {
     };
   };
 
+  function createKeyRange(start, end, inclusiveEnd, key, descending) {
+    try {
+      if (start && end) {
+        if (descending) {
+          return IDBKeyRange.bound(end, start, !inclusiveEnd, false);
+        } else {
+          return IDBKeyRange.bound(start, end, false, !inclusiveEnd);
+        }
+      } else if (start) {
+        if (descending) {
+          return IDBKeyRange.upperBound(start);
+        } else {
+          return IDBKeyRange.lowerBound(start);
+        }
+      } else if (end) {
+        if (descending) {
+          return IDBKeyRange.lowerBound(end, !inclusiveEnd);
+        } else {
+          return IDBKeyRange.upperBound(end, !inclusiveEnd);
+        }
+      } else if (key) {
+        return IDBKeyRange.only(key);
+      }
+    } catch (e) {
+      return {error: e};
+    }
+    return null;
+  }
+
   function allDocsQuery(totalRows, opts, callback) {
     var start = 'startkey' in opts ? opts.startkey : false;
     var end = 'endkey' in opts ? opts.endkey : false;
@@ -58895,45 +58924,18 @@ function init(api, opts, callback) {
     var inclusiveEnd = opts.inclusive_end !== false;
     var descending = 'descending' in opts && opts.descending ? 'prev' : null;
 
-    var manualDescEnd = false;
-    if (descending && start && end) {
-      // unfortunately IDB has a quirk where IDBKeyRange.bound is invalid if the
-      // start is less than the end, even in descending mode.  Best bet
-      // is just to handle it manually in that case.
-      manualDescEnd = end;
-      end = false;
-    }
-
-    var keyRange = null;
-    try {
-      if (start && end) {
-        keyRange = IDBKeyRange.bound(start, end, false, !inclusiveEnd);
-      } else if (start) {
-        if (descending) {
-          keyRange = IDBKeyRange.upperBound(start);
-        } else {
-          keyRange = IDBKeyRange.lowerBound(start);
-        }
-      } else if (end) {
-        if (descending) {
-          keyRange = IDBKeyRange.lowerBound(end, !inclusiveEnd);
-        } else {
-          keyRange = IDBKeyRange.upperBound(end, !inclusiveEnd);
-        }
-      } else if (key) {
-        keyRange = IDBKeyRange.only(key);
-      }
-    } catch (e) {
-      if (e.name === "DataError" && e.code === 0) {
+    var keyRange = createKeyRange(start, end, inclusiveEnd, key, descending);
+    if (keyRange && keyRange.error) {
+      var err = keyRange.error;
+      if (err.name === "DataError" && err.code === 0) {
         // data error, start is less than end
-        return callback(null, {
-          total_rows : totalRows,
-          offset : opts.skip,
-          rows : []
-        });
-      } else {
-        return callback(errors.error(errors.IDB_ERROR, e.name, e.message));
+         return callback(null, {
+           total_rows : totalRows,
+           offset : opts.skip,
+           rows : []
+         });
       }
+      return callback(errors.error(errors.IDB_ERROR, err.name, err.message));
     }
 
     var stores = [DOC_STORE, BY_SEQ_STORE];
@@ -58998,13 +59000,6 @@ function init(api, opts, callback) {
           }
           results.push(doc);
         } else if (!deleted && skip-- <= 0) {
-          if (manualDescEnd) {
-            if (inclusiveEnd && doc.key < manualDescEnd) {
-              return;
-            } else if (!inclusiveEnd && doc.key <= manualDescEnd) {
-              return;
-            }
-          }
           results.push(doc);
           if (--limit === 0) {
             return;
@@ -59096,7 +59091,9 @@ function init(api, opts, callback) {
       txn.oncomplete = function () {
         callback(null, {
           doc_count: count,
-          update_seq: updateSeq
+          update_seq: updateSeq,
+          // for debugging
+          idb_attachment_format: (api._blobSupport ? 'binary' : 'base64')
         });
       };
     });
@@ -60164,6 +60161,33 @@ function getSize(opts) {
   return isAndroid ? 5000000 : 1; // in PhantomJS, if you use 0 it will crash
 }
 
+var cachedDatabases = {};
+
+function openDB(name, version, desc, size) {
+  var sqlitePluginOpenDBFunction =
+    typeof sqlitePlugin !== 'undefined' &&
+    sqlitePlugin.openDatabase &&
+    sqlitePlugin.openDatabase.bind(sqlitePlugin);
+
+  var openDBFunction = sqlitePluginOpenDBFunction ||
+    (typeof openDatabase !== 'undefined' && openDatabase);
+
+  var db = cachedDatabases[name];
+  if (!db) {
+    db = cachedDatabases[name] = openDBFunction(name, version, desc, size);
+    db._sqlitePlugin = !!sqlitePluginOpenDBFunction;
+  }
+  return db;
+}
+
+function valid() {
+  // SQLitePlugin leaks this global object, which we can use
+  // to detect if it's installed or not. The benefit is that it's
+  // declared immediately, before the 'deviceready' event has fired.
+  return typeof openDatabase !== 'undefined' ||
+    typeof SQLitePlugin !== 'undefined';
+}
+
 module.exports = {
   escapeBlob: escapeBlob,
   unescapeBlob: unescapeBlob,
@@ -60173,7 +60197,9 @@ module.exports = {
   select: select,
   compactRevs: compactRevs,
   unknownError: unknownError,
-  getSize: getSize
+  getSize: getSize,
+  openDB: openDB,
+  valid: valid
 };
 },{"../../deps/errors":86,"../../utils":102,"./websql-constants":77}],79:[function(require,module,exports){
 'use strict';
@@ -60202,6 +60228,7 @@ var select = websqlUtils.select;
 var compactRevs = websqlUtils.compactRevs;
 var unknownError = websqlUtils.unknownError;
 var getSize = websqlUtils.getSize;
+var openDB = websqlUtils.openDB;
 
 function fetchAttachmentsIfNecessary(doc, opts, api, txn, cb) {
   var attachments = Object.keys(doc._attachments || {});
@@ -60236,26 +60263,6 @@ function fetchAttachmentsIfNecessary(doc, opts, api, txn, cb) {
       checkDone();
     }
   });
-}
-
-var cachedDatabases = {};
-
-var openDBFunction = (typeof navigator !== 'undefined' &&
-      navigator.sqlitePlugin &&
-      navigator.sqlitePlugin.openDatabase) ?
-    navigator.sqlitePlugin.openDatabase.bind(navigator.sqlitePlugin) :
-      (typeof sqlitePlugin !== 'undefined' && sqlitePlugin.openDatabase) ?
-    sqlitePlugin.openDatabase.bind(sqlitePlugin) :
-      (typeof openDatabase !== 'undefined') ?
-    openDatabase :
-    null;
-
-function openDB(name, version, desc, size) {
-  var db = cachedDatabases[name];
-  if (!db) {
-    db = cachedDatabases[name] = openDBFunction(name, version, desc, size);
-  }
-  return db;
 }
 
 var POUCH_VERSION = 1;
@@ -60710,7 +60717,10 @@ function WebSqlPouch(opts, callback) {
           var updateSeq = res.rows.item(0).seq || 0;
           callback(null, {
             doc_count: docCount,
-            update_seq: updateSeq
+            update_seq: updateSeq,
+            // for debugging
+            sqlite_plugin: db._sqlitePlugin,
+            websql_encoding: encoding
           });
         });
       });
@@ -61170,9 +61180,7 @@ function WebSqlPouch(opts, callback) {
   };
 }
 
-WebSqlPouch.valid = function () {
-  return !!openDBFunction;
-};
+WebSqlPouch.valid = websqlUtils.valid;
 
 WebSqlPouch.destroy = utils.toPromise(function (name, opts, callback) {
   WebSqlPouch.Changes.removeAllListeners(name);
@@ -64311,6 +64319,7 @@ Changes.prototype.addListener = function (dbName, id, db, opts) {
     }
     inprogress = true;
     db.changes({
+      style: opts.style,
       include_docs: opts.include_docs,
       attachments: opts.attachments,
       conflicts: opts.conflicts,
@@ -64365,7 +64374,11 @@ Changes.prototype.notify = function (dbName) {
   this.notifyLocalWindows(dbName);
 };
 
-if (typeof window === 'undefined' || typeof window.atob !== 'function') {
+if (typeof atob === 'function') {
+  exports.atob = function (str) {
+    return atob(str);
+  };
+} else {
   exports.atob = function (str) {
     var base64 = new buffer(str, 'base64');
     // Node.js will just skip the characters it can't encode instead of
@@ -64375,19 +64388,15 @@ if (typeof window === 'undefined' || typeof window.atob !== 'function') {
     }
     return base64.toString('binary');
   };
-} else {
-  exports.atob = function (str) {
-    return atob(str);
-  };
 }
 
-if (typeof window === 'undefined' || typeof window.btoa !== 'function') {
+if (typeof btoa === 'function') {
   exports.btoa = function (str) {
-    return new buffer(str, 'binary').toString('base64');
+    return btoa(str);
   };
 } else {
   exports.btoa = function (str) {
-    return btoa(str);
+    return new buffer(str, 'binary').toString('base64');
   };
 }
 
@@ -64934,7 +64943,7 @@ exports.safeJsonStringify = function safeJsonStringify(json) {
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./deps/ajax":83,"./deps/blob":84,"./deps/buffer":85,"./deps/errors":86,"./deps/md5":87,"./deps/parse-doc":88,"./deps/parse-uri":90,"./deps/uuid":93,"./merge":97,"_process":8,"argsarray":104,"bluebird":112,"debug":105,"events":6,"inherits":108,"pouchdb-collections":129,"pouchdb-extend":130,"vuvuzela":139}],103:[function(require,module,exports){
-module.exports = "3.3.0";
+module.exports = "3.3.1";
 
 },{}],104:[function(require,module,exports){
 'use strict';
