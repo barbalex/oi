@@ -69125,8 +69125,7 @@ module.exports = function (object, correspondingHierarchy) {
 'use strict';
 
 var openSigninModal = require('./openSigninModal'),
-    initiateNav     = require('./initiateNav'),
-    syncUserDb      = require('../syncUserDb');
+    initiateNav     = require('./initiateNav');
 
 module.exports = function () {
     var loginName = localStorage.me_name,
@@ -69142,7 +69141,7 @@ module.exports = function () {
     }
 
 };
-},{"../syncUserDb":224,"./initiateNav":207,"./openSigninModal":208}],206:[function(require,module,exports){
+},{"./initiateNav":207,"./openSigninModal":208}],206:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus */
 'use strict';
 
@@ -69527,14 +69526,10 @@ module.exports = function () {
     remoteDbAddress = 'http://' + couchUrl + '/' + userDbName;
     remoteDb        = new PouchDB(remoteDbAddress, dbOptions);
 
-    if (remoteDb) {
-
-        console.log('replicateUserDbOnceFromRemoteToLocal: starting replication');
-
+    // make sure syncing and listening to changes is only started if not already started
+    if (remoteDb && !window.oi[userDbName + '_firstReplication']) {
         // sync once from remote to local
         window.oi[userDbName + '_firstReplication'] = PouchDB.replicate(remoteDb, localDb, syncOptions);
-
-        console.log('replicateUserDbOnceFromRemoteToLocal: started replication');
     }
 };
 
@@ -69850,11 +69845,15 @@ module.exports = function (projectName) {
 
     console.log('syncProjectDb: syncing project ', projectName);
 
-    if (remoteDb) {
+    // make sure syncing and listening to changes is only started if not already started
+    if (remoteDb && !window.oi[projectName + '_sync']) {
         // sync
         window.oi[projectName + '_sync'] = PouchDB.sync(localDb, remoteDb, syncOptions);
         // watch changes
         remoteDb.changes(changeOptions).on('change', handleChanges);
+
+        console.log('watching changes for db ' + projectName);
+
     }
 };
 
@@ -69915,9 +69914,10 @@ module.exports = function () {
     remoteDbAddress = 'http://' + couchUrl + '/' + userDbName;
     remoteDb        = new PouchDB(remoteDbAddress, dbOptions);
 
-    if (remoteDb) {
-        // sync
-        window.oi[userDbName + '_sync'] = PouchDB.sync(localDb, remoteDb, syncOptions);
+    // make sure syncing and listening to changes is only started if not already started
+    if (remoteDb && !window.oi[userDbName + '_sync']) {
+        // sync but ony one way needed
+        window.oi[userDbName + '_sync'] = PouchDB.replicate(remoteDb, localDb, syncOptions);
         // watch changes
         remoteDb.changes(changeOptions).on('change', handleChanges);
     }

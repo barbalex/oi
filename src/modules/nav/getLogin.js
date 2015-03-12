@@ -2,8 +2,7 @@
 'use strict';
 
 var openSigninModal = require('./openSigninModal'),
-    initiateNav     = require('./initiateNav'),
-    syncUserDb      = require('../syncUserDb');
+    initiateNav     = require('./initiateNav');
 
 module.exports = function () {
     var loginName = localStorage.me_name,

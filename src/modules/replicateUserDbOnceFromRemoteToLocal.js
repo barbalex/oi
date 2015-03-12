@@ -38,13 +38,9 @@ module.exports = function () {
     remoteDbAddress = 'http://' + couchUrl + '/' + userDbName;
     remoteDb        = new PouchDB(remoteDbAddress, dbOptions);
 
-    if (remoteDb) {
-
-        console.log('replicateUserDbOnceFromRemoteToLocal: starting replication');
-
+    // make sure syncing and listening to changes is only started if not already started
+    if (remoteDb && !window.oi[userDbName + '_firstReplication']) {
         // sync once from remote to local
         window.oi[userDbName + '_firstReplication'] = PouchDB.replicate(remoteDb, localDb, syncOptions);
-
-        console.log('replicateUserDbOnceFromRemoteToLocal: started replication');
     }
 };

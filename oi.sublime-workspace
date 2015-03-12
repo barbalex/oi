@@ -4,8 +4,32 @@
 		"selected_items":
 		[
 			[
+				"fir",
+				"firstSync"
+			],
+			[
+				"fi",
+				"firstSync"
+			],
+			[
+				"proj",
+				"projectNames"
+			],
+			[
+				"first",
+				"firstOnceThenLive"
+			],
+			[
 				"pro",
-				"projectName"
+				"projectNames"
+			],
+			[
+				"userD",
+				"userDbName"
+			],
+			[
+				"get",
+				"getUserDbName"
 			],
 			[
 				"fist",
@@ -14,10 +38,6 @@
 			[
 				"con",
 				"console"
-			],
-			[
-				"get",
-				"getFeatures"
 			],
 			[
 				"sele",
@@ -40,16 +60,8 @@
 				"featureGeometry"
 			],
 			[
-				"proj",
-				"projectLayersFeatures"
-			],
-			[
 				"ve",
 				"vectorLayerFeature"
-			],
-			[
-				"fi",
-				"fields"
 			],
 			[
 				"feat",
@@ -495,47 +507,7 @@
 			"file": "index.html",
 			"settings":
 			{
-				"buffer_size": 15977,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/modules/nav/signin.js",
-			"settings":
-			{
-				"buffer_size": 1840,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/modules/nav/getLogin.js",
-			"settings":
-			{
-				"buffer_size": 483,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/modules/nav/initiateNav.js",
-			"settings":
-			{
-				"buffer_size": 2457,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/modules/nav/getModelData.js",
-			"settings":
-			{
-				"buffer_size": 1238,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/modules/nav/getDataFromDb.js",
-			"settings":
-			{
-				"buffer_size": 1825,
+				"buffer_size": 15973,
 				"line_ending": "Windows"
 			}
 		},
@@ -543,23 +515,89 @@
 			"file": "src/modules/nav/signUp.js",
 			"settings":
 			{
-				"buffer_size": 1173,
+				"buffer_size": 1218,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/modules/nav/signInOrUp.js",
+			"file": "src/modules/nav/getLogin.js",
 			"settings":
 			{
-				"buffer_size": 1895,
+				"buffer_size": 573,
 				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/modules/nav/signin.js",
+			"settings":
+			{
+				"buffer_size": 1915,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/modules/nav/initiateNav.js",
+			"settings":
+			{
+				"buffer_size": 2061,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/modules/syncUserDb.js",
+			"settings":
+			{
+				"buffer_size": 1345,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/modules/syncProjectDbs.js",
+			"settings":
+			{
+				"buffer_size": 302,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/modules/syncProjectDb.js",
+			"settings":
+			{
+				"buffer_size": 1272,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/modules/nav/getModelData.js",
+			"settings":
+			{
+				"buffer_size": 666,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/modules/nav/getDataFromDb.js",
+			"settings":
+			{
+				"buffer_size": 2329,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "Searching 180 files for \"login response:\" (case sensitive)\n\nC:\\Users\\alex\\oi\\src\\modules\\nav\\signin.js:\n   16      oiDb.login(signindata.name, signindata.password).then(function (response) {\n   17  \n   18:         console.log('login response: ', response);\n   19  \n   20          window.oi.me          = {};\n\nUnable to open C:\\Users\\alex\\oi\\src\\oi_browserified.js~RF7d49ca.TMP\n1 match in 1 file\n\n\nSearching 179 files for \"initiateNav\" (case sensitive, whole word)\n\nC:\\Users\\alex\\oi\\src\\modules\\nav\\getLogin.js:\n    3  \n    4  var openSigninModal = require('./openSigninModal'),\n    5:     initiateNav     = require('./initiateNav'),\n    6      syncUserDb      = require('../syncUserDb');\n    7  \n    .\n   14          window.oi.me.name     = loginName;\n   15          window.oi.me.password = localStorage.me_password;\n   16:         initiateNav();\n   17      } else {\n   18          openSigninModal(firstSync);\n\nC:\\Users\\alex\\oi\\src\\modules\\nav\\initiateNav.js:\n   62      var userDbName;\n   63  \n   64:     console.log('initiateNav, firstSync: ', firstSync);\n   65  \n   66      // get user info\n\nC:\\Users\\alex\\oi\\src\\modules\\nav\\signin.js:\n    6      configuration = require('../configuration'),\n    7      couchUrl      = configuration.couch.dbUrl,\n    8:     initiateNav   = require('./initiateNav');\n    9  \n   10  module.exports = function (signindata, firstSync) {\n   ..\n   30          // when first sync data for model is fetched from remote db instead of locally\n   31          // better because data may not yet have arrived locally\n   32:         initiateNav(firstSync);\n   33          $('#signinWithModal').modal('hide');\n   34      }).catch(function (error) {\n\n7 matches across 3 files\n\n\nSearching 179 files for \"error getting user from local userDb:\" (case sensitive)\n\nC:\\Users\\alex\\oi\\src\\modules\\nav\\initiateNav.js:\n   48          createDatabaseId();\n   49      }).catch(function (error) {\n   50:         console.log('error getting user from local userDb: ', error);\n   51      });\n   52  \n\n1 match in 1 file\n\n\nSearching 179 files for \"initiateNav\" (case sensitive, whole word)\n\nC:\\Users\\alex\\oi\\src\\modules\\nav\\getLogin.js:\n    3  \n    4  var openSigninModal = require('./openSigninModal'),\n    5:     initiateNav     = require('./initiateNav'),\n    6      syncUserDb      = require('../syncUserDb');\n    7  \n    .\n   14          window.oi.me.name     = loginName;\n   15          window.oi.me.password = localStorage.me_password;\n   16:         initiateNav(firstSync);\n   17      } else {\n   18          openSigninModal();\n\nC:\\Users\\alex\\oi\\src\\modules\\nav\\initiateNav.js:\n   65      var userDbName;\n   66  \n   67:     console.log('initiateNav, firstSync: ', firstSync);\n   68  \n   69      // get user info\n\nC:\\Users\\alex\\oi\\src\\modules\\nav\\signin.js:\n    6      configuration = require('../configuration'),\n    7      couchUrl      = configuration.couch.dbUrl,\n    8:     initiateNav   = require('./initiateNav');\n    9  \n   10  module.exports = function (signindata, newSignup) {\n   ..\n   30          // when first sync data for model is fetched from remote db instead of locally\n   31          // better because data may not yet have arrived locally\n   32:         initiateNav(newSignup, login);\n   33          $('#signinWithModal').modal('hide');\n   34      }).catch(function (error) {\n\n7 matches across 3 files\n",
+			"settings":
+			{
+				"buffer_size": 3330,
+				"line_ending": "Windows",
+				"name": "Find Results",
+				"scratch": true
 			}
 		},
 		{
 			"file": "/C/Users/alex/oi_testdata/index.js",
 			"settings":
 			{
-				"buffer_size": 19813,
+				"buffer_size": 22710,
 				"line_ending": "Windows"
 			}
 		}
@@ -613,21 +651,30 @@
 		"/C/Users/alex/oi",
 		"/C/Users/alex/oi/src",
 		"/C/Users/alex/oi/src/modules",
-		"/C/Users/alex/oi/src/modules/event",
-		"/C/Users/alex/oi/src/modules/map",
 		"/C/Users/alex/oi/src/modules/nav",
 		"/C/Users/alex/oi/templates"
 	],
 	"file_history":
 	[
+		"/C/Users/alex/oi/src/modules/replicateUserDbOnceFromRemoteToLocal.js",
+		"/C/Users/alex/oi/src/modules/syncUserDb.js",
 		"/C/Users/alex/oi/src/oi_browserified.js",
+		"/C/Users/alex/oi/src/modules/form/saveObjectValue.js",
+		"/C/Users/alex/oi/src/modules/handleUserChanges.js",
+		"/C/Users/alex/oi/src/modules/handleChanges.js",
+		"/C/Users/alex/oi/src/modules/syncProjectDb.js",
+		"/C/Users/alex/oi/src/modules/getUserDbName.js",
+		"/C/Users/alex/oi/src/modules/nav/getDataFromDb.js",
+		"/C/Users/alex/oi/src/modules/nav/getModelData.js",
+		"/C/Users/alex/oi/package.json",
+		"/C/Users/alex/oi/src/oi.js",
 		"/C/Users/alex/oi/src/modules/nav/createTree.js",
+		"/C/Users/alex/oi/src/modules/syncProjectDbs.js",
+		"/C/Users/alex/oi/src/modules/nav/signInOrUp.js",
 		"/C/Users/alex/oi/src/modules/nav/generateDataForTree.js",
 		"/C/Users/alex/oi/src/modules/syncWithRemoteDbs.js",
 		"/C/Users/alex/oi/src/modules/nav/openSigninModal.js",
 		"/C/Users/alex/oi/src/modules/tellWithModal.js",
-		"/C/Users/alex/oi/src/modules/nav/getDataFromDb.js",
-		"/C/Users/alex/oi/src/modules/nav/getModelData.js",
 		"/C/Users/alex/oi/src/modules/nav/initiateNav.js",
 		"/C/Users/alex/oi/src/modules/initiateApp.js",
 		"/C/Users/alex/oi/src/modules/map/styleSelected.js",
@@ -649,7 +696,6 @@
 		"/C/Users/alex/oi/templates/geoJson.hdb",
 		"/C/Users/alex/oi/src/modules/map/removeAllInteractions.js",
 		"/C/Users/alex/oi/src/modules/map/getEditingLayer.js",
-		"/C/Users/alex/oi/src/modules/form/saveObjectValue.js",
 		"/C/Users/alex/oi/src/modules/event/onChangeEditLayerType.js",
 		"/C/Users/alex/oi/src/modules/event/onChangeLytEditLayer.js",
 		"/C/Users/alex/oi/src/modules/nav/selectObjectNode.js",
@@ -675,7 +721,6 @@
 		"/C/Users/alex/oi/src/modules/deleteObjectAndChildren.js",
 		"/C/Users/alex/oi/src/modules/form/fitTextareaToContent.js",
 		"/C/Users/alex/oi/src/modules/event/onClickFormNew.js",
-		"/C/Users/alex/oi/src/modules/handleChanges.js",
 		"/C/Users/alex/oi/src/modules/map/createLayerSwisstopoAerial.js",
 		"/C/Users/alex/oi/src/modules/map/zoomToFeature.js",
 		"/C/Users/alex/oi/src/modules/map/addLayers.js",
@@ -697,7 +742,6 @@
 		"/C/Users/alex/oi/src/modules/map/mousePositionControl.js",
 		"/C/Users/alex/oi/src/modules/map/createLayers.js",
 		"/C/Users/alex/oi/src/modules/map/addMousePositionControl.js",
-		"/C/Users/alex/oi/package.json",
 		"/C/Users/alex/oi/gulp-tasks/dev_src.js",
 		"/C/Users/alex/oi/src/proj4.js",
 		"/C/Users/alex/AppData/Local/Temp/Temp1_proj4js-proj4js-2.2.3-3-gf6f3c00.zip/proj4js-proj4js-f6f3c00/dist/proj4-src.js",
@@ -715,7 +759,6 @@
 		"/C/Users/alex/oi/src/modules/map/createWmtsLayer.js",
 		"/C/Users/alex/oi/src/modules/syncWithRemoteDb.js",
 		"/C/Users/alex/oi/src/modules/createNewObject.js",
-		"/C/Users/alex/oi/src/oi.js",
 		"/C/Users/alex/oi/gulp-tasks/dev.js",
 		"/C/Users/alex/oi/gulp-tasks/default.js",
 		"/C/Users/alex/oi/gulp-tasks/dev_when_watch.js",
@@ -740,18 +783,11 @@
 		"/C/Users/alex/oi/src/modules/configuration.js",
 		"/C/Users/alex/oi/couchpass.json",
 		"/C/Users/alex/oi_pg/modules/handleProjectChangesInDb.js",
-		"/C/Users/alex/oi/src/modules/nav/createObjectsByTypeIndex.js",
-		"/C/Users/alex/oi/src/modules/nav/addDataOfProjectToModel.js",
-		"/C/Users/alex/oi/src/modules/nav/signIn.js",
-		"/C/Users/alex/oi/src/modules/nav/objectsByTypeIndex.js",
-		"/C/Users/alex/oi_pg/package.json",
-		"/C/Users/alex/oi/src/modules/nav/getProjectNames.js",
-		"/C/Users/alex/oi_testdata/package.json",
-		"/C/Users/alex/oi/src/modules/nav/sync.js"
+		"/C/Users/alex/oi/src/modules/nav/createObjectsByTypeIndex.js"
 	],
 	"find":
 	{
-		"height": 97.0
+		"height": 43.0
 	},
 	"find_in_files":
 	{
@@ -842,6 +878,28 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"initiateNav",
+			"error getting user from local userDb:",
+			"initiateNav",
+			"firstsync",
+			"login response:",
+			"initiateNav",
+			"getModelData",
+			"no projectNames passed",
+			"couchName",
+			"getModelData",
+			"syncError",
+			"remoteDbAddress",
+			"error getting user from local userDb:",
+			"getModelData:",
+			"pouchdb-all-dbs",
+			"treeData:",
+			"user",
+			"handleUsersChanges",
+			"couchName",
+			"syncWithRemoteUserDb",
+			"syncWithRemoteDb",
+			"syncWithRemoteDbs",
 			"remoteDb",
 			"getDataFromDb(firstSync, projectName, function (error, done) {\n            if (error) {\n                console.log('got an error: ', error);",
 			"initiateNav",
@@ -947,29 +1005,7 @@
 			"addModifyInteraction to layer:",
 			"get_selected",
 			"get('id')",
-			"get_selected",
-			"map",
-			"layer.get('editing') === true",
-			"initiateForm",
-			"feature.setGeometry(new ol.geom[geomData.type](geomData.coordinates));",
-			"./saveObjectValue",
-			"saveFeature",
-			"createLayerForData",
-			"source_feature_id",
-			"source_feature",
-			"vectorlayer_features",
-			"addDrawInteraction",
-			"saveFeature: data:",
-			"drawInteraction = new ol.interaction.Draw({\n        source: layer.getSource(),",
-			"drawInteraction",
-			"addDrawInteraction",
-			"selectInteraction",
-			"saveData",
-			"addDrawInteraction",
-			"addModifyInteraction",
-			"drawInteraction",
-			"selected_feature",
-			"selected_feature_id"
+			"get_selected"
 		],
 		"highlight": false,
 		"in_selection": false,
@@ -977,6 +1013,15 @@
 		"regex": false,
 		"replace_history":
 		[
+			"firstSync",
+			"projectName",
+			"remoteDbUrl",
+			"userDoc",
+			"handleUserChanges",
+			"userDbName",
+			"syncUserDb",
+			"syncProjectDb",
+			"syncProjectDbs",
 			"oiDb",
 			"selectInteraction",
 			"data('object').layerName",
@@ -1095,16 +1140,7 @@
 			"project_o10o",
 			"o10o",
 			"\"projId\": \"o1o\",",
-			"\"projId\": \"o10o\",",
-			"o1o",
-			"oldDoc",
-			"doc",
-			"oi.appcache",
-			"localDb",
-			"remoteDb",
-			"localDb",
-			"objects_by_user_type",
-			"remoteDb"
+			"\"projId\": \"o10o\","
 		],
 		"reverse": false,
 		"show_context": true,
@@ -1115,7 +1151,7 @@
 	"groups":
 	[
 		{
-			"selected": 10,
+			"selected": 6,
 			"sheets":
 			[
 				{
@@ -1143,7 +1179,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 10,
+					"stack_index": 13,
 					"type": "text"
 				},
 				{
@@ -1173,7 +1209,7 @@
 						"translation.y": 6519.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 9,
+					"stack_index": 12,
 					"type": "text"
 				},
 				{
@@ -1182,15 +1218,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 15977,
+						"buffer_size": 15973,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								12651,
-								12651
+								2510,
+								2510
 							]
 						],
 						"settings":
@@ -1200,57 +1236,27 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 5358.0,
+						"translation.y": 363.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 7,
+					"stack_index": 10,
 					"type": "text"
 				},
 				{
 					"buffer": 3,
-					"file": "src/modules/nav/signin.js",
+					"file": "src/modules/nav/signUp.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1840,
+						"buffer_size": 1218,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								327,
-								337
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "src/modules/nav/getLogin.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 483,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								427,
-								427
+								988,
+								997
 							]
 						],
 						"settings":
@@ -1267,20 +1273,20 @@
 					"type": "text"
 				},
 				{
-					"buffer": 5,
-					"file": "src/modules/nav/initiateNav.js",
+					"buffer": 4,
+					"file": "src/modules/nav/getLogin.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2457,
+						"buffer_size": 573,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1154,
-								1154
+								336,
+								345
 							]
 						],
 						"settings":
@@ -1290,7 +1296,37 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 378.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "src/modules/nav/signin.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1915,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1183,
+								1188
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 81.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
@@ -1298,19 +1334,107 @@
 				},
 				{
 					"buffer": 6,
-					"file": "src/modules/nav/getModelData.js",
+					"file": "src/modules/nav/initiateNav.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1238,
+						"buffer_size": 2061,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								280,
-								286
+								1461,
+								1461
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 756.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "src/modules/syncUserDb.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1345,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								948,
+								955
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 243.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 9,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "src/modules/syncProjectDbs.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 302,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								279,
+								288
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "src/modules/syncProjectDb.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1272,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								571,
+								421
 							]
 						],
 						"settings":
@@ -1327,20 +1451,20 @@
 					"type": "text"
 				},
 				{
-					"buffer": 7,
-					"file": "src/modules/nav/getDataFromDb.js",
+					"buffer": 10,
+					"file": "src/modules/nav/getModelData.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1825,
+						"buffer_size": 666,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1712,
-								1717
+								526,
+								526
 							]
 						],
 						"settings":
@@ -1350,87 +1474,164 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 162.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"file": "src/modules/nav/getDataFromDb.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2329,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								409,
+								414
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 270.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 6,
 					"type": "text"
 				},
 				{
-					"buffer": 8,
-					"file": "src/modules/nav/signUp.js",
+					"buffer": 12,
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1173,
+						"buffer_size": 3330,
 						"regions":
 						{
+							"match":
+							{
+								"flags": 112,
+								"regions":
+								[
+									[
+										227,
+										242
+									],
+									[
+										589,
+										600
+									],
+									[
+										618,
+										629
+									],
+									[
+										832,
+										843
+									],
+									[
+										1019,
+										1030
+									],
+									[
+										1260,
+										1271
+									],
+									[
+										1287,
+										1298
+									],
+									[
+										1555,
+										1566
+									],
+									[
+										1931,
+										1968
+									],
+									[
+										2216,
+										2227
+									],
+									[
+										2245,
+										2256
+									],
+									[
+										2459,
+										2470
+									],
+									[
+										2646,
+										2657
+									],
+									[
+										2887,
+										2898
+									],
+									[
+										2914,
+										2925
+									],
+									[
+										3182,
+										3193
+									]
+								],
+								"scope": ""
+							}
 						},
 						"selection":
 						[
 							[
-								954,
-								954
+								2466,
+								2466
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
+							"detect_indentation": false,
+							"line_numbers": false,
+							"output_tag": 4,
+							"result_base_dir": "",
+							"result_file_regex": "^([A-Za-z\\\\/<].*):$",
+							"result_line_regex": "^ +([0-9]+):",
+							"scroll_past_end": true,
+							"syntax": "Packages/Default/Find Results.hidden-tmLanguage",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 1674.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 8,
 					"type": "text"
 				},
 				{
-					"buffer": 9,
-					"file": "src/modules/nav/signInOrUp.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1895,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1873,
-								1879
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 621.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 4,
-					"type": "text"
-				},
-				{
-					"buffer": 10,
+					"buffer": 13,
 					"file": "/C/Users/alex/oi_testdata/index.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 19813,
+						"buffer_size": 22710,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								384,
-								384
+								0,
+								0
 							]
 						],
 						"settings":
@@ -1443,7 +1644,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 11,
 					"type": "text"
 				}
 			]

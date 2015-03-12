@@ -33,10 +33,14 @@ module.exports = function (projectName) {
 
     console.log('syncProjectDb: syncing project ', projectName);
 
-    if (remoteDb) {
+    // make sure syncing and listening to changes is only started if not already started
+    if (remoteDb && !window.oi[projectName + '_sync']) {
         // sync
         window.oi[projectName + '_sync'] = PouchDB.sync(localDb, remoteDb, syncOptions);
         // watch changes
         remoteDb.changes(changeOptions).on('change', handleChanges);
+
+        console.log('watching changes for db ' + projectName);
+
     }
 };
