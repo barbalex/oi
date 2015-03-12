@@ -18,6 +18,7 @@ module.exports = function (projectNames, login) {
         getDataFromDb(projectName, login, function () {
             dbCount++;
             if (dbCount === projectNames.length) {
+                // all projects have returned their data > create tree
                 createTree();
             }
         });

@@ -40361,6 +40361,7 @@ module.exports = function () {
             // hierarchy-id übergeben
             initiateForm(data.node.data.id, 'hierarchy');
         }
+        $navContent.jstree().open_node(data.node);
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
@@ -40592,6 +40593,7 @@ module.exports = function (projectNames, login) {
         getDataFromDb(projectName, login, function () {
             dbCount++;
             if (dbCount === projectNames.length) {
+                // all projects have returned their data > create tree
                 createTree();
             }
         });
@@ -40963,7 +40965,7 @@ module.exports = function () {
     // make sure syncing and listening to changes is only started if not already started
     if (remoteDb && !window.oi[userDbName + '_firstReplication']) {
         // sync once from remote to local
-        window.oi[userDbName + '_firstReplication'] = PouchDB.replicate(remoteDb, localDb, syncOptions);
+        window.oi[userDbName + '_firstReplication'] = PouchDB.replicate(remoteDb, localDb, syncOptions).setMaxListeners(20);
     }
 };
 
@@ -41282,7 +41284,7 @@ module.exports = function (projectName) {
     // make sure syncing and listening to changes is only started if not already started
     if (remoteDb && !window.oi[projectName + '_sync']) {
         // sync
-        window.oi[projectName + '_sync'] = PouchDB.sync(localDb, remoteDb, syncOptions);
+        window.oi[projectName + '_sync'] = PouchDB.sync(localDb, remoteDb, syncOptions).setMaxListeners(20);
         // watch changes
         remoteDb.changes(changeOptions).on('change', handleChanges);
 
@@ -41351,7 +41353,7 @@ module.exports = function () {
     // make sure syncing and listening to changes is only started if not already started
     if (remoteDb && !window.oi[userDbName + '_sync']) {
         // sync but ony one way needed
-        window.oi[userDbName + '_sync'] = PouchDB.replicate(remoteDb, localDb, syncOptions);
+        window.oi[userDbName + '_sync'] = PouchDB.replicate(remoteDb, localDb, syncOptions).setMaxListeners(20);
         // watch changes
         remoteDb.changes(changeOptions).on('change', handleChanges);
     }

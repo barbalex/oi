@@ -41,6 +41,6 @@ module.exports = function () {
     // make sure syncing and listening to changes is only started if not already started
     if (remoteDb && !window.oi[userDbName + '_firstReplication']) {
         // sync once from remote to local
-        window.oi[userDbName + '_firstReplication'] = PouchDB.replicate(remoteDb, localDb, syncOptions);
+        window.oi[userDbName + '_firstReplication'] = PouchDB.replicate(remoteDb, localDb, syncOptions).setMaxListeners(20);
     }
 };

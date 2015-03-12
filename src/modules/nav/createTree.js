@@ -48,5 +48,6 @@ module.exports = function () {
             // hierarchy-id übergeben
             initiateForm(data.node.data.id, 'hierarchy');
         }
+        $navContent.jstree().open_node(data.node);
     });
 };

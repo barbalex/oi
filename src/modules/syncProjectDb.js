@@ -36,7 +36,7 @@ module.exports = function (projectName) {
     // make sure syncing and listening to changes is only started if not already started
     if (remoteDb && !window.oi[projectName + '_sync']) {
         // sync
-        window.oi[projectName + '_sync'] = PouchDB.sync(localDb, remoteDb, syncOptions);
+        window.oi[projectName + '_sync'] = PouchDB.sync(localDb, remoteDb, syncOptions).setMaxListeners(20);
         // watch changes
         remoteDb.changes(changeOptions).on('change', handleChanges);
 
