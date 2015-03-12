@@ -1148,7 +1148,7 @@ initiateApp();
 }).call(this,require('_process'))
 },{"_process":7}],3:[function(require,module,exports){
 /* ========================================================================
- * Bootstrap (plugin): validator.js v0.7.2
+ * Bootstrap (plugin): validator.js v0.7.3
  * ========================================================================
  * The MIT License (MIT)
  *
@@ -1299,7 +1299,7 @@ initiateApp();
     var delay = this.options.delay
 
     this.options.delay = 0
-    this.$element.find(':input').trigger('input.bs.validator')
+    this.$element.find(':input:not([type="hidden"])').trigger('input.bs.validator')
     this.options.delay = delay
 
     return this
@@ -1311,6 +1311,7 @@ initiateApp();
     this.defer($el, function () {
       var $group = $el.closest('.form-group')
       var $block = $group.find('.help-block.with-errors')
+      var $feedback = $group.find('.form-control-feedback')
       var errors = $el.data('bs.validator.errors')
 
       if (!errors.length) return
@@ -1321,17 +1322,24 @@ initiateApp();
 
       $block.data('bs.validator.originalContent') === undefined && $block.data('bs.validator.originalContent', $block.html())
       $block.empty().append(errors)
-
+      $group.removeClass('has-success')
       $group.addClass('has-error')
+
+      $feedback.removeClass('glyphicon-ok')
+      $feedback.addClass('glyphicon-warning-sign')
     })
   }
 
   Validator.prototype.clearErrors = function ($el) {
     var $group = $el.closest('.form-group')
     var $block = $group.find('.help-block.with-errors')
+    var $feedback = $group.find('.form-control-feedback')
 
     $block.html($block.data('bs.validator.originalContent'))
     $group.removeClass('has-error')
+    $group.addClass('has-success')
+    $feedback.removeClass('glyphicon-warning-sign')
+    $feedback.addClass('glyphicon-ok')
   }
 
   Validator.prototype.hasErrors = function () {
@@ -1788,6 +1796,7 @@ process.browser = true;
 process.env = {};
 process.argv = [];
 process.version = ''; // empty string to avoid regexp issues
+process.versions = {};
 
 function noop() {}
 
@@ -32998,7 +33007,7 @@ var storage;
 if (typeof chrome !== 'undefined' && typeof chrome.storage !== 'undefined')
   storage = chrome.storage.local;
 else
-  storage = window.localStorage;
+  storage = localstorage();
 
 /**
  * Colors.
@@ -33133,6 +33142,23 @@ function load() {
  */
 
 exports.enable(load());
+
+/**
+ * Localstorage attempts to return the localstorage.
+ *
+ * This is necessary because safari throws
+ * when a user disables cookies/localstorage
+ * and you attempt to access it.
+ *
+ * @return {LocalStorage}
+ * @api private
+ */
+
+function localstorage(){
+  try {
+    return window.localStorage;
+  } catch (e) {}
+}
 
 },{"./debug":92}],92:[function(require,module,exports){
 
@@ -33374,13 +33400,15 @@ module.exports = function(val, options){
  */
 
 function parse(str) {
-  var match = /^((?:\d+)?\.?\d+) *(ms|seconds?|s|minutes?|m|hours?|h|days?|d|years?|y)?$/i.exec(str);
+  var match = /^((?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|years?|yrs?|y)?$/i.exec(str);
   if (!match) return;
   var n = parseFloat(match[1]);
   var type = (match[2] || 'ms').toLowerCase();
   switch (type) {
     case 'years':
     case 'year':
+    case 'yrs':
+    case 'yr':
     case 'y':
       return n * y;
     case 'days':
@@ -33389,16 +33417,26 @@ function parse(str) {
       return n * d;
     case 'hours':
     case 'hour':
+    case 'hrs':
+    case 'hr':
     case 'h':
       return n * h;
     case 'minutes':
     case 'minute':
+    case 'mins':
+    case 'min':
     case 'm':
       return n * m;
     case 'seconds':
     case 'second':
+    case 'secs':
+    case 'sec':
     case 's':
       return n * s;
+    case 'milliseconds':
+    case 'millisecond':
+    case 'msecs':
+    case 'msec':
     case 'ms':
       return n;
   }
@@ -34107,6 +34145,19 @@ function isGenOne(changes) {
   return changes.length === 1 && /^1-/.test(changes[0].rev);
 }
 
+function emitError(db, e) {
+  try {
+    db.emit('error', e);
+  } catch (err) {
+    console.error(
+      'The user\'s map/reduce function threw an uncaught error.\n' +
+      'You can debug this error by doing:\n' +
+      'myDatabase.on(\'error\', function (err) { debugger; });\n' +
+      'Please double-check your map/reduce function.');
+    console.error(e);
+  }
+}
+
 function tryCode(db, fun, args) {
   // emit an event if there was an error thrown by a map/reduce function.
   // putting try/catches in a single function also avoids deoptimizations.
@@ -34115,8 +34166,8 @@ function tryCode(db, fun, args) {
       output : fun.apply(null, args)
     };
   } catch (e) {
-    db.emit('error', e);
-    return {error : e};
+    emitError(db, e);
+    return {error: e};
   }
 }
 
@@ -34144,12 +34195,10 @@ function rowToDocId(row) {
 }
 
 function createBuiltInError(name) {
-  var error = new Error('builtin ' + name +
+  var message = 'builtin ' + name +
     ' function requires map values to be numbers' +
-    ' or number arrays');
-  error.name = 'invalid_value';
-  error.status = 500;
-  return error;
+    ' or number arrays';
+  return new BuiltInError(message);
 }
 
 function sum(values) {
@@ -34528,7 +34577,7 @@ function updateViewInQueue(view) {
             for (var j = 0, jl = mapResults.length; j < jl; j++) {
               var obj = mapResults[j];
               var complexKey = [obj.key, obj.id];
-              if (obj.key === lastKey) {
+              if (collate(obj.key, lastKey) === 0) {
                 complexKey.push(j); // dup key+id, so make it unique
               }
               var indexableKey = toIndexableString(complexKey);
@@ -34596,7 +34645,11 @@ function reduceView(view, results, options) {
   for (var i = 0, len = groups.length; i < len; i++) {
     var e = groups[i];
     var reduceTry = tryCode(view.sourceDB, reduceFun, [e.key, e.value, false]);
-    // CouchDB typically just sets the value to null if reduce errors out
+    if (reduceTry.error && reduceTry.error instanceof BuiltInError) {
+      // CouchDB returns an error if a built-in errors out
+      throw reduceTry.error;
+    }
+    // CouchDB just sets the value to null if a non-built-in errors out
     e.value = reduceTry.error ? null : reduceTry.output;
     e.key = e.key[0][0];
   }
@@ -34791,7 +34844,7 @@ function localViewCleanup(db) {
       });
       var destroyPromises = dbsToDelete.map(function (viewDBName) {
         return utils.sequentialize(getQueue(viewDBName), function () {
-          return db.constructor.destroy(viewDBName, db.__opts);
+          return new db.constructor(viewDBName, db.__opts).destroy();
         })();
       });
       return Promise.all(destroyPromises).then(function () {
@@ -34918,6 +34971,17 @@ function NotFoundError(message) {
 
 utils.inherits(NotFoundError, Error);
 
+function BuiltInError(message) {
+  this.status = 500;
+  this.name = 'invalid_value';
+  this.message = message;
+  this.error = true;
+  try {
+    Error.captureStackTrace(this, BuiltInError);
+  } catch (e) {}
+}
+
+utils.inherits(BuiltInError, Error);
 }).call(this,require('_process'))
 },{"./create-view":117,"./evalfunc":118,"./taskqueue":120,"./utils":122,"_process":7,"pouchdb-collate":113}],120:[function(require,module,exports){
 'use strict';
@@ -35090,12 +35154,21 @@ function upsertInner(db, docId, diffFun) {
         }
         doc = {};
       }
+
+      // the user might change the _rev, so save it for posterity
+      var docRev = doc._rev;
       var newDoc = diffFun(doc);
+
       if (!newDoc) {
-        return fulfill({updated: false, rev: doc._rev});
+        // if the diffFun returns falsy, we short-circuit as
+        // an optimization
+        return fulfill({updated: false, rev: docRev});
       }
+
+      // users aren't allowed to modify these values,
+      // so reset them here
       newDoc._id = docId;
-      newDoc._rev = doc._rev;
+      newDoc._rev = docRev;
       fulfill(tryAndPut(db, newDoc, diffFun));
     });
   });
