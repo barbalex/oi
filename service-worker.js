@@ -24,7 +24,7 @@
 
 
 
-var PrecacheConfig = [["images/favicon.ico","a62323a86256dfae2a052b95b7c81587"],["index.html","39ab98ff862e68c81ab173716b69bef6"],["style/jstree.css","74bf9a47814de52ff491be0a616c403b"],["style/oi_built.css","1edd299af8f626921c7de9e8c2e03e06"]];
+var PrecacheConfig = [["images/favicon.ico","a62323a86256dfae2a052b95b7c81587"],["index.html","39ab98ff862e68c81ab173716b69bef6"],["style/jstree.css","af86ebe17a16967402312e1ee8159651"],["style/oi_built.css","d299f943556d3dd46e5e350b9275d098"]];
 var CacheNamePrefix = 'sw-precache-v1--' + (self.registration ? self.registration.scope : '') + '-';
 
 
