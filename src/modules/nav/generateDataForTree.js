@@ -3,6 +3,8 @@
 
 var PouchDB                        = require('pouchdb'),
     _                              = require('underscore'),
+    configuration                  = require('../configuration'),
+    couchUrl                       = configuration.couch.dbUrl,
     createTreeNodeObject           = require('./createTreeNodeObject'),
     createTreeNodeRootObject       = require('./createTreeNodeRootObject'),
     createChildHierarchiesOfObject = require('./createChildHierarchiesOfObject'),
@@ -13,7 +15,12 @@ function setupFirstProject() {
         projHierarchyGuid,
         projObject,
         projObjectGuid,
-        localDb;
+        localDb,
+        syncOptionsSync,
+        syncOptionsReplication,
+        projectName,
+        remoteDbAddress,
+        remoteDb;
 
     console.log('setting up first project');
 
@@ -54,7 +61,7 @@ function setupFirstProject() {
         "type": "object",
         "hId": projHierarchyGuid,
         "parent": null,
-        "projId": "o1o",
+        "projId": projObjectGuid,
         "users": [window.oi.me.name],
         "lastEdited": {"date": null, "user": null, "database": null},
         "data": {
@@ -64,9 +71,26 @@ function setupFirstProject() {
     };
     window.oi.objects.push(projObject);
     window.oi.hierarchies.push(projHierarchy);
-    localDb = new PouchDB('project_' + projObjectGuid);
+    projectName     = 'project_' + projObjectGuid;
+    localDb         = new PouchDB(projectName);
+    remoteDbAddress = 'http://' + couchUrl + '/' + projectName;
+    remoteDb        = new PouchDB(remoteDbAddress);
     localDb.put(projObject).then(function (response) {
         return localDb.put(projHierarchy);
+    }).then(function (response) {
+        syncOptionsSync = {
+            live:  true,
+            retry: true
+        };
+        syncOptionsReplication = {
+            create_target: true
+        };
+        // first replicate once because syncing does not seem to work
+        PouchDB.replicate(localDb, remoteDb, syncOptionsReplication).setMaxListeners(20);
+        window.oi[projectName + '_sync'] = PouchDB.sync(localDb, remoteDb, syncOptionsSync).setMaxListeners(20);
+
+        console.log('syncing with ' + projectName);
+
     }).catch(function (err) {
         console.log('error saving first project: ', err);
     });
