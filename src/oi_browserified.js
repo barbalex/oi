@@ -45377,16 +45377,86 @@ module.exports = function (object) {
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var _                              = require('underscore'),
+var PouchDB                        = require('pouchdb'),
+    _                              = require('underscore'),
     createTreeNodeObject           = require('./createTreeNodeObject'),
     createTreeNodeRootObject       = require('./createTreeNodeRootObject'),
-    createChildHierarchiesOfObject = require('./createChildHierarchiesOfObject');
+    createChildHierarchiesOfObject = require('./createChildHierarchiesOfObject'),
+    guid                           = require('../guid');
+
+function setupFirstProject() {
+    var projHierarchy,
+        projHierarchyGuid,
+        projObject,
+        projObjectGuid,
+        localDb;
+
+    console.log('setting up first project');
+
+    // the user has no data yet
+    // add standard project
+    projHierarchyGuid = guid();
+    projObjectGuid    = guid();
+    projHierarchy = {
+        "_id": projHierarchyGuid,
+        "type": "hierarchy",
+        "parent": null,
+        "projId": projObjectGuid,
+        "name": "Projekte",
+        "nameField": "Projektname",
+        "users": [window.oi.me.name],
+        "lastEdited": {"date": null, "user": null, "database": null},
+        "fields": [
+            {
+                "label": "Projektname",
+                "inputType": "input",
+                "valueList": [],
+                "order": 1,
+                "inputDataType": "text",
+                "standardValue": ""
+            },
+            {
+                "label": "Bemerkungen",
+                "inputType": "textarea",
+                "valueList": [],
+                "order": 1,
+                "inputDataType": "",
+                "standardValue": ""
+            }
+        ]
+    };
+    projObject = {
+        "_id": projObjectGuid,
+        "type": "object",
+        "hId": projHierarchyGuid,
+        "parent": null,
+        "projId": "o1o",
+        "users": [window.oi.me.name],
+        "lastEdited": {"date": null, "user": null, "database": null},
+        "data": {
+            "Projektname": "Mein erstes Projekt",
+            "Bemerkungen": null
+        }
+    };
+    window.oi.objects.push(projObject);
+    window.oi.hierarchies.push(projHierarchy);
+    localDb = new PouchDB('project_' + projObjectGuid);
+    localDb.put(projObject).then(function (response) {
+        return localDb.put(projHierarchy);
+    }).catch(function (err) {
+        console.log('error saving first project: ', err);
+    });
+}
 
 module.exports = function () {
     var objectsData          = [],
         childHierarchiesData = [],
         obj,
         dat;
+
+    if (window.oi.objects.length === 0) {
+        setupFirstProject();
+    }
 
     _.each(window.oi.objects, function (object) {
         if (object && (object.parent || object.parent === null)) {
@@ -45406,7 +45476,7 @@ module.exports = function () {
 
     return _.union(objectsData, childHierarchiesData);
 };
-},{"./createChildHierarchiesOfObject":231,"./createTreeNodeObject":234,"./createTreeNodeRootObject":235,"underscore":160}],237:[function(require,module,exports){
+},{"../guid":196,"./createChildHierarchiesOfObject":231,"./createTreeNodeObject":234,"./createTreeNodeRootObject":235,"pouchdb":116,"underscore":160}],237:[function(require,module,exports){
 /*
  * gets data from the db to populate the model
  * on firstsync gets from couch
@@ -45563,6 +45633,9 @@ module.exports = function (projectNames, login) {
 
     if (!projectNames || projectNames.length === 0) {
         console.log('no projectNames passed');
+        // create tree
+        // will add first project
+        createTree();
     }
 };
 },{"./createTree":233,"./getDataFromDb":237,"underscore":160}],241:[function(require,module,exports){
@@ -45842,8 +45915,8 @@ function signup(signindata) {
 }
 
 module.exports = function (signindata) {
-    // when first sync data for model is fetched from remote db instead of locally
-    // better because data may not yet have arrived locally
+    // after signin data for model is fetched from remote db instead of locally
+    // better because data may not yet have arrived locally through syncing
     newSignup = true;
 
     console.log('going to sign up. signindata: ', signindata);

@@ -26,5 +26,8 @@ module.exports = function (projectNames, login) {
 
     if (!projectNames || projectNames.length === 0) {
         console.log('no projectNames passed');
+        // create tree
+        // will add first project
+        createTree();
     }
 };

@@ -35,8 +35,8 @@ function signup(signindata) {
 }
 
 module.exports = function (signindata) {
-    // when first sync data for model is fetched from remote db instead of locally
-    // better because data may not yet have arrived locally
+    // after signin data for model is fetched from remote db instead of locally
+    // better because data may not yet have arrived locally through syncing
     newSignup = true;
 
     console.log('going to sign up. signindata: ', signindata);
