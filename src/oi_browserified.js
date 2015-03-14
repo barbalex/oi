@@ -42719,7 +42719,7 @@ module.exports = function ($node) {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./askYesNoWithModal":162,"./deleteObjectFromModel":169,"./getObject":194,"./tellWithModal":259,"dateformat":9,"pouchdb":116,"underscore":160}],169:[function(require,module,exports){
+},{"./askYesNoWithModal":162,"./deleteObjectFromModel":169,"./getObject":194,"./tellWithModal":260,"dateformat":9,"pouchdb":116,"underscore":160}],169:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -42913,7 +42913,7 @@ module.exports = function () {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../getObject":194,"../map/zoomToFeature":229,"../showTab":255,"openlayers":41}],177:[function(require,module,exports){
+},{"../getObject":194,"../map/zoomToFeature":229,"../showTab":256,"openlayers":41}],177:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -43401,7 +43401,7 @@ module.exports = function (id, type) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../../templates/checkbox":262,"../../../templates/checkboxGroup":263,"../../../templates/formButtonToolbar":264,"../../../templates/geoJson":265,"../../../templates/input":266,"../../../templates/optionGroup":270,"../../../templates/select":271,"../../../templates/textarea":272,"../capitalizeFirstLetter":163,"../getHierarchy":193,"../getObject":194,"../map/zoomToFeatures":230,"../refreshScrollbar":248,"../showTab":255,"./addCheckedToValueList":183,"./positionFormBtngroup":189,"./resizeTextareas":190,"openlayers":41,"underscore":160}],188:[function(require,module,exports){
+},{"../../../templates/checkbox":263,"../../../templates/checkboxGroup":264,"../../../templates/formButtonToolbar":265,"../../../templates/geoJson":266,"../../../templates/input":267,"../../../templates/optionGroup":271,"../../../templates/select":272,"../../../templates/textarea":273,"../capitalizeFirstLetter":163,"../getHierarchy":193,"../getObject":194,"../map/zoomToFeatures":230,"../refreshScrollbar":248,"../showTab":256,"./addCheckedToValueList":183,"./positionFormBtngroup":189,"./resizeTextareas":190,"openlayers":41,"underscore":160}],188:[function(require,module,exports){
 // Hilfsfunktion, die typeof ersetzt und ergänzt
 // typeof gibt bei input-Feldern immer String zurück!
 
@@ -43596,7 +43596,7 @@ module.exports = function (passedObject, value) {
                     // write object ALSO to oi that is listened to from oi_pg
                     // then start syncing
 
-                    console.log('starting to sync with new db: ', projectName);
+                    console.log('new project saved: starting to sync with new db: ', projectName);
                     // give oi_pg time to create the new db
                     setTimeout(function () {
                         syncProjectDb(projectName);
@@ -43615,9 +43615,9 @@ module.exports = function (passedObject, value) {
                 }
                 // if field is geoGson, update feature on map
                 if (inputType === 'geoJson') {
-                    layerName          = 'layer' + capitalizeFirstLetter(correspondingHierarchy.name) + capitalizeFirstLetter(passedObject.label);
-                    layer              = getLayerByName(layerName);
-                    feature            = getFeatureById(layer, object._id);
+                    layerName = 'layer' + capitalizeFirstLetter(correspondingHierarchy.name) + capitalizeFirstLetter(passedObject.label);
+                    layer     = getLayerByName(layerName);
+                    feature   = getFeatureById(layer, object._id);
                     if (value) {
                         geomType           = value.type;
                         featureCoordinates = value.coordinates;
@@ -43653,7 +43653,7 @@ module.exports = function (passedObject, value) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../capitalizeFirstLetter":163,"../getObject":194,"../map/getFeatureById":216,"../map/getLayerByName":217,"../nav/getLabelForObject":238,"../syncProjectDb":256,"dateformat":9,"openlayers":41,"pouchdb":116,"underscore":160}],193:[function(require,module,exports){
+},{"../capitalizeFirstLetter":163,"../getObject":194,"../map/getFeatureById":216,"../map/getLayerByName":217,"../nav/getLabelForObject":238,"../syncProjectDb":257,"dateformat":9,"openlayers":41,"pouchdb":116,"underscore":160}],193:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -44026,7 +44026,7 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./alsoResizeReverse":161,"./form/positionFormBtngroup":189,"./form/resizeTextareas":190,"./map/refreshMap":220,"./refreshScrollbar":248,"./saveResizablesConfig":250,"./setWidthOfTabs":252,"./toggleTab":260,"perfect-scrollbar":42,"underscore":160}],203:[function(require,module,exports){
+},{"./alsoResizeReverse":161,"./form/positionFormBtngroup":189,"./form/resizeTextareas":190,"./map/refreshMap":220,"./refreshScrollbar":248,"./saveResizablesConfig":250,"./setWidthOfTabs":252,"./toggleTab":261,"perfect-scrollbar":42,"underscore":160}],203:[function(require,module,exports){
 /*
  * add a DragBox interaction used to select features by drawing boxes
  * while holding the shift key
@@ -44210,7 +44210,7 @@ module.exports = function (layer) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../../templates/layertoolLayerCollapse":267,"../../../templates/layertoolProjectPanel":268,"../../../templates/layertoolThemesPanel":269,"../capitalizeFirstLetter":163,"../getHierarchy":193,"../getObject":194}],206:[function(require,module,exports){
+},{"../../../templates/layertoolLayerCollapse":268,"../../../templates/layertoolProjectPanel":269,"../../../templates/layertoolThemesPanel":270,"../capitalizeFirstLetter":163,"../getHierarchy":193,"../getObject":194}],206:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -45381,100 +45381,11 @@ module.exports = function (object) {
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var PouchDB                        = require('pouchdb'),
-    _                              = require('underscore'),
-    configuration                  = require('../configuration'),
-    couchUrl                       = configuration.couch.dbUrl,
+var _                              = require('underscore'),
     createTreeNodeObject           = require('./createTreeNodeObject'),
     createTreeNodeRootObject       = require('./createTreeNodeRootObject'),
     createChildHierarchiesOfObject = require('./createChildHierarchiesOfObject'),
-    guid                           = require('../guid');
-
-function setupFirstProject() {
-    var projHierarchy,
-        projHierarchyGuid,
-        projObject,
-        projObjectGuid,
-        localDb,
-        syncOptionsSync,
-        syncOptionsReplication,
-        projectName,
-        remoteDbAddress,
-        remoteDb;
-
-    console.log('setting up first project');
-
-    // the user has no data yet
-    // add standard project
-    projHierarchyGuid = guid();
-    projObjectGuid    = guid();
-    projHierarchy = {
-        "_id": projHierarchyGuid,
-        "type": "hierarchy",
-        "parent": null,
-        "projId": projObjectGuid,
-        "name": "Projekte",
-        "nameField": "Projektname",
-        "users": [window.oi.me.name],
-        "lastEdited": {"date": null, "user": null, "database": null},
-        "fields": [
-            {
-                "label": "Projektname",
-                "inputType": "input",
-                "valueList": [],
-                "order": 1,
-                "inputDataType": "text",
-                "standardValue": ""
-            },
-            {
-                "label": "Bemerkungen",
-                "inputType": "textarea",
-                "valueList": [],
-                "order": 1,
-                "inputDataType": "",
-                "standardValue": ""
-            }
-        ]
-    };
-    projObject = {
-        "_id": projObjectGuid,
-        "type": "object",
-        "hId": projHierarchyGuid,
-        "parent": null,
-        "projId": projObjectGuid,
-        "users": [window.oi.me.name],
-        "lastEdited": {"date": null, "user": null, "database": null},
-        "data": {
-            "Projektname": "Mein erstes Projekt",
-            "Bemerkungen": null
-        }
-    };
-    window.oi.objects.push(projObject);
-    window.oi.hierarchies.push(projHierarchy);
-    projectName     = 'project_' + projObjectGuid;
-    localDb         = new PouchDB(projectName);
-    remoteDbAddress = 'http://' + couchUrl + '/' + projectName;
-    remoteDb        = new PouchDB(remoteDbAddress);
-    localDb.put(projObject).then(function (response) {
-        return localDb.put(projHierarchy);
-    }).then(function (response) {
-        syncOptionsSync = {
-            live:  true,
-            retry: true
-        };
-        syncOptionsReplication = {
-            create_target: true
-        };
-        // first replicate once because syncing does not seem to work
-        PouchDB.replicate(localDb, remoteDb, syncOptionsReplication).setMaxListeners(20);
-        window.oi[projectName + '_sync'] = PouchDB.sync(localDb, remoteDb, syncOptionsSync).setMaxListeners(20);
-
-        console.log('syncing with ' + projectName);
-
-    }).catch(function (err) {
-        console.log('error saving first project: ', err);
-    });
-}
+    setupFirstProject              = require('../setupFirstProject');
 
 module.exports = function () {
     var objectsData          = [],
@@ -45504,7 +45415,7 @@ module.exports = function () {
 
     return _.union(objectsData, childHierarchiesData);
 };
-},{"../configuration":164,"../guid":196,"./createChildHierarchiesOfObject":231,"./createTreeNodeObject":234,"./createTreeNodeRootObject":235,"pouchdb":116,"underscore":160}],237:[function(require,module,exports){
+},{"../setupFirstProject":255,"./createChildHierarchiesOfObject":231,"./createTreeNodeObject":234,"./createTreeNodeRootObject":235,"underscore":160}],237:[function(require,module,exports){
 /*
  * gets data from the db to populate the model
  * on firstsync gets from couch
@@ -45738,7 +45649,7 @@ module.exports = function (newSignup, login) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../getUserDbName":195,"../replicateUserDbOnceFromRemoteToLocal":249,"../syncProjectDbs":257,"../syncUserDb":258,"./createDatabaseId":232,"./getModelData":240,"async":2,"pouchdb":116,"underscore":160}],242:[function(require,module,exports){
+},{"../getUserDbName":195,"../replicateUserDbOnceFromRemoteToLocal":249,"../syncProjectDbs":258,"../syncUserDb":259,"./createDatabaseId":232,"./getModelData":240,"async":2,"pouchdb":116,"underscore":160}],242:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -45904,7 +45815,7 @@ module.exports = function () {
     signIn(signindata);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../validateEmail":261,"./signIn":244,"./signUp":246}],246:[function(require,module,exports){
+},{"../validateEmail":262,"./signIn":244,"./signUp":246}],246:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -46321,6 +46232,124 @@ module.exports = function () {
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./event/onChangeEditLayerType":170,"./event/onChangeElement":171,"./event/onChangeLytEditLayer":172,"./event/onChangeLytShowLayer":173,"./event/onClickFormDelete":174,"./event/onClickFormNew":175,"./event/onClickGeometryField":176,"./event/onClickNavFormSort":177,"./event/onClickNavLogin":178,"./event/onClickNavbarCollapse":179,"./event/onClickSigninWithModalSignupCheckbox":180,"./event/onKeypressSigninWithModal":181,"./event/onScrollTab":182,"./form/fitTextareaToContent":185,"./map/deleteSelectedFeatures":213,"./nav/signInOrUp":245,"./refreshScrollbar":248,"underscore":160}],255:[function(require,module,exports){
+/*
+ * creates the first project if a user has none yet
+ * 1. creates project-hierarchy (metadata for project-doc)
+ * 2. creates project-doc
+ * 3. adds these docs to the model
+ * 4. creates new local project db and adds these docs
+ * 5. syncs local project db to remote couch, opting to create the db on the remote couch
+ */
+
+/*jslint node: true, browser: true, nomen: true, todo: true */
+'use strict';
+
+var PouchDB                        = require('pouchdb'),
+    _                              = require('underscore'),
+    configuration                  = require('./configuration'),
+    couchUrl                       = configuration.couch.dbUrl,
+    guid                           = require('./guid');
+
+module.exports = function () {
+    var projHierarchy,
+        projHierarchyGuid,
+        projObject,
+        projObjectGuid,
+        localDb,
+        syncOptions,
+        replicationOptions,
+        projectName,
+        remoteDbUrl,
+        remoteDb,
+        dbOptions;
+
+    console.log('setting up first project');
+
+    // the user has no data yet
+    // add standard project
+
+    // first create hierarchy- and object-doc for the project
+    projHierarchyGuid = guid();
+    projObjectGuid    = guid();
+    projHierarchy = {
+        "_id": projHierarchyGuid,
+        "type": "hierarchy",
+        "parent": null,
+        "projId": projObjectGuid,
+        "name": "Projekte",
+        "nameField": "Projektname",
+        "users": [window.oi.me.name],
+        "lastEdited": {"date": null, "user": null, "database": null},
+        "fields": [
+            {
+                "label": "Projektname",
+                "inputType": "input",
+                "valueList": [],
+                "order": 1,
+                "inputDataType": "text",
+                "standardValue": ""
+            },
+            {
+                "label": "Bemerkungen",
+                "inputType": "textarea",
+                "valueList": [],
+                "order": 1,
+                "inputDataType": "",
+                "standardValue": ""
+            }
+        ]
+    };
+    projObject = {
+        "_id": projObjectGuid,
+        "type": "object",
+        "hId": projHierarchyGuid,
+        "parent": null,
+        "projId": projObjectGuid,
+        "users": [window.oi.me.name],
+        "lastEdited": {"date": null, "user": null, "database": null},
+        "data": {
+            "Projektname": "Mein erstes Projekt",
+            "Bemerkungen": null
+        }
+    };
+    // add docs to model
+    window.oi.objects.push(projObject);
+    window.oi.hierarchies.push(projHierarchy);
+    // add docs to new local project-db
+    projectName = 'project_' + projObjectGuid;
+    localDb     = new PouchDB(projectName);
+    localDb.put(projObject).then(function (response) {
+        return localDb.put(projHierarchy);
+    }).then(function (response) {
+        // sync docs to remote project-db making sure the remote db is created 
+        syncOptions = {
+            live:  true,
+            retry: true
+        };
+        replicationOptions = {
+            create_target: true
+        };
+        dbOptions = {
+            auth: {
+                username: window.oi.me.name,
+                password: window.oi.me.password
+            }
+        };
+        remoteDbUrl = 'http://' + couchUrl + '/' + projectName;
+        remoteDb    = new PouchDB(remoteDbUrl, dbOptions);
+        // first replicate once because using PouchDB.sync does not seem to work (?)
+        PouchDB.replicate(localDb, remoteDb, replicationOptions).setMaxListeners(20);
+        // sync permanently
+        // assing sync to a global variable so it can be stopped later (if project-db is removed)
+        window.oi[projectName + '_sync'] = PouchDB.sync(localDb, remoteDb, syncOptions).setMaxListeners(20);
+
+        console.log('syncing with ' + projectName);
+
+    }).catch(function (err) {
+        console.log('error saving first project: ', err);
+    });
+};
+},{"./configuration":164,"./guid":196,"pouchdb":116,"underscore":160}],256:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -46345,7 +46374,7 @@ module.exports = function (tab, setTabsWidth) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./map/initiateMap":218,"./setWidthOfTabs":252}],256:[function(require,module,exports){
+},{"./map/initiateMap":218,"./setWidthOfTabs":252}],257:[function(require,module,exports){
 /**
  * syncs data from a project-db with a local project-db in the pouch
  * starts the changes listener
@@ -46367,8 +46396,9 @@ module.exports = function (projectName) {
             }
         },
         syncOptions = {
-            live:  true,
-            retry: true
+            live:          true,
+            retry:         true,
+            create_target: true
         },
         changeOptions = {
             since:        'now',
@@ -46393,7 +46423,7 @@ module.exports = function (projectName) {
     }
 };
 
-},{"./configuration":164,"./handleChanges":197,"pouchdb":116}],257:[function(require,module,exports){
+},{"./configuration":164,"./handleChanges":197,"pouchdb":116}],258:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -46406,7 +46436,7 @@ module.exports = function (projectDbs) {
     });
 };
 
-},{"./syncProjectDb":256,"underscore":160}],258:[function(require,module,exports){
+},{"./syncProjectDb":257,"underscore":160}],259:[function(require,module,exports){
 /**
  * syncs data from a user-db with a local user-db in the pouch
  * starts the changes listener
@@ -46459,7 +46489,7 @@ module.exports = function () {
     }
 };
 
-},{"./configuration":164,"./getUserDbName":195,"./handleChanges":197,"pouchdb":116}],259:[function(require,module,exports){
+},{"./configuration":164,"./getUserDbName":195,"./handleChanges":197,"pouchdb":116}],260:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -46482,7 +46512,7 @@ module.exports = function (title, text) {
     $modal.modal(options);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],260:[function(require,module,exports){
+},{}],261:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -46506,7 +46536,7 @@ module.exports = function (tab) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./hideTab":200,"./setWidthOfTabs":252,"./showTab":255}],261:[function(require,module,exports){
+},{"./hideTab":200,"./setWidthOfTabs":252,"./showTab":256}],262:[function(require,module,exports){
 /*
  * prüft, ob ein String eine email-Adressen sein könnte
  * Quelle: http://stackoverflow.com/questions/46155/validate-email-address-in-javascript
@@ -46519,7 +46549,7 @@ module.exports = function (string) {
     var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(string);
 };
-},{}],262:[function(require,module,exports){
+},{}],263:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1, helper, alias1=this.lambda, alias2=this.escapeExpression, alias3=helpers.helperMissing;
 
@@ -46534,7 +46564,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + alias2(((helper = (helper = helpers.checked || (depth0 != null ? depth0.checked : depth0)) != null ? helper : alias3),(typeof helper === "function" ? helper.call(depth0,{"name":"checked","hash":{},"data":data}) : helper)))
     + ">\r\n            </label>\r\n        </div>\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":27}],263:[function(require,module,exports){
+},{"handlebars":27}],264:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,blockParams,depths) {
     var stack1, helper, alias1=this.lambda, alias2=this.escapeExpression, alias3=helpers.helperMissing;
 
@@ -46563,11 +46593,11 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
     + ((stack1 = helpers.each.call(depth0,((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.valueList : stack1),{"name":"each","hash":{},"fn":this.program(1, data, 0, blockParams, depths),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "    </div>\r\n</div>";
 },"useData":true,"useDepths":true});
-},{"handlebars":27}],264:[function(require,module,exports){
+},{"handlebars":27}],265:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     return "<div class=\"btn-toolbar\" role=\"toolbar\" aria-label=\"Daten Toolbar\">\r\n    <div class=\"btn-group pull-right\" role=\"group\" aria-label=\"Daten Button group\">\r\n        <button id=\"formNew\" class=\"btn btn-default\">neu</button>\r\n        <button id=\"formDelete\" class=\"btn btn-default\">löschen</button>\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":27}],265:[function(require,module,exports){
+},{"handlebars":27}],266:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1, alias1=this.lambda, alias2=this.escapeExpression;
 
@@ -46585,7 +46615,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.value : stack1), depth0))
     + "</textarea>\r\n    <button class=\"js-geometryField btn btn-default btn-xs\">zoomen</button>\r\n</div>";
 },"useData":true});
-},{"handlebars":27}],266:[function(require,module,exports){
+},{"handlebars":27}],267:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1, alias1=this.lambda, alias2=this.escapeExpression;
 
@@ -46605,7 +46635,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.value : stack1), depth0))
     + "\">\r\n</div>";
 },"useData":true});
-},{"handlebars":27}],267:[function(require,module,exports){
+},{"handlebars":27}],268:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data) {
     var stack1;
 
@@ -46633,7 +46663,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
     + ((stack1 = helpers['if'].call(depth0,((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.isProject : stack1),{"name":"if","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":27}],268:[function(require,module,exports){
+},{"handlebars":27}],269:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1, alias1=this.lambda, alias2=this.escapeExpression;
 
@@ -46651,11 +46681,11 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.projId : stack1), depth0))
     + "\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingProjekte\">\r\n        <!--insert layer collapses-->\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":27}],269:[function(require,module,exports){
+},{"handlebars":27}],270:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     return "<div id=\"lytThemes\" class=\"panel panel-default js-layerPanel\">\r\n    <div class=\"panel-heading\" role=\"tab\" id=\"headingThemen\">\r\n        <h4 class=\"panel-title\">\r\n            <a class=\"collapsed\" data-toggle=\"collapse\" data-parent=\"#utilsLayertoolAccordion\" href=\"#collapseThemes\" aria-expanded=\"false\" aria-controls=\"collapseThemes\">\r\n              Themen\r\n            </a>\r\n        </h4>\r\n    </div>\r\n    <div id=\"collapseThemes\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingThemen\">\r\n        <!--insert list-groups-->\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":27}],270:[function(require,module,exports){
+},{"handlebars":27}],271:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,blockParams,depths) {
     var stack1, helper, alias1=this.lambda, alias2=this.escapeExpression, alias3=helpers.helperMissing;
 
@@ -46684,7 +46714,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
     + ((stack1 = helpers.each.call(depth0,((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.valueList : stack1),{"name":"each","hash":{},"fn":this.program(1, data, 0, blockParams, depths),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "    </div>\r\n</div>";
 },"useData":true,"useDepths":true});
-},{"handlebars":27}],271:[function(require,module,exports){
+},{"handlebars":27}],272:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data) {
     var stack1, alias1=this.lambda, alias2=this.escapeExpression;
 
@@ -46709,7 +46739,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
     + ((stack1 = helpers.each.call(depth0,((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.valueList : stack1),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "        </select>\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":27}],272:[function(require,module,exports){
+},{"handlebars":27}],273:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1, alias1=this.lambda, alias2=this.escapeExpression;
 

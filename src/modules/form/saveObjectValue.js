@@ -81,7 +81,7 @@ module.exports = function (passedObject, value) {
                     // write object ALSO to oi that is listened to from oi_pg
                     // then start syncing
 
-                    console.log('starting to sync with new db: ', projectName);
+                    console.log('new project saved: starting to sync with new db: ', projectName);
                     // give oi_pg time to create the new db
                     setTimeout(function () {
                         syncProjectDb(projectName);
@@ -100,9 +100,9 @@ module.exports = function (passedObject, value) {
                 }
                 // if field is geoGson, update feature on map
                 if (inputType === 'geoJson') {
-                    layerName          = 'layer' + capitalizeFirstLetter(correspondingHierarchy.name) + capitalizeFirstLetter(passedObject.label);
-                    layer              = getLayerByName(layerName);
-                    feature            = getFeatureById(layer, object._id);
+                    layerName = 'layer' + capitalizeFirstLetter(correspondingHierarchy.name) + capitalizeFirstLetter(passedObject.label);
+                    layer     = getLayerByName(layerName);
+                    feature   = getFeatureById(layer, object._id);
                     if (value) {
                         geomType           = value.type;
                         featureCoordinates = value.coordinates;
