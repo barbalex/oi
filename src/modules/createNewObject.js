@@ -4,7 +4,6 @@
  * - type
  * - parent
  * - projId
- * - users
  * erstellt ein neues Objekt dieser Hierarchie und den gemeinsamen Daten von object
  * (objekt kann auch einfach eine Hüllen sein, mit der diese Eigenschaften übergeben werden,
  * z.B. wenn das neue Objekt von der Hierarchie aus geschaffen wird)
@@ -39,7 +38,6 @@ module.exports = function (object, hierarchy) {
     newObject.parent              = object.parent;
     // wenn ein neues Projekt erfasst wird, muss eine neue projId vergeben werden
     newObject.projId              = object.parent ? object.projId : guid();
-    newObject.users               = object.users;
     newObject.lastEdited          = {};
     newObject.lastEdited.date     = dateformat(new Date(), 'isoDateTime');
     newObject.lastEdited.user     = window.oi.me.name;

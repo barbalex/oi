@@ -7,7 +7,7 @@ var _               = require('underscore'),
 
 module.exports = function (hierarchyId, parentId) {
     var parentObject,
-        // object ist eine Hülle, welche parent, projId und users übermittelt
+        // object ist eine Hülle, welche parent und projId übermittelt
         object,
         hierarchy;
 
@@ -22,7 +22,6 @@ module.exports = function (hierarchyId, parentId) {
             object        = {};
             object.parent = parentObject._id;
             object.projId = parentObject.projId;
-            object.users  = parentObject.users;
             createNewObject(object, hierarchy);
         } else {
             console.log('error: no object found for parent hierarchy');

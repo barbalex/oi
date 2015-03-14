@@ -42465,7 +42465,6 @@ module.exports = config;
  * - type
  * - parent
  * - projId
- * - users
  * erstellt ein neues Objekt dieser Hierarchie und den gemeinsamen Daten von object
  * (objekt kann auch einfach eine Hüllen sein, mit der diese Eigenschaften übergeben werden,
  * z.B. wenn das neue Objekt von der Hierarchie aus geschaffen wird)
@@ -42500,7 +42499,6 @@ module.exports = function (object, hierarchy) {
     newObject.parent              = object.parent;
     // wenn ein neues Projekt erfasst wird, muss eine neue projId vergeben werden
     newObject.projId              = object.parent ? object.projId : guid();
-    newObject.users               = object.users;
     newObject.lastEdited          = {};
     newObject.lastEdited.date     = dateformat(new Date(), 'isoDateTime');
     newObject.lastEdited.user     = window.oi.me.name;
@@ -42548,7 +42546,7 @@ var _               = require('underscore'),
 
 module.exports = function (hierarchyId, parentId) {
     var parentObject,
-        // object ist eine Hülle, welche parent, projId und users übermittelt
+        // object ist eine Hülle, welche parent und projId übermittelt
         object,
         hierarchy;
 
@@ -42563,7 +42561,6 @@ module.exports = function (hierarchyId, parentId) {
             object        = {};
             object.parent = parentObject._id;
             object.projId = parentObject.projId;
-            object.users  = parentObject.users;
             createNewObject(object, hierarchy);
         } else {
             console.log('error: no object found for parent hierarchy');
