@@ -5,7 +5,7 @@ var _                              = require('underscore'),
     createTreeNodeObject           = require('./createTreeNodeObject'),
     createTreeNodeRootObject       = require('./createTreeNodeRootObject'),
     createChildHierarchiesOfObject = require('./createChildHierarchiesOfObject'),
-    setupFirstProject              = require('../setupFirstProject');
+    createFirstProject             = require('../createFirstProject');
 
 module.exports = function () {
     var objectsData          = [],
@@ -14,7 +14,7 @@ module.exports = function () {
         dat;
 
     if (window.oi.objects.length === 0) {
-        setupFirstProject();
+        createFirstProject();
     }
 
     _.each(window.oi.objects, function (object) {
