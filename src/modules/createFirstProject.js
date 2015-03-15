@@ -14,7 +14,8 @@ var PouchDB                        = require('pouchdb'),
     _                              = require('underscore'),
     configuration                  = require('./configuration'),
     couchUrl                       = configuration.couch.dbUrl,
-    guid                           = require('./guid');
+    guid                           = require('./guid'),
+    syncProjectDb = require('./syncProjectDb');
 
 module.exports = function () {
     var projHierarchy,
@@ -22,12 +23,7 @@ module.exports = function () {
         projObject,
         projObjectGuid,
         localDb,
-        syncOptions,
-        replicationOptions,
-        projectName,
-        remoteDbUrl,
-        remoteDb,
-        dbOptions;
+        projectName;
 
     console.log('setting up first project');
 
@@ -87,30 +83,8 @@ module.exports = function () {
     localDb.put(projObject).then(function (response) {
         return localDb.put(projHierarchy);
     }).then(function (response) {
-        // sync docs to remote project-db making sure the remote db is created 
-        syncOptions = {
-            live:  true,
-            retry: true
-        };
-        replicationOptions = {
-            create_target: true
-        };
-        dbOptions = {
-            auth: {
-                username: window.oi.me.name,
-                password: window.oi.me.password
-            }
-        };
-        remoteDbUrl = 'http://' + couchUrl + '/' + projectName;
-        remoteDb    = new PouchDB(remoteDbUrl, dbOptions);
-        // first replicate once because using PouchDB.sync does not seem to work (?)
-        PouchDB.replicate(localDb, remoteDb, replicationOptions).setMaxListeners(20);
-        // sync permanently
-        // assing sync to a global variable so it can be stopped later (if project-db is removed)
-        window.oi[projectName + '_sync'] = PouchDB.sync(localDb, remoteDb, syncOptions).setMaxListeners(20);
-
-        console.log('syncing with ' + projectName);
-
+        // sync docs to remote project-db making sure the remote db is created
+        syncProjectDb(projectName);
     }).catch(function (err) {
         console.log('error saving first project: ', err);
     });
