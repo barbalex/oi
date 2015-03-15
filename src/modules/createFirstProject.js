@@ -10,11 +10,11 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var PouchDB                        = require('pouchdb'),
-    _                              = require('underscore'),
-    configuration                  = require('./configuration'),
-    couchUrl                       = configuration.couch.dbUrl,
-    guid                           = require('./guid'),
+var PouchDB       = require('pouchdb'),
+    _             = require('underscore'),
+    configuration = require('./configuration'),
+    couchUrl      = configuration.couch.dbUrl,
+    guid          = require('./guid'),
     syncProjectDb = require('./syncProjectDb');
 
 module.exports = function () {
