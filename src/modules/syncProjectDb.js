@@ -19,9 +19,8 @@ module.exports = function (projectName) {
             }
         },
         syncOptions = {
-            live:          true,
-            retry:         true,
-            create_target: true
+            live:  true,
+            retry: true
         },
         changeOptions = {
             since:        'now',

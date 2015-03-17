@@ -28208,7 +28208,7 @@ window.oi.hierarchies = [];
 window.PouchDB = PouchDB;
 
 initiateApp();
-},{"./modules/initiateApp":203,"bootstrap-validator":3,"pouchdb":116,"pouchdb-authentication":65}],2:[function(require,module,exports){
+},{"./modules/initiateApp":204,"bootstrap-validator":3,"pouchdb":116,"pouchdb-authentication":65}],2:[function(require,module,exports){
 (function (process){
 /*!
  * async
@@ -70527,7 +70527,7 @@ module.exports = function (role) {
         console.log('error getting user from local userDb: ', error);
     });
 };
-},{"./getUserDbName":197,"pouchdb":116,"underscore":160}],162:[function(require,module,exports){
+},{"./getUserDbName":198,"pouchdb":116,"underscore":160}],162:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 /*global app, me, $*/
@@ -70691,7 +70691,6 @@ var PouchDB         = require('pouchdb'),
     configuration   = require('./configuration'),
     couchUrl        = configuration.couch.dbUrl,
     guid            = require('./guid'),
-    syncProjectDb   = require('./syncProjectDb'),
     addRoleToUserDb = require('./addRoleToUserDb');
 
 module.exports = function () {
@@ -70755,20 +70754,19 @@ module.exports = function () {
     window.oi.objects.push(projObject);
     window.oi.hierarchies.push(projHierarchy);
     projectName = 'project_' + projObjectGuid;
-    // TODO: add role to user in userDb
+    // add role to user in userDb
+    // userDb syncs role to server
+    // server script then creates projectDb in couch
     addRoleToUserDb(projectName);
     // add docs to new local project-db
     projectDb   = new PouchDB(projectName);
-    projectDb.put(projObject).then(function (response) {
+    projectDb.put(projObject).then(function () {
         return projectDb.put(projHierarchy);
-    }).then(function (response) {
-        // sync docs to remote project-db making sure the remote db is created
-        syncProjectDb(projectName);
     }).catch(function (err) {
         console.log('error saving first project: ', err);
     });
 };
-},{"./addRoleToUserDb":161,"./configuration":165,"./guid":198,"./syncProjectDb":258,"pouchdb":116,"underscore":160}],167:[function(require,module,exports){
+},{"./addRoleToUserDb":161,"./configuration":165,"./guid":199,"pouchdb":116,"underscore":160}],167:[function(require,module,exports){
 (function (global){
 /*
  * erhält eine Hierarchie
@@ -70847,7 +70845,7 @@ module.exports = function (object, hierarchy) {
     return newObject;
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./guid":198,"./nav/createChildHierarchiesOfObject":233,"./nav/createTreeNodeObject":236,"dateformat":9,"underscore":160}],168:[function(require,module,exports){
+},{"./guid":199,"./nav/createChildHierarchiesOfObject":234,"./nav/createTreeNodeObject":237,"dateformat":9,"underscore":160}],168:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -70880,7 +70878,7 @@ module.exports = function (hierarchyId, parentId) {
         console.log('error: no parent hierarchy found for hierarchy with id = ', hierarchyId);
     }
 };
-},{"./createNewObject":167,"./getHierarchy":195,"underscore":160}],169:[function(require,module,exports){
+},{"./createNewObject":167,"./getHierarchy":196,"underscore":160}],169:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -70906,7 +70904,7 @@ module.exports = function (objectId) {
         console.log('error: no hierarchy found for object with id = ', objectId);
     }
 };
-},{"./createNewObject":167,"./getHierarchy":195,"./getObject":196}],170:[function(require,module,exports){
+},{"./createNewObject":167,"./getHierarchy":196,"./getObject":197}],170:[function(require,module,exports){
 (function (global){
 /*
  * gets a node from the tree
@@ -71027,7 +71025,7 @@ module.exports = function ($node) {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./askYesNoWithModal":163,"./deleteObjectFromModel":171,"./getObject":196,"./tellWithModal":261,"dateformat":9,"pouchdb":116,"underscore":160}],171:[function(require,module,exports){
+},{"./askYesNoWithModal":163,"./deleteObjectFromModel":171,"./getObject":197,"./tellWithModal":262,"dateformat":9,"pouchdb":116,"underscore":160}],171:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -71073,7 +71071,7 @@ module.exports = function () {
         }
     }
 };
-},{"../map/addDrawInteraction":206,"../map/addModifyInteraction":209,"../map/getEditingLayer":217,"../map/removeAllInteractions":223,"openlayers":41,"underscore":160}],173:[function(require,module,exports){
+},{"../map/addDrawInteraction":207,"../map/addModifyInteraction":210,"../map/getEditingLayer":218,"../map/removeAllInteractions":224,"openlayers":41,"underscore":160}],173:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -71121,7 +71119,7 @@ module.exports = function () {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../map/addSelectInteraction":211,"openlayers":41,"underscore":160}],175:[function(require,module,exports){
+},{"../map/addSelectInteraction":212,"openlayers":41,"underscore":160}],175:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -71221,7 +71219,7 @@ module.exports = function () {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../getObject":196,"../map/zoomToFeature":231,"../showTab":257,"openlayers":41}],179:[function(require,module,exports){
+},{"../getObject":197,"../map/zoomToFeature":232,"../showTab":258,"openlayers":41}],179:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -71285,7 +71283,7 @@ module.exports = function () {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../form/saveHierarchy":193,"../getObject":196,"underscore":160}],180:[function(require,module,exports){
+},{"../form/saveHierarchy":193,"../getObject":197,"underscore":160}],180:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -71295,7 +71293,7 @@ module.exports = function () {
     event.preventDefault();
     openSigninModal();
 };
-},{"../nav/openSigninModal":244}],181:[function(require,module,exports){
+},{"../nav/openSigninModal":245}],181:[function(require,module,exports){
 (function (global){
 // wählt man in der Mobilansicht einen Menu-Eintrag, soll das Menu schliessen
 
@@ -71709,7 +71707,7 @@ module.exports = function (id, type) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../../templates/checkbox":264,"../../../templates/checkboxGroup":265,"../../../templates/formButtonToolbar":266,"../../../templates/geoJson":267,"../../../templates/input":268,"../../../templates/optionGroup":272,"../../../templates/select":273,"../../../templates/textarea":274,"../capitalizeFirstLetter":164,"../getHierarchy":195,"../getObject":196,"../map/zoomToFeatures":232,"../refreshScrollbar":250,"../showTab":257,"./addCheckedToValueList":185,"./positionFormBtngroup":191,"./resizeTextareas":192,"openlayers":41,"underscore":160}],190:[function(require,module,exports){
+},{"../../../templates/checkbox":265,"../../../templates/checkboxGroup":266,"../../../templates/formButtonToolbar":267,"../../../templates/geoJson":268,"../../../templates/input":269,"../../../templates/optionGroup":273,"../../../templates/select":274,"../../../templates/textarea":275,"../capitalizeFirstLetter":164,"../getHierarchy":196,"../getObject":197,"../map/zoomToFeatures":233,"../refreshScrollbar":251,"../showTab":258,"./addCheckedToValueList":185,"./positionFormBtngroup":191,"./resizeTextareas":192,"openlayers":41,"underscore":160}],190:[function(require,module,exports){
 // Hilfsfunktion, die typeof ersetzt und ergänzt
 // typeof gibt bei input-Feldern immer String zurück!
 
@@ -71819,7 +71817,7 @@ module.exports = function (hierarchy) {
         });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../getHierarchy":195,"../nav/getLabelForObject":240,"dateformat":9,"pouchdb":116,"underscore":160}],194:[function(require,module,exports){
+},{"../getHierarchy":196,"../nav/getLabelForObject":241,"dateformat":9,"pouchdb":116,"underscore":160}],194:[function(require,module,exports){
 (function (global){
 /*
  * when a value is changed in the form
@@ -71835,17 +71833,17 @@ module.exports = function (hierarchy) {
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $                     = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
-    dateformat            = require('dateformat'),
-    _                     = require('underscore'),
-    ol                    = require('openlayers'),
-    PouchDB               = require('pouchdb'),
-    getLabelForObject     = require('../nav/getLabelForObject'),
-    getObject             = require('../getObject'),
-    syncProjectDb         = require('../syncProjectDb'),
-    capitalizeFirstLetter = require('../capitalizeFirstLetter'),
-    getLayerByName        = require('../map/getLayerByName'),
-    getFeatureById        = require('../map/getFeatureById');
+var $                        = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+    dateformat               = require('dateformat'),
+    ol                       = require('openlayers'),
+    PouchDB                  = require('pouchdb'),
+    getObject                = require('../getObject'),
+    getLayerByName           = require('../map/getLayerByName'),
+    addRoleToUserDb          = require('../addRoleToUserDb'),
+    getHierarchy             = require('../getHierarchy'),
+    guid                     = require('../guid'),
+    updateUiAfterSavingValue = require('./updateUiAfterSavingValue'),
+    syncProjectDb            = require('../syncProjectDb');
 
 module.exports = function (passedObject, value) {
     var projId      = passedObject.projId,
@@ -71862,7 +71860,11 @@ module.exports = function (passedObject, value) {
             }
         },
         localDb     = new PouchDB(projectName, options),
-        featureCoordinatesBefore;
+        featureCoordinatesBefore,
+        projectDb,
+        projHierarchyGuid = guid(),
+        hierarchy,
+        newHierarchy;
 
     // get data for object
     object              = getObject(id);
@@ -71885,83 +71887,128 @@ module.exports = function (passedObject, value) {
         object.data[field] = value || null;
         object.lastEdited  = lastEdited;
         // write to pouch
-        localDb.put(object)
-            .then(function (response) {
-                var layer,
-                    layerName,
-                    feature,
-                    geomType,
-                    featureGeom,
-                    featureCoordinates,
-                    correspondingHierarchy,
-                    selectionFeature;
-
-                // check if this was a new project
-                if (!object._rev) {
-                    // TODO: new project: start syncing
-
-                    // TODO: tell when new project
-                    // write object ALSO to oi that is listened to from oi_pg
-                    // then start syncing
-
-                    console.log('new project saved: starting to sync with new db: ', projectName);
-                    // give oi_pg time to create the new db
-                    setTimeout(function () {
-                        syncProjectDb(projectName);
-                    }, 1000);
-                }
-
+        if (!object._rev) {
+            // this is a new project > create it
+            // add role to user in userDb
+            // userDb syncs role to server
+            // server script then creates projectDb in couch
+            addRoleToUserDb(projectName);
+            // get last hierarchy
+            hierarchy           = getHierarchy(object.projId);
+            // deep copy this hierarchy
+            newHierarchy        = $.extend(true, {}, hierarchy);
+            newHierarchy._id    = projHierarchyGuid;
+            delete newHierarchy._rev;
+            newHierarchy.projId = object._id;
+            // add the hierarchy to the model
+            window.oi.hierarchies.push(newHierarchy);
+            // give object the hId of the new hierarchy
+            object.hId = projHierarchyGuid;
+            // add object to new local project-db
+            projectDb  = new PouchDB(projectName);
+            projectDb.put(object).then(function (response) {
                 // update rev in model object
                 object._rev = response.rev;
-
-                // if field is nameField, update name in tree
-                correspondingHierarchy = _.find(window.oi.hierarchies, function (hierarchy) {
-                    return hierarchy._id === object.hId;
-                });
-                if (object.data && correspondingHierarchy && correspondingHierarchy.nameField && correspondingHierarchy.nameField === field) {
-                    $('#navContent').jstree().rename_node('#' + object._id, getLabelForObject(object, correspondingHierarchy));
-                }
-                // if field is geoGson, update feature on map
-                if (inputType === 'geoJson') {
-                    layerName = 'layer' + capitalizeFirstLetter(correspondingHierarchy.name) + capitalizeFirstLetter(passedObject.label);
-                    layer     = getLayerByName(layerName);
-                    feature   = getFeatureById(layer, object._id);
-                    if (value) {
-                        geomType           = value.type;
-                        featureCoordinates = value.coordinates;
-                        featureGeom        = new ol.geom[geomType](featureCoordinates);
-                        feature.setGeometry(featureGeom);
-                    } else {
-                        // remove feature
-                        layer.getSource().removeFeature(feature);
-                    }
-                    // if feature is selected, move selection feature too
-                    // find feature in select interaction with same coordinates
-                    if (featureCoordinatesBefore) {
-                        selectionFeature = _.find(window.oi.olMap.map.selectInteraction.getFeatures().getArray(), function (selectFeature) {
-                            // need to stringify the arrays to test if they are equal
-                            return JSON.stringify(selectFeature.getGeometry().getCoordinates()) === JSON.stringify(featureCoordinatesBefore);
-                        });
-                        // move it
-                        if (selectionFeature) {
-                            if (value) {
-                                selectionFeature.setGeometry(featureGeom);
-                            } else {
-                                window.oi.olMap.map.selectInteraction.getFeatures().remove(selectionFeature);
-                            }
-                        }
-                    }
-                }
-            })
-            .catch(function (err) {
+                // update ui
+                updateUiAfterSavingValue(object, value, field, inputType, featureCoordinatesBefore);
+                // sync project db
+                syncProjectDb(projectName);
+                // add new hierarchy to the new project db
+                return projectDb.put(newHierarchy);
+            }).catch(function (err) {
+                console.log('error saving first project: ', err);
+            });
+        } else {
+            // this is a regular object in the same project
+            localDb.put(object).then(function (response) {
+                // update rev in model object
+                object._rev = response.rev;
+                // update ui
+                updateUiAfterSavingValue(object, value, field, inputType, featureCoordinatesBefore);
+            }).catch(function (err) {
                 console.log('saveObjectValue: error: ', err);
             });
+        }
     } else {
         console.log('Änderung wurde nicht gespeichert');
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../capitalizeFirstLetter":164,"../getObject":196,"../map/getFeatureById":218,"../map/getLayerByName":219,"../nav/getLabelForObject":240,"../syncProjectDb":258,"dateformat":9,"openlayers":41,"pouchdb":116,"underscore":160}],195:[function(require,module,exports){
+},{"../addRoleToUserDb":161,"../getHierarchy":196,"../getObject":197,"../guid":199,"../map/getLayerByName":220,"../syncProjectDb":259,"./updateUiAfterSavingValue":195,"dateformat":9,"openlayers":41,"pouchdb":116}],195:[function(require,module,exports){
+(function (global){
+/*
+ * when a value is changed in the form
+ * it is passed together with other information wrapped in an object
+ * this function manages:
+ * - saving the value to the database
+ * - updating the navigation tree
+ * - updating the map when geometries were changed
+ * - creating new project-databases and starting syncing with them
+ -   when a new project was created
+ */
+
+/*jslint node: true, browser: true, nomen: true, todo: true */
+'use strict';
+
+var $                     = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+    _                     = require('underscore'),
+    ol                    = require('openlayers'),
+    getLabelForObject     = require('../nav/getLabelForObject'),
+    capitalizeFirstLetter = require('../capitalizeFirstLetter'),
+    getLayerByName        = require('../map/getLayerByName'),
+    getFeatureById        = require('../map/getFeatureById');
+
+module.exports = function (object, value, field, inputType, featureCoordinatesBefore) {
+    var layer,
+        layerName,
+        feature,
+        geomType,
+        featureGeom,
+        featureCoordinates,
+        correspondingHierarchy,
+        selectionFeature;
+
+    // if field is nameField, update name in tree
+    correspondingHierarchy = _.find(window.oi.hierarchies, function (hierarchy) {
+        return hierarchy._id === object.hId;
+    });
+    if (object.data && correspondingHierarchy && correspondingHierarchy.nameField && correspondingHierarchy.nameField === field) {
+        $('#navContent').jstree().rename_node('#' + object._id, getLabelForObject(object, correspondingHierarchy));
+    }
+    // if field is geoGson, update feature on map
+    if (inputType === 'geoJson') {
+        layerName = 'layer' + capitalizeFirstLetter(correspondingHierarchy.name) + capitalizeFirstLetter(field);
+        layer     = getLayerByName(layerName);
+        feature   = getFeatureById(layer, object._id);
+        if (value) {
+            geomType           = value.type;
+            featureCoordinates = value.coordinates;
+            featureGeom        = new ol.geom[geomType](featureCoordinates);
+            feature.setGeometry(featureGeom);
+        } else {
+            // remove feature
+            layer.getSource().removeFeature(feature);
+        }
+        // if feature is selected, move selection feature too
+        // find feature in select interaction with same coordinates
+        if (featureCoordinatesBefore) {
+            selectionFeature = _.find(window.oi.olMap.map.selectInteraction.getFeatures().getArray(), function (selectFeature) {
+                // need to stringify the arrays to test if they are equal
+                return JSON.stringify(selectFeature.getGeometry().getCoordinates()) === JSON.stringify(featureCoordinatesBefore);
+            });
+            // move it
+            if (selectionFeature) {
+                if (value) {
+                    selectionFeature.setGeometry(featureGeom);
+                } else {
+                    window.oi.olMap.map.selectInteraction.getFeatures().remove(selectionFeature);
+                }
+            }
+        }
+    }
+};
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../capitalizeFirstLetter":164,"../map/getFeatureById":219,"../map/getLayerByName":220,"../nav/getLabelForObject":241,"openlayers":41,"underscore":160}],196:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -71975,7 +72022,7 @@ module.exports = function (hierarchyId) {
 
     return hierarchy || null;
 };
-},{"underscore":160}],196:[function(require,module,exports){
+},{"underscore":160}],197:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -71989,14 +72036,14 @@ module.exports = function (id) {
 
     return object || null;
 };
-},{"underscore":160}],197:[function(require,module,exports){
+},{"underscore":160}],198:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
 module.exports = function () {
     return 'user_' + window.oi.me.name.toLowerCase().replace('@', '_at_').replace('.', '_p_');
 };
-},{}],198:[function(require,module,exports){
+},{}],199:[function(require,module,exports){
 /*
 * generiert eine uuid
 * Quelle: http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
@@ -72015,7 +72062,7 @@ module.exports = function () {
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
         s4() + '-' + s4() + s4() + s4();
 };
-},{}],199:[function(require,module,exports){
+},{}],200:[function(require,module,exports){
 /*
  * leitet je nach Typ des Dokuments an die zuständige Funktion weiter
  */
@@ -72042,7 +72089,7 @@ module.exports = function (change) {
         }
     }
 };
-},{"./handleExternalObjectChanges":200,"./handleUserChanges":201,"pouchdb":116}],200:[function(require,module,exports){
+},{"./handleExternalObjectChanges":201,"./handleUserChanges":202,"pouchdb":116}],201:[function(require,module,exports){
 (function (global){
 /*
  * passt model und wenn nötig die ui an,
@@ -72139,7 +72186,7 @@ module.exports = function (doc) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./form/initiateForm":189,"./nav/createTree":235,"./nav/createTreeNodeObject":236,"./nav/createTreeNodeRootObject":237,"./nav/getLabelForObject":240,"underscore":160}],201:[function(require,module,exports){
+},{"./form/initiateForm":189,"./nav/createTree":236,"./nav/createTreeNodeObject":237,"./nav/createTreeNodeRootObject":238,"./nav/getLabelForObject":241,"underscore":160}],202:[function(require,module,exports){
 /*
  * When the active user's _users-object is changed, it checks it's roles:
  * - if a role has been deleted, the corresponding project is removed and syncing stopped 
@@ -72184,7 +72231,7 @@ module.exports = function (userDoc) {
         console.log('projectsToAdd: ', projectsToAdd);
     }
 };
-},{"underscore":160}],202:[function(require,module,exports){
+},{"underscore":160}],203:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -72204,7 +72251,7 @@ module.exports = function (tab, setTabsWidth) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./setWidthOfTabs":254}],203:[function(require,module,exports){
+},{"./setWidthOfTabs":255}],204:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -72240,7 +72287,7 @@ module.exports = function () {
 
     proj4.defs("EPSG:21781", "+proj=somerc +lat_0=46.95240555555556 +lon_0=7.439583333333333 +k_0=1 +x_0=600000 +y_0=200000 +ellps=bessel +towgs84=674.4,15.1,405.3,0,0,0,0 +units=m +no_defs");
 };
-},{"./initiateResizables":204,"./nav/getLogin":241,"./setupEvents":256,"handlebars":27}],204:[function(require,module,exports){
+},{"./initiateResizables":205,"./nav/getLogin":242,"./setupEvents":257,"handlebars":27}],205:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -72334,7 +72381,7 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./alsoResizeReverse":162,"./form/positionFormBtngroup":191,"./form/resizeTextareas":192,"./map/refreshMap":222,"./refreshScrollbar":250,"./saveResizablesConfig":252,"./setWidthOfTabs":254,"./toggleTab":262,"perfect-scrollbar":42,"underscore":160}],205:[function(require,module,exports){
+},{"./alsoResizeReverse":162,"./form/positionFormBtngroup":191,"./form/resizeTextareas":192,"./map/refreshMap":223,"./refreshScrollbar":251,"./saveResizablesConfig":253,"./setWidthOfTabs":255,"./toggleTab":263,"perfect-scrollbar":42,"underscore":160}],206:[function(require,module,exports){
 /*
  * add a DragBox interaction used to select features by drawing boxes
  * while holding the shift key
@@ -72362,7 +72409,7 @@ module.exports = function () {
     // make dragbox global so it can be removed later
     window.oi.olMap.map.dragBoxInteraction = dragBox;
 };
-},{"openlayers":41}],206:[function(require,module,exports){
+},{"openlayers":41}],207:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -72431,7 +72478,7 @@ module.exports = function (layer, geometryType) {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../guid":198,"./getEditingLayer":217,"./saveFeatureData":226,"./toggleEditButtons":229,"openlayers":41}],207:[function(require,module,exports){
+},{"../guid":199,"./getEditingLayer":218,"./saveFeatureData":227,"./toggleEditButtons":230,"openlayers":41}],208:[function(require,module,exports){
 (function (global){
 /*
  * adds a layer to the layercontrol
@@ -72518,7 +72565,7 @@ module.exports = function (layer) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../../templates/layertoolLayerCollapse":269,"../../../templates/layertoolProjectPanel":270,"../../../templates/layertoolThemesPanel":271,"../capitalizeFirstLetter":164,"../getHierarchy":195,"../getObject":196}],208:[function(require,module,exports){
+},{"../../../templates/layertoolLayerCollapse":270,"../../../templates/layertoolProjectPanel":271,"../../../templates/layertoolThemesPanel":272,"../capitalizeFirstLetter":164,"../getHierarchy":196,"../getObject":197}],209:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -72539,7 +72586,7 @@ module.exports = function () {
     window.oi.olMap.map.addLayer(createLayerSwisstopoAerial());
     addProjectLayers();
 };
-},{"./addProjectLayers":210,"./createLayerSwisstopoAerial":213,"./createLayerSwisstopoPixelFarbe":214,"openlayers":41,"underscore":160}],209:[function(require,module,exports){
+},{"./addProjectLayers":211,"./createLayerSwisstopoAerial":214,"./createLayerSwisstopoPixelFarbe":215,"openlayers":41,"underscore":160}],210:[function(require,module,exports){
 (function (global){
 // build up modify interaction
 // needs a select and a modify interaction working together
@@ -72664,7 +72711,7 @@ module.exports = function (layer) {
     toggleEditButtons();
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../nav/selectObjectNode":245,"./addDragboxInteraction":205,"./deleteSelectedFeatures":215,"./removeAllInteractions":223,"./removeFeatureData":224,"./saveFeatureData":226,"./styleRed":227,"./styleSelected":228,"./toggleEditButtons":229,"openlayers":41}],210:[function(require,module,exports){
+},{"../nav/selectObjectNode":246,"./addDragboxInteraction":206,"./deleteSelectedFeatures":216,"./removeAllInteractions":224,"./removeFeatureData":225,"./saveFeatureData":227,"./styleRed":228,"./styleSelected":229,"./toggleEditButtons":230,"openlayers":41}],211:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -72699,7 +72746,7 @@ module.exports = function () {
         }
     });
 };
-},{"../capitalizeFirstLetter":164,"./createLayerForData":212,"underscore":160}],211:[function(require,module,exports){
+},{"../capitalizeFirstLetter":164,"./createLayerForData":213,"underscore":160}],212:[function(require,module,exports){
 (function (global){
 // build up select interaction
 
@@ -72780,7 +72827,7 @@ module.exports = function () {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../map/removeAllInteractions":223,"../nav/selectObjectNode":245,"openlayers":41,"underscore":160}],212:[function(require,module,exports){
+},{"../map/removeAllInteractions":224,"../nav/selectObjectNode":246,"openlayers":41,"underscore":160}],213:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -72835,7 +72882,7 @@ module.exports = function (passedData) {
 
     window.oi.olMap.map.addLayer(vectorLayer);
 };
-},{"./extendExtent":216,"./styleRed":227,"openlayers":41,"underscore":160}],213:[function(require,module,exports){
+},{"./extendExtent":217,"./styleRed":228,"openlayers":41,"underscore":160}],214:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -72883,7 +72930,7 @@ module.exports = function () {
     return wmtsS3Swissimage;
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./wmtsSource":230,"openlayers":41}],214:[function(require,module,exports){
+},{"./wmtsSource":231,"openlayers":41}],215:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -72932,7 +72979,7 @@ module.exports = function () {
     return wmtsS3PixelFarbe;
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./wmtsSource":230,"openlayers":41}],215:[function(require,module,exports){
+},{"./wmtsSource":231,"openlayers":41}],216:[function(require,module,exports){
 /*
  * deletes all the selected features from the select interaction
  * removes the also from the vector layer
@@ -72976,7 +73023,7 @@ module.exports = function () {
         });
     });
 };
-},{"./getEditingLayer":217,"./removeFeatureData":224}],216:[function(require,module,exports){
+},{"./getEditingLayer":218,"./removeFeatureData":225}],217:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -72993,7 +73040,7 @@ module.exports = function (extent, meters) {
 
     return extendedExtent;
 };
-},{"underscore":160}],217:[function(require,module,exports){
+},{"underscore":160}],218:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -73012,7 +73059,7 @@ module.exports = function () {
     });
     return layer;
 };
-},{"openlayers":41,"underscore":160}],218:[function(require,module,exports){
+},{"openlayers":41,"underscore":160}],219:[function(require,module,exports){
 /*
  * is passed a layer and a feature id
  * returns the corresponding feature
@@ -73032,7 +73079,7 @@ module.exports = function (layer, featureId) {
     feature = source.getFeatureById(featureId);
     return feature;
 };
-},{"openlayers":41,"underscore":160}],219:[function(require,module,exports){
+},{"openlayers":41,"underscore":160}],220:[function(require,module,exports){
 /*
  * is passed a layerName
  * returns the corresponding layer
@@ -73054,7 +73101,7 @@ module.exports = function (layerName) {
     });
     return layer;
 };
-},{"openlayers":41,"underscore":160}],220:[function(require,module,exports){
+},{"openlayers":41,"underscore":160}],221:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -73127,7 +73174,7 @@ module.exports = function () {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./addLayerToLayertool":207,"./addLayers":208,"./addSelectInteraction":211,"./mousePositionControl":221,"./removeLayerFromLayertool":225,"openlayers":41}],221:[function(require,module,exports){
+},{"./addLayerToLayertool":208,"./addLayers":209,"./addSelectInteraction":212,"./mousePositionControl":222,"./removeLayerFromLayertool":226,"openlayers":41}],222:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -73150,7 +73197,7 @@ module.exports = function () {
     });
     return mousePositionControl;
 };
-},{"openlayers":41}],222:[function(require,module,exports){
+},{"openlayers":41}],223:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -73159,7 +73206,7 @@ module.exports = function () {
         window.oi.olMap.map.updateSize();
     }
 };
-},{}],223:[function(require,module,exports){
+},{}],224:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true*/
 'use strict';
@@ -73181,7 +73228,7 @@ module.exports = function () {
     toggleEditButtons(false);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./toggleEditButtons":229,"openlayers":41}],224:[function(require,module,exports){
+},{"./toggleEditButtons":230,"openlayers":41}],225:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -73221,7 +73268,7 @@ module.exports = function (feature) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../form/fitTextareaToContent":187,"../form/saveObjectValue":194,"../getObject":196,"./getEditingLayer":217,"openlayers":41,"underscore":160}],225:[function(require,module,exports){
+},{"../form/fitTextareaToContent":187,"../form/saveObjectValue":194,"../getObject":197,"./getEditingLayer":218,"openlayers":41,"underscore":160}],226:[function(require,module,exports){
 (function (global){
 /*
  * removes a layer from the layercontrol
@@ -73254,7 +73301,7 @@ module.exports = function (layer) {
     $listGroupDiv.remove();
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],226:[function(require,module,exports){
+},{}],227:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -73300,7 +73347,7 @@ module.exports = function (feature) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../form/fitTextareaToContent":187,"../form/saveObjectValue":194,"../getObject":196,"./getEditingLayer":217,"openlayers":41,"underscore":160}],227:[function(require,module,exports){
+},{"../form/fitTextareaToContent":187,"../form/saveObjectValue":194,"../getObject":197,"./getEditingLayer":218,"openlayers":41,"underscore":160}],228:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -73325,7 +73372,7 @@ module.exports = function () {
         })
     });
 };
-},{"openlayers":41}],228:[function(require,module,exports){
+},{"openlayers":41}],229:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -73368,7 +73415,7 @@ module.exports = function () {
         })
     ];
 };
-},{"openlayers":41}],229:[function(require,module,exports){
+},{"openlayers":41}],230:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -73396,7 +73443,7 @@ module.exports = function (trueOrFalseForced) {
     $('#utilsEditDeletePoint').prop('disabled',   trueOrFalseForced || !featuresSelected);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],230:[function(require,module,exports){
+},{}],231:[function(require,module,exports){
 /*
  * Bekommt layername und layerConfig
  *
@@ -73496,7 +73543,7 @@ module.exports = function (layer, options) {
         requestEncoding: 'REST'
     }));
 };
-},{"openlayers":41}],231:[function(require,module,exports){
+},{"openlayers":41}],232:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -73514,7 +73561,7 @@ module.exports = function (feature, buffer) {
     ol.extent.extend(featuresExtent, featureExtentEnlarged);
     window.oi.olMap.map.getView().fitExtent(featuresExtent, window.oi.olMap.map.getSize());
 };
-},{"./extendExtent":216,"openlayers":41}],232:[function(require,module,exports){
+},{"./extendExtent":217,"openlayers":41}],233:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -73536,7 +73583,7 @@ module.exports = function (features, buffer) {
     ol.extent.extend(featuresExtent, featuresExtentEnlarged);
     window.oi.olMap.map.getView().fitExtent(featuresExtent, window.oi.olMap.map.getSize());
 };
-},{"./extendExtent":216,"openlayers":41,"underscore":160}],233:[function(require,module,exports){
+},{"./extendExtent":217,"openlayers":41,"underscore":160}],234:[function(require,module,exports){
 // creates descendant hierarchical objects of single objects
 // adds them to an array
 
@@ -73573,7 +73620,7 @@ module.exports = function (object) {
     }
     return [];
 };
-},{"underscore":160}],234:[function(require,module,exports){
+},{"underscore":160}],235:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -73583,7 +73630,7 @@ module.exports = function () {
     }
     window.oi.databaseId = localStorage.databaseId;
 };
-},{}],235:[function(require,module,exports){
+},{}],236:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -73639,7 +73686,7 @@ module.exports = function () {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../form/initiateForm":189,"../refreshScrollbar":250,"./generateDataForTree":238,"./treeContextmenuItems":249,"jstree":40}],236:[function(require,module,exports){
+},{"../form/initiateForm":189,"../refreshScrollbar":251,"./generateDataForTree":239,"./treeContextmenuItems":250,"jstree":40}],237:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -73672,7 +73719,7 @@ module.exports = function (object) {
 
     return jstreeObject;
 };
-},{"./getLabelForObject":240,"underscore":160}],237:[function(require,module,exports){
+},{"./getLabelForObject":241,"underscore":160}],238:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -73685,7 +73732,7 @@ module.exports = function (object) {
     jstreeObject.parent = '#';
     return jstreeObject;
 };
-},{"./createTreeNodeObject":236}],238:[function(require,module,exports){
+},{"./createTreeNodeObject":237}],239:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -73723,7 +73770,7 @@ module.exports = function () {
 
     return _.union(objectsData, childHierarchiesData);
 };
-},{"../createFirstProject":166,"./createChildHierarchiesOfObject":233,"./createTreeNodeObject":236,"./createTreeNodeRootObject":237,"underscore":160}],239:[function(require,module,exports){
+},{"../createFirstProject":166,"./createChildHierarchiesOfObject":234,"./createTreeNodeObject":237,"./createTreeNodeRootObject":238,"underscore":160}],240:[function(require,module,exports){
 /*
  * gets data from the db to populate the model
  * on firstsync gets from couch
@@ -73799,7 +73846,7 @@ module.exports = function (projectName, login, callback) {
         console.log('getDataFromDb: no projectName passed');
     }
 };
-},{"../configuration":165,"pouchdb":116,"underscore":160}],240:[function(require,module,exports){
+},{"../configuration":165,"pouchdb":116,"underscore":160}],241:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -73830,7 +73877,7 @@ module.exports = function (object, correspondingHierarchy) {
     label      = '<strong>' + labelValue + '</strong>';
     return label;
 };
-},{"underscore":160}],241:[function(require,module,exports){
+},{"underscore":160}],242:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -73851,7 +73898,7 @@ module.exports = function () {
     }
 
 };
-},{"./initiateNav":243,"./openSigninModal":244}],242:[function(require,module,exports){
+},{"./initiateNav":244,"./openSigninModal":245}],243:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus */
 'use strict';
 
@@ -73885,7 +73932,7 @@ module.exports = function (projectNames, login) {
         createTree();
     }
 };
-},{"./createTree":235,"./getDataFromDb":239,"underscore":160}],243:[function(require,module,exports){
+},{"./createTree":236,"./getDataFromDb":240,"underscore":160}],244:[function(require,module,exports){
 (function (global){
 /*
  * initiiert die nav
@@ -73957,7 +74004,7 @@ module.exports = function (newSignup, login) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../getUserDbName":197,"../replicateUserDbOnceFromRemoteToLocal":251,"../syncProjectDbs":259,"../syncUserDb":260,"./createDatabaseId":234,"./getModelData":242,"async":2,"pouchdb":116,"underscore":160}],244:[function(require,module,exports){
+},{"../getUserDbName":198,"../replicateUserDbOnceFromRemoteToLocal":252,"../syncProjectDbs":260,"../syncUserDb":261,"./createDatabaseId":235,"./getModelData":243,"async":2,"pouchdb":116,"underscore":160}],245:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -73985,7 +74032,7 @@ module.exports = function () {
         });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],245:[function(require,module,exports){
+},{}],246:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -74005,7 +74052,7 @@ module.exports = function (objId) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],246:[function(require,module,exports){
+},{}],247:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -74059,7 +74106,7 @@ module.exports = function (signindata, newSignup) {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../configuration":165,"./initiateNav":243,"pouchdb":116}],247:[function(require,module,exports){
+},{"../configuration":165,"./initiateNav":244,"pouchdb":116}],248:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -74123,7 +74170,7 @@ module.exports = function () {
     signIn(signindata);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../validateEmail":263,"./signIn":246,"./signUp":248}],248:[function(require,module,exports){
+},{"../validateEmail":264,"./signIn":247,"./signUp":249}],249:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -74187,7 +74234,7 @@ module.exports = function (signindata) {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../configuration":165,"./signIn":246,"pouchdb":116}],249:[function(require,module,exports){
+},{"../configuration":165,"./signIn":247,"pouchdb":116}],250:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -74223,7 +74270,7 @@ module.exports = function ($node) {
     };
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../createNewObjectFromHierarchy":168,"../createNewObjectFromObject":169,"../deleteObjectAndChildren":170}],250:[function(require,module,exports){
+},{"../createNewObjectFromHierarchy":168,"../createNewObjectFromObject":169,"../deleteObjectAndChildren":170}],251:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -74237,7 +74284,7 @@ module.exports = function () {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"perfect-scrollbar":42}],251:[function(require,module,exports){
+},{"perfect-scrollbar":42}],252:[function(require,module,exports){
 /**
  * syncs data from a user-db with a local user-db in the pouch
  * syncs only once
@@ -74285,7 +74332,7 @@ module.exports = function () {
     }
 };
 
-},{"./configuration":165,"./getUserDbName":197,"pouchdb":116}],252:[function(require,module,exports){
+},{"./configuration":165,"./getUserDbName":198,"pouchdb":116}],253:[function(require,module,exports){
 (function (global){
 /*
  * saves previous nav configurations
@@ -74355,7 +74402,7 @@ module.exports = function () {
     localStorage.previousTabConfig = JSON.stringify(window.oi.previousTabConfig);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],253:[function(require,module,exports){
+},{}],254:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus*/
 'use strict';
@@ -74381,7 +74428,7 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"underscore":160}],254:[function(require,module,exports){
+},{"underscore":160}],255:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus*/
 'use strict';
@@ -74430,7 +74477,7 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./form/positionFormBtngroup":191,"./map/refreshMap":222,"./setVisibilityOfTabSeparators":253,"./setWidthOfTabsWithoutPrevious":255,"underscore":160}],255:[function(require,module,exports){
+},{"./form/positionFormBtngroup":191,"./map/refreshMap":223,"./setVisibilityOfTabSeparators":254,"./setWidthOfTabsWithoutPrevious":256,"underscore":160}],256:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus*/
 'use strict';
@@ -74479,7 +74526,7 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./form/positionFormBtngroup":191,"./map/refreshMap":222,"underscore":160}],256:[function(require,module,exports){
+},{"./form/positionFormBtngroup":191,"./map/refreshMap":223,"underscore":160}],257:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -74539,7 +74586,7 @@ module.exports = function () {
         .on('shown.bs.collapse',                             refreshScrollbar);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./event/onChangeEditLayerType":172,"./event/onChangeElement":173,"./event/onChangeLytEditLayer":174,"./event/onChangeLytShowLayer":175,"./event/onClickFormDelete":176,"./event/onClickFormNew":177,"./event/onClickGeometryField":178,"./event/onClickNavFormSort":179,"./event/onClickNavLogin":180,"./event/onClickNavbarCollapse":181,"./event/onClickSigninWithModalSignupCheckbox":182,"./event/onKeypressSigninWithModal":183,"./event/onScrollTab":184,"./form/fitTextareaToContent":187,"./map/deleteSelectedFeatures":215,"./nav/signInOrUp":247,"./refreshScrollbar":250,"underscore":160}],257:[function(require,module,exports){
+},{"./event/onChangeEditLayerType":172,"./event/onChangeElement":173,"./event/onChangeLytEditLayer":174,"./event/onChangeLytShowLayer":175,"./event/onClickFormDelete":176,"./event/onClickFormNew":177,"./event/onClickGeometryField":178,"./event/onClickNavFormSort":179,"./event/onClickNavLogin":180,"./event/onClickNavbarCollapse":181,"./event/onClickSigninWithModalSignupCheckbox":182,"./event/onKeypressSigninWithModal":183,"./event/onScrollTab":184,"./form/fitTextareaToContent":187,"./map/deleteSelectedFeatures":216,"./nav/signInOrUp":248,"./refreshScrollbar":251,"underscore":160}],258:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -74564,7 +74611,7 @@ module.exports = function (tab, setTabsWidth) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./map/initiateMap":220,"./setWidthOfTabs":254}],258:[function(require,module,exports){
+},{"./map/initiateMap":221,"./setWidthOfTabs":255}],259:[function(require,module,exports){
 /**
  * syncs data from a project-db with a local project-db in the pouch
  * starts the changes listener
@@ -74586,9 +74633,8 @@ module.exports = function (projectName) {
             }
         },
         syncOptions = {
-            live:          true,
-            retry:         true,
-            create_target: true
+            live:  true,
+            retry: true
         },
         changeOptions = {
             since:        'now',
@@ -74613,7 +74659,7 @@ module.exports = function (projectName) {
     }
 };
 
-},{"./configuration":165,"./handleChanges":199,"pouchdb":116}],259:[function(require,module,exports){
+},{"./configuration":165,"./handleChanges":200,"pouchdb":116}],260:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -74626,7 +74672,7 @@ module.exports = function (projectDbs) {
     });
 };
 
-},{"./syncProjectDb":258,"underscore":160}],260:[function(require,module,exports){
+},{"./syncProjectDb":259,"underscore":160}],261:[function(require,module,exports){
 /**
  * syncs data from a user-db with a local user-db in the pouch
  * starts the changes listener
@@ -74679,7 +74725,7 @@ module.exports = function () {
     }
 };
 
-},{"./configuration":165,"./getUserDbName":197,"./handleChanges":199,"pouchdb":116}],261:[function(require,module,exports){
+},{"./configuration":165,"./getUserDbName":198,"./handleChanges":200,"pouchdb":116}],262:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -74702,7 +74748,7 @@ module.exports = function (title, text) {
     $modal.modal(options);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],262:[function(require,module,exports){
+},{}],263:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -74726,7 +74772,7 @@ module.exports = function (tab) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./hideTab":202,"./setWidthOfTabs":254,"./showTab":257}],263:[function(require,module,exports){
+},{"./hideTab":203,"./setWidthOfTabs":255,"./showTab":258}],264:[function(require,module,exports){
 /*
  * prüft, ob ein String eine email-Adressen sein könnte
  * Quelle: http://stackoverflow.com/questions/46155/validate-email-address-in-javascript
@@ -74739,7 +74785,7 @@ module.exports = function (string) {
     var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(string);
 };
-},{}],264:[function(require,module,exports){
+},{}],265:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1, helper, alias1=this.lambda, alias2=this.escapeExpression, alias3=helpers.helperMissing;
 
@@ -74754,7 +74800,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + alias2(((helper = (helper = helpers.checked || (depth0 != null ? depth0.checked : depth0)) != null ? helper : alias3),(typeof helper === "function" ? helper.call(depth0,{"name":"checked","hash":{},"data":data}) : helper)))
     + ">\r\n            </label>\r\n        </div>\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":27}],265:[function(require,module,exports){
+},{"handlebars":27}],266:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,blockParams,depths) {
     var stack1, helper, alias1=this.lambda, alias2=this.escapeExpression, alias3=helpers.helperMissing;
 
@@ -74783,11 +74829,11 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
     + ((stack1 = helpers.each.call(depth0,((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.valueList : stack1),{"name":"each","hash":{},"fn":this.program(1, data, 0, blockParams, depths),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "    </div>\r\n</div>";
 },"useData":true,"useDepths":true});
-},{"handlebars":27}],266:[function(require,module,exports){
+},{"handlebars":27}],267:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     return "<div class=\"btn-toolbar\" role=\"toolbar\" aria-label=\"Daten Toolbar\">\r\n    <div class=\"btn-group pull-right\" role=\"group\" aria-label=\"Daten Button group\">\r\n        <button id=\"formNew\" class=\"btn btn-default\">neu</button>\r\n        <button id=\"formDelete\" class=\"btn btn-default\">löschen</button>\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":27}],267:[function(require,module,exports){
+},{"handlebars":27}],268:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1, alias1=this.lambda, alias2=this.escapeExpression;
 
@@ -74805,7 +74851,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.value : stack1), depth0))
     + "</textarea>\r\n    <button class=\"js-geometryField btn btn-default btn-xs\">zoomen</button>\r\n</div>";
 },"useData":true});
-},{"handlebars":27}],268:[function(require,module,exports){
+},{"handlebars":27}],269:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1, alias1=this.lambda, alias2=this.escapeExpression;
 
@@ -74825,7 +74871,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.value : stack1), depth0))
     + "\">\r\n</div>";
 },"useData":true});
-},{"handlebars":27}],269:[function(require,module,exports){
+},{"handlebars":27}],270:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data) {
     var stack1;
 
@@ -74853,7 +74899,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
     + ((stack1 = helpers['if'].call(depth0,((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.isProject : stack1),{"name":"if","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":27}],270:[function(require,module,exports){
+},{"handlebars":27}],271:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1, alias1=this.lambda, alias2=this.escapeExpression;
 
@@ -74871,11 +74917,11 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.projId : stack1), depth0))
     + "\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingProjekte\">\r\n        <!--insert layer collapses-->\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":27}],271:[function(require,module,exports){
+},{"handlebars":27}],272:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     return "<div id=\"lytThemes\" class=\"panel panel-default js-layerPanel\">\r\n    <div class=\"panel-heading\" role=\"tab\" id=\"headingThemen\">\r\n        <h4 class=\"panel-title\">\r\n            <a class=\"collapsed\" data-toggle=\"collapse\" data-parent=\"#utilsLayertoolAccordion\" href=\"#collapseThemes\" aria-expanded=\"false\" aria-controls=\"collapseThemes\">\r\n              Themen\r\n            </a>\r\n        </h4>\r\n    </div>\r\n    <div id=\"collapseThemes\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingThemen\">\r\n        <!--insert list-groups-->\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":27}],272:[function(require,module,exports){
+},{"handlebars":27}],273:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,blockParams,depths) {
     var stack1, helper, alias1=this.lambda, alias2=this.escapeExpression, alias3=helpers.helperMissing;
 
@@ -74904,7 +74950,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
     + ((stack1 = helpers.each.call(depth0,((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.valueList : stack1),{"name":"each","hash":{},"fn":this.program(1, data, 0, blockParams, depths),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "    </div>\r\n</div>";
 },"useData":true,"useDepths":true});
-},{"handlebars":27}],273:[function(require,module,exports){
+},{"handlebars":27}],274:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data) {
     var stack1, alias1=this.lambda, alias2=this.escapeExpression;
 
@@ -74929,7 +74975,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
     + ((stack1 = helpers.each.call(depth0,((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.valueList : stack1),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "        </select>\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":27}],274:[function(require,module,exports){
+},{"handlebars":27}],275:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1, alias1=this.lambda, alias2=this.escapeExpression;
 

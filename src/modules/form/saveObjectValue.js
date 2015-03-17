@@ -12,17 +12,17 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $                     = require('jquery'),
-    dateformat            = require('dateformat'),
-    _                     = require('underscore'),
-    ol                    = require('openlayers'),
-    PouchDB               = require('pouchdb'),
-    getLabelForObject     = require('../nav/getLabelForObject'),
-    getObject             = require('../getObject'),
-    syncProjectDb         = require('../syncProjectDb'),
-    capitalizeFirstLetter = require('../capitalizeFirstLetter'),
-    getLayerByName        = require('../map/getLayerByName'),
-    getFeatureById        = require('../map/getFeatureById');
+var $                        = require('jquery'),
+    dateformat               = require('dateformat'),
+    ol                       = require('openlayers'),
+    PouchDB                  = require('pouchdb'),
+    getObject                = require('../getObject'),
+    getLayerByName           = require('../map/getLayerByName'),
+    addRoleToUserDb          = require('../addRoleToUserDb'),
+    getHierarchy             = require('../getHierarchy'),
+    guid                     = require('../guid'),
+    updateUiAfterSavingValue = require('./updateUiAfterSavingValue'),
+    syncProjectDb            = require('../syncProjectDb');
 
 module.exports = function (passedObject, value) {
     var projId      = passedObject.projId,
@@ -39,7 +39,11 @@ module.exports = function (passedObject, value) {
             }
         },
         localDb     = new PouchDB(projectName, options),
-        featureCoordinatesBefore;
+        featureCoordinatesBefore,
+        projectDb,
+        projHierarchyGuid = guid(),
+        hierarchy,
+        newHierarchy;
 
     // get data for object
     object              = getObject(id);
@@ -62,77 +66,48 @@ module.exports = function (passedObject, value) {
         object.data[field] = value || null;
         object.lastEdited  = lastEdited;
         // write to pouch
-        localDb.put(object)
-            .then(function (response) {
-                var layer,
-                    layerName,
-                    feature,
-                    geomType,
-                    featureGeom,
-                    featureCoordinates,
-                    correspondingHierarchy,
-                    selectionFeature;
-
-                // check if this was a new project
-                if (!object._rev) {
-                    // TODO: new project: start syncing
-
-                    // TODO: tell when new project
-                    // write object ALSO to oi that is listened to from oi_pg
-                    // then start syncing
-
-                    console.log('new project saved: starting to sync with new db: ', projectName);
-                    // give oi_pg time to create the new db
-                    setTimeout(function () {
-                        syncProjectDb(projectName);
-                    }, 1000);
-                }
-
+        if (!object._rev) {
+            // this is a new project > create it
+            // add role to user in userDb
+            // userDb syncs role to server
+            // server script then creates projectDb in couch
+            addRoleToUserDb(projectName);
+            // get last hierarchy
+            hierarchy           = getHierarchy(object.projId);
+            // deep copy this hierarchy
+            newHierarchy        = $.extend(true, {}, hierarchy);
+            newHierarchy._id    = projHierarchyGuid;
+            delete newHierarchy._rev;
+            newHierarchy.projId = object._id;
+            // add the hierarchy to the model
+            window.oi.hierarchies.push(newHierarchy);
+            // give object the hId of the new hierarchy
+            object.hId = projHierarchyGuid;
+            // add object to new local project-db
+            projectDb  = new PouchDB(projectName);
+            projectDb.put(object).then(function (response) {
                 // update rev in model object
                 object._rev = response.rev;
-
-                // if field is nameField, update name in tree
-                correspondingHierarchy = _.find(window.oi.hierarchies, function (hierarchy) {
-                    return hierarchy._id === object.hId;
-                });
-                if (object.data && correspondingHierarchy && correspondingHierarchy.nameField && correspondingHierarchy.nameField === field) {
-                    $('#navContent').jstree().rename_node('#' + object._id, getLabelForObject(object, correspondingHierarchy));
-                }
-                // if field is geoGson, update feature on map
-                if (inputType === 'geoJson') {
-                    layerName = 'layer' + capitalizeFirstLetter(correspondingHierarchy.name) + capitalizeFirstLetter(passedObject.label);
-                    layer     = getLayerByName(layerName);
-                    feature   = getFeatureById(layer, object._id);
-                    if (value) {
-                        geomType           = value.type;
-                        featureCoordinates = value.coordinates;
-                        featureGeom        = new ol.geom[geomType](featureCoordinates);
-                        feature.setGeometry(featureGeom);
-                    } else {
-                        // remove feature
-                        layer.getSource().removeFeature(feature);
-                    }
-                    // if feature is selected, move selection feature too
-                    // find feature in select interaction with same coordinates
-                    if (featureCoordinatesBefore) {
-                        selectionFeature = _.find(window.oi.olMap.map.selectInteraction.getFeatures().getArray(), function (selectFeature) {
-                            // need to stringify the arrays to test if they are equal
-                            return JSON.stringify(selectFeature.getGeometry().getCoordinates()) === JSON.stringify(featureCoordinatesBefore);
-                        });
-                        // move it
-                        if (selectionFeature) {
-                            if (value) {
-                                selectionFeature.setGeometry(featureGeom);
-                            } else {
-                                window.oi.olMap.map.selectInteraction.getFeatures().remove(selectionFeature);
-                            }
-                        }
-                    }
-                }
-            })
-            .catch(function (err) {
+                // update ui
+                updateUiAfterSavingValue(object, value, field, inputType, featureCoordinatesBefore);
+                // sync project db
+                syncProjectDb(projectName);
+                // add new hierarchy to the new project db
+                return projectDb.put(newHierarchy);
+            }).catch(function (err) {
+                console.log('error saving first project: ', err);
+            });
+        } else {
+            // this is a regular object in the same project
+            localDb.put(object).then(function (response) {
+                // update rev in model object
+                object._rev = response.rev;
+                // update ui
+                updateUiAfterSavingValue(object, value, field, inputType, featureCoordinatesBefore);
+            }).catch(function (err) {
                 console.log('saveObjectValue: error: ', err);
             });
+        }
     } else {
         console.log('Änderung wurde nicht gespeichert');
     }

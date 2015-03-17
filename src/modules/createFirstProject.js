@@ -15,7 +15,6 @@ var PouchDB         = require('pouchdb'),
     configuration   = require('./configuration'),
     couchUrl        = configuration.couch.dbUrl,
     guid            = require('./guid'),
-    syncProjectDb   = require('./syncProjectDb'),
     addRoleToUserDb = require('./addRoleToUserDb');
 
 module.exports = function () {
@@ -79,15 +78,14 @@ module.exports = function () {
     window.oi.objects.push(projObject);
     window.oi.hierarchies.push(projHierarchy);
     projectName = 'project_' + projObjectGuid;
-    // TODO: add role to user in userDb
+    // add role to user in userDb
+    // userDb syncs role to server
+    // server script then creates projectDb in couch
     addRoleToUserDb(projectName);
     // add docs to new local project-db
     projectDb   = new PouchDB(projectName);
-    projectDb.put(projObject).then(function (response) {
+    projectDb.put(projObject).then(function () {
         return projectDb.put(projHierarchy);
-    }).then(function (response) {
-        // sync docs to remote project-db making sure the remote db is created
-        syncProjectDb(projectName);
     }).catch(function (err) {
         console.log('error saving first project: ', err);
     });
