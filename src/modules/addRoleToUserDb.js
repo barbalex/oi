@@ -11,7 +11,11 @@ module.exports = function (role) {
 
     userDbName = getUserDbName();
     userDb     = new PouchDB(userDbName);
-    userDb.get('org.couchdb.user:' + window.oi.me.name).then(function (userDoc) {
+    userDb.get('org.couchdb.user:' + window.oi.me.name, {include_docs: true}).then(function (userDoc) {
+
+        console.log('userDoc: ', userDoc);
+        // userDoc has no roles after signup
+        userDoc.roles = userDoc.roles || [];
         if (_.indexOf(userDoc.roles, role) === -1) {
             userDoc.roles.push(role);
             userDb.put(userDoc).then(function () {
@@ -21,6 +25,6 @@ module.exports = function (role) {
             });
         }
     }).catch(function (error) {
-        console.log('error getting user from local userDb: ', error);
+        console.log('error getting user from local userDb ' + userDbName + ': ', error);
     });
 };

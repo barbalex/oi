@@ -70514,7 +70514,11 @@ module.exports = function (role) {
 
     userDbName = getUserDbName();
     userDb     = new PouchDB(userDbName);
-    userDb.get('org.couchdb.user:' + window.oi.me.name).then(function (userDoc) {
+    userDb.get('org.couchdb.user:' + window.oi.me.name, {include_docs: true}).then(function (userDoc) {
+
+        console.log('userDoc: ', userDoc);
+        // userDoc has no roles after signup
+        userDoc.roles = userDoc.roles || [];
         if (_.indexOf(userDoc.roles, role) === -1) {
             userDoc.roles.push(role);
             userDb.put(userDoc).then(function () {
@@ -70524,7 +70528,7 @@ module.exports = function (role) {
             });
         }
     }).catch(function (error) {
-        console.log('error getting user from local userDb: ', error);
+        console.log('error getting user from local userDb ' + userDbName + ': ', error);
     });
 };
 },{"./getUserDbName":198,"pouchdb":116,"underscore":160}],162:[function(require,module,exports){
@@ -70670,7 +70674,7 @@ module.exports = function (string) {
 var config          = {};
 config.couch        = {};
 config.couch.dbUrl  = '127.0.0.1:5984';
-config.couch.dbName = 'oi';
+config.couch.dbName = 'oi_messages';
 
 module.exports = config;
 },{}],166:[function(require,module,exports){
@@ -70753,6 +70757,7 @@ module.exports = function () {
     // add docs to model
     window.oi.objects.push(projObject);
     window.oi.hierarchies.push(projHierarchy);
+
     projectName = 'project_' + projObjectGuid;
     // add role to user in userDb
     // userDb syncs role to server
@@ -70760,10 +70765,15 @@ module.exports = function () {
     addRoleToUserDb(projectName);
     // add docs to new local project-db
     projectDb   = new PouchDB(projectName);
-    projectDb.put(projObject).then(function () {
-        return projectDb.put(projHierarchy);
+    projectDb.put(projObject).then(function (response) {
+        projObject._rev = response.rev;
     }).catch(function (err) {
-        console.log('error saving first project: ', err);
+        console.log('error saving first projects object: ', err);
+    });
+    projectDb.put(projHierarchy).then(function (response) {
+        projHierarchy._rev = response.rev;
+    }).catch(function (err) {
+        console.log('error saving first projects hierarchy: ', err);
     });
 };
 },{"./addRoleToUserDb":161,"./configuration":165,"./guid":199,"pouchdb":116,"underscore":160}],167:[function(require,module,exports){
@@ -71788,7 +71798,7 @@ var $                 = (typeof window !== "undefined" ? window.$ : typeof globa
 
 module.exports = function (hierarchy) {
     var lastEdited = {},
-        localDb    = new PouchDB('oi');
+        localDb    = new PouchDB(hierarchy.projId);
 
     // build lastEdited
     lastEdited.date     = dateformat(new Date(), 'isoDateTime');
@@ -72040,8 +72050,9 @@ module.exports = function (id) {
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-module.exports = function () {
-    return 'user_' + window.oi.me.name.toLowerCase().replace('@', '_at_').replace('.', '_p_');
+module.exports = function (name) {
+    name = name || window.oi.me.name;
+    return 'user_' + name.toLowerCase().replace('@', '_at_').replace('.', '_p_');
 };
 },{}],199:[function(require,module,exports){
 /*
@@ -73909,8 +73920,6 @@ var _             = require('underscore'),
 module.exports = function (projectNames, login) {
     var dbCount = 0;
 
-    //console.log('getModelData: projectNames: ', projectNames);
-
     // empty model if exists
     window.oi.objects     = [];
     window.oi.hierarchies = [];
@@ -74069,7 +74078,7 @@ function comunicateError(html) {
 }
 
 module.exports = function (signindata, newSignup) {
-    var oiDb = new PouchDB('http://' + couchUrl + '/oi');
+    var oiDb = new PouchDB('http://' + couchUrl + '/oi_messages');
 
     console.log('signin, signindata: ', signindata);
 
@@ -74180,8 +74189,12 @@ var $             = (typeof window !== "undefined" ? window.$ : typeof global !=
     configuration = require('../configuration'),
     couchUrl      = configuration.couch.dbUrl,
     signIn        = require('./signIn'),
-    oiDb          = new PouchDB('http://' + couchUrl + '/oi'),
-    newSignup;
+    getUserDbName = require('../getUserDbName'),
+    oiDb          = new PouchDB('http://' + couchUrl + '/oi_messages'),
+    newSignup,
+    userDbName,
+    userDb,
+    userDoc;
 
 function comunicateError(html) {
     $('#signinAlertText').html(html);
@@ -74195,7 +74208,19 @@ function signup(signindata) {
 
         console.log('signed up, now sign in. response: ', response);
 
-        signIn(signindata, newSignup);
+        // create user db
+        userDbName = getUserDbName(signindata.name);
+        userDb     = new PouchDB(userDbName);
+        userDoc    = {
+            _id: response.id,
+            name: signindata.name
+        };
+        userDb.put(userDoc).then(function () {
+            console.log('created userDb ' + userDbName);
+            signIn(signindata, newSignup);
+        }).catch(function (error) {
+            console.log('error creating userDb ' + userDbName + ': ', error);
+        });
     }).catch(function (error) {
         // Fehler melden
         if (error.name === 'conflict') {
@@ -74216,9 +74241,7 @@ module.exports = function (signindata) {
     console.log('going to sign up. signindata: ', signindata);
 
     oiDb.getSession(function (error, response) {
-        if (error) {
-            return console.log('error getting session: ', error);
-        }
+        if (error) { return console.log('error getting session: ', error); }
         if (!response.userCtx.name) {
             // no one logged in, signup
             return signup(signindata);
@@ -74234,7 +74257,7 @@ module.exports = function (signindata) {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../configuration":165,"./signIn":247,"pouchdb":116}],250:[function(require,module,exports){
+},{"../configuration":165,"../getUserDbName":198,"./signIn":247,"pouchdb":116}],250:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';

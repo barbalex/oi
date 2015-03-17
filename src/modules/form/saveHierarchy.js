@@ -10,7 +10,7 @@ var $                 = require('jquery'),
 
 module.exports = function (hierarchy) {
     var lastEdited = {},
-        localDb    = new PouchDB('oi');
+        localDb    = new PouchDB(hierarchy.projId);
 
     // build lastEdited
     lastEdited.date     = dateformat(new Date(), 'isoDateTime');

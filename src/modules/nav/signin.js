@@ -13,7 +13,7 @@ function comunicateError(html) {
 }
 
 module.exports = function (signindata, newSignup) {
-    var oiDb = new PouchDB('http://' + couchUrl + '/oi');
+    var oiDb = new PouchDB('http://' + couchUrl + '/oi_messages');
 
     console.log('signin, signindata: ', signindata);
 

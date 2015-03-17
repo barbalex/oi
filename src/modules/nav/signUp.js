@@ -6,8 +6,12 @@ var $             = require('jquery'),
     configuration = require('../configuration'),
     couchUrl      = configuration.couch.dbUrl,
     signIn        = require('./signIn'),
-    oiDb          = new PouchDB('http://' + couchUrl + '/oi'),
-    newSignup;
+    getUserDbName = require('../getUserDbName'),
+    oiDb          = new PouchDB('http://' + couchUrl + '/oi_messages'),
+    newSignup,
+    userDbName,
+    userDb,
+    userDoc;
 
 function comunicateError(html) {
     $('#signinAlertText').html(html);
@@ -21,7 +25,19 @@ function signup(signindata) {
 
         console.log('signed up, now sign in. response: ', response);
 
-        signIn(signindata, newSignup);
+        // create user db
+        userDbName = getUserDbName(signindata.name);
+        userDb     = new PouchDB(userDbName);
+        userDoc    = {
+            _id: response.id,
+            name: signindata.name
+        };
+        userDb.put(userDoc).then(function () {
+            console.log('created userDb ' + userDbName);
+            signIn(signindata, newSignup);
+        }).catch(function (error) {
+            console.log('error creating userDb ' + userDbName + ': ', error);
+        });
     }).catch(function (error) {
         // Fehler melden
         if (error.name === 'conflict') {
@@ -42,9 +58,7 @@ module.exports = function (signindata) {
     console.log('going to sign up. signindata: ', signindata);
 
     oiDb.getSession(function (error, response) {
-        if (error) {
-            return console.log('error getting session: ', error);
-        }
+        if (error) { return console.log('error getting session: ', error); }
         if (!response.userCtx.name) {
             // no one logged in, signup
             return signup(signindata);

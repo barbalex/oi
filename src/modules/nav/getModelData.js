@@ -8,8 +8,6 @@ var _             = require('underscore'),
 module.exports = function (projectNames, login) {
     var dbCount = 0;
 
-    //console.log('getModelData: projectNames: ', projectNames);
-
     // empty model if exists
     window.oi.objects     = [];
     window.oi.hierarchies = [];

@@ -77,6 +77,7 @@ module.exports = function () {
     // add docs to model
     window.oi.objects.push(projObject);
     window.oi.hierarchies.push(projHierarchy);
+
     projectName = 'project_' + projObjectGuid;
     // add role to user in userDb
     // userDb syncs role to server
@@ -84,9 +85,14 @@ module.exports = function () {
     addRoleToUserDb(projectName);
     // add docs to new local project-db
     projectDb   = new PouchDB(projectName);
-    projectDb.put(projObject).then(function () {
-        return projectDb.put(projHierarchy);
+    projectDb.put(projObject).then(function (response) {
+        projObject._rev = response.rev;
     }).catch(function (err) {
-        console.log('error saving first project: ', err);
+        console.log('error saving first projects object: ', err);
+    });
+    projectDb.put(projHierarchy).then(function (response) {
+        projHierarchy._rev = response.rev;
+    }).catch(function (err) {
+        console.log('error saving first projects hierarchy: ', err);
     });
 };
