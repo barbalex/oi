@@ -19,7 +19,7 @@ window.oi.hierarchies = [];
 window.PouchDB = PouchDB;
 
 initiateApp();
-},{"./modules/initiateApp":202,"bootstrap-validator":3,"pouchdb":116,"pouchdb-authentication":65}],2:[function(require,module,exports){
+},{"./modules/initiateApp":203,"bootstrap-validator":3,"pouchdb":116,"pouchdb-authentication":65}],2:[function(require,module,exports){
 (function (process){
 /*!
  * async
@@ -42312,6 +42312,33 @@ exports.parse = function (str) {
 }.call(this));
 
 },{}],161:[function(require,module,exports){
+/*jslint node: true, browser: true, nomen: true, todo: true */
+'use strict';
+
+var PouchDB       = require('pouchdb'),
+    _             = require('underscore'),
+    getUserDbName = require('./getUserDbName');
+
+module.exports = function (role) {
+    var userDbName,
+        userDb;
+
+    userDbName = getUserDbName();
+    userDb     = new PouchDB(userDbName);
+    userDb.get('org.couchdb.user:' + window.oi.me.name).then(function (userDoc) {
+        if (_.indexOf(userDoc.roles, role) === -1) {
+            userDoc.roles.push(role);
+            userDb.put(userDoc).then(function () {
+                console.log('added role ' + role + ' to userDb ' + userDbName);
+            }).catch(function (error) {
+                console.log('error putting role ' + role + ' to userDb ' + userDbName + ': ', error);
+            });
+        }
+    }).catch(function (error) {
+        console.log('error getting user from local userDb: ', error);
+    });
+};
+},{"./getUserDbName":197,"pouchdb":116,"underscore":160}],162:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 /*global app, me, $*/
@@ -42400,7 +42427,7 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],162:[function(require,module,exports){
+},{}],163:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -42431,7 +42458,7 @@ module.exports = function (title, text, yesButtonText, noButtonText) {
     $modal.modal(options);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"underscore":160}],163:[function(require,module,exports){
+},{"underscore":160}],164:[function(require,module,exports){
 /**
  * übernimmt einen string
  * der erste Buchstabe wird mit einem Grossbuchstaben ersetzt
@@ -42443,7 +42470,7 @@ module.exports = function (title, text, yesButtonText, noButtonText) {
 module.exports = function (string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 };
-},{}],164:[function(require,module,exports){
+},{}],165:[function(require,module,exports){
 /**
  * Hier werden zentral alle Konfigurationsparameter gesammelt
  */
@@ -42457,7 +42484,7 @@ config.couch.dbUrl  = '127.0.0.1:5984';
 config.couch.dbName = 'oi';
 
 module.exports = config;
-},{}],165:[function(require,module,exports){
+},{}],166:[function(require,module,exports){
 /*
  * creates the first project if a user has none yet
  * 1. creates project-hierarchy (metadata for project-doc)
@@ -42470,19 +42497,20 @@ module.exports = config;
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var PouchDB       = require('pouchdb'),
-    _             = require('underscore'),
-    configuration = require('./configuration'),
-    couchUrl      = configuration.couch.dbUrl,
-    guid          = require('./guid'),
-    syncProjectDb = require('./syncProjectDb');
+var PouchDB         = require('pouchdb'),
+    _               = require('underscore'),
+    configuration   = require('./configuration'),
+    couchUrl        = configuration.couch.dbUrl,
+    guid            = require('./guid'),
+    syncProjectDb   = require('./syncProjectDb'),
+    addRoleToUserDb = require('./addRoleToUserDb');
 
 module.exports = function () {
     var projHierarchy,
         projHierarchyGuid,
         projObject,
         projObjectGuid,
-        localDb,
+        projectDb,
         projectName;
 
     console.log('setting up first project');
@@ -42537,11 +42565,13 @@ module.exports = function () {
     // add docs to model
     window.oi.objects.push(projObject);
     window.oi.hierarchies.push(projHierarchy);
-    // add docs to new local project-db
     projectName = 'project_' + projObjectGuid;
-    localDb     = new PouchDB(projectName);
-    localDb.put(projObject).then(function (response) {
-        return localDb.put(projHierarchy);
+    // TODO: add role to user in userDb
+    addRoleToUserDb(projectName);
+    // add docs to new local project-db
+    projectDb   = new PouchDB(projectName);
+    projectDb.put(projObject).then(function (response) {
+        return projectDb.put(projHierarchy);
     }).then(function (response) {
         // sync docs to remote project-db making sure the remote db is created
         syncProjectDb(projectName);
@@ -42549,7 +42579,7 @@ module.exports = function () {
         console.log('error saving first project: ', err);
     });
 };
-},{"./configuration":164,"./guid":197,"./syncProjectDb":257,"pouchdb":116,"underscore":160}],166:[function(require,module,exports){
+},{"./addRoleToUserDb":161,"./configuration":165,"./guid":198,"./syncProjectDb":258,"pouchdb":116,"underscore":160}],167:[function(require,module,exports){
 (function (global){
 /*
  * erhält eine Hierarchie
@@ -42628,7 +42658,7 @@ module.exports = function (object, hierarchy) {
     return newObject;
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./guid":197,"./nav/createChildHierarchiesOfObject":232,"./nav/createTreeNodeObject":235,"dateformat":9,"underscore":160}],167:[function(require,module,exports){
+},{"./guid":198,"./nav/createChildHierarchiesOfObject":233,"./nav/createTreeNodeObject":236,"dateformat":9,"underscore":160}],168:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -42661,7 +42691,7 @@ module.exports = function (hierarchyId, parentId) {
         console.log('error: no parent hierarchy found for hierarchy with id = ', hierarchyId);
     }
 };
-},{"./createNewObject":166,"./getHierarchy":194,"underscore":160}],168:[function(require,module,exports){
+},{"./createNewObject":167,"./getHierarchy":195,"underscore":160}],169:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -42687,7 +42717,7 @@ module.exports = function (objectId) {
         console.log('error: no hierarchy found for object with id = ', objectId);
     }
 };
-},{"./createNewObject":166,"./getHierarchy":194,"./getObject":195}],169:[function(require,module,exports){
+},{"./createNewObject":167,"./getHierarchy":195,"./getObject":196}],170:[function(require,module,exports){
 (function (global){
 /*
  * gets a node from the tree
@@ -42808,7 +42838,7 @@ module.exports = function ($node) {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./askYesNoWithModal":162,"./deleteObjectFromModel":170,"./getObject":195,"./tellWithModal":260,"dateformat":9,"pouchdb":116,"underscore":160}],170:[function(require,module,exports){
+},{"./askYesNoWithModal":163,"./deleteObjectFromModel":171,"./getObject":196,"./tellWithModal":261,"dateformat":9,"pouchdb":116,"underscore":160}],171:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -42822,7 +42852,7 @@ module.exports = function (objectId) {
         window.oi.objects = _.without(window.oi.objects, object);
     }
 };
-},{"underscore":160}],171:[function(require,module,exports){
+},{"underscore":160}],172:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -42854,7 +42884,7 @@ module.exports = function () {
         }
     }
 };
-},{"../map/addDrawInteraction":205,"../map/addModifyInteraction":208,"../map/getEditingLayer":216,"../map/removeAllInteractions":222,"openlayers":41,"underscore":160}],172:[function(require,module,exports){
+},{"../map/addDrawInteraction":206,"../map/addModifyInteraction":209,"../map/getEditingLayer":217,"../map/removeAllInteractions":223,"openlayers":41,"underscore":160}],173:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -42870,7 +42900,7 @@ module.exports = function () {
     saveObjectValue(object, value);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../form/getValueAfterChange":187,"../form/saveObjectValue":193}],173:[function(require,module,exports){
+},{"../form/getValueAfterChange":188,"../form/saveObjectValue":194}],174:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -42902,7 +42932,7 @@ module.exports = function () {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../map/addSelectInteraction":210,"openlayers":41,"underscore":160}],174:[function(require,module,exports){
+},{"../map/addSelectInteraction":211,"openlayers":41,"underscore":160}],175:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -42933,7 +42963,7 @@ module.exports = function () {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"underscore":160}],175:[function(require,module,exports){
+},{"underscore":160}],176:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -42946,7 +42976,7 @@ module.exports = function () {
     deleteObjectAndChildren(node);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../deleteObjectAndChildren":169}],176:[function(require,module,exports){
+},{"../deleteObjectAndChildren":170}],177:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -42973,7 +43003,7 @@ module.exports = function () {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../createNewObjectFromHierarchy":167,"../createNewObjectFromObject":168}],177:[function(require,module,exports){
+},{"../createNewObjectFromHierarchy":168,"../createNewObjectFromObject":169}],178:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -43002,7 +43032,7 @@ module.exports = function () {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../getObject":195,"../map/zoomToFeature":230,"../showTab":256,"openlayers":41}],178:[function(require,module,exports){
+},{"../getObject":196,"../map/zoomToFeature":231,"../showTab":257,"openlayers":41}],179:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -43066,7 +43096,7 @@ module.exports = function () {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../form/saveHierarchy":192,"../getObject":195,"underscore":160}],179:[function(require,module,exports){
+},{"../form/saveHierarchy":193,"../getObject":196,"underscore":160}],180:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -43076,7 +43106,7 @@ module.exports = function () {
     event.preventDefault();
     openSigninModal();
 };
-},{"../nav/openSigninModal":243}],180:[function(require,module,exports){
+},{"../nav/openSigninModal":244}],181:[function(require,module,exports){
 (function (global){
 // wählt man in der Mobilansicht einen Menu-Eintrag, soll das Menu schliessen
 
@@ -43091,7 +43121,7 @@ module.exports = function () {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],181:[function(require,module,exports){
+},{}],182:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -43113,7 +43143,7 @@ module.exports = function () {
     $('#signinAlert').hide();
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],182:[function(require,module,exports){
+},{}],183:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -43126,7 +43156,7 @@ module.exports = function (event) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],183:[function(require,module,exports){
+},{}],184:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -43140,7 +43170,7 @@ module.exports = function () {
     $separator.css('height', $content.height() + 40);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],184:[function(require,module,exports){
+},{}],185:[function(require,module,exports){
 /*
  * erstellt aus einer possibleValues einen Array von Objekten
  * mit value und checked
@@ -43213,7 +43243,7 @@ module.exports = function (possibleValues, setValues, type) {
         return valueObject;
     });
 };
-},{"underscore":160}],185:[function(require,module,exports){
+},{"underscore":160}],186:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus: true, white: true*/
 'use strict';
 
@@ -43230,7 +43260,7 @@ module.exports = function (feldWert) {
 
     return feldWert;
 };
-},{"./myTypeOf":189}],186:[function(require,module,exports){
+},{"./myTypeOf":190}],187:[function(require,module,exports){
 // setzt die Höhe von textareas so, dass der Text genau rein passt
 
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus: true*/
@@ -43282,7 +43312,7 @@ module.exports = function (id, maxHeight) {
         text.style.height = adjustedHeight + 'px';
     }
 };
-},{}],187:[function(require,module,exports){
+},{}],188:[function(require,module,exports){
 (function (global){
 /*
  * holt sich nach einer Änderung in einem Feld die Daten
@@ -43326,7 +43356,7 @@ module.exports = function (that) {
     return value;
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./convertToCorrectType":185,"underscore":160}],188:[function(require,module,exports){
+},{"./convertToCorrectType":186,"underscore":160}],189:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -43490,7 +43520,7 @@ module.exports = function (id, type) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../../templates/checkbox":263,"../../../templates/checkboxGroup":264,"../../../templates/formButtonToolbar":265,"../../../templates/geoJson":266,"../../../templates/input":267,"../../../templates/optionGroup":271,"../../../templates/select":272,"../../../templates/textarea":273,"../capitalizeFirstLetter":163,"../getHierarchy":194,"../getObject":195,"../map/zoomToFeatures":231,"../refreshScrollbar":249,"../showTab":256,"./addCheckedToValueList":184,"./positionFormBtngroup":190,"./resizeTextareas":191,"openlayers":41,"underscore":160}],189:[function(require,module,exports){
+},{"../../../templates/checkbox":264,"../../../templates/checkboxGroup":265,"../../../templates/formButtonToolbar":266,"../../../templates/geoJson":267,"../../../templates/input":268,"../../../templates/optionGroup":272,"../../../templates/select":273,"../../../templates/textarea":274,"../capitalizeFirstLetter":164,"../getHierarchy":195,"../getObject":196,"../map/zoomToFeatures":232,"../refreshScrollbar":250,"../showTab":257,"./addCheckedToValueList":185,"./positionFormBtngroup":191,"./resizeTextareas":192,"openlayers":41,"underscore":160}],190:[function(require,module,exports){
 // Hilfsfunktion, die typeof ersetzt und ergänzt
 // typeof gibt bei input-Feldern immer String zurück!
 
@@ -43531,7 +43561,7 @@ module.exports = function (wert) {
     if (wert === undefined)          { return 'undefined'; }
     if (typeof wert === 'function')  { return 'function'; }
 };
-},{}],190:[function(require,module,exports){
+},{}],191:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus: true, white: true*/
 'use strict';
@@ -43542,7 +43572,7 @@ module.exports = function () {
     $('#form').find('.btn-group').css('margin-left', $('#formContent').width() - 120);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],191:[function(require,module,exports){
+},{}],192:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -43557,7 +43587,7 @@ module.exports = function () {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./fitTextareaToContent":186,"underscore":160}],192:[function(require,module,exports){
+},{"./fitTextareaToContent":187,"underscore":160}],193:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -43600,7 +43630,7 @@ module.exports = function (hierarchy) {
         });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../getHierarchy":194,"../nav/getLabelForObject":239,"dateformat":9,"pouchdb":116,"underscore":160}],193:[function(require,module,exports){
+},{"../getHierarchy":195,"../nav/getLabelForObject":240,"dateformat":9,"pouchdb":116,"underscore":160}],194:[function(require,module,exports){
 (function (global){
 /*
  * when a value is changed in the form
@@ -43742,7 +43772,7 @@ module.exports = function (passedObject, value) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../capitalizeFirstLetter":163,"../getObject":195,"../map/getFeatureById":217,"../map/getLayerByName":218,"../nav/getLabelForObject":239,"../syncProjectDb":257,"dateformat":9,"openlayers":41,"pouchdb":116,"underscore":160}],194:[function(require,module,exports){
+},{"../capitalizeFirstLetter":164,"../getObject":196,"../map/getFeatureById":218,"../map/getLayerByName":219,"../nav/getLabelForObject":240,"../syncProjectDb":258,"dateformat":9,"openlayers":41,"pouchdb":116,"underscore":160}],195:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -43756,7 +43786,7 @@ module.exports = function (hierarchyId) {
 
     return hierarchy || null;
 };
-},{"underscore":160}],195:[function(require,module,exports){
+},{"underscore":160}],196:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -43770,14 +43800,14 @@ module.exports = function (id) {
 
     return object || null;
 };
-},{"underscore":160}],196:[function(require,module,exports){
+},{"underscore":160}],197:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
 module.exports = function () {
     return 'user_' + window.oi.me.name.toLowerCase().replace('@', '_at_').replace('.', '_p_');
 };
-},{}],197:[function(require,module,exports){
+},{}],198:[function(require,module,exports){
 /*
 * generiert eine uuid
 * Quelle: http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
@@ -43796,7 +43826,7 @@ module.exports = function () {
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
         s4() + '-' + s4() + s4() + s4();
 };
-},{}],198:[function(require,module,exports){
+},{}],199:[function(require,module,exports){
 /*
  * leitet je nach Typ des Dokuments an die zuständige Funktion weiter
  */
@@ -43823,7 +43853,7 @@ module.exports = function (change) {
         }
     }
 };
-},{"./handleExternalObjectChanges":199,"./handleUserChanges":200,"pouchdb":116}],199:[function(require,module,exports){
+},{"./handleExternalObjectChanges":200,"./handleUserChanges":201,"pouchdb":116}],200:[function(require,module,exports){
 (function (global){
 /*
  * passt model und wenn nötig die ui an,
@@ -43920,7 +43950,7 @@ module.exports = function (doc) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./form/initiateForm":188,"./nav/createTree":234,"./nav/createTreeNodeObject":235,"./nav/createTreeNodeRootObject":236,"./nav/getLabelForObject":239,"underscore":160}],200:[function(require,module,exports){
+},{"./form/initiateForm":189,"./nav/createTree":235,"./nav/createTreeNodeObject":236,"./nav/createTreeNodeRootObject":237,"./nav/getLabelForObject":240,"underscore":160}],201:[function(require,module,exports){
 /*
  * When the active user's _users-object is changed, it checks it's roles:
  * - if a role has been deleted, the corresponding project is removed and syncing stopped 
@@ -43965,7 +43995,7 @@ module.exports = function (userDoc) {
         console.log('projectsToAdd: ', projectsToAdd);
     }
 };
-},{"underscore":160}],201:[function(require,module,exports){
+},{"underscore":160}],202:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -43985,7 +44015,7 @@ module.exports = function (tab, setTabsWidth) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./setWidthOfTabs":253}],202:[function(require,module,exports){
+},{"./setWidthOfTabs":254}],203:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -44021,7 +44051,7 @@ module.exports = function () {
 
     proj4.defs("EPSG:21781", "+proj=somerc +lat_0=46.95240555555556 +lon_0=7.439583333333333 +k_0=1 +x_0=600000 +y_0=200000 +ellps=bessel +towgs84=674.4,15.1,405.3,0,0,0,0 +units=m +no_defs");
 };
-},{"./initiateResizables":203,"./nav/getLogin":240,"./setupEvents":255,"handlebars":27}],203:[function(require,module,exports){
+},{"./initiateResizables":204,"./nav/getLogin":241,"./setupEvents":256,"handlebars":27}],204:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -44115,7 +44145,7 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./alsoResizeReverse":161,"./form/positionFormBtngroup":190,"./form/resizeTextareas":191,"./map/refreshMap":221,"./refreshScrollbar":249,"./saveResizablesConfig":251,"./setWidthOfTabs":253,"./toggleTab":261,"perfect-scrollbar":42,"underscore":160}],204:[function(require,module,exports){
+},{"./alsoResizeReverse":162,"./form/positionFormBtngroup":191,"./form/resizeTextareas":192,"./map/refreshMap":222,"./refreshScrollbar":250,"./saveResizablesConfig":252,"./setWidthOfTabs":254,"./toggleTab":262,"perfect-scrollbar":42,"underscore":160}],205:[function(require,module,exports){
 /*
  * add a DragBox interaction used to select features by drawing boxes
  * while holding the shift key
@@ -44143,7 +44173,7 @@ module.exports = function () {
     // make dragbox global so it can be removed later
     window.oi.olMap.map.dragBoxInteraction = dragBox;
 };
-},{"openlayers":41}],205:[function(require,module,exports){
+},{"openlayers":41}],206:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -44212,7 +44242,7 @@ module.exports = function (layer, geometryType) {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../guid":197,"./getEditingLayer":216,"./saveFeatureData":225,"./toggleEditButtons":228,"openlayers":41}],206:[function(require,module,exports){
+},{"../guid":198,"./getEditingLayer":217,"./saveFeatureData":226,"./toggleEditButtons":229,"openlayers":41}],207:[function(require,module,exports){
 (function (global){
 /*
  * adds a layer to the layercontrol
@@ -44299,7 +44329,7 @@ module.exports = function (layer) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../../templates/layertoolLayerCollapse":268,"../../../templates/layertoolProjectPanel":269,"../../../templates/layertoolThemesPanel":270,"../capitalizeFirstLetter":163,"../getHierarchy":194,"../getObject":195}],207:[function(require,module,exports){
+},{"../../../templates/layertoolLayerCollapse":269,"../../../templates/layertoolProjectPanel":270,"../../../templates/layertoolThemesPanel":271,"../capitalizeFirstLetter":164,"../getHierarchy":195,"../getObject":196}],208:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -44320,7 +44350,7 @@ module.exports = function () {
     window.oi.olMap.map.addLayer(createLayerSwisstopoAerial());
     addProjectLayers();
 };
-},{"./addProjectLayers":209,"./createLayerSwisstopoAerial":212,"./createLayerSwisstopoPixelFarbe":213,"openlayers":41,"underscore":160}],208:[function(require,module,exports){
+},{"./addProjectLayers":210,"./createLayerSwisstopoAerial":213,"./createLayerSwisstopoPixelFarbe":214,"openlayers":41,"underscore":160}],209:[function(require,module,exports){
 (function (global){
 // build up modify interaction
 // needs a select and a modify interaction working together
@@ -44445,7 +44475,7 @@ module.exports = function (layer) {
     toggleEditButtons();
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../nav/selectObjectNode":244,"./addDragboxInteraction":204,"./deleteSelectedFeatures":214,"./removeAllInteractions":222,"./removeFeatureData":223,"./saveFeatureData":225,"./styleRed":226,"./styleSelected":227,"./toggleEditButtons":228,"openlayers":41}],209:[function(require,module,exports){
+},{"../nav/selectObjectNode":245,"./addDragboxInteraction":205,"./deleteSelectedFeatures":215,"./removeAllInteractions":223,"./removeFeatureData":224,"./saveFeatureData":226,"./styleRed":227,"./styleSelected":228,"./toggleEditButtons":229,"openlayers":41}],210:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -44480,7 +44510,7 @@ module.exports = function () {
         }
     });
 };
-},{"../capitalizeFirstLetter":163,"./createLayerForData":211,"underscore":160}],210:[function(require,module,exports){
+},{"../capitalizeFirstLetter":164,"./createLayerForData":212,"underscore":160}],211:[function(require,module,exports){
 (function (global){
 // build up select interaction
 
@@ -44561,7 +44591,7 @@ module.exports = function () {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../map/removeAllInteractions":222,"../nav/selectObjectNode":244,"openlayers":41,"underscore":160}],211:[function(require,module,exports){
+},{"../map/removeAllInteractions":223,"../nav/selectObjectNode":245,"openlayers":41,"underscore":160}],212:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -44616,7 +44646,7 @@ module.exports = function (passedData) {
 
     window.oi.olMap.map.addLayer(vectorLayer);
 };
-},{"./extendExtent":215,"./styleRed":226,"openlayers":41,"underscore":160}],212:[function(require,module,exports){
+},{"./extendExtent":216,"./styleRed":227,"openlayers":41,"underscore":160}],213:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -44664,7 +44694,7 @@ module.exports = function () {
     return wmtsS3Swissimage;
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./wmtsSource":229,"openlayers":41}],213:[function(require,module,exports){
+},{"./wmtsSource":230,"openlayers":41}],214:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -44713,7 +44743,7 @@ module.exports = function () {
     return wmtsS3PixelFarbe;
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./wmtsSource":229,"openlayers":41}],214:[function(require,module,exports){
+},{"./wmtsSource":230,"openlayers":41}],215:[function(require,module,exports){
 /*
  * deletes all the selected features from the select interaction
  * removes the also from the vector layer
@@ -44757,7 +44787,7 @@ module.exports = function () {
         });
     });
 };
-},{"./getEditingLayer":216,"./removeFeatureData":223}],215:[function(require,module,exports){
+},{"./getEditingLayer":217,"./removeFeatureData":224}],216:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -44774,7 +44804,7 @@ module.exports = function (extent, meters) {
 
     return extendedExtent;
 };
-},{"underscore":160}],216:[function(require,module,exports){
+},{"underscore":160}],217:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -44793,7 +44823,7 @@ module.exports = function () {
     });
     return layer;
 };
-},{"openlayers":41,"underscore":160}],217:[function(require,module,exports){
+},{"openlayers":41,"underscore":160}],218:[function(require,module,exports){
 /*
  * is passed a layer and a feature id
  * returns the corresponding feature
@@ -44813,7 +44843,7 @@ module.exports = function (layer, featureId) {
     feature = source.getFeatureById(featureId);
     return feature;
 };
-},{"openlayers":41,"underscore":160}],218:[function(require,module,exports){
+},{"openlayers":41,"underscore":160}],219:[function(require,module,exports){
 /*
  * is passed a layerName
  * returns the corresponding layer
@@ -44835,7 +44865,7 @@ module.exports = function (layerName) {
     });
     return layer;
 };
-},{"openlayers":41,"underscore":160}],219:[function(require,module,exports){
+},{"openlayers":41,"underscore":160}],220:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -44908,7 +44938,7 @@ module.exports = function () {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./addLayerToLayertool":206,"./addLayers":207,"./addSelectInteraction":210,"./mousePositionControl":220,"./removeLayerFromLayertool":224,"openlayers":41}],220:[function(require,module,exports){
+},{"./addLayerToLayertool":207,"./addLayers":208,"./addSelectInteraction":211,"./mousePositionControl":221,"./removeLayerFromLayertool":225,"openlayers":41}],221:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -44931,7 +44961,7 @@ module.exports = function () {
     });
     return mousePositionControl;
 };
-},{"openlayers":41}],221:[function(require,module,exports){
+},{"openlayers":41}],222:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -44940,7 +44970,7 @@ module.exports = function () {
         window.oi.olMap.map.updateSize();
     }
 };
-},{}],222:[function(require,module,exports){
+},{}],223:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true*/
 'use strict';
@@ -44962,7 +44992,7 @@ module.exports = function () {
     toggleEditButtons(false);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./toggleEditButtons":228,"openlayers":41}],223:[function(require,module,exports){
+},{"./toggleEditButtons":229,"openlayers":41}],224:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -45002,7 +45032,7 @@ module.exports = function (feature) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../form/fitTextareaToContent":186,"../form/saveObjectValue":193,"../getObject":195,"./getEditingLayer":216,"openlayers":41,"underscore":160}],224:[function(require,module,exports){
+},{"../form/fitTextareaToContent":187,"../form/saveObjectValue":194,"../getObject":196,"./getEditingLayer":217,"openlayers":41,"underscore":160}],225:[function(require,module,exports){
 (function (global){
 /*
  * removes a layer from the layercontrol
@@ -45035,7 +45065,7 @@ module.exports = function (layer) {
     $listGroupDiv.remove();
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],225:[function(require,module,exports){
+},{}],226:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -45081,7 +45111,7 @@ module.exports = function (feature) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../form/fitTextareaToContent":186,"../form/saveObjectValue":193,"../getObject":195,"./getEditingLayer":216,"openlayers":41,"underscore":160}],226:[function(require,module,exports){
+},{"../form/fitTextareaToContent":187,"../form/saveObjectValue":194,"../getObject":196,"./getEditingLayer":217,"openlayers":41,"underscore":160}],227:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -45106,7 +45136,7 @@ module.exports = function () {
         })
     });
 };
-},{"openlayers":41}],227:[function(require,module,exports){
+},{"openlayers":41}],228:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -45149,7 +45179,7 @@ module.exports = function () {
         })
     ];
 };
-},{"openlayers":41}],228:[function(require,module,exports){
+},{"openlayers":41}],229:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -45177,7 +45207,7 @@ module.exports = function (trueOrFalseForced) {
     $('#utilsEditDeletePoint').prop('disabled',   trueOrFalseForced || !featuresSelected);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],229:[function(require,module,exports){
+},{}],230:[function(require,module,exports){
 /*
  * Bekommt layername und layerConfig
  *
@@ -45277,7 +45307,7 @@ module.exports = function (layer, options) {
         requestEncoding: 'REST'
     }));
 };
-},{"openlayers":41}],230:[function(require,module,exports){
+},{"openlayers":41}],231:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -45295,7 +45325,7 @@ module.exports = function (feature, buffer) {
     ol.extent.extend(featuresExtent, featureExtentEnlarged);
     window.oi.olMap.map.getView().fitExtent(featuresExtent, window.oi.olMap.map.getSize());
 };
-},{"./extendExtent":215,"openlayers":41}],231:[function(require,module,exports){
+},{"./extendExtent":216,"openlayers":41}],232:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -45317,7 +45347,7 @@ module.exports = function (features, buffer) {
     ol.extent.extend(featuresExtent, featuresExtentEnlarged);
     window.oi.olMap.map.getView().fitExtent(featuresExtent, window.oi.olMap.map.getSize());
 };
-},{"./extendExtent":215,"openlayers":41,"underscore":160}],232:[function(require,module,exports){
+},{"./extendExtent":216,"openlayers":41,"underscore":160}],233:[function(require,module,exports){
 // creates descendant hierarchical objects of single objects
 // adds them to an array
 
@@ -45354,7 +45384,7 @@ module.exports = function (object) {
     }
     return [];
 };
-},{"underscore":160}],233:[function(require,module,exports){
+},{"underscore":160}],234:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -45364,7 +45394,7 @@ module.exports = function () {
     }
     window.oi.databaseId = localStorage.databaseId;
 };
-},{}],234:[function(require,module,exports){
+},{}],235:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -45420,7 +45450,7 @@ module.exports = function () {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../form/initiateForm":188,"../refreshScrollbar":249,"./generateDataForTree":237,"./treeContextmenuItems":248,"jstree":40}],235:[function(require,module,exports){
+},{"../form/initiateForm":189,"../refreshScrollbar":250,"./generateDataForTree":238,"./treeContextmenuItems":249,"jstree":40}],236:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -45453,7 +45483,7 @@ module.exports = function (object) {
 
     return jstreeObject;
 };
-},{"./getLabelForObject":239,"underscore":160}],236:[function(require,module,exports){
+},{"./getLabelForObject":240,"underscore":160}],237:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -45466,7 +45496,7 @@ module.exports = function (object) {
     jstreeObject.parent = '#';
     return jstreeObject;
 };
-},{"./createTreeNodeObject":235}],237:[function(require,module,exports){
+},{"./createTreeNodeObject":236}],238:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -45504,7 +45534,7 @@ module.exports = function () {
 
     return _.union(objectsData, childHierarchiesData);
 };
-},{"../createFirstProject":165,"./createChildHierarchiesOfObject":232,"./createTreeNodeObject":235,"./createTreeNodeRootObject":236,"underscore":160}],238:[function(require,module,exports){
+},{"../createFirstProject":166,"./createChildHierarchiesOfObject":233,"./createTreeNodeObject":236,"./createTreeNodeRootObject":237,"underscore":160}],239:[function(require,module,exports){
 /*
  * gets data from the db to populate the model
  * on firstsync gets from couch
@@ -45580,7 +45610,7 @@ module.exports = function (projectName, login, callback) {
         console.log('getDataFromDb: no projectName passed');
     }
 };
-},{"../configuration":164,"pouchdb":116,"underscore":160}],239:[function(require,module,exports){
+},{"../configuration":165,"pouchdb":116,"underscore":160}],240:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -45611,7 +45641,7 @@ module.exports = function (object, correspondingHierarchy) {
     label      = '<strong>' + labelValue + '</strong>';
     return label;
 };
-},{"underscore":160}],240:[function(require,module,exports){
+},{"underscore":160}],241:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -45632,7 +45662,7 @@ module.exports = function () {
     }
 
 };
-},{"./initiateNav":242,"./openSigninModal":243}],241:[function(require,module,exports){
+},{"./initiateNav":243,"./openSigninModal":244}],242:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus */
 'use strict';
 
@@ -45666,7 +45696,7 @@ module.exports = function (projectNames, login) {
         createTree();
     }
 };
-},{"./createTree":234,"./getDataFromDb":238,"underscore":160}],242:[function(require,module,exports){
+},{"./createTree":235,"./getDataFromDb":239,"underscore":160}],243:[function(require,module,exports){
 (function (global){
 /*
  * initiiert die nav
@@ -45738,7 +45768,7 @@ module.exports = function (newSignup, login) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../getUserDbName":196,"../replicateUserDbOnceFromRemoteToLocal":250,"../syncProjectDbs":258,"../syncUserDb":259,"./createDatabaseId":233,"./getModelData":241,"async":2,"pouchdb":116,"underscore":160}],243:[function(require,module,exports){
+},{"../getUserDbName":197,"../replicateUserDbOnceFromRemoteToLocal":251,"../syncProjectDbs":259,"../syncUserDb":260,"./createDatabaseId":234,"./getModelData":242,"async":2,"pouchdb":116,"underscore":160}],244:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -45766,7 +45796,7 @@ module.exports = function () {
         });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],244:[function(require,module,exports){
+},{}],245:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -45786,7 +45816,7 @@ module.exports = function (objId) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],245:[function(require,module,exports){
+},{}],246:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -45840,7 +45870,7 @@ module.exports = function (signindata, newSignup) {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../configuration":164,"./initiateNav":242,"pouchdb":116}],246:[function(require,module,exports){
+},{"../configuration":165,"./initiateNav":243,"pouchdb":116}],247:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -45904,7 +45934,7 @@ module.exports = function () {
     signIn(signindata);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../validateEmail":262,"./signIn":245,"./signUp":247}],247:[function(require,module,exports){
+},{"../validateEmail":263,"./signIn":246,"./signUp":248}],248:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -45968,7 +45998,7 @@ module.exports = function (signindata) {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../configuration":164,"./signIn":245,"pouchdb":116}],248:[function(require,module,exports){
+},{"../configuration":165,"./signIn":246,"pouchdb":116}],249:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -46004,7 +46034,7 @@ module.exports = function ($node) {
     };
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../createNewObjectFromHierarchy":167,"../createNewObjectFromObject":168,"../deleteObjectAndChildren":169}],249:[function(require,module,exports){
+},{"../createNewObjectFromHierarchy":168,"../createNewObjectFromObject":169,"../deleteObjectAndChildren":170}],250:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -46018,7 +46048,7 @@ module.exports = function () {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"perfect-scrollbar":42}],250:[function(require,module,exports){
+},{"perfect-scrollbar":42}],251:[function(require,module,exports){
 /**
  * syncs data from a user-db with a local user-db in the pouch
  * syncs only once
@@ -46066,7 +46096,7 @@ module.exports = function () {
     }
 };
 
-},{"./configuration":164,"./getUserDbName":196,"pouchdb":116}],251:[function(require,module,exports){
+},{"./configuration":165,"./getUserDbName":197,"pouchdb":116}],252:[function(require,module,exports){
 (function (global){
 /*
  * saves previous nav configurations
@@ -46136,7 +46166,7 @@ module.exports = function () {
     localStorage.previousTabConfig = JSON.stringify(window.oi.previousTabConfig);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],252:[function(require,module,exports){
+},{}],253:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus*/
 'use strict';
@@ -46162,7 +46192,7 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"underscore":160}],253:[function(require,module,exports){
+},{"underscore":160}],254:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus*/
 'use strict';
@@ -46211,7 +46241,7 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./form/positionFormBtngroup":190,"./map/refreshMap":221,"./setVisibilityOfTabSeparators":252,"./setWidthOfTabsWithoutPrevious":254,"underscore":160}],254:[function(require,module,exports){
+},{"./form/positionFormBtngroup":191,"./map/refreshMap":222,"./setVisibilityOfTabSeparators":253,"./setWidthOfTabsWithoutPrevious":255,"underscore":160}],255:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus*/
 'use strict';
@@ -46260,7 +46290,7 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./form/positionFormBtngroup":190,"./map/refreshMap":221,"underscore":160}],255:[function(require,module,exports){
+},{"./form/positionFormBtngroup":191,"./map/refreshMap":222,"underscore":160}],256:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -46320,7 +46350,7 @@ module.exports = function () {
         .on('shown.bs.collapse',                             refreshScrollbar);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./event/onChangeEditLayerType":171,"./event/onChangeElement":172,"./event/onChangeLytEditLayer":173,"./event/onChangeLytShowLayer":174,"./event/onClickFormDelete":175,"./event/onClickFormNew":176,"./event/onClickGeometryField":177,"./event/onClickNavFormSort":178,"./event/onClickNavLogin":179,"./event/onClickNavbarCollapse":180,"./event/onClickSigninWithModalSignupCheckbox":181,"./event/onKeypressSigninWithModal":182,"./event/onScrollTab":183,"./form/fitTextareaToContent":186,"./map/deleteSelectedFeatures":214,"./nav/signInOrUp":246,"./refreshScrollbar":249,"underscore":160}],256:[function(require,module,exports){
+},{"./event/onChangeEditLayerType":172,"./event/onChangeElement":173,"./event/onChangeLytEditLayer":174,"./event/onChangeLytShowLayer":175,"./event/onClickFormDelete":176,"./event/onClickFormNew":177,"./event/onClickGeometryField":178,"./event/onClickNavFormSort":179,"./event/onClickNavLogin":180,"./event/onClickNavbarCollapse":181,"./event/onClickSigninWithModalSignupCheckbox":182,"./event/onKeypressSigninWithModal":183,"./event/onScrollTab":184,"./form/fitTextareaToContent":187,"./map/deleteSelectedFeatures":215,"./nav/signInOrUp":247,"./refreshScrollbar":250,"underscore":160}],257:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -46345,7 +46375,7 @@ module.exports = function (tab, setTabsWidth) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./map/initiateMap":219,"./setWidthOfTabs":253}],257:[function(require,module,exports){
+},{"./map/initiateMap":220,"./setWidthOfTabs":254}],258:[function(require,module,exports){
 /**
  * syncs data from a project-db with a local project-db in the pouch
  * starts the changes listener
@@ -46394,7 +46424,7 @@ module.exports = function (projectName) {
     }
 };
 
-},{"./configuration":164,"./handleChanges":198,"pouchdb":116}],258:[function(require,module,exports){
+},{"./configuration":165,"./handleChanges":199,"pouchdb":116}],259:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -46407,7 +46437,7 @@ module.exports = function (projectDbs) {
     });
 };
 
-},{"./syncProjectDb":257,"underscore":160}],259:[function(require,module,exports){
+},{"./syncProjectDb":258,"underscore":160}],260:[function(require,module,exports){
 /**
  * syncs data from a user-db with a local user-db in the pouch
  * starts the changes listener
@@ -46460,7 +46490,7 @@ module.exports = function () {
     }
 };
 
-},{"./configuration":164,"./getUserDbName":196,"./handleChanges":198,"pouchdb":116}],260:[function(require,module,exports){
+},{"./configuration":165,"./getUserDbName":197,"./handleChanges":199,"pouchdb":116}],261:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -46483,7 +46513,7 @@ module.exports = function (title, text) {
     $modal.modal(options);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],261:[function(require,module,exports){
+},{}],262:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -46507,7 +46537,7 @@ module.exports = function (tab) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./hideTab":201,"./setWidthOfTabs":253,"./showTab":256}],262:[function(require,module,exports){
+},{"./hideTab":202,"./setWidthOfTabs":254,"./showTab":257}],263:[function(require,module,exports){
 /*
  * prüft, ob ein String eine email-Adressen sein könnte
  * Quelle: http://stackoverflow.com/questions/46155/validate-email-address-in-javascript
@@ -46520,7 +46550,7 @@ module.exports = function (string) {
     var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(string);
 };
-},{}],263:[function(require,module,exports){
+},{}],264:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1, helper, alias1=this.lambda, alias2=this.escapeExpression, alias3=helpers.helperMissing;
 
@@ -46535,7 +46565,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + alias2(((helper = (helper = helpers.checked || (depth0 != null ? depth0.checked : depth0)) != null ? helper : alias3),(typeof helper === "function" ? helper.call(depth0,{"name":"checked","hash":{},"data":data}) : helper)))
     + ">\r\n            </label>\r\n        </div>\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":27}],264:[function(require,module,exports){
+},{"handlebars":27}],265:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,blockParams,depths) {
     var stack1, helper, alias1=this.lambda, alias2=this.escapeExpression, alias3=helpers.helperMissing;
 
@@ -46564,11 +46594,11 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
     + ((stack1 = helpers.each.call(depth0,((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.valueList : stack1),{"name":"each","hash":{},"fn":this.program(1, data, 0, blockParams, depths),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "    </div>\r\n</div>";
 },"useData":true,"useDepths":true});
-},{"handlebars":27}],265:[function(require,module,exports){
+},{"handlebars":27}],266:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     return "<div class=\"btn-toolbar\" role=\"toolbar\" aria-label=\"Daten Toolbar\">\r\n    <div class=\"btn-group pull-right\" role=\"group\" aria-label=\"Daten Button group\">\r\n        <button id=\"formNew\" class=\"btn btn-default\">neu</button>\r\n        <button id=\"formDelete\" class=\"btn btn-default\">löschen</button>\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":27}],266:[function(require,module,exports){
+},{"handlebars":27}],267:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1, alias1=this.lambda, alias2=this.escapeExpression;
 
@@ -46586,7 +46616,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.value : stack1), depth0))
     + "</textarea>\r\n    <button class=\"js-geometryField btn btn-default btn-xs\">zoomen</button>\r\n</div>";
 },"useData":true});
-},{"handlebars":27}],267:[function(require,module,exports){
+},{"handlebars":27}],268:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1, alias1=this.lambda, alias2=this.escapeExpression;
 
@@ -46606,7 +46636,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.value : stack1), depth0))
     + "\">\r\n</div>";
 },"useData":true});
-},{"handlebars":27}],268:[function(require,module,exports){
+},{"handlebars":27}],269:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data) {
     var stack1;
 
@@ -46634,7 +46664,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
     + ((stack1 = helpers['if'].call(depth0,((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.isProject : stack1),{"name":"if","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":27}],269:[function(require,module,exports){
+},{"handlebars":27}],270:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1, alias1=this.lambda, alias2=this.escapeExpression;
 
@@ -46652,11 +46682,11 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.projId : stack1), depth0))
     + "\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingProjekte\">\r\n        <!--insert layer collapses-->\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":27}],270:[function(require,module,exports){
+},{"handlebars":27}],271:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     return "<div id=\"lytThemes\" class=\"panel panel-default js-layerPanel\">\r\n    <div class=\"panel-heading\" role=\"tab\" id=\"headingThemen\">\r\n        <h4 class=\"panel-title\">\r\n            <a class=\"collapsed\" data-toggle=\"collapse\" data-parent=\"#utilsLayertoolAccordion\" href=\"#collapseThemes\" aria-expanded=\"false\" aria-controls=\"collapseThemes\">\r\n              Themen\r\n            </a>\r\n        </h4>\r\n    </div>\r\n    <div id=\"collapseThemes\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingThemen\">\r\n        <!--insert list-groups-->\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":27}],271:[function(require,module,exports){
+},{"handlebars":27}],272:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,blockParams,depths) {
     var stack1, helper, alias1=this.lambda, alias2=this.escapeExpression, alias3=helpers.helperMissing;
 
@@ -46685,7 +46715,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
     + ((stack1 = helpers.each.call(depth0,((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.valueList : stack1),{"name":"each","hash":{},"fn":this.program(1, data, 0, blockParams, depths),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "    </div>\r\n</div>";
 },"useData":true,"useDepths":true});
-},{"handlebars":27}],272:[function(require,module,exports){
+},{"handlebars":27}],273:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data) {
     var stack1, alias1=this.lambda, alias2=this.escapeExpression;
 
@@ -46710,7 +46740,7 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
     + ((stack1 = helpers.each.call(depth0,((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.valueList : stack1),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "        </select>\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":27}],273:[function(require,module,exports){
+},{"handlebars":27}],274:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1, alias1=this.lambda, alias2=this.escapeExpression;
 

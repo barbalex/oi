@@ -10,19 +10,20 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var PouchDB       = require('pouchdb'),
-    _             = require('underscore'),
-    configuration = require('./configuration'),
-    couchUrl      = configuration.couch.dbUrl,
-    guid          = require('./guid'),
-    syncProjectDb = require('./syncProjectDb');
+var PouchDB         = require('pouchdb'),
+    _               = require('underscore'),
+    configuration   = require('./configuration'),
+    couchUrl        = configuration.couch.dbUrl,
+    guid            = require('./guid'),
+    syncProjectDb   = require('./syncProjectDb'),
+    addRoleToUserDb = require('./addRoleToUserDb');
 
 module.exports = function () {
     var projHierarchy,
         projHierarchyGuid,
         projObject,
         projObjectGuid,
-        localDb,
+        projectDb,
         projectName;
 
     console.log('setting up first project');
@@ -77,11 +78,13 @@ module.exports = function () {
     // add docs to model
     window.oi.objects.push(projObject);
     window.oi.hierarchies.push(projHierarchy);
-    // add docs to new local project-db
     projectName = 'project_' + projObjectGuid;
-    localDb     = new PouchDB(projectName);
-    localDb.put(projObject).then(function (response) {
-        return localDb.put(projHierarchy);
+    // TODO: add role to user in userDb
+    addRoleToUserDb(projectName);
+    // add docs to new local project-db
+    projectDb   = new PouchDB(projectName);
+    projectDb.put(projObject).then(function (response) {
+        return projectDb.put(projHierarchy);
     }).then(function (response) {
         // sync docs to remote project-db making sure the remote db is created
         syncProjectDb(projectName);
