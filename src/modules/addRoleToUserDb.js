@@ -7,11 +7,18 @@ var PouchDB       = require('pouchdb'),
 
 module.exports = function (role) {
     var userDbName,
-        userDb;
+        userDb,
+        userDocId;
 
     userDbName = getUserDbName();
     userDb     = new PouchDB(userDbName);
-    userDb.get('org.couchdb.user:' + window.oi.me.name, {include_docs: true}).then(function (userDoc) {
+    userDocId  = 'org.couchdb.user:' + window.oi.me.name;
+
+    console.log('addRoleToUserDb: userDbName: ', userDbName);
+    console.log('addRoleToUserDb: userDb: ', userDb);
+    console.log('addRoleToUserDb: userDocId: ', userDocId);
+
+    userDb.get(userDocId, {include_docs: true}).then(function (userDoc) {
 
         console.log('userDoc: ', userDoc);
         // userDoc has no roles after signup

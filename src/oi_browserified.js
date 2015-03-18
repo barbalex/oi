@@ -42321,11 +42321,18 @@ var PouchDB       = require('pouchdb'),
 
 module.exports = function (role) {
     var userDbName,
-        userDb;
+        userDb,
+        userDocId;
 
     userDbName = getUserDbName();
     userDb     = new PouchDB(userDbName);
-    userDb.get('org.couchdb.user:' + window.oi.me.name, {include_docs: true}).then(function (userDoc) {
+    userDocId  = 'org.couchdb.user:' + window.oi.me.name;
+
+    console.log('addRoleToUserDb: userDbName: ', userDbName);
+    console.log('addRoleToUserDb: userDb: ', userDb);
+    console.log('addRoleToUserDb: userDocId: ', userDocId);
+
+    userDb.get(userDocId, {include_docs: true}).then(function (userDoc) {
 
         console.log('userDoc: ', userDoc);
         // userDoc has no roles after signup
@@ -45804,6 +45811,7 @@ module.exports = function (newSignup, login) {
         userDb;
 
     console.log('initiateNav, newSignup: ', newSignup);
+    console.log('initiateNav, login: ', login);
 
     userDbName = getUserDbName();
 
@@ -46553,9 +46561,11 @@ module.exports = function () {
     // make sure syncing and listening to changes is only started if not already started
     if (remoteDb && !window.oi[userDbName + '_sync']) {
         // sync but ony one way needed
-        window.oi[userDbName + '_sync'] = PouchDB.replicate(remoteDb, localDb, syncOptions).setMaxListeners(20);
+        window.oi[userDbName + '_sync'] = PouchDB.replicate(localDb, remoteDb, syncOptions).setMaxListeners(20);
         // watch changes
         remoteDb.changes(changeOptions).on('change', handleChanges);
+
+        console.log('syncUserDb: syncing ' + userDbName + ' with ' + remoteDbAddress);
     }
 };
 

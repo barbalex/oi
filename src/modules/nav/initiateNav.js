@@ -48,6 +48,7 @@ module.exports = function (newSignup, login) {
         userDb;
 
     console.log('initiateNav, newSignup: ', newSignup);
+    console.log('initiateNav, login: ', login);
 
     userDbName = getUserDbName();
 
