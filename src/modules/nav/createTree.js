@@ -12,9 +12,9 @@ module.exports = function () {
     var treeData    = generateDataForTree(),
         $navContent = $('#navContent');
 
-    console.log('window.oi.objects: ', window.oi.objects);
-    console.log('window.oi.hierarchies: ', window.oi.hierarchies);
-    console.log('treeData: ', treeData);
+    //console.log('window.oi.objects: ', window.oi.objects);
+    //console.log('window.oi.hierarchies: ', window.oi.hierarchies);
+    //console.log('treeData: ', treeData);
 
     $navContent.jstree({
         'plugins': ['wholerow', 'state', 'contextmenu'],
