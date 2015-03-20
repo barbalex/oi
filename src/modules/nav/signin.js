@@ -2,6 +2,7 @@
 'use strict';
 
 var $             = require('jquery'),
+    _             = require('underscore'),
     PouchDB       = require('pouchdb'),
     configuration = require('../configuration'),
     couchUrl      = configuration.couch.dbUrl,
@@ -13,9 +14,20 @@ function comunicateError(html) {
 }
 
 module.exports = function (signindata, newSignup) {
-    var oiDb = new PouchDB('http://' + couchUrl + '/oi_messages');
+    var syncOptions = {
+            live:  true,
+            retry: true
+        },
+        oiDb = new PouchDB('http://' + couchUrl + '/oi_messages', syncOptions);
 
     console.log('signin, signindata: ', signindata);
+
+    // stop all syncs
+    // in case user is changed and previous user's syncs are still running
+    _.each(window.oi.sync, function (value, key) {
+        window.oi.sync[key].cancel();
+        delete window.oi.sync[key];
+    });
 
     // signin
     oiDb.login(signindata.name, signindata.password).then(function (response) {

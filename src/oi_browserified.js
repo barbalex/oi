@@ -12,6 +12,7 @@ PouchDB.plugin(require('pouchdb-authentication'));
 // benötigte globale Variabeln initialisieren
 window.oi             = window.oi       || {};
 window.oi.olMap       = window.oi.olMap || {};
+window.oi.sync        = window.oi.sync  || {};
 window.oi.objects     = [];
 window.oi.hierarchies = [];
 
@@ -45635,7 +45636,7 @@ module.exports = function (projectName, login, callback) {
         db          = login ? remoteDb : localDb;
 
         console.log('getDataFromDb, projectName: ', projectName);
-        console.log('getDataFromDb, login: ', login);
+        //console.log('getDataFromDb, login: ', login);
 
         db.allDocs({
             include_docs: true,
@@ -45887,6 +45888,7 @@ module.exports = function (objId) {
 'use strict';
 
 var $             = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null),
+    _             = require('underscore'),
     PouchDB       = require('pouchdb'),
     configuration = require('../configuration'),
     couchUrl      = configuration.couch.dbUrl,
@@ -45898,9 +45900,20 @@ function comunicateError(html) {
 }
 
 module.exports = function (signindata, newSignup) {
-    var oiDb = new PouchDB('http://' + couchUrl + '/oi_messages');
+    var syncOptions = {
+            live:  true,
+            retry: true
+        },
+        oiDb = new PouchDB('http://' + couchUrl + '/oi_messages', syncOptions);
 
     console.log('signin, signindata: ', signindata);
+
+    // stop all syncs
+    // in case user is changed and previous user's syncs are still running
+    _.each(window.oi.sync, function (value, key) {
+        window.oi.sync[key].cancel();
+        delete window.oi.sync[key];
+    });
 
     // signin
     oiDb.login(signindata.name, signindata.password).then(function (response) {
@@ -45935,7 +45948,7 @@ module.exports = function (signindata, newSignup) {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../configuration":165,"./initiateNav":244,"pouchdb":116}],248:[function(require,module,exports){
+},{"../configuration":165,"./initiateNav":244,"pouchdb":116,"underscore":160}],248:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -46010,7 +46023,11 @@ var $             = (typeof window !== "undefined" ? window.$ : typeof global !=
     couchUrl      = configuration.couch.dbUrl,
     signIn        = require('./signIn'),
     getUserDbName = require('../getUserDbName'),
-    oiDb          = new PouchDB('http://' + couchUrl + '/oi_messages'),
+    syncOptions   = {
+        live:  true,
+        retry: true
+    },
+    oiDb          = new PouchDB('http://' + couchUrl + '/oi_messages', syncOptions),
     newSignup,
     userDbName,
     userDb,
@@ -46466,7 +46483,8 @@ module.exports = function (tab, setTabsWidth) {
 var PouchDB       = require('pouchdb'),
     configuration = require('./configuration'),
     couchUrl      = configuration.couch.dbUrl,
-    handleChanges = require('./handleChanges');
+    handleChanges = require('./handleChanges'),
+    guid          = require('./guid');
 
 module.exports = function (projectName) {
     var dbOptions = {
@@ -46488,12 +46506,31 @@ module.exports = function (projectName) {
         remoteDbAddress = 'http://' + couchUrl + '/' + projectName,
         remoteDb        = new PouchDB(remoteDbAddress, dbOptions);
 
-    console.log('syncProjectDb: syncing project ', projectName);
-
     // make sure syncing and listening to changes is only started if not already started
-    if (remoteDb && !window.oi['sync_' + projectName]) {
+    if (remoteDb && !window.oi.sync[projectName]) {
         // sync
-        window.oi['sync_' + projectName] = PouchDB.sync(localDb, remoteDb, syncOptions).setMaxListeners(20);
+        window.oi.sync[projectName] = PouchDB.sync(localDb, remoteDb, syncOptions).then(function (response) {
+            console.log('syncProjectDb: response from syncing ' + projectName + ':', response);
+        }).catch(function (error) {
+            console.log('syncProjectDb: error from syncing ' + projectName + ':', error);
+            if (error.status === 404) {
+                // db not found
+                // something must have gone wrong when the role was first added to the userDb
+                // TODO: send a signal to the server to create db
+                var oiDb    = new PouchDB('http://' + couchUrl + '/oi_messages', dbOptions),
+                    message = {
+                        _id: guid(),
+                        type: "projectAdd",
+                        projectName: projectName
+                    };
+
+                oiDb.put(message).then(function (response) {
+                    console.log('syncProjectDb: response from messaging oi_messages to create new db ' + projectName + ':', response);
+                }).catch(function (error) {
+                    console.log('syncProjectDb: error from messaging oi_messages to create new db ' + projectName + ':', error);
+                });
+            }
+        });
         // watch changes
         remoteDb.changes(changeOptions).on('change', handleChanges);
 
@@ -46501,8 +46538,7 @@ module.exports = function (projectName) {
 
     }
 };
-
-},{"./configuration":165,"./handleChanges":200,"pouchdb":116}],260:[function(require,module,exports){
+},{"./configuration":165,"./guid":199,"./handleChanges":200,"pouchdb":116}],260:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -46511,7 +46547,7 @@ var _             = require('underscore'),
 
 module.exports = function (projectDbs) {
 
-    console.log('syncProjectDbs: syncing projects ', projectDbs);
+    //console.log('syncProjectDbs: syncing projects', projectDbs);
 
     _.each(projectDbs, function (projectDb) {
         syncProjectDb(projectDb);
@@ -46542,6 +46578,8 @@ module.exports = function () {
         remoteDb,
         userDbName;
 
+    window.oi.sync = window.oi.sync || {};
+
     dbOptions = {
         auth: {
             username: window.oi.me.name,
@@ -46563,9 +46601,9 @@ module.exports = function () {
     remoteDb        = new PouchDB(remoteDbAddress, dbOptions);
 
     // make sure syncing and listening to changes is only started if not already started
-    if (remoteDb && !window.oi['sync_' + userDbName]) {
+    if (remoteDb && !window.oi.sync[userDbName]) {
         // sync but ony one way needed
-        window.oi['sync_' + userDbName] = PouchDB.sync(localDb, remoteDb, syncOptions).setMaxListeners(20);
+        window.oi.sync[userDbName] = PouchDB.sync(localDb, remoteDb, syncOptions).setMaxListeners(20);
         // watch changes
         remoteDb.changes(changeOptions).on('change', handleChanges);
 

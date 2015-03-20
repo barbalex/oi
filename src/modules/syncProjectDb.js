@@ -9,7 +9,8 @@
 var PouchDB       = require('pouchdb'),
     configuration = require('./configuration'),
     couchUrl      = configuration.couch.dbUrl,
-    handleChanges = require('./handleChanges');
+    handleChanges = require('./handleChanges'),
+    guid          = require('./guid');
 
 module.exports = function (projectName) {
     var dbOptions = {
@@ -31,12 +32,31 @@ module.exports = function (projectName) {
         remoteDbAddress = 'http://' + couchUrl + '/' + projectName,
         remoteDb        = new PouchDB(remoteDbAddress, dbOptions);
 
-    console.log('syncProjectDb: syncing project ', projectName);
-
     // make sure syncing and listening to changes is only started if not already started
-    if (remoteDb && !window.oi['sync_' + projectName]) {
+    if (remoteDb && !window.oi.sync[projectName]) {
         // sync
-        window.oi['sync_' + projectName] = PouchDB.sync(localDb, remoteDb, syncOptions).setMaxListeners(20);
+        window.oi.sync[projectName] = PouchDB.sync(localDb, remoteDb, syncOptions).then(function (response) {
+            console.log('syncProjectDb: response from syncing ' + projectName + ':', response);
+        }).catch(function (error) {
+            console.log('syncProjectDb: error from syncing ' + projectName + ':', error);
+            if (error.status === 404) {
+                // db not found
+                // something must have gone wrong when the role was first added to the userDb
+                // TODO: send a signal to the server to create db
+                var oiDb    = new PouchDB('http://' + couchUrl + '/oi_messages', dbOptions),
+                    message = {
+                        _id: guid(),
+                        type: "projectAdd",
+                        projectName: projectName
+                    };
+
+                oiDb.put(message).then(function (response) {
+                    console.log('syncProjectDb: response from messaging oi_messages to create new db ' + projectName + ':', response);
+                }).catch(function (error) {
+                    console.log('syncProjectDb: error from messaging oi_messages to create new db ' + projectName + ':', error);
+                });
+            }
+        });
         // watch changes
         remoteDb.changes(changeOptions).on('change', handleChanges);
 

@@ -33,7 +33,7 @@ module.exports = function (projectName, login, callback) {
         db          = login ? remoteDb : localDb;
 
         console.log('getDataFromDb, projectName: ', projectName);
-        console.log('getDataFromDb, login: ', login);
+        //console.log('getDataFromDb, login: ', login);
 
         db.allDocs({
             include_docs: true,

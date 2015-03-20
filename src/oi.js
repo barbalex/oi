@@ -11,6 +11,7 @@ PouchDB.plugin(require('pouchdb-authentication'));
 // benötigte globale Variabeln initialisieren
 window.oi             = window.oi       || {};
 window.oi.olMap       = window.oi.olMap || {};
+window.oi.sync        = window.oi.sync  || {};
 window.oi.objects     = [];
 window.oi.hierarchies = [];
 

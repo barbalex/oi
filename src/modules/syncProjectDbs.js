@@ -6,7 +6,7 @@ var _             = require('underscore'),
 
 module.exports = function (projectDbs) {
 
-    console.log('syncProjectDbs: syncing projects ', projectDbs);
+    //console.log('syncProjectDbs: syncing projects', projectDbs);
 
     _.each(projectDbs, function (projectDb) {
         syncProjectDb(projectDb);

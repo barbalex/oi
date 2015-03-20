@@ -7,7 +7,11 @@ var $             = require('jquery'),
     couchUrl      = configuration.couch.dbUrl,
     signIn        = require('./signIn'),
     getUserDbName = require('../getUserDbName'),
-    oiDb          = new PouchDB('http://' + couchUrl + '/oi_messages'),
+    syncOptions   = {
+        live:  true,
+        retry: true
+    },
+    oiDb          = new PouchDB('http://' + couchUrl + '/oi_messages', syncOptions),
     newSignup,
     userDbName,
     userDb,

@@ -47,6 +47,7 @@ src/oi_browserified.js
 style/oi_built.css
 style/oi_built.css.map
 src/oi_built.js
+src/oi_built.js.map
 oi.sublime-workspace
 oi.sublime-workspace
 *.map
