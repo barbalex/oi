@@ -5,6 +5,8 @@
  * 3. adds these docs to the model
  * 4. creates new local project db and adds these docs
  * 5. syncs local project db to remote couch, opting to create the db on the remote couch
+ *
+ * if a projectName is passed, then there is an empty db that needs to get its first docs
  */
 
 /*jslint node: true, browser: true, nomen: true, todo: true */
@@ -17,7 +19,7 @@ var PouchDB         = require('pouchdb'),
     guid            = require('./guid'),
     addRoleToUserDb = require('./addRoleToUserDb');
 
-module.exports = function () {
+module.exports = function (projectNamePassed) {
     var projHierarchy,
         projHierarchyGuid,
         projObject,
@@ -78,12 +80,17 @@ module.exports = function () {
     window.oi.objects.push(projObject);
     window.oi.hierarchies.push(projHierarchy);
 
-    projectName = 'project_' + projObjectGuid;
-    // add role to user in userDb
-    // userDb syncs role to server
-    // server script then creates projectDb in couch
-    addRoleToUserDb(projectName);
-    // add docs to new local project-db
+    if (projectNamePassed) {
+        // there is an empty db that needs to get its first docs
+        projectName = projectNamePassed;
+    } else {
+        projectName = 'project_' + projObjectGuid;
+        // add role to user in userDb
+        // userDb syncs role to server
+        // server script then creates projectDb in couch
+        addRoleToUserDb(projectName);
+        // add docs to new local project-db
+    }
     projectDb   = new PouchDB(projectName);
     projectDb.put(projObject).then(function (response) {
         projObject._rev = response.rev;

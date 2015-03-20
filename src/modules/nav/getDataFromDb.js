@@ -7,10 +7,11 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var _             = require('underscore'),
-    PouchDB       = require('pouchdb'),
-    configuration = require('../configuration'),
-    couchUrl      = configuration.couch.dbUrl;
+var _                  = require('underscore'),
+    PouchDB            = require('pouchdb'),
+    configuration      = require('../configuration'),
+    couchUrl           = configuration.couch.dbUrl,
+    createFirstProject = require('../createFirstProject');
 
 module.exports = function (projectName, login, callback) {
     if (projectName) {
@@ -47,6 +48,12 @@ module.exports = function (projectName, login, callback) {
                 objects;
 
             console.log('getDataFromDb: result from db.allDocs: ', result);
+
+            if (result.rows.length === 0) {
+                // somehow this db didn't get a first set of docs
+                // do that now
+                createFirstProject(projectName);
+            }
 
             docs = _.map(result.rows, function (row) {
                 return row.doc;

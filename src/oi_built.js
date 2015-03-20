@@ -70693,6 +70693,8 @@ module.exports = config;
  * 3. adds these docs to the model
  * 4. creates new local project db and adds these docs
  * 5. syncs local project db to remote couch, opting to create the db on the remote couch
+ *
+ * if a projectName is passed, then there is an empty db that needs to get its first docs
  */
 
 /*jslint node: true, browser: true, nomen: true, todo: true */
@@ -70705,7 +70707,7 @@ var PouchDB         = require('pouchdb'),
     guid            = require('./guid'),
     addRoleToUserDb = require('./addRoleToUserDb');
 
-module.exports = function () {
+module.exports = function (projectNamePassed) {
     var projHierarchy,
         projHierarchyGuid,
         projObject,
@@ -70766,12 +70768,17 @@ module.exports = function () {
     window.oi.objects.push(projObject);
     window.oi.hierarchies.push(projHierarchy);
 
-    projectName = 'project_' + projObjectGuid;
-    // add role to user in userDb
-    // userDb syncs role to server
-    // server script then creates projectDb in couch
-    addRoleToUserDb(projectName);
-    // add docs to new local project-db
+    if (projectNamePassed) {
+        // there is an empty db that needs to get its first docs
+        projectName = projectNamePassed;
+    } else {
+        projectName = 'project_' + projObjectGuid;
+        // add role to user in userDb
+        // userDb syncs role to server
+        // server script then creates projectDb in couch
+        addRoleToUserDb(projectName);
+        // add docs to new local project-db
+    }
     projectDb   = new PouchDB(projectName);
     projectDb.put(projObject).then(function (response) {
         projObject._rev = response.rev;
@@ -73799,10 +73806,11 @@ module.exports = function () {
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var _             = require('underscore'),
-    PouchDB       = require('pouchdb'),
-    configuration = require('../configuration'),
-    couchUrl      = configuration.couch.dbUrl;
+var _                  = require('underscore'),
+    PouchDB            = require('pouchdb'),
+    configuration      = require('../configuration'),
+    couchUrl           = configuration.couch.dbUrl,
+    createFirstProject = require('../createFirstProject');
 
 module.exports = function (projectName, login, callback) {
     if (projectName) {
@@ -73840,6 +73848,12 @@ module.exports = function (projectName, login, callback) {
 
             console.log('getDataFromDb: result from db.allDocs: ', result);
 
+            if (result.rows.length === 0) {
+                // somehow this db didn't get a first set of docs
+                // do that now
+                createFirstProject(projectName);
+            }
+
             docs = _.map(result.rows, function (row) {
                 return row.doc;
             });
@@ -73865,7 +73879,7 @@ module.exports = function (projectName, login, callback) {
         console.log('getDataFromDb: no projectName passed');
     }
 };
-},{"../configuration":165,"pouchdb":116,"underscore":160}],241:[function(require,module,exports){
+},{"../configuration":165,"../createFirstProject":166,"pouchdb":116,"underscore":160}],241:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
