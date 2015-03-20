@@ -6,10 +6,10 @@ var $ = require('jquery');
 module.exports = function () {
     // Werte im Modal zurücksetzen, falls es schon mal offen war
     $('#signinWithModal').find('input').each(function (index, element) {
-        if (this.type === 'checkbox') {
-            $(this).val(this.id === 'signinWithModalRemember');
+        if (element.type === 'checkbox') {
+            $(element).val(element.id === 'signinWithModalRemember');
         } else {
-            $(this).val('');
+            $(element).val('');
         }
     });
     // modal öffnen
@@ -22,4 +22,5 @@ module.exports = function () {
                 match: 'stimmt nicht überein'
             }
         });
+    $('#signinWithModalEmail').focus();
 };

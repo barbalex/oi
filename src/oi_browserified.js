@@ -45842,10 +45842,10 @@ var $ = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined
 module.exports = function () {
     // Werte im Modal zurücksetzen, falls es schon mal offen war
     $('#signinWithModal').find('input').each(function (index, element) {
-        if (this.type === 'checkbox') {
-            $(this).val(this.id === 'signinWithModalRemember');
+        if (element.type === 'checkbox') {
+            $(element).val(element.id === 'signinWithModalRemember');
         } else {
-            $(this).val('');
+            $(element).val('');
         }
     });
     // modal öffnen
@@ -45858,6 +45858,7 @@ module.exports = function () {
                 match: 'stimmt nicht überein'
             }
         });
+    $('#signinWithModalEmail').focus();
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],246:[function(require,module,exports){
