@@ -13,18 +13,7 @@ function comunicateError(html) {
     $('#signinAlert').show();
 }
 
-module.exports = function (signindata, newSignup) {
-    var oiDb = new PouchDB('http://' + couchUrl + '/oi_messages');
-
-    console.log('signin, signindata: ', signindata);
-
-    // stop all syncs
-    // in case user is changed and previous user's syncs are still running
-    _.each(window.oi.sync, function (value, key) {
-        window.oi.sync[key].cancel();
-        delete window.oi.sync[key];
-    });
-
+function signin(oiDb, signindata, newSignup) {
     // signin
     oiDb.login(signindata.name, signindata.password).then(function (response) {
         var login;
@@ -54,5 +43,41 @@ module.exports = function (signindata, newSignup) {
             // cosmic rays, a meteor, etc.
             comunicateError('Anmeldung gescheitert:<br>Oh je. Die Anwendung ist offenbar schlecht gelaunt. Bitte versuchen Sie es nochmals. Gemeldeter Fehler:<br>' + JSON.stringify(error));
         }
+    });
+}
+
+module.exports = function (signindata, newSignup) {
+    var oiDb = new PouchDB('http://' + couchUrl + '/oi_messages');
+
+    console.log('signin, signindata: ', signindata);
+
+    // stop all syncs
+    // in case user is changed and previous user's syncs are still running
+    // PROBLEM TODO: project sync returned not a sync object but a promise
+    // this causes an error
+    // so now only user syncs are stopped
+    _.each(window.oi.sync, function (value, key) {
+        if (window.oi.sync[key]) {
+            if (key.substring(0, 5) === 'user_') {
+                window.oi.sync[key].cancel();
+                delete window.oi.sync[key];
+            }
+        }
+    });
+
+    oiDb.getSession(function (error, response) {
+        if (error) { return console.log('error getting session: ', error); }
+        if (!response.userCtx.name) {
+            // no one logged in, log in
+            return signin(oiDb, signindata, newSignup);
+        }
+        if (signindata.name === response.userCtx.name) {
+            // this person is already signed in
+            return console.log(signindata.name + ' is already signed in');
+        }
+        // other user is logged in, log out first
+        oiDb.logout(function () {
+            signin(oiDb, signindata, newSignup);
+        });
     });
 };

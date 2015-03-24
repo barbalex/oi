@@ -42,7 +42,7 @@ module.exports = function (projectName) {
             if (error.status === 404) {
                 // db not found
                 // something must have gone wrong when the role was first added to the userDb
-                // TODO: send a signal to the server to create db
+                // send a signal to the server to create db
                 var oiDb    = new PouchDB('http://' + couchUrl + '/oi_messages', dbOptions),
                     message = {
                         _id: guid(),

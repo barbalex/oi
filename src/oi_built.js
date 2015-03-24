@@ -72331,7 +72331,7 @@ module.exports = function () {
         window.oi.previousTabConfig = JSON.parse(localStorage.previousTabConfig);
     }
 
-    proj4.defs("EPSG:21781", "+proj=somerc +lat_0=46.95240555555556 +lon_0=7.439583333333333 +k_0=1 +x_0=600000 +y_0=200000 +ellps=bessel +towgs84=674.4,15.1,405.3,0,0,0,0 +units=m +no_defs");
+    window.proj4.defs("EPSG:21781", "+proj=somerc +lat_0=46.95240555555556 +lon_0=7.439583333333333 +k_0=1 +x_0=600000 +y_0=200000 +ellps=bessel +towgs84=674.4,15.1,405.3,0,0,0,0 +units=m +no_defs");
 };
 },{"./initiateResizables":205,"./nav/getLogin":242,"./setupEvents":256,"./syncProjectDb":258,"handlebars":27}],205:[function(require,module,exports){
 (function (global){
@@ -74124,18 +74124,7 @@ function comunicateError(html) {
     $('#signinAlert').show();
 }
 
-module.exports = function (signindata, newSignup) {
-    var oiDb = new PouchDB('http://' + couchUrl + '/oi_messages');
-
-    console.log('signin, signindata: ', signindata);
-
-    // stop all syncs
-    // in case user is changed and previous user's syncs are still running
-    _.each(window.oi.sync, function (value, key) {
-        window.oi.sync[key].cancel();
-        delete window.oi.sync[key];
-    });
-
+function signin(oiDb, signindata, newSignup) {
     // signin
     oiDb.login(signindata.name, signindata.password).then(function (response) {
         var login;
@@ -74165,6 +74154,42 @@ module.exports = function (signindata, newSignup) {
             // cosmic rays, a meteor, etc.
             comunicateError('Anmeldung gescheitert:<br>Oh je. Die Anwendung ist offenbar schlecht gelaunt. Bitte versuchen Sie es nochmals. Gemeldeter Fehler:<br>' + JSON.stringify(error));
         }
+    });
+}
+
+module.exports = function (signindata, newSignup) {
+    var oiDb = new PouchDB('http://' + couchUrl + '/oi_messages');
+
+    console.log('signin, signindata: ', signindata);
+
+    // stop all syncs
+    // in case user is changed and previous user's syncs are still running
+    // PROBLEM TODO: project sync returned not a sync object but a promise
+    // this causes an error
+    // so now only user syncs are stopped
+    _.each(window.oi.sync, function (value, key) {
+        if (window.oi.sync[key]) {
+            if (key.substring(0, 5) === 'user_') {
+                window.oi.sync[key].cancel();
+                delete window.oi.sync[key];
+            }
+        }
+    });
+
+    oiDb.getSession(function (error, response) {
+        if (error) { return console.log('error getting session: ', error); }
+        if (!response.userCtx.name) {
+            // no one logged in, log in
+            return signin(oiDb, signindata, newSignup);
+        }
+        if (signindata.name === response.userCtx.name) {
+            // this person is already signed in
+            return console.log(signindata.name + ' is already signed in');
+        }
+        // other user is logged in, log out first
+        oiDb.logout(function () {
+            signin(oiDb, signindata, newSignup);
+        });
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
@@ -74684,7 +74709,7 @@ module.exports = function (projectName) {
             if (error.status === 404) {
                 // db not found
                 // something must have gone wrong when the role was first added to the userDb
-                // TODO: send a signal to the server to create db
+                // send a signal to the server to create db
                 var oiDb    = new PouchDB('http://' + couchUrl + '/oi_messages', dbOptions),
                     message = {
                         _id: guid(),
