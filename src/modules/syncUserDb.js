@@ -19,7 +19,8 @@ module.exports = function () {
         localDb,
         remoteDbAddress,
         remoteDb,
-        userDbName;
+        userDbName,
+        changeListener;
 
     window.oi.sync = window.oi.sync || {};
 
@@ -46,10 +47,13 @@ module.exports = function () {
     // make sure syncing and listening to changes is only started if not already started
     if (remoteDb && !window.oi.sync[userDbName]) {
         // sync but ony one way needed
-        window.oi.sync[userDbName] = PouchDB.sync(localDb, remoteDb, syncOptions).setMaxListeners(20);
+        window.oi.sync[userDbName] = PouchDB.sync(localDb, remoteDb, syncOptions, function (error, response) {
+            if (error) { return console.log('syncUserDb: error syncing with ' + userDbName + ':', error); }
+            console.log('syncUserDb: syncing ' + userDbName + ' with ' + remoteDbAddress);
+        });
         // watch changes
-        remoteDb.changes(changeOptions).on('change', handleChanges);
-
-        console.log('syncUserDb: syncing ' + userDbName + ' with ' + remoteDbAddress);
+        changeListener = remoteDb.changes(changeOptions).on('change', handleChanges);
+        // add listener to array so it can be canceled later
+        window.oi.changes.push(changeListener);
     }
 };

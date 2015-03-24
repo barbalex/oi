@@ -62,6 +62,11 @@ module.exports = function (signindata, newSignup) {
             delete window.oi.sync[key];
         }
     });
+    // cancel all changes listeners
+    _.each(window.oi.changes, function (change) {
+        change.cancel();
+    });
+    window.oi.changes = [];
 
     oiDb.getSession(function (error, response) {
         if (error) { return console.log('error getting session: ', error); }

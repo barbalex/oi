@@ -28199,10 +28199,11 @@ require('bootstrap-validator');
 PouchDB.plugin(require('pouchdb-authentication'));
 
 // benötigte globale Variabeln initialisieren
-window.oi             = window.oi       || {};
-window.oi.olMap       = window.oi.olMap || {};
-window.oi.sync        = window.oi.sync  || {};
-window.oi.me          = window.oi.me  || {};
+window.oi             = window.oi         || {};
+window.oi.olMap       = window.oi.olMap   || {};
+window.oi.sync        = window.oi.sync    || {};
+window.oi.changes     = window.oi.changes || [];
+window.oi.me          = window.oi.me      || {};
 window.oi.objects     = [];
 window.oi.hierarchies = [];
 
@@ -74184,6 +74185,11 @@ module.exports = function (signindata, newSignup) {
             delete window.oi.sync[key];
         }
     });
+    // cancel all changes listeners
+    _.each(window.oi.changes, function (change) {
+        change.cancel();
+    });
+    window.oi.changes = [];
 
     oiDb.getSession(function (error, response) {
         if (error) { return console.log('error getting session: ', error); }
@@ -74707,7 +74713,8 @@ module.exports = function (projectName) {
         },
         localDb         = new PouchDB(projectName),
         remoteDbAddress = 'http://' + couchUrl + '/' + projectName,
-        remoteDb        = new PouchDB(remoteDbAddress, dbOptions);
+        remoteDb        = new PouchDB(remoteDbAddress, dbOptions),
+        changeListener;
 
     // make sure syncing and listening to changes is only started if not already started
     if (remoteDb && !window.oi.sync[projectName]) {
@@ -74738,7 +74745,9 @@ module.exports = function (projectName) {
             }
         });
         // watch changes
-        remoteDb.changes(changeOptions).on('change', handleChanges);
+        changeListener = remoteDb.changes(changeOptions).on('change', handleChanges);
+        // add listener to array so it can be canceled later
+        window.oi.changes.push(changeListener);
 
         console.log('syncProjectDb: syncing ' + projectName + ' with ' + remoteDbAddress);
 
@@ -74782,7 +74791,8 @@ module.exports = function () {
         localDb,
         remoteDbAddress,
         remoteDb,
-        userDbName;
+        userDbName,
+        changeListener;
 
     window.oi.sync = window.oi.sync || {};
 
@@ -74809,11 +74819,14 @@ module.exports = function () {
     // make sure syncing and listening to changes is only started if not already started
     if (remoteDb && !window.oi.sync[userDbName]) {
         // sync but ony one way needed
-        window.oi.sync[userDbName] = PouchDB.sync(localDb, remoteDb, syncOptions).setMaxListeners(20);
+        window.oi.sync[userDbName] = PouchDB.sync(localDb, remoteDb, syncOptions, function (error, response) {
+            if (error) { return console.log('syncUserDb: error syncing with ' + userDbName + ':', error); }
+            console.log('syncUserDb: syncing ' + userDbName + ' with ' + remoteDbAddress);
+        });
         // watch changes
-        remoteDb.changes(changeOptions).on('change', handleChanges);
-
-        console.log('syncUserDb: syncing ' + userDbName + ' with ' + remoteDbAddress);
+        changeListener = remoteDb.changes(changeOptions).on('change', handleChanges);
+        // add listener to array so it can be canceled later
+        window.oi.changes.push(changeListener);
     }
 };
 

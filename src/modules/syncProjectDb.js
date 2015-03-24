@@ -30,7 +30,8 @@ module.exports = function (projectName) {
         },
         localDb         = new PouchDB(projectName),
         remoteDbAddress = 'http://' + couchUrl + '/' + projectName,
-        remoteDb        = new PouchDB(remoteDbAddress, dbOptions);
+        remoteDb        = new PouchDB(remoteDbAddress, dbOptions),
+        changeListener;
 
     // make sure syncing and listening to changes is only started if not already started
     if (remoteDb && !window.oi.sync[projectName]) {
@@ -61,7 +62,9 @@ module.exports = function (projectName) {
             }
         });
         // watch changes
-        remoteDb.changes(changeOptions).on('change', handleChanges);
+        changeListener = remoteDb.changes(changeOptions).on('change', handleChanges);
+        // add listener to array so it can be canceled later
+        window.oi.changes.push(changeListener);
 
         console.log('syncProjectDb: syncing ' + projectName + ' with ' + remoteDbAddress);
 
