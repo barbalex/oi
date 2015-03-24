@@ -58,10 +58,8 @@ module.exports = function (signindata, newSignup) {
     // so now only user syncs are stopped
     _.each(window.oi.sync, function (value, key) {
         if (window.oi.sync[key]) {
-            if (key.substring(0, 5) === 'user_') {
-                window.oi.sync[key].cancel();
-                delete window.oi.sync[key];
-            }
+            window.oi.sync[key].cancel();
+            delete window.oi.sync[key];
         }
     });
 
@@ -73,7 +71,8 @@ module.exports = function (signindata, newSignup) {
         }
         if (signindata.name === response.userCtx.name) {
             // this person is already signed in
-            return console.log(signindata.name + ' is already signed in');
+            console.log(signindata.name + ' is already signed in');
+            return signin(oiDb, signindata, newSignup);
         }
         // other user is logged in, log out first
         oiDb.logout(function () {

@@ -45782,9 +45782,20 @@ module.exports = function (projectNames, login) {
 
     _.each(projectNames, function (projectName) {
         getDataFromDb(projectName, login, function () {
+
+            console.log('callback calling');
+
             dbCount++;
+
+            console.log('callback dbCount:', dbCount);
+            console.log('callback projectNames.length:', projectNames.length);
+            console.log('callback window.oi.objects:', window.oi.objects);
+
             if (dbCount === projectNames.length) {
                 // all projects have returned their data > create tree
+
+                console.log('callback create tree');
+
                 createTree();
             }
         });
@@ -45980,10 +45991,8 @@ module.exports = function (signindata, newSignup) {
     // so now only user syncs are stopped
     _.each(window.oi.sync, function (value, key) {
         if (window.oi.sync[key]) {
-            if (key.substring(0, 5) === 'user_') {
-                window.oi.sync[key].cancel();
-                delete window.oi.sync[key];
-            }
+            window.oi.sync[key].cancel();
+            delete window.oi.sync[key];
         }
     });
 
@@ -45995,7 +46004,8 @@ module.exports = function (signindata, newSignup) {
         }
         if (signindata.name === response.userCtx.name) {
             // this person is already signed in
-            return console.log(signindata.name + ' is already signed in');
+            console.log(signindata.name + ' is already signed in');
+            return signin(oiDb, signindata, newSignup);
         }
         // other user is logged in, log out first
         oiDb.logout(function () {
@@ -46513,26 +46523,29 @@ module.exports = function (projectName) {
     // make sure syncing and listening to changes is only started if not already started
     if (remoteDb && !window.oi.sync[projectName]) {
         // sync
-        window.oi.sync[projectName] = PouchDB.sync(localDb, remoteDb, syncOptions).then(function (response) {
-            console.log('syncProjectDb: response from syncing ' + projectName + ':', response);
-        }).catch(function (error) {
-            console.log('syncProjectDb: error from syncing ' + projectName + ':', error);
-            if (error.status === 404) {
-                // db not found
-                // something must have gone wrong when the role was first added to the userDb
-                // send a signal to the server to create db
-                var oiDb    = new PouchDB('http://' + couchUrl + '/oi_messages', dbOptions),
-                    message = {
-                        _id: guid(),
-                        type: "projectAdd",
-                        projectName: projectName
-                    };
+        // dont use promise or a promis will be returned instead of a sync object
+        window.oi.sync[projectName] = PouchDB.sync(localDb, remoteDb, syncOptions, function (error, response) {
+            if (error) {
+                console.log('syncProjectDb: error from syncing ' + projectName + ':', error);
+                if (error.status === 404) {
+                    // db not found
+                    // something must have gone wrong when the role was first added to the userDb
+                    // send a signal to the server to create db
+                    var oiDb    = new PouchDB('http://' + couchUrl + '/oi_messages', dbOptions),
+                        message = {
+                            _id: guid(),
+                            type: "projectAdd",
+                            projectName: projectName
+                        };
 
-                oiDb.put(message).then(function (response) {
-                    console.log('syncProjectDb: response from messaging oi_messages to create new db ' + projectName + ':', response);
-                }).catch(function (error) {
-                    console.log('syncProjectDb: error from messaging oi_messages to create new db ' + projectName + ':', error);
-                });
+                    oiDb.put(message).then(function (response) {
+                        console.log('syncProjectDb: response from messaging oi_messages to create new db ' + projectName + ':', response);
+                    }).catch(function (error) {
+                        console.log('syncProjectDb: error from messaging oi_messages to create new db ' + projectName + ':', error);
+                    });
+                }
+            } else {
+                console.log('syncProjectDb: response from syncing ' + projectName + ':', response);
             }
         });
         // watch changes
