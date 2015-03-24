@@ -36,13 +36,7 @@ module.exports = function (projectName, login, callback) {
         console.log('getDataFromDb, projectName: ', projectName);
         //console.log('getDataFromDb, login: ', login);
 
-        db.allDocs({
-            include_docs: true,
-            auth: {
-                username: window.oi.me.name,
-                password: window.oi.me.password
-            }
-        }).then(function (result) {
+        db.allDocs({ include_docs: true }).then(function (result) {
             var docs,
                 hierarchies,
                 objects;

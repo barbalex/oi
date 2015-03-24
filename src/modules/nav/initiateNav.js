@@ -14,8 +14,7 @@ var $                = require('jquery'),
     syncUserDb       = require('../syncUserDb'),
     createDatabaseId = require('./createDatabaseId'),
     getModelData     = require('./getModelData'),
-    getUserDbName    = require('../getUserDbName'),
-    replicateUserDbOnceFromRemoteToLocal = require('../replicateUserDbOnceFromRemoteToLocal');
+    getUserDbName    = require('../getUserDbName');
 
 function initiate(projectNames, login) {
 
@@ -50,21 +49,21 @@ module.exports = function (newSignup, login) {
     console.log('initiateNav, newSignup: ', newSignup);
     console.log('initiateNav, login: ', login);
 
-    userDbName = getUserDbName();
-
     // get user info
     if (login) {
-        //replicateUserDbOnceFromRemoteToLocal();
+        // login info came from signup/signin
         projectNames = login.roles;
         initiate(projectNames, login);
     } else {
-        userDb = new PouchDB(userDbName);
+        // get login info from local userdb
+        userDbName = getUserDbName();
+        userDb     = new PouchDB(userDbName);
         // get project names from user roles
         userDb.get('org.couchdb.user:' + window.oi.me.name).then(function (userDoc) {
             projectNames = userDoc.roles;
             initiate(projectNames, login);
         }).catch(function (error) {
-            console.log('error getting user from local userDb: ', error);
+            console.log('initiateNav: error getting user from local userDb: ', error);
         });
     }
 };

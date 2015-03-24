@@ -14,11 +14,7 @@ function comunicateError(html) {
 }
 
 module.exports = function (signindata, newSignup) {
-    var syncOptions = {
-            live:  true,
-            retry: true
-        },
-        oiDb = new PouchDB('http://' + couchUrl + '/oi_messages', syncOptions);
+    var oiDb = new PouchDB('http://' + couchUrl + '/oi_messages');
 
     console.log('signin, signindata: ', signindata);
 
@@ -33,7 +29,7 @@ module.exports = function (signindata, newSignup) {
     oiDb.login(signindata.name, signindata.password).then(function (response) {
         var login;
 
-        console.log('login response: ', response);
+        console.log('signin: login response: ', response);
 
         window.oi.me          = {};
         window.oi.me.name     = signindata.name;
@@ -52,7 +48,6 @@ module.exports = function (signindata, newSignup) {
         $('#signinWithModal').modal('hide');
     }).catch(function (error) {
         if (error.name === 'unauthorized') {
-            console.log('unauthorized');
             // name or password incorrect
             comunicateError('Anmeldung gescheitert:<br>Sie haben Email und/oder Passwort falsch eingegeben.<br>Oder müssen Sie ein Konto erstellen?');
         } else {

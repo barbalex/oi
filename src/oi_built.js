@@ -28202,6 +28202,7 @@ PouchDB.plugin(require('pouchdb-authentication'));
 window.oi             = window.oi       || {};
 window.oi.olMap       = window.oi.olMap || {};
 window.oi.sync        = window.oi.sync  || {};
+window.oi.me          = window.oi.me  || {};
 window.oi.objects     = [];
 window.oi.hierarchies = [];
 
@@ -36749,7 +36750,7 @@ function amdefine(module, requireFn) {
 
 module.exports = amdefine;
 
-}).call(this,require('_process'),"/node_modules/handlebars/node_modules/source-map/node_modules/amdefine/amdefine.js")
+}).call(this,require('_process'),"/node_modules\\handlebars\\node_modules\\source-map\\node_modules\\amdefine\\amdefine.js")
 },{"_process":8,"path":7}],39:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v2.1.3
@@ -70507,9 +70508,10 @@ exports.parse = function (str) {
 
 var PouchDB       = require('pouchdb'),
     _             = require('underscore'),
-    getUserDbName = require('./getUserDbName');
+    getUserDbName = require('./getUserDbName')/*,
+    syncProjectDb = require('./syncProjectDb')*/;
 
-module.exports = function (role) {
+module.exports = function (role, projectDb) {
     var userDbName,
         userDb,
         userDocId;
@@ -70522,7 +70524,7 @@ module.exports = function (role) {
     console.log('addRoleToUserDb: userDb: ', userDb);
     console.log('addRoleToUserDb: userDocId: ', userDocId);
 
-    userDb.get(userDocId, {include_docs: true}).then(function (userDoc) {
+    userDb.get(userDocId, { include_docs: true }).then(function (userDoc) {
 
         console.log('userDoc: ', userDoc);
         // userDoc has no roles after signup
@@ -70531,9 +70533,21 @@ module.exports = function (role) {
             userDoc.roles.push(role);
             userDb.put(userDoc).then(function () {
                 console.log('added role ' + role + ' to userDb ' + userDbName);
+                // now start syncing the new project db
+                // well, wait a moment, so the project db exists on the server
+                // THIS CREATES WEIRD ERROR
+                // THIS FUNCTION IS RETURNED AS EMPTY OBJECT WHEN CALLED IN CREATEFIRSTOBJECT
+                // error caused by calling function via browserify
+                // circumvented it by calling it as global variable
+                setTimeout(function () {
+                    window.oi.syncProjectDb(role);
+                }, 1000);
             }).catch(function (error) {
                 console.log('error putting role ' + role + ' to userDb ' + userDbName + ': ', error);
             });
+        } else {
+            // sync it all the same
+            window.oi.syncProjectDb(role);
         }
     }).catch(function (error) {
         console.log('error getting user from local userDb ' + userDbName + ': ', error);
@@ -70692,7 +70706,7 @@ module.exports = config;
  * 2. creates project-doc
  * 3. adds these docs to the model
  * 4. creates new local project db and adds these docs
- * 5. syncs local project db to remote couch, opting to create the db on the remote couch
+ * 5. syncs local project db to remote couch
  *
  * if a projectName is passed, then there is an empty db that needs to get its first docs
  */
@@ -70715,7 +70729,7 @@ module.exports = function (projectNamePassed) {
         projectDb,
         projectName;
 
-    console.log('setting up first project');
+    console.log('createFirstProject: setting up first project');
 
     // the user has no data yet
     // add standard project
@@ -70773,12 +70787,8 @@ module.exports = function (projectNamePassed) {
         projectName = projectNamePassed;
     } else {
         projectName = 'project_' + projObjectGuid;
-        // add role to user in userDb
-        // userDb syncs role to server
-        // server script then creates projectDb in couch
-        addRoleToUserDb(projectName);
-        // add docs to new local project-db
     }
+    // add docs to new local project-db
     projectDb   = new PouchDB(projectName);
     projectDb.put(projObject).then(function (response) {
         projObject._rev = response.rev;
@@ -70790,6 +70800,10 @@ module.exports = function (projectNamePassed) {
     }).catch(function (err) {
         console.log('error saving first projects hierarchy: ', err);
     });
+    // add role to user in userDb
+    // userDb syncs role to server
+    // server script then creates projectDb in couch
+    addRoleToUserDb(projectName, projectDb);
 };
 },{"./addRoleToUserDb":161,"./configuration":165,"./guid":199,"pouchdb":116,"underscore":160}],167:[function(require,module,exports){
 (function (global){
@@ -71050,7 +71064,7 @@ module.exports = function ($node) {
     });
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./askYesNoWithModal":163,"./deleteObjectFromModel":171,"./getObject":197,"./tellWithModal":262,"dateformat":9,"pouchdb":116,"underscore":160}],171:[function(require,module,exports){
+},{"./askYesNoWithModal":163,"./deleteObjectFromModel":171,"./getObject":197,"./tellWithModal":261,"dateformat":9,"pouchdb":116,"underscore":160}],171:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -71244,7 +71258,7 @@ module.exports = function () {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../getObject":197,"../map/zoomToFeature":232,"../showTab":258,"openlayers":41}],179:[function(require,module,exports){
+},{"../getObject":197,"../map/zoomToFeature":232,"../showTab":257,"openlayers":41}],179:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -71732,7 +71746,7 @@ module.exports = function (id, type) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../../templates/checkbox":265,"../../../templates/checkboxGroup":266,"../../../templates/formButtonToolbar":267,"../../../templates/geoJson":268,"../../../templates/input":269,"../../../templates/optionGroup":273,"../../../templates/select":274,"../../../templates/textarea":275,"../capitalizeFirstLetter":164,"../getHierarchy":196,"../getObject":197,"../map/zoomToFeatures":233,"../refreshScrollbar":251,"../showTab":258,"./addCheckedToValueList":185,"./positionFormBtngroup":191,"./resizeTextareas":192,"openlayers":41,"underscore":160}],190:[function(require,module,exports){
+},{"../../../templates/checkbox":264,"../../../templates/checkboxGroup":265,"../../../templates/formButtonToolbar":266,"../../../templates/geoJson":267,"../../../templates/input":268,"../../../templates/optionGroup":272,"../../../templates/select":273,"../../../templates/textarea":274,"../capitalizeFirstLetter":164,"../getHierarchy":196,"../getObject":197,"../map/zoomToFeatures":233,"../refreshScrollbar":251,"../showTab":257,"./addCheckedToValueList":185,"./positionFormBtngroup":191,"./resizeTextareas":192,"openlayers":41,"underscore":160}],190:[function(require,module,exports){
 // Hilfsfunktion, die typeof ersetzt und ergänzt
 // typeof gibt bei input-Feldern immer String zurück!
 
@@ -71867,8 +71881,7 @@ var $                        = (typeof window !== "undefined" ? window.$ : typeo
     addRoleToUserDb          = require('../addRoleToUserDb'),
     getHierarchy             = require('../getHierarchy'),
     guid                     = require('../guid'),
-    updateUiAfterSavingValue = require('./updateUiAfterSavingValue'),
-    syncProjectDb            = require('../syncProjectDb');
+    updateUiAfterSavingValue = require('./updateUiAfterSavingValue');
 
 module.exports = function (passedObject, value) {
     var projId      = passedObject.projId,
@@ -71914,10 +71927,6 @@ module.exports = function (passedObject, value) {
         // write to pouch
         if (!object._rev) {
             // this is a new project > create it
-            // add role to user in userDb
-            // userDb syncs role to server
-            // server script then creates projectDb in couch
-            addRoleToUserDb(projectName);
             // get last hierarchy
             hierarchy           = getHierarchy(object.projId);
             // deep copy this hierarchy
@@ -71936,13 +71945,16 @@ module.exports = function (passedObject, value) {
                 object._rev = response.rev;
                 // update ui
                 updateUiAfterSavingValue(object, value, field, inputType, featureCoordinatesBefore);
-                // sync project db
-                syncProjectDb(projectName);
                 // add new hierarchy to the new project db
                 return projectDb.put(newHierarchy);
             }).catch(function (err) {
                 console.log('error saving first project: ', err);
             });
+            // add role to user in userDb
+            // userDb syncs role to server
+            // server script then creates projectDb in couch
+            // this function also starts syncing the new project db
+            addRoleToUserDb(projectName, localDb);
         } else {
             // this is a regular object in the same project
             localDb.put(object).then(function (response) {
@@ -71959,7 +71971,7 @@ module.exports = function (passedObject, value) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../addRoleToUserDb":161,"../getHierarchy":196,"../getObject":197,"../guid":199,"../map/getLayerByName":220,"../syncProjectDb":259,"./updateUiAfterSavingValue":195,"dateformat":9,"openlayers":41,"pouchdb":116}],195:[function(require,module,exports){
+},{"../addRoleToUserDb":161,"../getHierarchy":196,"../getObject":197,"../guid":199,"../map/getLayerByName":220,"./updateUiAfterSavingValue":195,"dateformat":9,"openlayers":41,"pouchdb":116}],195:[function(require,module,exports){
 (function (global){
 /*
  * when a value is changed in the form
@@ -72277,14 +72289,15 @@ module.exports = function (tab, setTabsWidth) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./setWidthOfTabs":255}],204:[function(require,module,exports){
+},{"./setWidthOfTabs":254}],204:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
 var Handlebars         = require('handlebars'),
     initiateResizables = require('./initiateResizables'),
     setupEvents        = require('./setupEvents'),
-    getLogin           = require('./nav/getLogin');
+    getLogin           = require('./nav/getLogin'),
+    syncProjectDb      = require('./syncProjectDb');
 
 module.exports = function () {
     // für index.html bereitstellen
@@ -72301,6 +72314,13 @@ module.exports = function () {
         getLogin();
     };
 
+    // muss als globale Variable greifbar sein, weil sonst Probleme entstehen
+    // browserify retourniert statt der Funkion ein leeres Objekt, wegen 
+    // der Abhängigkeiten zwischen den Funktionen...
+    window.oi.syncProjectDb = function (role) {
+        syncProjectDb(role);
+    };
+
     window.Handlebars = Handlebars;
     window.Handlebars.registerHelper('json', function (context) {
         return JSON.stringify(context);
@@ -72313,7 +72333,7 @@ module.exports = function () {
 
     proj4.defs("EPSG:21781", "+proj=somerc +lat_0=46.95240555555556 +lon_0=7.439583333333333 +k_0=1 +x_0=600000 +y_0=200000 +ellps=bessel +towgs84=674.4,15.1,405.3,0,0,0,0 +units=m +no_defs");
 };
-},{"./initiateResizables":205,"./nav/getLogin":242,"./setupEvents":257,"handlebars":27}],205:[function(require,module,exports){
+},{"./initiateResizables":205,"./nav/getLogin":242,"./setupEvents":256,"./syncProjectDb":258,"handlebars":27}],205:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -72407,7 +72427,7 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./alsoResizeReverse":162,"./form/positionFormBtngroup":191,"./form/resizeTextareas":192,"./map/refreshMap":223,"./refreshScrollbar":251,"./saveResizablesConfig":253,"./setWidthOfTabs":255,"./toggleTab":263,"perfect-scrollbar":42,"underscore":160}],206:[function(require,module,exports){
+},{"./alsoResizeReverse":162,"./form/positionFormBtngroup":191,"./form/resizeTextareas":192,"./map/refreshMap":223,"./refreshScrollbar":251,"./saveResizablesConfig":252,"./setWidthOfTabs":254,"./toggleTab":262,"perfect-scrollbar":42,"underscore":160}],206:[function(require,module,exports){
 /*
  * add a DragBox interaction used to select features by drawing boxes
  * while holding the shift key
@@ -72591,7 +72611,7 @@ module.exports = function (layer) {
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../../templates/layertoolLayerCollapse":270,"../../../templates/layertoolProjectPanel":271,"../../../templates/layertoolThemesPanel":272,"../capitalizeFirstLetter":164,"../getHierarchy":196,"../getObject":197}],209:[function(require,module,exports){
+},{"../../../templates/layertoolLayerCollapse":269,"../../../templates/layertoolProjectPanel":270,"../../../templates/layertoolThemesPanel":271,"../capitalizeFirstLetter":164,"../getHierarchy":196,"../getObject":197}],209:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -73835,13 +73855,7 @@ module.exports = function (projectName, login, callback) {
         console.log('getDataFromDb, projectName: ', projectName);
         //console.log('getDataFromDb, login: ', login);
 
-        db.allDocs({
-            include_docs: true,
-            auth: {
-                username: window.oi.me.name,
-                password: window.oi.me.password
-            }
-        }).then(function (result) {
+        db.allDocs({ include_docs: true }).then(function (result) {
             var docs,
                 hierarchies,
                 objects;
@@ -73932,6 +73946,15 @@ module.exports = function () {
 
 };
 },{"./initiateNav":244,"./openSigninModal":245}],243:[function(require,module,exports){
+/*
+ * makes model data accessible in model
+ * by populating model with the data from all the user's project db's
+ * model is:
+ * - window.oi.objects: list of all objects
+ * - window.oi.hierarchies: list of all hierarchies (metadata of objects)
+ * when model is populated the nav tree is created
+ */
+
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus */
 'use strict';
 
@@ -73981,8 +74004,7 @@ var $                = (typeof window !== "undefined" ? window.$ : typeof global
     syncUserDb       = require('../syncUserDb'),
     createDatabaseId = require('./createDatabaseId'),
     getModelData     = require('./getModelData'),
-    getUserDbName    = require('../getUserDbName'),
-    replicateUserDbOnceFromRemoteToLocal = require('../replicateUserDbOnceFromRemoteToLocal');
+    getUserDbName    = require('../getUserDbName');
 
 function initiate(projectNames, login) {
 
@@ -74017,26 +74039,26 @@ module.exports = function (newSignup, login) {
     console.log('initiateNav, newSignup: ', newSignup);
     console.log('initiateNav, login: ', login);
 
-    userDbName = getUserDbName();
-
     // get user info
     if (login) {
-        //replicateUserDbOnceFromRemoteToLocal();
+        // login info came from signup/signin
         projectNames = login.roles;
         initiate(projectNames, login);
     } else {
-        userDb = new PouchDB(userDbName);
+        // get login info from local userdb
+        userDbName = getUserDbName();
+        userDb     = new PouchDB(userDbName);
         // get project names from user roles
         userDb.get('org.couchdb.user:' + window.oi.me.name).then(function (userDoc) {
             projectNames = userDoc.roles;
             initiate(projectNames, login);
         }).catch(function (error) {
-            console.log('error getting user from local userDb: ', error);
+            console.log('initiateNav: error getting user from local userDb: ', error);
         });
     }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../getUserDbName":198,"../replicateUserDbOnceFromRemoteToLocal":252,"../syncProjectDbs":260,"../syncUserDb":261,"./createDatabaseId":235,"./getModelData":243,"async":2,"pouchdb":116,"underscore":160}],245:[function(require,module,exports){
+},{"../getUserDbName":198,"../syncProjectDbs":259,"../syncUserDb":260,"./createDatabaseId":235,"./getModelData":243,"async":2,"pouchdb":116,"underscore":160}],245:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -74103,11 +74125,7 @@ function comunicateError(html) {
 }
 
 module.exports = function (signindata, newSignup) {
-    var syncOptions = {
-            live:  true,
-            retry: true
-        },
-        oiDb = new PouchDB('http://' + couchUrl + '/oi_messages', syncOptions);
+    var oiDb = new PouchDB('http://' + couchUrl + '/oi_messages');
 
     console.log('signin, signindata: ', signindata);
 
@@ -74122,7 +74140,7 @@ module.exports = function (signindata, newSignup) {
     oiDb.login(signindata.name, signindata.password).then(function (response) {
         var login;
 
-        console.log('login response: ', response);
+        console.log('signin: login response: ', response);
 
         window.oi.me          = {};
         window.oi.me.name     = signindata.name;
@@ -74141,7 +74159,6 @@ module.exports = function (signindata, newSignup) {
         $('#signinWithModal').modal('hide');
     }).catch(function (error) {
         if (error.name === 'unauthorized') {
-            console.log('unauthorized');
             // name or password incorrect
             comunicateError('Anmeldung gescheitert:<br>Sie haben Email und/oder Passwort falsch eingegeben.<br>Oder müssen Sie ein Konto erstellen?');
         } else {
@@ -74215,7 +74232,7 @@ module.exports = function () {
     signIn(signindata);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../validateEmail":264,"./signIn":247,"./signUp":249}],249:[function(require,module,exports){
+},{"../validateEmail":263,"./signIn":247,"./signUp":249}],249:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -74226,11 +74243,7 @@ var $             = (typeof window !== "undefined" ? window.$ : typeof global !=
     couchUrl      = configuration.couch.dbUrl,
     signIn        = require('./signIn'),
     getUserDbName = require('../getUserDbName'),
-    syncOptions   = {
-        live:  true,
-        retry: true
-    },
-    oiDb          = new PouchDB('http://' + couchUrl + '/oi_messages', syncOptions),
+    oiDb          = new PouchDB('http://' + couchUrl + '/oi_messages'),
     newSignup,
     userDbName,
     userDb,
@@ -74348,54 +74361,6 @@ module.exports = function () {
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"perfect-scrollbar":42}],252:[function(require,module,exports){
-/**
- * syncs data from a user-db with a local user-db in the pouch
- * syncs only once
- * that is because the pause event is needed do know when syncing has happened to get the roles
- * and the pause event fires repeatedly on persistant syncing
- */
-
-/*jslint node: true, browser: true, nomen: true, todo: true */
-'use strict';
-
-var PouchDB       = require('pouchdb'),
-    configuration = require('./configuration'),
-    couchUrl      = configuration.couch.dbUrl,
-    getUserDbName = require('./getUserDbName');
-
-module.exports = function () {
-    var dbOptions,
-        syncOptions,
-        localDb,
-        remoteDbAddress,
-        remoteDb,
-        userDbName;
-
-    console.log('replicateUserDbOnceFromRemoteToLocal');
-
-    dbOptions = {
-        auth: {
-            username: window.oi.me.name,
-            password: window.oi.me.password
-        }
-    };
-    syncOptions = {
-        live:  false,
-        retry: true
-    };
-    userDbName      = getUserDbName();
-    localDb         = new PouchDB(userDbName);
-    remoteDbAddress = 'http://' + couchUrl + '/' + userDbName;
-    remoteDb        = new PouchDB(remoteDbAddress, dbOptions);
-
-    // make sure syncing and listening to changes is only started if not already started
-    if (remoteDb && !window.oi[userDbName + '_firstReplication']) {
-        // sync once from remote to local
-        window.oi[userDbName + '_firstReplication'] = PouchDB.replicate(remoteDb, localDb, syncOptions).setMaxListeners(20);
-    }
-};
-
-},{"./configuration":165,"./getUserDbName":198,"pouchdb":116}],253:[function(require,module,exports){
 (function (global){
 /*
  * saves previous nav configurations
@@ -74465,7 +74430,7 @@ module.exports = function () {
     localStorage.previousTabConfig = JSON.stringify(window.oi.previousTabConfig);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],254:[function(require,module,exports){
+},{}],253:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus*/
 'use strict';
@@ -74491,7 +74456,7 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"underscore":160}],255:[function(require,module,exports){
+},{"underscore":160}],254:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus*/
 'use strict';
@@ -74540,7 +74505,7 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./form/positionFormBtngroup":191,"./map/refreshMap":223,"./setVisibilityOfTabSeparators":254,"./setWidthOfTabsWithoutPrevious":256,"underscore":160}],256:[function(require,module,exports){
+},{"./form/positionFormBtngroup":191,"./map/refreshMap":223,"./setVisibilityOfTabSeparators":253,"./setWidthOfTabsWithoutPrevious":255,"underscore":160}],255:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus*/
 'use strict';
@@ -74589,7 +74554,7 @@ module.exports = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./form/positionFormBtngroup":191,"./map/refreshMap":223,"underscore":160}],257:[function(require,module,exports){
+},{"./form/positionFormBtngroup":191,"./map/refreshMap":223,"underscore":160}],256:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -74649,7 +74614,7 @@ module.exports = function () {
         .on('shown.bs.collapse',                             refreshScrollbar);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./event/onChangeEditLayerType":172,"./event/onChangeElement":173,"./event/onChangeLytEditLayer":174,"./event/onChangeLytShowLayer":175,"./event/onClickFormDelete":176,"./event/onClickFormNew":177,"./event/onClickGeometryField":178,"./event/onClickNavFormSort":179,"./event/onClickNavLogin":180,"./event/onClickNavbarCollapse":181,"./event/onClickSigninWithModalSignupCheckbox":182,"./event/onKeypressSigninWithModal":183,"./event/onScrollTab":184,"./form/fitTextareaToContent":187,"./map/deleteSelectedFeatures":216,"./nav/signInOrUp":248,"./refreshScrollbar":251,"underscore":160}],258:[function(require,module,exports){
+},{"./event/onChangeEditLayerType":172,"./event/onChangeElement":173,"./event/onChangeLytEditLayer":174,"./event/onChangeLytShowLayer":175,"./event/onClickFormDelete":176,"./event/onClickFormNew":177,"./event/onClickGeometryField":178,"./event/onClickNavFormSort":179,"./event/onClickNavLogin":180,"./event/onClickNavbarCollapse":181,"./event/onClickSigninWithModalSignupCheckbox":182,"./event/onKeypressSigninWithModal":183,"./event/onScrollTab":184,"./form/fitTextareaToContent":187,"./map/deleteSelectedFeatures":216,"./nav/signInOrUp":248,"./refreshScrollbar":251,"underscore":160}],257:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -74674,7 +74639,7 @@ module.exports = function (tab, setTabsWidth) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./map/initiateMap":221,"./setWidthOfTabs":255}],259:[function(require,module,exports){
+},{"./map/initiateMap":221,"./setWidthOfTabs":254}],258:[function(require,module,exports){
 /**
  * syncs data from a project-db with a local project-db in the pouch
  * starts the changes listener
@@ -74741,7 +74706,7 @@ module.exports = function (projectName) {
 
     }
 };
-},{"./configuration":165,"./guid":199,"./handleChanges":200,"pouchdb":116}],260:[function(require,module,exports){
+},{"./configuration":165,"./guid":199,"./handleChanges":200,"pouchdb":116}],259:[function(require,module,exports){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
@@ -74757,7 +74722,7 @@ module.exports = function (projectDbs) {
     });
 };
 
-},{"./syncProjectDb":259,"underscore":160}],261:[function(require,module,exports){
+},{"./syncProjectDb":258,"underscore":160}],260:[function(require,module,exports){
 /**
  * syncs data from a user-db with a local user-db in the pouch
  * starts the changes listener
@@ -74814,7 +74779,7 @@ module.exports = function () {
     }
 };
 
-},{"./configuration":165,"./getUserDbName":198,"./handleChanges":200,"pouchdb":116}],262:[function(require,module,exports){
+},{"./configuration":165,"./getUserDbName":198,"./handleChanges":200,"pouchdb":116}],261:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -74837,7 +74802,7 @@ module.exports = function (title, text) {
     $modal.modal(options);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],263:[function(require,module,exports){
+},{}],262:[function(require,module,exports){
 (function (global){
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
@@ -74861,7 +74826,7 @@ module.exports = function (tab) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./hideTab":203,"./setWidthOfTabs":255,"./showTab":258}],264:[function(require,module,exports){
+},{"./hideTab":203,"./setWidthOfTabs":254,"./showTab":257}],263:[function(require,module,exports){
 /*
  * prüft, ob ein String eine email-Adressen sein könnte
  * Quelle: http://stackoverflow.com/questions/46155/validate-email-address-in-javascript
@@ -74874,26 +74839,26 @@ module.exports = function (string) {
     var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(string);
 };
-},{}],265:[function(require,module,exports){
+},{}],264:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1, helper, alias1=this.lambda, alias2=this.escapeExpression, alias3=helpers.helperMissing;
 
-  return "<div class=\"form-group js-form-group\">\n    <label class=\"control-label\">"
+  return "<div class=\"form-group js-form-group\">\r\n    <label class=\"control-label\">"
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.label : stack1), depth0))
-    + "</label>\n    <div class=\"controls reducedMargin\">\n        <div class=\"checkbox\">\n            <label>\n                <input type=\"checkbox\" id=\""
+    + "</label>\r\n    <div class=\"controls reducedMargin\">\r\n        <div class=\"checkbox\">\r\n            <label>\r\n                <input type=\"checkbox\" id=\""
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1._id : stack1), depth0))
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.label : stack1), depth0))
     + "\" data-object=\""
     + alias2((helpers.json || (depth0 && depth0.json) || alias3).call(depth0,(depth0 != null ? depth0.object : depth0),{"name":"json","hash":{},"data":data}))
     + "\" value=\"true\" "
     + alias2(((helper = (helper = helpers.checked || (depth0 != null ? depth0.checked : depth0)) != null ? helper : alias3),(typeof helper === "function" ? helper.call(depth0,{"name":"checked","hash":{},"data":data}) : helper)))
-    + ">\n            </label>\n        </div>\n    </div>\n</div>";
+    + ">\r\n            </label>\r\n        </div>\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":27}],266:[function(require,module,exports){
+},{"handlebars":27}],265:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,blockParams,depths) {
     var stack1, helper, alias1=this.lambda, alias2=this.escapeExpression, alias3=helpers.helperMissing;
 
-  return "            <div class=\"checkbox\">\n                <label>\n                    <input type=\"checkbox\" id=\""
+  return "            <div class=\"checkbox\">\r\n                <label>\r\n                    <input type=\"checkbox\" id=\""
     + alias2(alias1(((stack1 = (depths[1] != null ? depths[1].object : depths[1])) != null ? stack1._id : stack1), depth0))
     + alias2(alias1(((stack1 = (depths[1] != null ? depths[1].object : depths[1])) != null ? stack1.label : stack1), depth0))
     + alias2(((helper = (helper = helpers.index || (data && data.index)) != null ? helper : alias3),(typeof helper === "function" ? helper.call(depth0,{"name":"index","hash":{},"data":data}) : helper)))
@@ -74906,50 +74871,50 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
     + alias2(alias1((depth0 != null ? depth0.value : depth0), depth0))
     + "\" "
     + alias2(alias1((depth0 != null ? depth0.checked : depth0), depth0))
-    + ">\n                    "
+    + ">\r\n                    "
     + alias2(alias1((depth0 != null ? depth0.label : depth0), depth0))
-    + "\n                </label>\n            </div>\n";
+    + "\r\n                </label>\r\n            </div>\r\n";
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data,blockParams,depths) {
     var stack1;
 
-  return "<div class=\"form-group js-form-group\">\n    <label class=\"control-label\">"
+  return "<div class=\"form-group js-form-group\">\r\n    <label class=\"control-label\">"
     + this.escapeExpression(this.lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.label : stack1), depth0))
-    + "</label>\n    <div class=\"controls reducedMargin\">\n"
+    + "</label>\r\n    <div class=\"controls reducedMargin\">\r\n"
     + ((stack1 = helpers.each.call(depth0,((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.valueList : stack1),{"name":"each","hash":{},"fn":this.program(1, data, 0, blockParams, depths),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-    + "    </div>\n</div>";
+    + "    </div>\r\n</div>";
 },"useData":true,"useDepths":true});
-},{"handlebars":27}],267:[function(require,module,exports){
+},{"handlebars":27}],266:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-    return "<div class=\"btn-toolbar\" role=\"toolbar\" aria-label=\"Daten Toolbar\">\n    <div class=\"btn-group pull-right\" role=\"group\" aria-label=\"Daten Button group\">\n        <button id=\"formNew\" class=\"btn btn-default\">neu</button>\n        <button id=\"formDelete\" class=\"btn btn-default\">löschen</button>\n    </div>\n</div>";
+    return "<div class=\"btn-toolbar\" role=\"toolbar\" aria-label=\"Daten Toolbar\">\r\n    <div class=\"btn-group pull-right\" role=\"group\" aria-label=\"Daten Button group\">\r\n        <button id=\"formNew\" class=\"btn btn-default\">neu</button>\r\n        <button id=\"formDelete\" class=\"btn btn-default\">löschen</button>\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":27}],268:[function(require,module,exports){
+},{"handlebars":27}],267:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1, alias1=this.lambda, alias2=this.escapeExpression;
 
-  return "<div class=\"form-group js-form-group\">\n    <label for=\""
+  return "<div class=\"form-group js-form-group\">\r\n    <label for=\""
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1._id : stack1), depth0))
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.label : stack1), depth0))
     + "\">"
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.label : stack1), depth0))
-    + "</label>\n    <textarea class=\"form-control\" id=\""
+    + "</label>\r\n    <textarea class=\"form-control\" id=\""
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1._id : stack1), depth0))
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.label : stack1), depth0))
     + "\" data-object=\""
     + alias2((helpers.json || (depth0 && depth0.json) || helpers.helperMissing).call(depth0,(depth0 != null ? depth0.object : depth0),{"name":"json","hash":{},"data":data}))
     + "\">"
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.value : stack1), depth0))
-    + "</textarea>\n    <button class=\"js-geometryField btn btn-default btn-xs\">zoomen</button>\n</div>";
+    + "</textarea>\r\n    <button class=\"js-geometryField btn btn-default btn-xs\">zoomen</button>\r\n</div>";
 },"useData":true});
-},{"handlebars":27}],269:[function(require,module,exports){
+},{"handlebars":27}],268:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1, alias1=this.lambda, alias2=this.escapeExpression;
 
-  return "<div class=\"form-group js-form-group\">\n    <label for=\""
+  return "<div class=\"form-group js-form-group\">\r\n    <label for=\""
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1._id : stack1), depth0))
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.label : stack1), depth0))
     + "\">"
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.label : stack1), depth0))
-    + "</label>\n    <input type=\""
+    + "</label>\r\n    <input type=\""
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.inputDataType : stack1), depth0))
     + "\" class=\"form-control\" id=\""
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1._id : stack1), depth0))
@@ -74958,25 +74923,25 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + alias2((helpers.json || (depth0 && depth0.json) || helpers.helperMissing).call(depth0,(depth0 != null ? depth0.object : depth0),{"name":"json","hash":{},"data":data}))
     + "\" value=\""
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.value : stack1), depth0))
-    + "\">\n</div>";
+    + "\">\r\n</div>";
 },"useData":true});
-},{"handlebars":27}],270:[function(require,module,exports){
+},{"handlebars":27}],269:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data) {
     var stack1;
 
-  return "            <div class=\"checkbox\">\n                <label>\n                    <input type=\"checkbox\" id=\""
+  return "            <div class=\"checkbox\">\r\n                <label>\r\n                    <input type=\"checkbox\" id=\""
     + this.escapeExpression(this.lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.editControlId : stack1), depth0))
-    + "\" class=\"js-lytEditLayer\"><div class=\"lytListGroupLabelText\">bearbeiten</div>\n                </label>\n            </div>\n";
+    + "\" class=\"js-lytEditLayer\"><div class=\"lytListGroupLabelText\">bearbeiten</div>\r\n                </label>\r\n            </div>\r\n";
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1, alias1=this.escapeExpression, alias2=this.lambda;
 
   return "<div class=\"list-group\" data-object=\""
     + alias1((helpers.json || (depth0 && depth0.json) || helpers.helperMissing).call(depth0,(depth0 != null ? depth0.object : depth0),{"name":"json","hash":{},"data":data}))
-    + "\">\n    <div class=\"layerTitle\">"
+    + "\">\r\n    <div class=\"layerTitle\">"
     + alias1(alias2(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.layerTitle : stack1), depth0))
-    + "</div>\n    <div class=\"lytLayerColumns\">\n        <div class=\""
+    + "</div>\r\n    <div class=\"lytLayerColumns\">\r\n        <div class=\""
     + alias1(alias2(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.inputType : stack1), depth0))
-    + "\">\n            <label>\n                <input type=\""
+    + "\">\r\n            <label>\r\n                <input type=\""
     + alias1(alias2(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.inputType : stack1), depth0))
     + "\" id=\""
     + alias1(alias2(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.showControlId : stack1), depth0))
@@ -74984,11 +74949,11 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
     + alias1(alias2(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.inputName : stack1), depth0))
     + "\" class=\"js-lytShowLayer\" "
     + alias1(alias2(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.checked : stack1), depth0))
-    + "><div class=\"lytListGroupLabelText\">zeigen</div>\n            </label>\n        </div>\n"
+    + "><div class=\"lytListGroupLabelText\">zeigen</div>\r\n            </label>\r\n        </div>\r\n"
     + ((stack1 = helpers['if'].call(depth0,((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.isProject : stack1),{"name":"if","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-    + "    </div>\n</div>";
+    + "    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":27}],271:[function(require,module,exports){
+},{"handlebars":27}],270:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1, alias1=this.lambda, alias2=this.escapeExpression;
 
@@ -74996,25 +74961,25 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.projId : stack1), depth0))
     + "\" class=\"panel panel-default js-layerPanel js-projectPanel\" data-projId=\""
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.projId : stack1), depth0))
-    + "\">\n    <div class=\"panel-heading\" role=\"tab\" id=\"headingProjekte\">\n        <h4 class=\"panel-title\">\n            <a class=\"collapsed\" data-toggle=\"collapse\" data-parent=\"#utilsLayertoolAccordion\" href=\"#collapseProject"
+    + "\">\r\n    <div class=\"panel-heading\" role=\"tab\" id=\"headingProjekte\">\r\n        <h4 class=\"panel-title\">\r\n            <a class=\"collapsed\" data-toggle=\"collapse\" data-parent=\"#utilsLayertoolAccordion\" href=\"#collapseProject"
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.projId : stack1), depth0))
     + "\" aria-expanded=\"false\" aria-controls=\"collapseProject"
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.projId : stack1), depth0))
-    + "\">\n              "
+    + "\">\r\n              "
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.projectName : stack1), depth0))
-    + "\n            </a>\n        </h4>\n    </div>\n    <div id=\"collapseProject"
+    + "\r\n            </a>\r\n        </h4>\r\n    </div>\r\n    <div id=\"collapseProject"
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.projId : stack1), depth0))
-    + "\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingProjekte\">\n        <!--insert layer collapses-->\n    </div>\n</div>";
+    + "\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingProjekte\">\r\n        <!--insert layer collapses-->\r\n    </div>\r\n</div>";
+},"useData":true});
+},{"handlebars":27}],271:[function(require,module,exports){
+var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+    return "<div id=\"lytThemes\" class=\"panel panel-default js-layerPanel\">\r\n    <div class=\"panel-heading\" role=\"tab\" id=\"headingThemen\">\r\n        <h4 class=\"panel-title\">\r\n            <a class=\"collapsed\" data-toggle=\"collapse\" data-parent=\"#utilsLayertoolAccordion\" href=\"#collapseThemes\" aria-expanded=\"false\" aria-controls=\"collapseThemes\">\r\n              Themen\r\n            </a>\r\n        </h4>\r\n    </div>\r\n    <div id=\"collapseThemes\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingThemen\">\r\n        <!--insert list-groups-->\r\n    </div>\r\n</div>";
 },"useData":true});
 },{"handlebars":27}],272:[function(require,module,exports){
-var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-    return "<div id=\"lytThemes\" class=\"panel panel-default js-layerPanel\">\n    <div class=\"panel-heading\" role=\"tab\" id=\"headingThemen\">\n        <h4 class=\"panel-title\">\n            <a class=\"collapsed\" data-toggle=\"collapse\" data-parent=\"#utilsLayertoolAccordion\" href=\"#collapseThemes\" aria-expanded=\"false\" aria-controls=\"collapseThemes\">\n              Themen\n            </a>\n        </h4>\n    </div>\n    <div id=\"collapseThemes\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingThemen\">\n        <!--insert list-groups-->\n    </div>\n</div>";
-},"useData":true});
-},{"handlebars":27}],273:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,blockParams,depths) {
     var stack1, helper, alias1=this.lambda, alias2=this.escapeExpression, alias3=helpers.helperMissing;
 
-  return "            <div class=\"radio\">\n                <label>\n                    <input type=\"radio\" name=\""
+  return "            <div class=\"radio\">\r\n                <label>\r\n                    <input type=\"radio\" name=\""
     + alias2(alias1(((stack1 = (depths[1] != null ? depths[1].object : depths[1])) != null ? stack1._id : stack1), depth0))
     + alias2(alias1(((stack1 = (depths[1] != null ? depths[1].object : depths[1])) != null ? stack1.label : stack1), depth0))
     + "\" id=\""
@@ -75027,19 +74992,19 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
     + alias2(alias1((depth0 != null ? depth0.value : depth0), depth0))
     + "\" "
     + alias2(alias1((depth0 != null ? depth0.checked : depth0), depth0))
-    + ">\n                    "
+    + ">\r\n                    "
     + alias2(alias1((depth0 != null ? depth0.label : depth0), depth0))
-    + "\n                </label>\n            </div>\n";
+    + "\r\n                </label>\r\n            </div>\r\n";
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data,blockParams,depths) {
     var stack1;
 
-  return "<div class=\"form-group js-form-group\">\n    <label class=\"control-label\">"
+  return "<div class=\"form-group js-form-group\">\r\n    <label class=\"control-label\">"
     + this.escapeExpression(this.lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.label : stack1), depth0))
-    + "</label>\n    <div class=\"controls reducedMargin\">\n"
+    + "</label>\r\n    <div class=\"controls reducedMargin\">\r\n"
     + ((stack1 = helpers.each.call(depth0,((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.valueList : stack1),{"name":"each","hash":{},"fn":this.program(1, data, 0, blockParams, depths),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-    + "    </div>\n</div>";
+    + "    </div>\r\n</div>";
 },"useData":true,"useDepths":true});
-},{"handlebars":27}],274:[function(require,module,exports){
+},{"handlebars":27}],273:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data) {
     var stack1, alias1=this.lambda, alias2=this.escapeExpression;
 
@@ -75049,38 +75014,38 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
     + alias2(alias1((depth0 != null ? depth0.checked : depth0), depth0))
     + ">"
     + alias2(alias1((depth0 != null ? depth0.label : depth0), depth0))
-    + "</option>\n";
+    + "</option>\r\n";
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1, alias1=this.lambda, alias2=this.escapeExpression;
 
-  return "<div class=\"form-group js-form-group\">\n    <label class=\"control-label\">"
+  return "<div class=\"form-group js-form-group\">\r\n    <label class=\"control-label\">"
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.label : stack1), depth0))
-    + "</label>\n    <div class=\"controls\">\n        <select id=\""
+    + "</label>\r\n    <div class=\"controls\">\r\n        <select id=\""
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1._id : stack1), depth0))
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.label : stack1), depth0))
     + "\" data-object=\""
     + alias2((helpers.json || (depth0 && depth0.json) || helpers.helperMissing).call(depth0,(depth0 != null ? depth0.object : depth0),{"name":"json","hash":{},"data":data}))
-    + "\" class=\"form-control\">\n"
+    + "\" class=\"form-control\">\r\n"
     + ((stack1 = helpers.each.call(depth0,((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.valueList : stack1),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-    + "        </select>\n    </div>\n</div>";
+    + "        </select>\r\n    </div>\r\n</div>";
 },"useData":true});
-},{"handlebars":27}],275:[function(require,module,exports){
+},{"handlebars":27}],274:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1, alias1=this.lambda, alias2=this.escapeExpression;
 
-  return "<div class=\"form-group js-form-group\">\n    <label for=\""
+  return "<div class=\"form-group js-form-group\">\r\n    <label for=\""
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1._id : stack1), depth0))
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.label : stack1), depth0))
     + "\">"
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.label : stack1), depth0))
-    + "</label>\n    <textarea class=\"form-control\" id=\""
+    + "</label>\r\n    <textarea class=\"form-control\" id=\""
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1._id : stack1), depth0))
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.label : stack1), depth0))
     + "\" data-object=\""
     + alias2((helpers.json || (depth0 && depth0.json) || helpers.helperMissing).call(depth0,(depth0 != null ? depth0.object : depth0),{"name":"json","hash":{},"data":data}))
     + "\">"
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.value : stack1), depth0))
-    + "</textarea>\n</div>";
+    + "</textarea>\r\n</div>";
 },"useData":true});
 },{"handlebars":27}]},{},[1]);
 

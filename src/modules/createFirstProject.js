@@ -4,7 +4,7 @@
  * 2. creates project-doc
  * 3. adds these docs to the model
  * 4. creates new local project db and adds these docs
- * 5. syncs local project db to remote couch, opting to create the db on the remote couch
+ * 5. syncs local project db to remote couch
  *
  * if a projectName is passed, then there is an empty db that needs to get its first docs
  */
@@ -27,7 +27,7 @@ module.exports = function (projectNamePassed) {
         projectDb,
         projectName;
 
-    console.log('setting up first project');
+    console.log('createFirstProject: setting up first project');
 
     // the user has no data yet
     // add standard project
@@ -85,12 +85,8 @@ module.exports = function (projectNamePassed) {
         projectName = projectNamePassed;
     } else {
         projectName = 'project_' + projObjectGuid;
-        // add role to user in userDb
-        // userDb syncs role to server
-        // server script then creates projectDb in couch
-        addRoleToUserDb(projectName);
-        // add docs to new local project-db
     }
+    // add docs to new local project-db
     projectDb   = new PouchDB(projectName);
     projectDb.put(projObject).then(function (response) {
         projObject._rev = response.rev;
@@ -102,4 +98,8 @@ module.exports = function (projectNamePassed) {
     }).catch(function (err) {
         console.log('error saving first projects hierarchy: ', err);
     });
+    // add role to user in userDb
+    // userDb syncs role to server
+    // server script then creates projectDb in couch
+    addRoleToUserDb(projectName, projectDb);
 };

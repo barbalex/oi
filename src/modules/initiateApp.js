@@ -4,7 +4,8 @@
 var Handlebars         = require('handlebars'),
     initiateResizables = require('./initiateResizables'),
     setupEvents        = require('./setupEvents'),
-    getLogin           = require('./nav/getLogin');
+    getLogin           = require('./nav/getLogin'),
+    syncProjectDb      = require('./syncProjectDb');
 
 module.exports = function () {
     // für index.html bereitstellen
@@ -19,6 +20,13 @@ module.exports = function () {
 
     window.oi.getLogin = function () {
         getLogin();
+    };
+
+    // muss als globale Variable greifbar sein, weil sonst Probleme entstehen
+    // browserify retourniert statt der Funkion ein leeres Objekt, wegen 
+    // der Abhängigkeiten zwischen den Funktionen...
+    window.oi.syncProjectDb = function (role) {
+        syncProjectDb(role);
     };
 
     window.Handlebars = Handlebars;

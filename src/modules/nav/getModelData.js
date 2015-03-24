@@ -1,3 +1,12 @@
+/*
+ * makes model data accessible in model
+ * by populating model with the data from all the user's project db's
+ * model is:
+ * - window.oi.objects: list of all objects
+ * - window.oi.hierarchies: list of all hierarchies (metadata of objects)
+ * when model is populated the nav tree is created
+ */
+
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus */
 'use strict';
 

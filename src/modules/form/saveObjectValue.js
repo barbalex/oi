@@ -21,8 +21,7 @@ var $                        = require('jquery'),
     addRoleToUserDb          = require('../addRoleToUserDb'),
     getHierarchy             = require('../getHierarchy'),
     guid                     = require('../guid'),
-    updateUiAfterSavingValue = require('./updateUiAfterSavingValue'),
-    syncProjectDb            = require('../syncProjectDb');
+    updateUiAfterSavingValue = require('./updateUiAfterSavingValue');
 
 module.exports = function (passedObject, value) {
     var projId      = passedObject.projId,
@@ -68,10 +67,6 @@ module.exports = function (passedObject, value) {
         // write to pouch
         if (!object._rev) {
             // this is a new project > create it
-            // add role to user in userDb
-            // userDb syncs role to server
-            // server script then creates projectDb in couch
-            addRoleToUserDb(projectName);
             // get last hierarchy
             hierarchy           = getHierarchy(object.projId);
             // deep copy this hierarchy
@@ -90,13 +85,16 @@ module.exports = function (passedObject, value) {
                 object._rev = response.rev;
                 // update ui
                 updateUiAfterSavingValue(object, value, field, inputType, featureCoordinatesBefore);
-                // sync project db
-                syncProjectDb(projectName);
                 // add new hierarchy to the new project db
                 return projectDb.put(newHierarchy);
             }).catch(function (err) {
                 console.log('error saving first project: ', err);
             });
+            // add role to user in userDb
+            // userDb syncs role to server
+            // server script then creates projectDb in couch
+            // this function also starts syncing the new project db
+            addRoleToUserDb(projectName, localDb);
         } else {
             // this is a regular object in the same project
             localDb.put(object).then(function (response) {
