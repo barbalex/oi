@@ -64,6 +64,10 @@ module.exports = function (newSignup, login) {
             initiate(projectNames, login);
         }).catch(function (error) {
             console.log('initiateNav: error getting user from local userDb: ', error);
+            if (error.status === 404) {
+                // user not found > user was never created
+                // get server script to sync!!!
+            }
         });
     }
 };

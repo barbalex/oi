@@ -23,20 +23,9 @@ module.exports = function (projectNames, login) {
 
     _.each(projectNames, function (projectName) {
         getDataFromDb(projectName, login, function () {
-
-            console.log('callback calling');
-
             dbCount++;
-
-            console.log('callback dbCount:', dbCount);
-            console.log('callback projectNames.length:', projectNames.length);
-            console.log('callback window.oi.objects:', window.oi.objects);
-
             if (dbCount === projectNames.length) {
                 // all projects have returned their data > create tree
-
-                console.log('callback create tree');
-
                 createTree();
             }
         });

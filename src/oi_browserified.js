@@ -45783,20 +45783,9 @@ module.exports = function (projectNames, login) {
 
     _.each(projectNames, function (projectName) {
         getDataFromDb(projectName, login, function () {
-
-            console.log('callback calling');
-
             dbCount++;
-
-            console.log('callback dbCount:', dbCount);
-            console.log('callback projectNames.length:', projectNames.length);
-            console.log('callback window.oi.objects:', window.oi.objects);
-
             if (dbCount === projectNames.length) {
                 // all projects have returned their data > create tree
-
-                console.log('callback create tree');
-
                 createTree();
             }
         });
@@ -45877,6 +45866,10 @@ module.exports = function (newSignup, login) {
             initiate(projectNames, login);
         }).catch(function (error) {
             console.log('initiateNav: error getting user from local userDb: ', error);
+            if (error.status === 404) {
+                // user not found > user was never created
+                // get server script to sync!!!
+            }
         });
     }
 };
@@ -46000,6 +45993,7 @@ module.exports = function (signindata, newSignup) {
     _.each(window.oi.changes, function (change) {
         change.cancel();
     });
+    // now remove them
     window.oi.changes = [];
 
     oiDb.getSession(function (error, response) {
@@ -46629,10 +46623,13 @@ module.exports = function () {
 
     // make sure syncing and listening to changes is only started if not already started
     if (remoteDb && !window.oi.sync[userDbName]) {
-        // sync but ony one way needed
+
+        console.log('dbOptions: ', dbOptions);
+
+        // sync but only one way needed
         window.oi.sync[userDbName] = PouchDB.sync(localDb, remoteDb, syncOptions, function (error, response) {
             if (error) { return console.log('syncUserDb: error syncing with ' + userDbName + ':', error); }
-            console.log('syncUserDb: syncing ' + userDbName + ' with ' + remoteDbAddress);
+            console.log('syncUserDb: syncing ' + userDbName + ' with ' + remoteDbAddress + ', response:', response);
         });
         // watch changes
         changeListener = remoteDb.changes(changeOptions).on('change', handleChanges);
@@ -46750,24 +46747,8 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     return "<div class=\"btn-toolbar\" role=\"toolbar\" aria-label=\"Daten Toolbar\">\r\n    <div class=\"btn-group pull-right\" role=\"group\" aria-label=\"Daten Button group\">\r\n        <button id=\"formNew\" class=\"btn btn-default\">neu</button>\r\n        <button id=\"formDelete\" class=\"btn btn-default\">löschen</button>\r\n    </div>\r\n</div>";
 },"useData":true});
 },{"handlebars":27}],267:[function(require,module,exports){
-var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-    var stack1, alias1=this.lambda, alias2=this.escapeExpression;
-
-  return "<div class=\"form-group js-form-group\">\r\n    <label for=\""
-    + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1._id : stack1), depth0))
-    + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.label : stack1), depth0))
-    + "\">"
-    + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.label : stack1), depth0))
-    + "</label>\r\n    <textarea class=\"form-control\" id=\""
-    + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1._id : stack1), depth0))
-    + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.label : stack1), depth0))
-    + "\" data-object=\""
-    + alias2((helpers.json || (depth0 && depth0.json) || helpers.helperMissing).call(depth0,(depth0 != null ? depth0.object : depth0),{"name":"json","hash":{},"data":data}))
-    + "\">"
-    + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.value : stack1), depth0))
-    + "</textarea>\r\n    <button class=\"js-geometryField btn btn-default btn-xs\">zoomen</button>\r\n</div>";
-},"useData":true});
-},{"handlebars":27}],268:[function(require,module,exports){
+arguments[4][4][0].apply(exports,arguments)
+},{"dup":4}],268:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1, alias1=this.lambda, alias2=this.escapeExpression;
 

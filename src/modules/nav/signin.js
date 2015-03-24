@@ -66,6 +66,7 @@ module.exports = function (signindata, newSignup) {
     _.each(window.oi.changes, function (change) {
         change.cancel();
     });
+    // now remove them
     window.oi.changes = [];
 
     oiDb.getSession(function (error, response) {
