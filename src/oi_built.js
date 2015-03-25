@@ -36751,7 +36751,7 @@ function amdefine(module, requireFn) {
 
 module.exports = amdefine;
 
-}).call(this,require('_process'),"/node_modules/handlebars/node_modules/source-map/node_modules/amdefine/amdefine.js")
+}).call(this,require('_process'),"/node_modules\\handlebars\\node_modules\\source-map\\node_modules\\amdefine\\amdefine.js")
 },{"_process":8,"path":7}],39:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v2.1.3
@@ -74891,22 +74891,22 @@ module.exports = function (string) {
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1, helper, alias1=this.lambda, alias2=this.escapeExpression, alias3=helpers.helperMissing;
 
-  return "<div class=\"form-group js-form-group\">\n    <label class=\"control-label\">"
+  return "<div class=\"form-group js-form-group\">\r\n    <label class=\"control-label\">"
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.label : stack1), depth0))
-    + "</label>\n    <div class=\"controls reducedMargin\">\n        <div class=\"checkbox\">\n            <label>\n                <input type=\"checkbox\" id=\""
+    + "</label>\r\n    <div class=\"controls reducedMargin\">\r\n        <div class=\"checkbox\">\r\n            <label>\r\n                <input type=\"checkbox\" id=\""
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1._id : stack1), depth0))
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.label : stack1), depth0))
     + "\" data-object=\""
     + alias2((helpers.json || (depth0 && depth0.json) || alias3).call(depth0,(depth0 != null ? depth0.object : depth0),{"name":"json","hash":{},"data":data}))
     + "\" value=\"true\" "
     + alias2(((helper = (helper = helpers.checked || (depth0 != null ? depth0.checked : depth0)) != null ? helper : alias3),(typeof helper === "function" ? helper.call(depth0,{"name":"checked","hash":{},"data":data}) : helper)))
-    + ">\n            </label>\n        </div>\n    </div>\n</div>";
+    + ">\r\n            </label>\r\n        </div>\r\n    </div>\r\n</div>";
 },"useData":true});
 },{"handlebars":27}],265:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,blockParams,depths) {
     var stack1, helper, alias1=this.lambda, alias2=this.escapeExpression, alias3=helpers.helperMissing;
 
-  return "            <div class=\"checkbox\">\n                <label>\n                    <input type=\"checkbox\" id=\""
+  return "            <div class=\"checkbox\">\r\n                <label>\r\n                    <input type=\"checkbox\" id=\""
     + alias2(alias1(((stack1 = (depths[1] != null ? depths[1].object : depths[1])) != null ? stack1._id : stack1), depth0))
     + alias2(alias1(((stack1 = (depths[1] != null ? depths[1].object : depths[1])) != null ? stack1.label : stack1), depth0))
     + alias2(((helper = (helper = helpers.index || (data && data.index)) != null ? helper : alias3),(typeof helper === "function" ? helper.call(depth0,{"name":"index","hash":{},"data":data}) : helper)))
@@ -74919,50 +74919,50 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
     + alias2(alias1((depth0 != null ? depth0.value : depth0), depth0))
     + "\" "
     + alias2(alias1((depth0 != null ? depth0.checked : depth0), depth0))
-    + ">\n                    "
+    + ">\r\n                    "
     + alias2(alias1((depth0 != null ? depth0.label : depth0), depth0))
-    + "\n                </label>\n            </div>\n";
+    + "\r\n                </label>\r\n            </div>\r\n";
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data,blockParams,depths) {
     var stack1;
 
-  return "<div class=\"form-group js-form-group\">\n    <label class=\"control-label\">"
+  return "<div class=\"form-group js-form-group\">\r\n    <label class=\"control-label\">"
     + this.escapeExpression(this.lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.label : stack1), depth0))
-    + "</label>\n    <div class=\"controls reducedMargin\">\n"
+    + "</label>\r\n    <div class=\"controls reducedMargin\">\r\n"
     + ((stack1 = helpers.each.call(depth0,((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.valueList : stack1),{"name":"each","hash":{},"fn":this.program(1, data, 0, blockParams, depths),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-    + "    </div>\n</div>";
+    + "    </div>\r\n</div>";
 },"useData":true,"useDepths":true});
 },{"handlebars":27}],266:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-    return "<div class=\"btn-toolbar\" role=\"toolbar\" aria-label=\"Daten Toolbar\">\n    <div class=\"btn-group pull-right\" role=\"group\" aria-label=\"Daten Button group\">\n        <button id=\"formNew\" class=\"btn btn-default\">neu</button>\n        <button id=\"formDelete\" class=\"btn btn-default\">löschen</button>\n    </div>\n</div>";
+    return "<div class=\"btn-toolbar\" role=\"toolbar\" aria-label=\"Daten Toolbar\">\r\n    <div class=\"btn-group pull-right\" role=\"group\" aria-label=\"Daten Button group\">\r\n        <button id=\"formNew\" class=\"btn btn-default\">neu</button>\r\n        <button id=\"formDelete\" class=\"btn btn-default\">löschen</button>\r\n    </div>\r\n</div>";
 },"useData":true});
 },{"handlebars":27}],267:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1, alias1=this.lambda, alias2=this.escapeExpression;
 
-  return "<div class=\"form-group js-form-group\">\n    <label for=\""
+  return "<div class=\"form-group js-form-group\">\r\n    <label for=\""
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1._id : stack1), depth0))
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.label : stack1), depth0))
     + "\">"
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.label : stack1), depth0))
-    + "</label>\n    <textarea class=\"form-control\" id=\""
+    + "</label>\r\n    <textarea class=\"form-control\" id=\""
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1._id : stack1), depth0))
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.label : stack1), depth0))
     + "\" data-object=\""
     + alias2((helpers.json || (depth0 && depth0.json) || helpers.helperMissing).call(depth0,(depth0 != null ? depth0.object : depth0),{"name":"json","hash":{},"data":data}))
     + "\">"
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.value : stack1), depth0))
-    + "</textarea>\n    <button class=\"js-geometryField btn btn-default btn-xs\">zoomen</button>\n</div>";
+    + "</textarea>\r\n    <button class=\"js-geometryField btn btn-default btn-xs\">zoomen</button>\r\n</div>";
 },"useData":true});
 },{"handlebars":27}],268:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1, alias1=this.lambda, alias2=this.escapeExpression;
 
-  return "<div class=\"form-group js-form-group\">\n    <label for=\""
+  return "<div class=\"form-group js-form-group\">\r\n    <label for=\""
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1._id : stack1), depth0))
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.label : stack1), depth0))
     + "\">"
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.label : stack1), depth0))
-    + "</label>\n    <input type=\""
+    + "</label>\r\n    <input type=\""
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.inputDataType : stack1), depth0))
     + "\" class=\"form-control\" id=\""
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1._id : stack1), depth0))
@@ -74971,25 +74971,25 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + alias2((helpers.json || (depth0 && depth0.json) || helpers.helperMissing).call(depth0,(depth0 != null ? depth0.object : depth0),{"name":"json","hash":{},"data":data}))
     + "\" value=\""
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.value : stack1), depth0))
-    + "\">\n</div>";
+    + "\">\r\n</div>";
 },"useData":true});
 },{"handlebars":27}],269:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data) {
     var stack1;
 
-  return "            <div class=\"checkbox\">\n                <label>\n                    <input type=\"checkbox\" id=\""
+  return "            <div class=\"checkbox\">\r\n                <label>\r\n                    <input type=\"checkbox\" id=\""
     + this.escapeExpression(this.lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.editControlId : stack1), depth0))
-    + "\" class=\"js-lytEditLayer\"><div class=\"lytListGroupLabelText\">bearbeiten</div>\n                </label>\n            </div>\n";
+    + "\" class=\"js-lytEditLayer\"><div class=\"lytListGroupLabelText\">bearbeiten</div>\r\n                </label>\r\n            </div>\r\n";
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1, alias1=this.escapeExpression, alias2=this.lambda;
 
   return "<div class=\"list-group\" data-object=\""
     + alias1((helpers.json || (depth0 && depth0.json) || helpers.helperMissing).call(depth0,(depth0 != null ? depth0.object : depth0),{"name":"json","hash":{},"data":data}))
-    + "\">\n    <div class=\"layerTitle\">"
+    + "\">\r\n    <div class=\"layerTitle\">"
     + alias1(alias2(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.layerTitle : stack1), depth0))
-    + "</div>\n    <div class=\"lytLayerColumns\">\n        <div class=\""
+    + "</div>\r\n    <div class=\"lytLayerColumns\">\r\n        <div class=\""
     + alias1(alias2(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.inputType : stack1), depth0))
-    + "\">\n            <label>\n                <input type=\""
+    + "\">\r\n            <label>\r\n                <input type=\""
     + alias1(alias2(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.inputType : stack1), depth0))
     + "\" id=\""
     + alias1(alias2(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.showControlId : stack1), depth0))
@@ -74997,9 +74997,9 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
     + alias1(alias2(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.inputName : stack1), depth0))
     + "\" class=\"js-lytShowLayer\" "
     + alias1(alias2(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.checked : stack1), depth0))
-    + "><div class=\"lytListGroupLabelText\">zeigen</div>\n            </label>\n        </div>\n"
+    + "><div class=\"lytListGroupLabelText\">zeigen</div>\r\n            </label>\r\n        </div>\r\n"
     + ((stack1 = helpers['if'].call(depth0,((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.isProject : stack1),{"name":"if","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-    + "    </div>\n</div>";
+    + "    </div>\r\n</div>";
 },"useData":true});
 },{"handlebars":27}],270:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
@@ -75009,25 +75009,25 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"co
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.projId : stack1), depth0))
     + "\" class=\"panel panel-default js-layerPanel js-projectPanel\" data-projId=\""
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.projId : stack1), depth0))
-    + "\">\n    <div class=\"panel-heading\" role=\"tab\" id=\"headingProjekte\">\n        <h4 class=\"panel-title\">\n            <a class=\"collapsed\" data-toggle=\"collapse\" data-parent=\"#utilsLayertoolAccordion\" href=\"#collapseProject"
+    + "\">\r\n    <div class=\"panel-heading\" role=\"tab\" id=\"headingProjekte\">\r\n        <h4 class=\"panel-title\">\r\n            <a class=\"collapsed\" data-toggle=\"collapse\" data-parent=\"#utilsLayertoolAccordion\" href=\"#collapseProject"
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.projId : stack1), depth0))
     + "\" aria-expanded=\"false\" aria-controls=\"collapseProject"
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.projId : stack1), depth0))
-    + "\">\n              "
+    + "\">\r\n              "
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.projectName : stack1), depth0))
-    + "\n            </a>\n        </h4>\n    </div>\n    <div id=\"collapseProject"
+    + "\r\n            </a>\r\n        </h4>\r\n    </div>\r\n    <div id=\"collapseProject"
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.projId : stack1), depth0))
-    + "\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingProjekte\">\n        <!--insert layer collapses-->\n    </div>\n</div>";
+    + "\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingProjekte\">\r\n        <!--insert layer collapses-->\r\n    </div>\r\n</div>";
 },"useData":true});
 },{"handlebars":27}],271:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-    return "<div id=\"lytThemes\" class=\"panel panel-default js-layerPanel\">\n    <div class=\"panel-heading\" role=\"tab\" id=\"headingThemen\">\n        <h4 class=\"panel-title\">\n            <a class=\"collapsed\" data-toggle=\"collapse\" data-parent=\"#utilsLayertoolAccordion\" href=\"#collapseThemes\" aria-expanded=\"false\" aria-controls=\"collapseThemes\">\n              Themen\n            </a>\n        </h4>\n    </div>\n    <div id=\"collapseThemes\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingThemen\">\n        <!--insert list-groups-->\n    </div>\n</div>";
+    return "<div id=\"lytThemes\" class=\"panel panel-default js-layerPanel\">\r\n    <div class=\"panel-heading\" role=\"tab\" id=\"headingThemen\">\r\n        <h4 class=\"panel-title\">\r\n            <a class=\"collapsed\" data-toggle=\"collapse\" data-parent=\"#utilsLayertoolAccordion\" href=\"#collapseThemes\" aria-expanded=\"false\" aria-controls=\"collapseThemes\">\r\n              Themen\r\n            </a>\r\n        </h4>\r\n    </div>\r\n    <div id=\"collapseThemes\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingThemen\">\r\n        <!--insert list-groups-->\r\n    </div>\r\n</div>";
 },"useData":true});
 },{"handlebars":27}],272:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data,blockParams,depths) {
     var stack1, helper, alias1=this.lambda, alias2=this.escapeExpression, alias3=helpers.helperMissing;
 
-  return "            <div class=\"radio\">\n                <label>\n                    <input type=\"radio\" name=\""
+  return "            <div class=\"radio\">\r\n                <label>\r\n                    <input type=\"radio\" name=\""
     + alias2(alias1(((stack1 = (depths[1] != null ? depths[1].object : depths[1])) != null ? stack1._id : stack1), depth0))
     + alias2(alias1(((stack1 = (depths[1] != null ? depths[1].object : depths[1])) != null ? stack1.label : stack1), depth0))
     + "\" id=\""
@@ -75040,17 +75040,17 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
     + alias2(alias1((depth0 != null ? depth0.value : depth0), depth0))
     + "\" "
     + alias2(alias1((depth0 != null ? depth0.checked : depth0), depth0))
-    + ">\n                    "
+    + ">\r\n                    "
     + alias2(alias1((depth0 != null ? depth0.label : depth0), depth0))
-    + "\n                </label>\n            </div>\n";
+    + "\r\n                </label>\r\n            </div>\r\n";
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data,blockParams,depths) {
     var stack1;
 
-  return "<div class=\"form-group js-form-group\">\n    <label class=\"control-label\">"
+  return "<div class=\"form-group js-form-group\">\r\n    <label class=\"control-label\">"
     + this.escapeExpression(this.lambda(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.label : stack1), depth0))
-    + "</label>\n    <div class=\"controls reducedMargin\">\n"
+    + "</label>\r\n    <div class=\"controls reducedMargin\">\r\n"
     + ((stack1 = helpers.each.call(depth0,((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.valueList : stack1),{"name":"each","hash":{},"fn":this.program(1, data, 0, blockParams, depths),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-    + "    </div>\n</div>";
+    + "    </div>\r\n</div>";
 },"useData":true,"useDepths":true});
 },{"handlebars":27}],273:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"1":function(depth0,helpers,partials,data) {
@@ -75062,38 +75062,38 @@ var Handlebars = require("handlebars");module.exports = Handlebars.template({"1"
     + alias2(alias1((depth0 != null ? depth0.checked : depth0), depth0))
     + ">"
     + alias2(alias1((depth0 != null ? depth0.label : depth0), depth0))
-    + "</option>\n";
+    + "</option>\r\n";
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1, alias1=this.lambda, alias2=this.escapeExpression;
 
-  return "<div class=\"form-group js-form-group\">\n    <label class=\"control-label\">"
+  return "<div class=\"form-group js-form-group\">\r\n    <label class=\"control-label\">"
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.label : stack1), depth0))
-    + "</label>\n    <div class=\"controls\">\n        <select id=\""
+    + "</label>\r\n    <div class=\"controls\">\r\n        <select id=\""
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1._id : stack1), depth0))
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.label : stack1), depth0))
     + "\" data-object=\""
     + alias2((helpers.json || (depth0 && depth0.json) || helpers.helperMissing).call(depth0,(depth0 != null ? depth0.object : depth0),{"name":"json","hash":{},"data":data}))
-    + "\" class=\"form-control\">\n"
+    + "\" class=\"form-control\">\r\n"
     + ((stack1 = helpers.each.call(depth0,((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.valueList : stack1),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-    + "        </select>\n    </div>\n</div>";
+    + "        </select>\r\n    </div>\r\n</div>";
 },"useData":true});
 },{"handlebars":27}],274:[function(require,module,exports){
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1, alias1=this.lambda, alias2=this.escapeExpression;
 
-  return "<div class=\"form-group js-form-group\">\n    <label for=\""
+  return "<div class=\"form-group js-form-group\">\r\n    <label for=\""
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1._id : stack1), depth0))
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.label : stack1), depth0))
     + "\">"
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.label : stack1), depth0))
-    + "</label>\n    <textarea class=\"form-control\" id=\""
+    + "</label>\r\n    <textarea class=\"form-control\" id=\""
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1._id : stack1), depth0))
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.label : stack1), depth0))
     + "\" data-object=\""
     + alias2((helpers.json || (depth0 && depth0.json) || helpers.helperMissing).call(depth0,(depth0 != null ? depth0.object : depth0),{"name":"json","hash":{},"data":data}))
     + "\">"
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.object : depth0)) != null ? stack1.value : stack1), depth0))
-    + "</textarea>\n</div>";
+    + "</textarea>\r\n</div>";
 },"useData":true});
 },{"handlebars":27}]},{},[1]);
 
