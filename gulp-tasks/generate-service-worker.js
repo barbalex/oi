@@ -20,7 +20,8 @@ gulp.task('generate-service-worker', function (callback) {
             'style/jstree.css',
             'style/oi_built.css'
         ],
-        stripPrefix: rootDir
+        stripPrefix: rootDir,
+        maximumFileSizeToCacheInBytes: 7000000
     }, function(error, swFileContents) {
         if (error) {
             return callback(error);
