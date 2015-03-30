@@ -24,7 +24,7 @@ module.exports = function (role, projectDb) {
         console.log('userDoc: ', userDoc);
         // userDoc has no roles after signup
         userDoc.roles = userDoc.roles || [];
-        if (!_.contains(userDoc.roles, role)) {
+        if (_.indexOf(userDoc.roles, role) === -1) {
             userDoc.roles.push(role);
             userDb.put(userDoc).then(function () {
                 console.log('added role ' + role + ' to userDb ' + userDbName);

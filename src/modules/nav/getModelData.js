@@ -22,14 +22,12 @@ module.exports = function (projectNames, login) {
     window.oi.hierarchies = [];
 
     _.each(projectNames, function (projectName) {
-        getDataFromDb(projectName, login).then(function () {
+        getDataFromDb(projectName, login, function () {
             dbCount++;
             if (dbCount === projectNames.length) {
                 // all projects have returned their data > create tree
                 createTree();
             }
-        }).catch(function (error) {
-            console.log('got an error getting data from ' + projectName + ': ', error);
         });
     });
 

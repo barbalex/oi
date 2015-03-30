@@ -13,58 +13,64 @@ var _                  = require('underscore'),
     couchUrl           = configuration.couch.dbUrl,
     createFirstProject = require('../createFirstProject');
 
-module.exports = function (projectName, login) {
-    if (!projectName) { return console.log('getDataFromDb: no projectName passed'); }
-    var localDb,
-        remoteDbUrl,
-        remoteDb,
-        db,
-        dbOptions;
+module.exports = function (projectName, login, callback) {
+    if (projectName) {
+        var localDb,
+            remoteDbUrl,
+            remoteDb,
+            db,
+            dbOptions;
 
-    dbOptions = {
-        auth: {
-            username: window.oi.me.name,
-            password: window.oi.me.password
-        }
-    };
-    localDb     = new PouchDB(projectName);
-    remoteDbUrl = 'http://' + couchUrl + '/' + projectName;
-    remoteDb    = new PouchDB(remoteDbUrl, dbOptions);
-    // on fist sync get model data from remoteDb
-    db          = login ? remoteDb : localDb;
+        dbOptions = {
+            auth: {
+                username: window.oi.me.name,
+                password: window.oi.me.password
+            }
+        };
+        localDb     = new PouchDB(projectName);
+        remoteDbUrl = 'http://' + couchUrl + '/' + projectName;
+        remoteDb    = new PouchDB(remoteDbUrl, dbOptions);
+        // on fist sync get model data from remoteDb
+        db          = login ? remoteDb : localDb;
 
-    console.log('getDataFromDb, projectName: ', projectName);
-    //console.log('getDataFromDb, login: ', login);
+        console.log('getDataFromDb, projectName: ', projectName);
+        //console.log('getDataFromDb, login: ', login);
 
-    return db.allDocs({ include_docs: true }).then(function (result) {
-        var docs,
-            hierarchies,
-            objects;
+        db.allDocs({ include_docs: true }).then(function (result) {
+            var docs,
+                hierarchies,
+                objects;
 
-        console.log('getDataFromDb: result from db.allDocs: ', result);
+            console.log('getDataFromDb: result from db.allDocs: ', result);
 
-        if (result.rows.length === 0) {
-            // somehow this db didn't get a first set of docs
-            // do that now
-            createFirstProject(projectName);
-        }
+            if (result.rows.length === 0) {
+                // somehow this db didn't get a first set of docs
+                // do that now
+                createFirstProject(projectName);
+            }
 
-        docs = _.map(result.rows, function (row) {
-            return row.doc;
+            docs = _.map(result.rows, function (row) {
+                return row.doc;
+            });
+
+            hierarchies = _.filter(docs, function (doc) {
+                return doc.type === 'hierarchy';
+            });
+            if (hierarchies && hierarchies.length > 0) {
+                window.oi.hierarchies = _.union(window.oi.hierarchies, hierarchies);
+            }
+
+            objects = _.filter(docs, function (doc) {
+                return doc.type === 'object';
+            });
+            if (objects && objects.length > 0) {
+                window.oi.objects = _.union(window.oi.objects, objects);
+            }
+            callback();
+        }).catch(function (error) {
+            console.log('got an error getting data from ' + projectName + ': ', error);
         });
-
-        hierarchies = _.filter(docs, function (doc) {
-            return doc.type === 'hierarchy';
-        });
-        if (hierarchies && hierarchies.length > 0) {
-            window.oi.hierarchies = _.union(window.oi.hierarchies, hierarchies);
-        }
-
-        objects = _.filter(docs, function (doc) {
-            return doc.type === 'object';
-        });
-        if (objects && objects.length > 0) {
-            window.oi.objects = _.union(window.oi.objects, objects);
-        }
-    });
+    } else {
+        console.log('getDataFromDb: no projectName passed');
+    }
 };
