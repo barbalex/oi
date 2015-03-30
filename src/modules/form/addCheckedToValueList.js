@@ -27,12 +27,12 @@ module.exports = function (possibleValues, setValues, type) {
     if (type === 'select' || type === 'optionGroup') {
         // Vorsicht: null ist auch ein Objekt!
         if (typeof possibleValues[0] === 'object' && possibleValues[0] !== null) {
-            if (_.indexOf(valueList, null) === -1) {
+            if (!_.contains(valueList, null)) {
                 possibleValues.unshift(nullObject);
                 valueList.unshift(null);
             }
         } else {
-            if (_.indexOf(possibleValues, null) === -1) {
+            if (!_.contains(possibleValues, null)) {
                 possibleValues.unshift(null);
             }
         }
@@ -49,7 +49,7 @@ module.exports = function (possibleValues, setValues, type) {
 
             // setzen, ob checkbox checked ist
             if (setValues && setValues.constructor === Array) {
-                valueObject.checked = _.indexOf(setValues, value.value) > -1 ? selectedOrChecked : '';
+                valueObject.checked = !_.contains(setValues, value.value) ? selectedOrChecked : '';
             } else {
                 valueObject.checked = setValues == value.value ? selectedOrChecked : '';
             }
@@ -62,7 +62,7 @@ module.exports = function (possibleValues, setValues, type) {
             }
             // setzen, ob checkbox checked ist
             if (setValues && setValues.constructor === Array) {
-                valueObject.checked = _.indexOf(setValues, value) > -1 ? selectedOrChecked : '';
+                valueObject.checked = !_.contains(setValues, value) ? selectedOrChecked : '';
             } else {
                 valueObject.checked = setValues == value ? selectedOrChecked : '';
             }
