@@ -6,11 +6,11 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var PouchDB       = require('pouchdb'),
-    configuration = require('./configuration'),
-    couchUrl      = configuration.couch.dbUrl,
-    handleChanges = require('./handleChanges'),
-    guid          = require('./guid');
+var PouchDB                     = require('pouchdb'),
+    configuration               = require('./configuration'),
+    couchUrl                    = configuration.couch.dbUrl,
+    handleExternalObjectChanges = require('./handleExternalObjectChanges'),
+    guid                        = require('./guid');
 
 module.exports = function (projectName) {
     var dbOptions = {
@@ -62,7 +62,7 @@ module.exports = function (projectName) {
             }
         });
         // watch changes
-        changeListener = remoteDb.changes(changeOptions).on('change', handleChanges);
+        changeListener = remoteDb.changes(changeOptions).on('change', handleExternalObjectChanges);
         // add listener to array so it can be canceled later
         window.oi.changes.push(changeListener);
 

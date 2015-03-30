@@ -38,11 +38,12 @@ function removeNodeFromTree(doc) {
     $('#navContent').jstree().delete_node('#' + doc._id);
 }
 
-module.exports = function (doc) {
-    var modelObject,
+module.exports = function (change) {
+    var doc        = change.doc,
         tree       = $('#navContent').jstree(),
         activeNode = tree.get_selected(true)[0],
-        activeId   = null;
+        activeId   = null,
+        modelObject;
 
     if (activeNode) {
         activeId = activeNode.data.type === 'object' ? activeNode.id : activeNode.data.id;

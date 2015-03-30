@@ -9,8 +9,9 @@
 
 var _ = require('underscore');
 
-module.exports = function (userDoc) {
-    var userName = userDoc.name,
+module.exports = function (change) {
+    var userDoc  = change.doc,
+        userName = userDoc.name,
         rootObjects,
         rootObjectsProjectNames,
         projectsToAdd,

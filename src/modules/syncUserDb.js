@@ -6,11 +6,11 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var PouchDB       = require('pouchdb'),
-    configuration = require('./configuration'),
-    couchUrl      = configuration.couch.dbUrl,
-    handleChanges = require('./handleChanges'),
-    getUserDbName = require('./getUserDbName');
+var PouchDB           = require('pouchdb'),
+    configuration     = require('./configuration'),
+    couchUrl          = configuration.couch.dbUrl,
+    handleUserChanges = require('./handleUserChanges'),
+    getUserDbName     = require('./getUserDbName');
 
 module.exports = function () {
     var dbOptions,
@@ -55,7 +55,7 @@ module.exports = function () {
             console.log('syncUserDb: syncing ' + userDbName + ' with ' + remoteDbAddress + ', response:', response);
         });
         // watch changes
-        changeListener = remoteDb.changes(changeOptions).on('change', handleChanges);
+        changeListener = remoteDb.changes(changeOptions).on('change', handleUserChanges);
         // add listener to array so it can be canceled later
         window.oi.changes.push(changeListener);
     }
