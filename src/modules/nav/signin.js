@@ -33,7 +33,7 @@ function signin(oiDb, signindata, newSignup) {
         }
         // when first sync data for model is fetched from remote db instead of locally
         // better because data may not yet have arrived locally
-        getProjectNamesToInitiateUi(newSignup, login);
+        getProjectNamesToInitiateUi(login);
         $('#signinWithModal').modal('hide');
     }).catch(function (error) {
         if (error.name === 'unauthorized') {

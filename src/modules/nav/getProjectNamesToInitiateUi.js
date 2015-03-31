@@ -12,12 +12,11 @@ var $             = require('jquery'),
     initiateUi    = require('../initiateUi'),
     syncUserDb    = require('../syncUserDb');
 
-module.exports = function (newSignup, login) {
+module.exports = function (login) {
     var userDbName,
         projectNames,
         userDb;
 
-    console.log('getProjectNamesToInitiateUi, newSignup: ', newSignup);
     console.log('getProjectNamesToInitiateUi, login: ', login);
 
     // get user info

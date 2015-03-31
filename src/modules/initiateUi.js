@@ -7,10 +7,10 @@
 'use strict';
 
 var $                = require('jquery'),
-    syncProjectDbs   = require('../syncProjectDbs'),
-    syncUserDb       = require('../syncUserDb'),
-    createDatabaseId = require('./createDatabaseId'),
-    getModelData     = require('./getModelData');
+    syncProjectDbs   = require('./syncProjectDbs'),
+    syncUserDb       = require('./syncUserDb'),
+    createDatabaseId = require('./nav/createDatabaseId'),
+    getModelData     = require('./nav/getModelData');
 
 module.exports = function (projectNames, login) {
     // every database gets a locally saved id

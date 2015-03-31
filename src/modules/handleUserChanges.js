@@ -42,7 +42,7 @@ module.exports = function (change) {
             if (revisions.length === 1) {
                 // this is a new user doc
                 // need to initiate ui
-                getProjectNamesToInitiateUi();
+                getProjectNamesToInitiateUi(null);
             }
         });
 

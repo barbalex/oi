@@ -42,22 +42,27 @@ module.exports = function () {
     userDbName      = getUserDbName();
     localDb         = new PouchDB(userDbName);
     remoteDbAddress = 'http://' + couchUrl + '/' + userDbName;
-    remoteDb        = new PouchDB(remoteDbAddress, dbOptions);
+    remoteDb        = new PouchDB(remoteDbAddress, dbOptions).then(function (response) {
 
-    // make sure syncing and listening to changes is only started if not already started
-    if (remoteDb && !window.oi.sync[userDbName]) {
+        console.log('syncUserDb: response from instantiating remote db ' + remoteDbAddress + ' with username ' + dbOptions.auth.username + ' and password ' + dbOptions.auth.password + ':', response);
 
-        console.log('dbOptions: ', dbOptions);
+        // make sure syncing and listening to changes is only started if not already started
+        if (remoteDb && !window.oi.sync[userDbName]) {
 
-        // watch changes
-        changeListener = remoteDb.changes(changeOptions).on('change', handleUserChanges);
-        // add listener to array so it can be canceled later
-        window.oi.changes.push(changeListener);
+            console.log('dbOptions: ', dbOptions);
 
-        // sync
-        window.oi.sync[userDbName] = PouchDB.sync(localDb, remoteDb, syncOptions, function (error, response) {
-            if (error) { return console.log('syncUserDb: error syncing with ' + userDbName + ':', error); }
-            console.log('syncUserDb: syncing ' + userDbName + ' with ' + remoteDbAddress + ', response:', response);
-        });
-    }
+            // watch changes
+            changeListener = remoteDb.changes(changeOptions).on('change', handleUserChanges);
+            // add listener to array so it can be canceled later
+            window.oi.changes.push(changeListener);
+
+            // sync
+            window.oi.sync[userDbName] = PouchDB.sync(localDb, remoteDb, syncOptions, function (error, response) {
+                if (error) { return console.log('syncUserDb: error syncing with ' + userDbName + ':', error); }
+                console.log('syncUserDb: syncing ' + userDbName + ' with ' + remoteDbAddress + ', response:', response);
+            });
+        }
+    }).catch(function (error) {
+        console.log('syncUserDb: error instantiating remote db ' + remoteDbAddress + ' with username ' + dbOptions.auth.username + ' and password ' + dbOptions.auth.password + ':', error);
+    });
 };

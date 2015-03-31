@@ -12,7 +12,7 @@ module.exports = function () {
         window.oi.me          = {};
         window.oi.me.name     = loginName;
         window.oi.me.password = localStorage.me_password;
-        getProjectNamesToInitiateUi(newSignup, null);
+        getProjectNamesToInitiateUi(null);
     } else {
         openSigninModal();
     }
