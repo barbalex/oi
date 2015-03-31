@@ -34,13 +34,14 @@ module.exports = function (newSignup, login) {
             projectNames = userDoc.roles;
             initiateUi(projectNames, login);
         }).catch(function (error) {
-            console.log('getProjectNamesToInitiateUi: error getting user ' + window.oi.me.name + ' from local userDb ' + userDbName + ': ', error);
             if (error.status === 404) {
                 // user not found > user was never created
                 // maybe account was created on other computer and user is loggin in for the first time
                 // syncUserDb checks if userDoc coming as change is new
                 // if new it initiates UI
                 syncUserDb();
+            } else {
+                console.log('getProjectNamesToInitiateUi: error getting user ' + window.oi.me.name + ' from local userDb ' + userDbName + ': ', error);
             }
         });
     }

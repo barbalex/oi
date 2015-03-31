@@ -12,9 +12,10 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var _             = require('underscore'),
-    PouchDB       = require('pouchdb'),
-    getUserDbName = require('./getUserDbName');
+var _                           = require('underscore'),
+    PouchDB                     = require('pouchdb'),
+    getUserDbName               = require('./getUserDbName'),
+    getProjectNamesToInitiateUi = require('./nav/getProjectNamesToInitiateUi');
 
 module.exports = function (change) {
     var userDoc  = change.doc,
@@ -40,8 +41,8 @@ module.exports = function (change) {
 
             if (revisions.length === 1) {
                 // this is a new user doc
-                // TODO: need to initiate ui
-                
+                // need to initiate ui
+                getProjectNamesToInitiateUi();
             }
         });
 
