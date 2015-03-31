@@ -49,14 +49,15 @@ module.exports = function () {
 
         console.log('dbOptions: ', dbOptions);
 
+        // watch changes
+        changeListener = remoteDb.changes(changeOptions).on('change', handleUserChanges);
+        // add listener to array so it can be canceled later
+        window.oi.changes.push(changeListener);
+
         // sync
         window.oi.sync[userDbName] = PouchDB.sync(localDb, remoteDb, syncOptions, function (error, response) {
             if (error) { return console.log('syncUserDb: error syncing with ' + userDbName + ':', error); }
             console.log('syncUserDb: syncing ' + userDbName + ' with ' + remoteDbAddress + ', response:', response);
         });
-        // watch changes
-        changeListener = remoteDb.changes(changeOptions).on('change', handleUserChanges);
-        // add listener to array so it can be canceled later
-        window.oi.changes.push(changeListener);
     }
 };

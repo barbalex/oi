@@ -1,12 +1,12 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $             = require('jquery'),
-    _             = require('underscore'),
-    PouchDB       = require('pouchdb'),
-    configuration = require('../configuration'),
-    couchUrl      = configuration.couch.dbUrl,
-    initiateNav   = require('./initiateNav');
+var $                           = require('jquery'),
+    _                           = require('underscore'),
+    PouchDB                     = require('pouchdb'),
+    configuration               = require('../configuration'),
+    couchUrl                    = configuration.couch.dbUrl,
+    getProjectNamesToInitiateUi = require('./getProjectNamesToInitiateUi');
 
 function comunicateError(html) {
     $('#signinAlertText').html(html);
@@ -33,7 +33,7 @@ function signin(oiDb, signindata, newSignup) {
         }
         // when first sync data for model is fetched from remote db instead of locally
         // better because data may not yet have arrived locally
-        initiateNav(newSignup, login);
+        getProjectNamesToInitiateUi(newSignup, login);
         $('#signinWithModal').modal('hide');
     }).catch(function (error) {
         if (error.name === 'unauthorized') {
