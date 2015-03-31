@@ -42,14 +42,17 @@ module.exports = function () {
     userDbName      = getUserDbName();
     localDb         = new PouchDB(userDbName);
     remoteDbAddress = 'http://' + couchUrl + '/' + userDbName;
-    remoteDb        = new PouchDB(remoteDbAddress, dbOptions).then(function (response) {
+    remoteDb        = new PouchDB(remoteDbAddress, dbOptions, function (error, response) {
+        if (error) {
+            return console.log('syncUserDb: error instantiating remote db ' + remoteDbAddress + ' with username ' + dbOptions.auth.username + ' and password ' + dbOptions.auth.password + ':', error);
+        }
 
         console.log('syncUserDb: response from instantiating remote db ' + remoteDbAddress + ' with username ' + dbOptions.auth.username + ' and password ' + dbOptions.auth.password + ':', response);
 
         // make sure syncing and listening to changes is only started if not already started
         if (remoteDb && !window.oi.sync[userDbName]) {
 
-            console.log('dbOptions: ', dbOptions);
+            //console.log('dbOptions: ', dbOptions);
 
             // watch changes
             changeListener = remoteDb.changes(changeOptions).on('change', handleUserChanges);
@@ -62,7 +65,5 @@ module.exports = function () {
                 console.log('syncUserDb: syncing ' + userDbName + ' with ' + remoteDbAddress + ', response:', response);
             });
         }
-    }).catch(function (error) {
-        console.log('syncUserDb: error instantiating remote db ' + remoteDbAddress + ' with username ' + dbOptions.auth.username + ' and password ' + dbOptions.auth.password + ':', error);
     });
 };

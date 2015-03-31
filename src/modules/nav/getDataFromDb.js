@@ -29,46 +29,49 @@ module.exports = function (projectName, login, callback) {
         };
         localDb     = new PouchDB(projectName);
         remoteDbUrl = 'http://' + couchUrl + '/' + projectName;
-        remoteDb    = new PouchDB(remoteDbUrl, dbOptions);
-        // on fist sync get model data from remoteDb
-        db          = login ? remoteDb : localDb;
+        remoteDb    = new PouchDB(remoteDbUrl, dbOptions, function (error, response) {
+            if (error) { return console.log('getDataFromDb: error instantiating remote db ' + remoteDbUrl + ':', error); }
 
-        console.log('getDataFromDb, projectName: ', projectName);
-        //console.log('getDataFromDb, login: ', login);
+            // on fist sync get model data from remoteDb
+            db = login ? remoteDb : localDb;
 
-        db.allDocs({ include_docs: true }).then(function (result) {
-            var docs,
-                hierarchies,
-                objects;
+            console.log('getDataFromDb, projectName: ', projectName);
+            //console.log('getDataFromDb, login: ', login);
 
-            console.log('getDataFromDb: result from db.allDocs: ', result);
+            db.allDocs({ include_docs: true }).then(function (result) {
+                var docs,
+                    hierarchies,
+                    objects;
 
-            if (result.rows.length === 0) {
-                // somehow this db didn't get a first set of docs
-                // do that now
-                createFirstProject(projectName);
-            }
+                console.log('getDataFromDb: result from db.allDocs: ', result);
 
-            docs = _.map(result.rows, function (row) {
-                return row.doc;
+                if (result.rows.length === 0) {
+                    // somehow this db didn't get a first set of docs
+                    // do that now
+                    createFirstProject(projectName);
+                }
+
+                docs = _.map(result.rows, function (row) {
+                    return row.doc;
+                });
+
+                hierarchies = _.filter(docs, function (doc) {
+                    return doc.type === 'hierarchy';
+                });
+                if (hierarchies && hierarchies.length > 0) {
+                    window.oi.hierarchies = _.union(window.oi.hierarchies, hierarchies);
+                }
+
+                objects = _.filter(docs, function (doc) {
+                    return doc.type === 'object';
+                });
+                if (objects && objects.length > 0) {
+                    window.oi.objects = _.union(window.oi.objects, objects);
+                }
+                callback();
+            }).catch(function (error) {
+                console.log('getDataFromDb: got an error getting data from ' + projectName + ': ', error);
             });
-
-            hierarchies = _.filter(docs, function (doc) {
-                return doc.type === 'hierarchy';
-            });
-            if (hierarchies && hierarchies.length > 0) {
-                window.oi.hierarchies = _.union(window.oi.hierarchies, hierarchies);
-            }
-
-            objects = _.filter(docs, function (doc) {
-                return doc.type === 'object';
-            });
-            if (objects && objects.length > 0) {
-                window.oi.objects = _.union(window.oi.objects, objects);
-            }
-            callback();
-        }).catch(function (error) {
-            console.log('got an error getting data from ' + projectName + ': ', error);
         });
     } else {
         console.log('getDataFromDb: no projectName passed');
