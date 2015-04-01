@@ -73,7 +73,7 @@ module.exports = function (projectName) {
             // add listener to array so it can be canceled later
             window.oi.changes.push(changeListener);
 
-            console.log('syncProjectDb: syncing ' + projectName + ' with ' + remoteDbAddress);
+            //console.log('syncProjectDb: syncing ' + projectName + ' with ' + remoteDbAddress);
 
         }
     });
