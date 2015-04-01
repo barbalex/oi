@@ -13,7 +13,7 @@ function comunicateError(html) {
     $('#signinAlert').show();
 }
 
-function signin(oiDb, signindata, newSignup) {
+function signin(oiDb, signindata) {
     // signin
     oiDb.login(signindata.name, signindata.password).then(function (response) {
         var login;
@@ -46,7 +46,7 @@ function signin(oiDb, signindata, newSignup) {
     });
 }
 
-module.exports = function (signindata, newSignup) {
+module.exports = function (signindata) {
     var oiDb = new PouchDB('http://' + couchUrl + '/oi_messages', function (error, response) {
         if (error) { return console.log('signin: error instantiating remote oi db:', error); }
 
@@ -54,9 +54,6 @@ module.exports = function (signindata, newSignup) {
 
         // stop all syncs
         // in case user is changed and previous user's syncs are still running
-        // PROBLEM TODO: project sync returned not a sync object but a promise
-        // this causes an error
-        // so now only user syncs are stopped
         _.each(window.oi.sync, function (value, key) {
             if (window.oi.sync[key]) {
                 window.oi.sync[key].cancel();
@@ -74,16 +71,16 @@ module.exports = function (signindata, newSignup) {
             if (error) { return console.log('error getting session: ', error); }
             if (!response.userCtx.name) {
                 // no one logged in, log in
-                return signin(oiDb, signindata, newSignup);
+                return signin(oiDb, signindata);
             }
             if (signindata.name === response.userCtx.name) {
                 // this person is already signed in
                 console.log(signindata.name + ' is already signed in');
-                return signin(oiDb, signindata, newSignup);
+                return signin(oiDb, signindata);
             }
             // other user is logged in, log out first
             oiDb.logout(function () {
-                signin(oiDb, signindata, newSignup);
+                signin(oiDb, signindata);
             });
         });
     });

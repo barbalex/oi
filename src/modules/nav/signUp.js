@@ -8,7 +8,6 @@ var $             = require('jquery'),
     signIn        = require('./signIn'),
     getUserDbName = require('../getUserDbName'),
     oiDb,
-    newSignup,
     userDbName,
     userDb,
     userDoc;
@@ -34,7 +33,7 @@ function signup(oiDb, signindata) {
         };
         userDb.put(userDoc).then(function () {
             console.log('created userDb ' + userDbName);
-            signIn(signindata, newSignup);
+            signIn(signindata);
         }).catch(function (error) {
             console.log('error creating userDb ' + userDbName + ': ', error);
         });
@@ -51,9 +50,6 @@ function signup(oiDb, signindata) {
 }
 
 module.exports = function (signindata) {
-    // after signin data for model is fetched from remote db instead of locally
-    // better because data may not yet have arrived locally through syncing
-    newSignup = true;
 
     console.log('going to sign up. signindata: ', signindata);
 
