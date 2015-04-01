@@ -10,6 +10,10 @@ module.exports = function (tab, setTabsWidth) {
     $('#' + tab + 'Menu').removeClass('active');
     // Seite ausblenden
     $('#' + tab).hide();
+    if (tab === 'map') {
+        $('#utils').hide();
+        $('#utilsMenu').removeClass('active');
+    }
     if (!setTabsWidth) {
         setWidthOfTabs();
     }

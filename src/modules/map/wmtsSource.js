@@ -27,14 +27,15 @@
  * Quelle: http://procrastinatio.org/2015/02/21/lv95-lv03-comparison/
  */
 
-/*jslint node: true, browser: true, nomen: true, todo: true */
+/*jslint node: true, browser: true, nomen: true, todo: true, plusplus */
 'use strict';
 
 var ol = require('openlayers');
 
 function getMatrixIds(resolutions, pad) {
-    var matrixIds = [];
-    for (var i = 0; i < resolutions.length; i++) {
+    var matrixIds = [],
+        i;
+    for (i = 0; i < resolutions.length; i++) {
         if (pad) {
             matrixIds.push((i < 10 ? '0' : '') + i);
         } else {
@@ -66,7 +67,7 @@ module.exports = function (layer, options) {
     timestamp = options.timestamps[0];
     if (options.attributionUrl && options.attribution) {
         attribution = new ol.Attribution({
-            html: '<a target="new" href="'+options.attributionUrl + '">' + options.attribution + '</a>'
+            html: '<a target="new" href="' + options.attributionUrl + '">' + options.attribution + '</a>'
         });
     }
     localContext = {
