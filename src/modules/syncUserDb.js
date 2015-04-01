@@ -47,7 +47,7 @@ module.exports = function () {
             return console.log('syncUserDb: error instantiating remote db ' + remoteDbAddress + ' with username ' + dbOptions.auth.username + ' and password ' + dbOptions.auth.password + ':', error);
         }
 
-        console.log('syncUserDb: response from instantiating remote db ' + remoteDbAddress + ' with username ' + dbOptions.auth.username + ' and password ' + dbOptions.auth.password + ':', response);
+        //console.log('syncUserDb: response from instantiating remote db ' + remoteDbAddress + ' with username ' + dbOptions.auth.username + ' and password ' + dbOptions.auth.password + ':', response);
 
         // make sure syncing and listening to changes is only started if not already started
         if (remoteDb && !window.oi.sync[userDbName]) {

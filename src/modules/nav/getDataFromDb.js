@@ -35,7 +35,7 @@ module.exports = function (projectName, login, callback) {
             // on fist sync get model data from remoteDb
             db = login ? remoteDb : localDb;
 
-            console.log('getDataFromDb, projectName: ', projectName);
+            //console.log('getDataFromDb, projectName: ', projectName);
             //console.log('getDataFromDb, login: ', login);
 
             db.allDocs({ include_docs: true }).then(function (result) {
@@ -43,7 +43,7 @@ module.exports = function (projectName, login, callback) {
                     hierarchies,
                     objects;
 
-                console.log('getDataFromDb: result from db.allDocs: ', result);
+                //console.log('getDataFromDb: result from db.allDocs: ', result);
 
                 if (result.rows.length === 0) {
                     // somehow this db didn't get a first set of docs

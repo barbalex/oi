@@ -47,42 +47,44 @@ function signin(oiDb, signindata, newSignup) {
 }
 
 module.exports = function (signindata, newSignup) {
-    var oiDb = new PouchDB('http://' + couchUrl + '/oi_messages');
+    var oiDb = new PouchDB('http://' + couchUrl + '/oi_messages', function (error, response) {
+        if (error) { return console.log('signin: error instantiating remote oi db:', error); }
 
-    console.log('signin, signindata: ', signindata);
+        console.log('signin, signindata: ', signindata);
 
-    // stop all syncs
-    // in case user is changed and previous user's syncs are still running
-    // PROBLEM TODO: project sync returned not a sync object but a promise
-    // this causes an error
-    // so now only user syncs are stopped
-    _.each(window.oi.sync, function (value, key) {
-        if (window.oi.sync[key]) {
-            window.oi.sync[key].cancel();
-            delete window.oi.sync[key];
-        }
-    });
-    // cancel all changes listeners
-    _.each(window.oi.changes, function (change) {
-        change.cancel();
-    });
-    // now remove them
-    window.oi.changes = [];
+        // stop all syncs
+        // in case user is changed and previous user's syncs are still running
+        // PROBLEM TODO: project sync returned not a sync object but a promise
+        // this causes an error
+        // so now only user syncs are stopped
+        _.each(window.oi.sync, function (value, key) {
+            if (window.oi.sync[key]) {
+                window.oi.sync[key].cancel();
+                delete window.oi.sync[key];
+            }
+        });
+        // cancel all changes listeners
+        _.each(window.oi.changes, function (change) {
+            change.cancel();
+        });
+        // now remove them
+        window.oi.changes = [];
 
-    oiDb.getSession(function (error, response) {
-        if (error) { return console.log('error getting session: ', error); }
-        if (!response.userCtx.name) {
-            // no one logged in, log in
-            return signin(oiDb, signindata, newSignup);
-        }
-        if (signindata.name === response.userCtx.name) {
-            // this person is already signed in
-            console.log(signindata.name + ' is already signed in');
-            return signin(oiDb, signindata, newSignup);
-        }
-        // other user is logged in, log out first
-        oiDb.logout(function () {
-            signin(oiDb, signindata, newSignup);
+        oiDb.getSession(function (error, response) {
+            if (error) { return console.log('error getting session: ', error); }
+            if (!response.userCtx.name) {
+                // no one logged in, log in
+                return signin(oiDb, signindata, newSignup);
+            }
+            if (signindata.name === response.userCtx.name) {
+                // this person is already signed in
+                console.log(signindata.name + ' is already signed in');
+                return signin(oiDb, signindata, newSignup);
+            }
+            // other user is logged in, log out first
+            oiDb.logout(function () {
+                signin(oiDb, signindata, newSignup);
+            });
         });
     });
 };

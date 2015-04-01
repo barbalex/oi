@@ -7,7 +7,7 @@ var $             = require('jquery'),
     couchUrl      = configuration.couch.dbUrl,
     signIn        = require('./signIn'),
     getUserDbName = require('../getUserDbName'),
-    oiDb          = new PouchDB('http://' + couchUrl + '/oi_messages'),
+    oiDb,
     newSignup,
     userDbName,
     userDb,
@@ -18,7 +18,7 @@ function comunicateError(html) {
     $('#signinAlert').show();
 }
 
-function signup(signindata) {
+function signup(oiDb, signindata) {
     // TODO: pass more data as metadata
     // see: https://github.com/nolanlawson/pouchdb-authentication#options
     oiDb.signup(signindata.name, signindata.password).then(function (response) {
@@ -57,19 +57,23 @@ module.exports = function (signindata) {
 
     console.log('going to sign up. signindata: ', signindata);
 
-    oiDb.getSession(function (error, response) {
-        if (error) { return console.log('error getting session: ', error); }
-        if (!response.userCtx.name) {
-            // no one logged in, signup
-            return signup(signindata);
-        }
-        if (signindata.name === response.userCtx.name) {
-            // this person is already signed in
-            return console.log(signindata.name + ' is already signed in');
-        }
-        // other user is logged in, log out first
-        oiDb.logout(function () {
-            signup(signindata);
+    oiDb = new PouchDB('http://' + couchUrl + '/oi_messages', function (error) {
+        if (error) { console.log('error instantiating oi db:', error); }
+
+        oiDb.getSession(function (error, response) {
+            if (error) { return console.log('error getting session: ', error); }
+            if (!response.userCtx.name) {
+                // no one logged in, signup
+                return signup(signindata);
+            }
+            if (signindata.name === response.userCtx.name) {
+                // this person is already signed in
+                return console.log(signindata.name + ' is already signed in');
+            }
+            // other user is logged in, log out first
+            oiDb.logout(function () {
+                signup(oiDb, signindata);
+            });
         });
     });
 };

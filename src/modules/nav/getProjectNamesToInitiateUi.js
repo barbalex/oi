@@ -17,7 +17,7 @@ module.exports = function (login) {
         projectNames,
         userDb;
 
-    console.log('getProjectNamesToInitiateUi, login: ', login);
+    //console.log('getProjectNamesToInitiateUi, login: ', login);
 
     // get user info
     if (login) {

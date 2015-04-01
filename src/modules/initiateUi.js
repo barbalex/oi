@@ -18,7 +18,7 @@ module.exports = function (projectNames, login) {
     // with it the changes feed can ignore locally changed documents
     createDatabaseId();
 
-    console.log('initiate: projectNames: ', projectNames);
+    //console.log('initiateUi: projectNames: ', projectNames);
 
     // build model
     // model is added to window.oi.objects and window.oi.hierarchies
