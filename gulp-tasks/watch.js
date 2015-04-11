@@ -10,6 +10,7 @@ return gulp.task('watch', function () {
     gulp.watch(
         [
             'index.html',
+            'package.json',
             'server.js',
             'images/*',
             'src/oi.js',
