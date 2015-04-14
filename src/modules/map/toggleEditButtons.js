@@ -11,7 +11,7 @@ module.exports = function (trueOrFalseForced) {
 
     //console.log('toggleEditButtons');
 
-    if (selectInteraction && selectInteraction.getFeatures().getArray()) {
+    if (selectInteraction && selectInteraction.getFeatures() && selectInteraction.getFeatures().getArray()) {
         featuresLength   = selectInteraction.getFeatures().getLength();
         featuresSelected = featuresLength > 0;
         deleteButtonText = featuresLength === 1 ? featuresLength + ' Geometrie löschen' : featuresLength + ' Geometrien löschen';
