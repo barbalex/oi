@@ -31,9 +31,7 @@ module.exports = function (change) {
         // check the revs
         userDbName = getUserDbName();
         userDb     = new PouchDB(userDbName);
-        userDb.get(change.id, { revs_info: true }, function (error, doc) {
-            if (error) { return console.log('error getting revs of doc: ', error); }
-
+        userDb.get(change.id, { revs_info: true }).then(function (doc) {
             var revisions = doc._revs_info;
 
             //console.log('handleChangesInUserDb: change: ', change);
@@ -44,8 +42,9 @@ module.exports = function (change) {
                 // need to initiate ui
                 getProjectNamesToInitiateUi(null);
             }
+        }).catch(function (error) {
+            console.log('error getting revs of doc: ', error);
         });
-
 
         rootObjects = _.filter(window.oi.objects, function (object) {
             return !object.parent;
