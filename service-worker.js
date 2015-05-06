@@ -17,20 +17,28 @@
 // This generated service worker JavaScript will precache your site's resources.
 // The code needs to be saved in a .js file at the top-level of your site, and registered
 // from your pages in order to be used. See
-// https://github.com/jeffposnick/sw-precache/blob/master/demo/app/js/service-worker-registration.js
+// https://github.com/googlechrome/sw-precache/blob/master/demo/app/js/service-worker-registration.js
 // for an example of how you can register this script and handle various service worker events.
 
 'use strict';
 
 
 
-var PrecacheConfig = [["images/favicon.ico","a62323a86256dfae2a052b95b7c81587"],["index.html","40ec1b174463ed47fdc5cecc596bd526"],["src/oi_built.js","20a0df044cedbb91fb44882c85e8b79c"],["style/jstree.css","dcf42e9b19fe3cc69aaff19666c48283"],["style/oi_built.css","9a9a84834303725e61fceae5f39dd6ae"]];
+var PrecacheConfig = [["images/favicon.ico","a62323a86256dfae2a052b95b7c81587"],["index.html","40ec1b174463ed47fdc5cecc596bd526"],["src/oi_built.js","190c0dd4b5119412db4b99b4e4edb791"],["style/jstree.css","1314eb7fc504cf526dbe1486efde900d"],["style/oi_built.css","c288d6bd141a15bb96aa9f35d1f3eb96"]];
 var CacheNamePrefix = 'sw-precache-v1--' + (self.registration ? self.registration.scope : '') + '-';
 
 
 var IgnoreUrlParametersMatching = [/^utm_/];
 
 
+
+var addDirectoryIndex = function (originalUrl, index) {
+    var url = new URL(originalUrl);
+    if (url.pathname.slice(-1) === '/') {
+      url.pathname += index;
+    }
+    return url.toString();
+  };
 
 var populateCurrentCacheNames = function (precacheConfig, cacheNamePrefix, baseUrl) {
     var absoluteUrlToCacheName = {};
@@ -167,6 +175,12 @@ self.addEventListener('fetch', function(event) {
       IgnoreUrlParametersMatching);
 
     var cacheName = AbsoluteUrlToCacheName[urlWithoutIgnoredParameters];
+    var directoryIndex = 'index.html';
+    if (!cacheName && directoryIndex) {
+      urlWithoutIgnoredParameters = addDirectoryIndex(urlWithoutIgnoredParameters, directoryIndex);
+      cacheName = AbsoluteUrlToCacheName[urlWithoutIgnoredParameters];
+    }
+
     if (cacheName) {
       event.respondWith(
         // We can't call cache.match(event.request) since the entry in the cache will contain the
