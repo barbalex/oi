@@ -116,22 +116,22 @@
                                 <div class="list-group utilsEditColumns">
                                     <div class="radio">
                                         <label>
-                                            <input type="radio" id="utilsEditChoose" name="utilsEditEditType" class="js-utilsEditLayerType"><div class="lytListGroupLabelText">auswählen</div>
+                                            <input type="radio" id="utilsEditChoose" name="utilsEditEditType" class="js-utilsEditLayerType"><div class="lytListGroupLabelText">vorhandene Geometrie auswählen und bearbeiten</div>
                                         </label>
                                     </div>
                                     <div class="radio">
                                         <label>
-                                            <input type="radio" id="utilsEditDrawPoint" name="utilsEditEditType" class="js-utilsEditLayerType" value="Point"><div class="lytListGroupLabelText">Punkt zeichnen</div>
+                                            <input type="radio" id="utilsEditDrawPoint" name="utilsEditEditType" class="js-utilsEditLayerType" value="Point"><div class="lytListGroupLabelText">neuen Punkt zeichnen</div>
                                         </label>
                                     </div>
                                     <div class="radio">
                                         <label>
-                                            <input type="radio" id="utilsEditDrawLine" name="utilsEditEditType" class="js-utilsEditLayerType" value="LineString"><div class="lytListGroupLabelText">Linie zeichnen</div>
+                                            <input type="radio" id="utilsEditDrawLine" name="utilsEditEditType" class="js-utilsEditLayerType" value="LineString"><div class="lytListGroupLabelText">neue Linie zeichnen</div>
                                         </label>
                                     </div>
                                     <div class="radio">
                                         <label>
-                                            <input type="radio" id="utilsEditDrawPolygon" name="utilsEditEditType" class="js-utilsEditLayerType" value="Polygon"><div class="lytListGroupLabelText">Fläche zeichnen</div>
+                                            <input type="radio" id="utilsEditDrawPolygon" name="utilsEditEditType" class="js-utilsEditLayerType" value="Polygon"><div class="lytListGroupLabelText">neue Fläche zeichnen</div>
                                         </label>
                                     </div>
                                     <button id="utilsEditDeleteFeature" class="btn btn-default btn-xs btn-block" disabled="disabled">Geometrie löschen</button>
@@ -139,6 +139,11 @@
                                     <div class="checkbox">
                                         <label>
                                             <input type="checkbox" id="utilsEditDeletePoint"><div class="lytListGroupLabelText">Punkte beim Klicken löschen</div>
+                                        </label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" id="utilsSnap" checked><div class="lytListGroupLabelText">An vorhandene Punkte "snappen"</div>
                                         </label>
                                     </div>
                                 </div>

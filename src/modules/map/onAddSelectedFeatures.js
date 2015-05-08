@@ -19,7 +19,7 @@ module.exports = function (event) {
 
     // grab the feature
     feature = event.element;
-    // dieses Objekt in tree und Formular anzeigen
+    // show it in tree und form
     objId = feature.getId();
     selectObjectNode(objId);
 

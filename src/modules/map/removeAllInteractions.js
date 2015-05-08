@@ -3,6 +3,7 @@
 
 var ol                = require('openlayers'),
     $                 = require('jquery'),
+    _                 = require('underscore'),
     toggleEditButtons = require('./toggleEditButtons');
 
 module.exports = function () {
@@ -15,5 +16,12 @@ module.exports = function () {
         $(document).off('keyup');
     }
     if (map.dragBoxInteraction) { map.removeInteraction(map.dragBoxInteraction); }
+    // there can be several snap interactions
+    // remove all
+    if (map.snapInteraction) {
+        _.each(map.snapInteraction, function (snpInteraction) {
+            map.removeInteraction(snpInteraction);
+        });
+    }
     toggleEditButtons(false);
 };

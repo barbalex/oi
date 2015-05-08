@@ -4,18 +4,14 @@
 /*jslint node: true, browser: true, nomen: true, todo: true, plusplus */
 'use strict';
 
-var ol                     = require('openlayers'),
-    $                      = require('jquery'),
-    saveFeatureData        = require('./saveFeatureData'),
-    removeFeatureData      = require('./removeFeatureData'),
-    toggleEditButtons      = require('./toggleEditButtons'),
-    removeAllInteractions  = require('./removeAllInteractions'),
-    selectObjectNode       = require('../nav/selectObjectNode'),
-    addDragboxInteraction  = require('./addDragboxInteraction'),
-    deleteSelectedFeatures = require('./deleteSelectedFeatures'),
-    styleSelected          = require('./styleSelected'),
-    styleRed               = require('./styleRed'),
-    onAddSelectedFeatures  = require('./onAddSelectedFeatures');
+var ol                       = require('openlayers'),
+    $                        = require('jquery'),
+    removeFeatureData        = require('./removeFeatureData'),
+    toggleEditButtons        = require('./toggleEditButtons'),
+    removeAllInteractions    = require('./removeAllInteractions'),
+    addDragboxInteraction    = require('./addDragboxInteraction'),
+    onAddSelectedFeatures    = require('./onAddSelectedFeatures'),
+    onRemoveSelectedFeatures = require('./onRemoveSelectedFeatures');
 
 module.exports = function (layer) {
     var map = window.oi.olMap.map,
@@ -24,7 +20,7 @@ module.exports = function (layer) {
         selectedFeatures,
         feature,
         layerName = layer.get('layerName'),
-        $jstree = $('#navContent').jstree(true);
+        $jstree   = $('#navContent').jstree(true);
 
     removeAllInteractions();
 
@@ -47,15 +43,7 @@ module.exports = function (layer) {
     selectedFeatures = selectInteraction.getFeatures();
 
     // when features are changed
-    selectedFeatures.on('remove', function (event) {
-
-        console.log('feature removed from select interaction');
-
-        // set different style
-        feature.setStyle(styleRed());
-
-        toggleEditButtons();
-    });
+    selectedFeatures.on('remove', onRemoveSelectedFeatures);
 
     // when a feature is selected...
     selectedFeatures.on('add', onAddSelectedFeatures);

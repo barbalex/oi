@@ -17,7 +17,7 @@ module.exports = function (trueOrFalseForced) {
         deleteButtonText = featuresLength === 1 ? featuresLength + ' Geometrie löschen' : featuresLength + ' Geometrien löschen';
         $('#utilsEditDeleteFeature').text(deleteButtonText);
 
-        console.log('featuresLength: ', featuresLength);
+        console.log('selectedFeaturesLength: ', featuresLength);
 
     }
     $('#utilsEditDeleteFeature').prop('disabled', trueOrFalseForced || !featuresSelected);
