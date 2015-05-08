@@ -3,7 +3,7 @@
 
 var ol                = require('openlayers'),
     toggleEditButtons = require('./toggleEditButtons'),
-    onDrawEnd         = require('./onDrawEnd');
+    onEndDraw         = require('./onEndDraw');
 
 module.exports = function (layer, geometryType) {
     var map = window.oi.olMap.map,
@@ -22,5 +22,5 @@ module.exports = function (layer, geometryType) {
     window.oi.olMap.map.drawInteraction = drawInteraction;
 
     // when a new feature has been drawn...
-    drawInteraction.on('drawend', onDrawEnd);
+    drawInteraction.on('drawend', onEndDraw);
 };
