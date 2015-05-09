@@ -12,6 +12,9 @@ module.exports = function () {
         id   = node.data.type === 'object' ? node.id : node.data.id,
         parentId;
 
+    console.log('onClickFormNew: type', type);
+    console.log('onClickFormNew: id', id);
+
     switch (type) {
     case 'object':
         createNewObjectFromObject(id);

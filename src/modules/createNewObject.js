@@ -31,9 +31,19 @@ module.exports = function (object, hierarchy) {
         tree         = $('#navContent').jstree(),
         $formContent = $('#formContent');
 
+    //console.log('createNewObject: object', object);
+    //console.log('createNewObject: object.hId', object.hId);
+
     newObject                     = {};
     newObject._id                 = guid();
-    newObject.hId                 = hierarchy._id;
+    //newObject.hId                 = hierarchy._id;
+
+    //console.log('createNewObject: object.hId', object.hId);
+
+    newObject.hId                 = object.hId;
+
+    //console.log('createNewObject: object.hId', object.hId);
+
     newObject.type                = 'object';
     newObject.parent              = object.parent;
     // wenn ein neues Projekt erfasst wird, muss eine neue projId vergeben werden
@@ -51,8 +61,13 @@ module.exports = function (object, hierarchy) {
         });
     }
 
+    //console.log('createNewObject: object.hId', object.hId);
+
     // ergänze model
     window.oi.objects.push(newObject);
+
+    // deep copy newObject because otherwise weird things happen
+    newObject = $.extend(true, {}, newObject);
 
     // füge dem node der hierarchy einen neuen node für newObject hinzu
     parentNode    = newObject.parent ? '#' + newObject.parent + newObject.hId : '#';
@@ -71,6 +86,8 @@ module.exports = function (object, hierarchy) {
 
     // Fokus in das erste Feld setzen
     $formContent.find('.form-control').first().focus();
+
+    //console.log('createNewObject: object.hId', object.hId);
 
     return newObject;
 };

@@ -46,6 +46,9 @@ module.exports = function (passedObject, value) {
 
     // get data for object
     object              = getObject(id);
+
+    console.log('saveObjectValue: object', object);
+
     // build lastEdited
     lastEdited.date     = dateformat(new Date(), 'isoDateTime');
     lastEdited.user     = window.oi.me.name;
@@ -65,12 +68,15 @@ module.exports = function (passedObject, value) {
         object.data[field] = value || null;
         object.lastEdited  = lastEdited;
         // write to pouch
-        if (!object._rev) {
+        if (!object._rev && object.parent === null) {
             // this is a new project > create it
             // get last hierarchy
             hierarchy           = getHierarchy(object.projId);
             // deep copy this hierarchy
             newHierarchy        = $.extend(true, {}, hierarchy);
+
+            console.log('saveObjectValue: object before changing anything', object);
+
             newHierarchy._id    = projHierarchyGuid;
             delete newHierarchy._rev;
             newHierarchy.projId = object._id;
@@ -78,6 +84,9 @@ module.exports = function (passedObject, value) {
             window.oi.hierarchies.push(newHierarchy);
             // give object the hId of the new hierarchy
             object.hId = projHierarchyGuid;
+
+            console.log('saveObjectValue: object after changing stuff', object);
+
             // add object to new local project-db
             projectDb  = new PouchDB(projectName);
             projectDb.put(object).then(function (response) {

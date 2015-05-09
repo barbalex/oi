@@ -24,7 +24,7 @@
 
 
 
-var PrecacheConfig = [["images/favicon.ico","a62323a86256dfae2a052b95b7c81587"],["index.html","09e459d511f42d160ae771428f65111e"],["src/oi_built.js","ccc1990ccabb62269b8fab965da54730"],["style/jstree.css","dcf42e9b19fe3cc69aaff19666c48283"],["style/oi_built.css","9a9a84834303725e61fceae5f39dd6ae"]];
+var PrecacheConfig = [["images/favicon.ico","a62323a86256dfae2a052b95b7c81587"],["index.html","a581a7f77cf4fb818fcdc79f548d81f6"],["src/oi_built.js","a969fd023511c22a6c41aa3773ae5b02"],["style/jstree.css","dcf42e9b19fe3cc69aaff19666c48283"],["style/oi_built.css","9a9a84834303725e61fceae5f39dd6ae"]];
 var CacheNamePrefix = 'sw-precache-v1--' + (self.registration ? self.registration.scope : '') + '-';
 
 

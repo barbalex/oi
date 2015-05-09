@@ -11,11 +11,21 @@ module.exports = function (objectId) {
         newObject;
 
     object = getObject(objectId);
+
+    //console.log('createNewObjectFromObject: object', object);
+
     if (object && object.hId) {
         // get metadata for doc
         hierarchy = getHierarchy(object.hId);
+
+        //console.log('createNewObjectFromObject: hierarchy', hierarchy);
+        //console.log('createNewObjectFromObject: object.hId', object.hId);
+
         // erstellt neues Objekt, ergänzt model und tree und selected node
         newObject = createNewObject(object, hierarchy);
+
+        //console.log('createNewObjectFromObject: newObject', newObject);
+
         if (!newObject) {
             console.log('error: new object not created');
         }
