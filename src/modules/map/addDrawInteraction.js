@@ -4,7 +4,7 @@
 var ol                 = require('openlayers'),
     toggleEditButtons  = require('./toggleEditButtons'),
     onEndDraw          = require('./onEndDraw'),
-    addSnapInteraction = require('./addSnapInteraction');
+    addSnapInteractions = require('./addSnapInteractions');
 
 module.exports = function (layer, geometryType) {
     var map = window.oi.olMap.map,
@@ -26,5 +26,5 @@ module.exports = function (layer, geometryType) {
     drawInteraction.on('drawend', onEndDraw);
 
     // add snap interaction if clicked
-    addSnapInteraction(layer);
+    addSnapInteractions(layer);
 };

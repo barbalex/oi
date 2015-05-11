@@ -12,6 +12,11 @@
                     <input type="checkbox" id="{{object.editControlId}}" class="js-lytEditLayer"><div class="lytListGroupLabelText">bearbeiten</div>
                 </label>
             </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" id="{{object.snapControlId}}" class="js-lytSnapLayer" checked><div class="lytListGroupLabelText">kann "gesnappt" werden</div>
+                </label>
+            </div>
         {{/if}}
     </div>
 </div>

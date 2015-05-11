@@ -17,6 +17,7 @@ var $                                    = require('jquery'),
     onClickGeometryField                 = require('./event/onClickGeometryField'),
     onChangeLytShowLayer                 = require('./event/onChangeLytShowLayer'),
     onChangeLytEditLayer                 = require('./event/onChangeLytEditLayer'),
+    onChangeLytSnapLayer                 = require('./event/onChangeLytSnapLayer'),
     onChangeEditLayerType                = require('./event/onChangeEditLayerType'),
     deleteSelectedFeatures               = require('./map/deleteSelectedFeatures'),
     refreshScrollbar                     = require('./refreshScrollbar');
@@ -50,6 +51,7 @@ module.exports = function () {
     $('#utils')
         .on('change',      '.js-lytShowLayer',               onChangeLytShowLayer)
         .on('change',      '.js-lytEditLayer',               onChangeLytEditLayer)
+        .on('change',      '.js-lytSnapLayer',               onChangeLytSnapLayer)
         .on('change',      '.js-utilsEditLayerType',         onChangeEditLayerType)
         .on('click',       '#utilsEditDeleteFeature',        deleteSelectedFeatures)
         .on('hidden.bs.collapse',                            refreshScrollbar)

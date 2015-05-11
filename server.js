@@ -3,13 +3,28 @@
 
 var Hapi = require('hapi'),
     options,
-    server;
+    server,
+    serverOptionsDevelopment;
 
-server = new Hapi.Server();
+// wird nur in Entwicklung genutzt
+serverOptionsDevelopment = {
+    debug: {
+        log: ['error'],
+        request: ['error']
+    }
+};
+
+server = new Hapi.Server(serverOptionsDevelopment);
 
 server.connection({
     host: '0.0.0.0',
-    port: 2000
+    port: 2000,
+    routes: {
+        cors: true
+        /*cors: {
+            origin: ['http://127.0.0.1:5984']
+        }*/
+    }
 });
 
 // start the server:

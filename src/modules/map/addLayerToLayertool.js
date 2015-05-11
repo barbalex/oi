@@ -31,6 +31,7 @@ module.exports = function (layer) {
     obj.layerName     = layer.get('layerName');
     obj.showControlId = 'show' + layer.get('layerName');
     obj.editControlId = 'edit' + layer.get('layerName');
+    obj.snapControlId = 'snap' + layer.get('layerName');
     obj.checked       = layer.getVisible() ? 'checked' : '';
     layerGroup        = layer.get('layerGroup');
     obj.inputType     = layerGroup === 'background' ? 'radio' : 'checkbox';

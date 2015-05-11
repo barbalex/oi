@@ -47,7 +47,8 @@ module.exports = function (passedData) {
         projId:      passedData.projId || null,
         visible:     true,
         source:      vectorSource,
-        style:       styleRed()
+        style:       styleRed(),
+        snappable:   true
     });
 
     window.oi.olMap.map.addLayer(vectorLayer);
