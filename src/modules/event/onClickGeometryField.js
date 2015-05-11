@@ -11,9 +11,9 @@ var $             = require('jquery'),
 module.exports = function () {
     var objectData = $(this).prev().data('object'),
         object,
-        feature,
-        selectInteraction = window.oi.olMap.map.selectInteraction,
-        selectedFeatures  = selectInteraction.getFeatures();
+        feature;
+        //selectInteraction = window.oi.olMap.map.selectInteraction,
+        //selectedFeatures  = selectInteraction.getFeatures();
 
     if (objectData) {
         object = getObject(objectData._id);
@@ -25,8 +25,8 @@ module.exports = function () {
             feature.setGeometry(new ol.geom[object.data[objectData.label].type](object.data[objectData.label].coordinates));
             zoomToFeature(feature, 200);
             // select feature
-            selectedFeatures.clear();
-            selectedFeatures.push(feature);
+            //selectedFeatures.clear();
+            //selectedFeatures.push(feature);   // SCHEISSE: DAS DESELEKTIERT DEN NODE IN JSTREE!!!
         }
     }
 };

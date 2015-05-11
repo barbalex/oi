@@ -11,7 +11,8 @@ var ol                       = require('openlayers'),
     removeAllInteractions    = require('./removeAllInteractions'),
     addDragboxInteraction    = require('./addDragboxInteraction'),
     onAddSelectedFeatures    = require('./onAddSelectedFeatures'),
-    onRemoveSelectedFeatures = require('./onRemoveSelectedFeatures');
+    onRemoveSelectedFeatures = require('./onRemoveSelectedFeatures'),
+    addSnapInteractions      = require('./addSnapInteractions');
 
 module.exports = function (layer) {
     var map = window.oi.olMap.map,
@@ -63,4 +64,6 @@ module.exports = function (layer) {
     map.addInteraction(modifyInteraction);
     // enable buttons
     toggleEditButtons();
+
+    addSnapInteractions();
 };
