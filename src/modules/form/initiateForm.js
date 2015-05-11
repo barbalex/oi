@@ -20,7 +20,9 @@ var $                     = require('jquery'),
     refreshScrollbar      = require('../refreshScrollbar'),
     capitalizeFirstLetter = require('../capitalizeFirstLetter'),
     showTab               = require('../showTab'),
-    zoomToFeatures        = require('../map/zoomToFeatures');
+    showMap               = require('./showMap'),
+    zoomToFeatures        = require('../map/zoomToFeatures'),
+    setActiveObject       = require('../setActiveObject');
 
 module.exports = function (id, type) {
     var html         = '',
@@ -121,32 +123,12 @@ module.exports = function (id, type) {
                 resizeTextareas();
                 refreshScrollbar();
 
-                // wenn Geometrie existiert, entsprechenden Layer im Layertool öffnen
-                if (geomFeatures && geomFeatures.length > 0) {
-                    // Karte anzeigen
-                    showTab('map');
-                    // zu den Geometrien zoomen
-                    // wenn ausgelöst duch Klick auf Geometrie auf Karte, soll nicht gezoomt werden
-                    if (!window.oi.olMap.dontZoom) {
-                        zoomToFeatures(geomFeatures, 200);
-                    } else {
-                        delete window.oi.olMap.dontZoom;
-                    }
-
-                    // sie selectieren
-                    selectedFeatures = window.oi.olMap.map.selectInteraction.getFeatures();
-                    // bestehende Selektion aufheben
-                    selectedFeatures.clear();
-                    _.each(geomFeatures, function (geomFeature) {
-                        // make sure, selectInteraction doesn't select in tree
-                        window.oi.dontSelectTree = true;
-                        selectedFeatures.push(geomFeature);
-                    });
-                    // Layer im Layertool öffnen
-                    $('#collapseProject' + object.projId).collapse('show');
-                }
+                // entsprechenden Layer im Layertool öffnen (falls eine Geometrie existiert)
+                showMap(geomFeatures, object);
+                // aktives Objekt im model markieren
+                setActiveObject(id);
             } else {
-                console.log('error: found hierarchy for object with id ', id);
+                console.log('error: found no hierarchy for object with id ', id);
             }
         } else {
             console.log('error: found no object with id ', id);
@@ -156,6 +138,7 @@ module.exports = function (id, type) {
         html += formButtonToolbar();
         $formContent.html(html);
         positionFormBtngroup();
+        setActiveObject();
         break;
     }
 };

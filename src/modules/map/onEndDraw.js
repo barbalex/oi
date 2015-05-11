@@ -1,10 +1,11 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $               = require('jquery'),
-    getEditingLayer = require('./getEditingLayer'),
-    guid            = require('../guid'),
-    saveFeatureData = require('./saveFeatureData');
+var $                = require('jquery'),
+    getEditingLayer  = require('./getEditingLayer'),
+    guid             = require('../guid'),
+    saveFeatureData  = require('./saveFeatureData'),
+    getActiveObjects = require('../getActiveObjects');
 
 module.exports = function (event) {
     // Two cases:
@@ -21,14 +22,19 @@ module.exports = function (event) {
     var feature,
         layer,
         objId,
+        activeObject,
         label,
         geomElemVal;
 
-    feature     = event.feature;
-    layer       = getEditingLayer();
-    objId       = $('#navContent').jstree(true).get_selected(true)[0].id;
-    label       = layer.get('fieldLabel');
-    geomElemVal = objId ? $('#' + objId + label).val() : null;  // if no object is active, create new one
+    feature      = event.feature;
+    layer        = getEditingLayer();
+    activeObject = getActiveObjects();
+    objId        = activeObject._id;
+
+    console.log('onEndDraw: objId', objId);
+
+    label        = layer.get('fieldLabel');
+    geomElemVal  = objId ? $('#' + objId + label).val() : null;  // if no object is active, create new one
 
     if (geomElemVal) {
         // TODO

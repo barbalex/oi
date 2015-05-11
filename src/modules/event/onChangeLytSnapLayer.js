@@ -22,8 +22,8 @@ module.exports = function () {
         } else {
             layer.set('snappable', false);
         }
-        // check if snapping interaction(s) exists
-        // if true: cancel and recreate
+
+        // cancel and recreate (if necessary) snapping interaction(s)
         removeSnapInteractions();
         addSnapInteractions();
     }
