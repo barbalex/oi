@@ -9,28 +9,23 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var $                     = require('jquery'),
-    _                     = require('underscore'),
-    dateformat            = require('dateformat'),
-    PouchDB               = require('pouchdb'),
-    deleteObjectFromModel = require('./deleteObjectFromModel'),
-    getObject             = require('./getObject'),
-    askYesNoWithModal     = require('./askYesNoWithModal'),
-    tellWithModal         = require('./tellWithModal');
+var $                           = require('jquery'),
+    _                           = require('underscore'),
+    dateformat                  = require('dateformat'),
+    PouchDB                     = require('pouchdb'),
+    deleteObjectFromModel       = require('./deleteObjectFromModel'),
+    getObject                   = require('./getObject'),
+    askYesNoWithModal           = require('./askYesNoWithModal'),
+    tellWithModal               = require('./tellWithModal'),
+    objectWithoutUiState        = require('./objectWithoutUiState'),
+    onClickAskYesNoWithModalYes = require('./event/onClickAskYesNoWithModalYes');
 
 module.exports = function ($node) {
-    var objectId        = $node.id,
-        object,
-        // reverse direction of children_d to delete from bottom to top
+    var // reverse direction of children_d to delete from bottom to top
         // children in anderen Array kopieren, sonst wird nur der erste verarbeitet
         nodeChildren    = _.union($node.children_d.reverse()),
-        tree            = $('#navContent').jstree(true),
-        parentNodeId,
         objectsToDelete = [],
         childrenToDelete,
-        // TODO: get projectId and choose correct db
-        localDbName     = 'project_' + getObject(objectId).projId,
-        localDb         = new PouchDB(localDbName),
         $body           = $('body');
 
     // ermitteln, wieviele child-Objekte betroffen werden
@@ -54,60 +49,7 @@ module.exports = function ($node) {
     askYesNoWithModal('sicher?', 'es werden ' + objectsToDelete.length + ' Objekte direkt und ' + childrenToDelete.length + ' hierarchisch tiefer liegende Objekte gelöscht', 'ja, löschen', 'nein, abbrechen');
 
     $body.on('click', '#askYesNoWithModalYes', function () {
-        var lastEdited  = {};
-
-        // event-listeners entfernen
-        $body
-            .off('click', '#askYesNoWithModalNo')
-            .off('click', '#askYesNoWithModalYes');
-
-        // weiter machen
-        // remove all children objects and nodes
-        _.each(nodeChildren, function (childNodeId) {
-            var nodeJson = tree.get_node('#' + childNodeId);
-
-            if (nodeJson && nodeJson.data && nodeJson.data.type && nodeJson.data.type === 'object') {
-                // delete object from localDb and model
-                localDb.remove(getObject(nodeJson.id));
-                deleteObjectFromModel(nodeJson.id);
-            }
-            // delete node (hierarchies and objects)
-            tree.delete_node('#' + childNodeId);
-        });
-
-        // get object
-        if (objectsToDelete.length > 0) {
-            object = getObject(objectId);
-            if (object) {
-                // delete object in localDb
-                // add _deleted: true instead of remove object
-                // to keep other info because is needed to evaluate deleted objects in syncing db's
-                object._deleted = true;
-                // add databaseId so syncing db can tell if change happened in other db
-                // build lastEdited
-                lastEdited.date     = dateformat(new Date(), 'isoDateTime');
-                lastEdited.user     = window.oi.me.name;
-                lastEdited.database = window.oi.databaseId;
-                object.lastEdited   = lastEdited;
-                // put object
-                localDb.put(object).then(function () {
-                //localDb.remove(object).then(function () {
-                    // delete model
-                    window.oi.objects = _.without(window.oi.objects, object);
-                    // delete node
-                    parentNodeId = $('#navContent').jstree(true).get_selected(true)[0].parent;
-                    tree.delete_node('#' + objectId);
-                    // parent node selektieren
-                    if (parentNodeId) {
-                        tree.select_node('#' + parentNodeId);
-                    }
-                }).catch(function (error) {
-                    console.log('The object was not deleted. Error: ', error);
-                });
-            } else {
-                console.log('error: the object was not deleted. It was not found in the model');
-            }
-        }
+        onClickAskYesNoWithModalYes($node);
     });
 
     $('body').on('click', '#askYesNoWithModalNo', function () {

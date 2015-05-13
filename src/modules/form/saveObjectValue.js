@@ -21,7 +21,8 @@ var $                        = require('jquery'),
     addRoleToUserDb          = require('../addRoleToUserDb'),
     getHierarchy             = require('../getHierarchy'),
     guid                     = require('../guid'),
-    updateUiAfterSavingValue = require('./updateUiAfterSavingValue');
+    updateUiAfterSavingValue = require('./updateUiAfterSavingValue'),
+    objectWithoutUiState     = require('../objectWithoutUiState');
 
 module.exports = function (passedObject, value) {
     var projId      = passedObject.projId,
@@ -89,7 +90,7 @@ module.exports = function (passedObject, value) {
 
             // add object to new local project-db
             projectDb  = new PouchDB(projectName);
-            projectDb.put(object).then(function (response) {
+            projectDb.put(objectWithoutUiState(object)).then(function (response) {
                 // update rev in model object
                 object._rev = response.rev;
                 // update ui
@@ -106,7 +107,7 @@ module.exports = function (passedObject, value) {
             addRoleToUserDb(projectName, localDb);
         } else {
             // this is a regular object in the same project
-            localDb.put(object).then(function (response) {
+            localDb.put(objectWithoutUiState(object)).then(function (response) {
                 // update rev in model object
                 object._rev = response.rev;
                 // update ui

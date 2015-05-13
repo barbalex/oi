@@ -8,6 +8,9 @@
       "browserify-shim"
     ]
   },
+  "scripts": {
+    "dev": "npm run gulp & npm start"
+  },
   "browserify-shim": {
     "jquery": "global:$",
     "jquery-ui": "global:$.ui",
