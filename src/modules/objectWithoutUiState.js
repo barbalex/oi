@@ -1,5 +1,5 @@
 /*
- * removes state from object
+ * removes ui state from object
  * necessary before writing to the database
  */
 

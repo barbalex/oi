@@ -11,13 +11,9 @@
 
 var $                           = require('jquery'),
     _                           = require('underscore'),
-    dateformat                  = require('dateformat'),
     PouchDB                     = require('pouchdb'),
-    deleteObjectFromModel       = require('./deleteObjectFromModel'),
-    getObject                   = require('./getObject'),
     askYesNoWithModal           = require('./askYesNoWithModal'),
     tellWithModal               = require('./tellWithModal'),
-    objectWithoutUiState        = require('./objectWithoutUiState'),
     onClickAskYesNoWithModalYes = require('./event/onClickAskYesNoWithModalYes');
 
 module.exports = function ($node) {
