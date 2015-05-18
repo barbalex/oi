@@ -1,9 +1,9 @@
 /*jslint node: true, browser: true, nomen: true, todo: true */
 'use strict';
 
-var ol                 = require('openlayers'),
-    toggleEditButtons  = require('./toggleEditButtons'),
-    onEndDraw          = require('./onEndDraw'),
+var ol                  = require('openlayers'),
+    toggleEditButtons   = require('./toggleEditButtons'),
+    onEndDraw           = require('./onEndDraw'),
     addSnapInteractions = require('./addSnapInteractions');
 
 module.exports = function (layer, geometryType) {
