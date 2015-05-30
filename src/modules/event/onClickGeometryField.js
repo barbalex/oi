@@ -1,7 +1,6 @@
 'use strict'
 
 var $ = require('jquery'),
-  _ = require('underscore'),
   ol = require('openlayers'),
   showTab = require('../showTab'),
   zoomToFeature = require('../map/zoomToFeature'),

@@ -2,7 +2,6 @@
 
 var $ = require('jquery'),
   _ = require('underscore'),
-  ol = require('openlayers'),
   showTab = require('../showTab'),
   zoomToFeatures = require('../map/zoomToFeatures')
 

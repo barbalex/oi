@@ -2,7 +2,7 @@
 
 var openSigninModal = require('../nav/openSigninModal')
 
-module.exports = function () {
+module.exports = function (event) {
   event.preventDefault()
   openSigninModal()
 }

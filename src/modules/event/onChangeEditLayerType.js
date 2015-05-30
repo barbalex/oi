@@ -1,8 +1,6 @@
 'use strict'
 
-var ol = require('openlayers'),
-  _ = require('underscore'),
-  getEditingLayer = require('../map/getEditingLayer'),
+var getEditingLayer = require('../map/getEditingLayer'),
   removeAllInteractions = require('../map/removeAllInteractions'),
   addModifyInteraction = require('../map/addModifyInteraction'),
   addDrawInteraction = require('../map/addDrawInteraction')

@@ -13,81 +13,80 @@
  * retourniert es
  */
 
-/*jslint node: true, browser: true, nomen: true, todo: true, plusplus: true, white: true*/
-'use strict';
+'use strict'
 
-var _                              = require('underscore'),
-    $                              = require('jquery'),
-    dateformat                     = require('dateformat'),
-    guid                           = require('./guid'),
-    createTreeNodeObject           = require('./nav/createTreeNodeObject'),
-    createChildHierarchiesOfObject = require('./nav/createChildHierarchiesOfObject');
+var _ = require('underscore'),
+  $ = require('jquery'),
+  dateformat = require('dateformat'),
+  guid = require('./guid'),
+  createTreeNodeObject = require('./nav/createTreeNodeObject'),
+  createChildHierarchiesOfObject = require('./nav/createChildHierarchiesOfObject')
 
 module.exports = function (object, hierarchy) {
-    var newObject,
-        parentNode,
-        newObjectNode,
-        childHierarchies,
-        tree         = $('#navContent').jstree(),
-        $formContent = $('#formContent');
+  var newObject,
+    parentNode,
+    newObjectNode,
+    childHierarchies,
+    tree = $('#navContent').jstree(),
+    $formContent = $('#formContent')
 
-    //console.log('createNewObject: object', object);
-    //console.log('createNewObject: object.hId', object.hId);
+  // console.log('createNewObject: object', object)
+    // console.log('createNewObject: object.hId', object.hId)
 
-    newObject                     = {};
-    newObject._id                 = guid();
-    //newObject.hId                 = hierarchy._id;
+  newObject = {}
+  newObject._id = guid()
+  // newObject.hId                 = hierarchy._id
 
-    //console.log('createNewObject: object.hId', object.hId);
+  // console.log('createNewObject: object.hId', object.hId)
 
-    newObject.hId                 = object.hId;
+  newObject.hId = object.hId
 
-    //console.log('createNewObject: object.hId', object.hId);
+  // console.log('createNewObject: object.hId', object.hId)
 
-    newObject.type                = 'object';
-    newObject.parent              = object.parent;
-    // wenn ein neues Projekt erfasst wird, muss eine neue projId vergeben werden
-    newObject.projId              = object.parent ? object.projId : guid();
-    newObject.lastEdited          = {};
-    newObject.lastEdited.date     = dateformat(new Date(), 'isoDateTime');
-    newObject.lastEdited.user     = window.oi.me.name;
-    newObject.lastEdited.database = window.oi.databaseId;
-    newObject.data                = {};
-    if (hierarchy.fields) {
-        _.each(hierarchy.fields, function (field) {
-            if (field.label) {
-                newObject.data[field.label] = null;
-            }
-        });
-    }
+  newObject.type = 'object'
+  newObject.parent = object.parent
+  // wenn ein neues Projekt erfasst wird, muss eine neue projId vergeben werden
+  newObject.projId = object.parent ? object.projId : guid()
+  newObject.lastEdited = {}
+  newObject.lastEdited.date = dateformat(new Date(), 'isoDateTime')
+  newObject.lastEdited.user = window.oi.me.name
+  newObject.lastEdited.database = window.oi.databaseId
+  newObject.data = {}
+  if (hierarchy.fields) {
+    _.each(hierarchy.fields, function (field) {
+      if (field.label) {
+        newObject.data[field.label] = null
+      }
+    })
+  }
 
-    //console.log('createNewObject: object.hId', object.hId);
+  // console.log('createNewObject: object.hId', object.hId)
 
-    // ergänze model
-    window.oi.objects.push(newObject);
+  // ergänze model
+  window.oi.objects.push(newObject)
 
-    // deep copy newObject because otherwise weird things happen
-    newObject = $.extend(true, {}, newObject);
+  // deep copy newObject because otherwise weird things happen
+  newObject = $.extend(true, {}, newObject)
 
-    // füge dem node der hierarchy einen neuen node für newObject hinzu
-    parentNode    = newObject.parent ? '#' + newObject.parent + newObject.hId : '#';
-    newObjectNode = createTreeNodeObject(newObject);
-    tree.create_node(parentNode, newObjectNode);
+  // füge dem node der hierarchy einen neuen node für newObject hinzu
+  parentNode = newObject.parent ? '#' + newObject.parent + newObject.hId : '#'
+  newObjectNode = createTreeNodeObject(newObject)
+  tree.create_node(parentNode, newObjectNode)
 
-    // ergänze child hierarchies
-    childHierarchies = createChildHierarchiesOfObject(newObject);
-    _.each(childHierarchies, function (childHierarchy) {
-        tree.create_node('#' + newObject._id, childHierarchy);
-    });
+  // ergänze child hierarchies
+  childHierarchies = createChildHierarchiesOfObject(newObject)
+  _.each(childHierarchies, function (childHierarchy) {
+    tree.create_node('#' + newObject._id, childHierarchy)
+  })
 
-    // select newObject
-    tree.deselect_all();
-    tree.select_node('#' + newObject._id);
+  // select newObject
+  tree.deselect_all()
+  tree.select_node('#' + newObject._id)
 
-    // Fokus in das erste Feld setzen
-    $formContent.find('.form-control').first().focus();
+  // Fokus in das erste Feld setzen
+  $formContent.find('.form-control').first().focus()
 
-    //console.log('createNewObject: object.hId', object.hId);
+  // console.log('createNewObject: object.hId', object.hId)
 
-    return newObject;
-};
+  return newObject
+}

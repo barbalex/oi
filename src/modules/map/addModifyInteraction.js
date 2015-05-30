@@ -1,69 +1,66 @@
 // build up modify interaction
 // needs a select and a modify interaction working together
 
-/*jslint node: true, browser: true, nomen: true, todo: true, plusplus */
-'use strict';
+'use strict'
 
-var ol                       = require('openlayers'),
-    $                        = require('jquery'),
-    removeFeatureData        = require('./removeFeatureData'),
-    toggleEditButtons        = require('./toggleEditButtons'),
-    removeAllInteractions    = require('./removeAllInteractions'),
-    addDragboxInteraction    = require('./addDragboxInteraction'),
-    onAddSelectedFeatures    = require('./onAddSelectedFeatures'),
-    onRemoveSelectedFeatures = require('./onRemoveSelectedFeatures'),
-    addSnapInteractions      = require('./addSnapInteractions');
+var ol = require('openlayers'),
+  $ = require('jquery'),
+  removeFeatureData = require('./removeFeatureData'),
+  toggleEditButtons = require('./toggleEditButtons'),
+  removeAllInteractions = require('./removeAllInteractions'),
+  addDragboxInteraction = require('./addDragboxInteraction'),
+  onAddSelectedFeatures = require('./onAddSelectedFeatures'),
+  onRemoveSelectedFeatures = require('./onRemoveSelectedFeatures'),
+  addSnapInteractions = require('./addSnapInteractions')
 
 module.exports = function (layer) {
-    var map = window.oi.olMap.map,
-        selectInteraction,
-        modifyInteraction,
-        selectedFeatures,
-        feature,
-        layerName = layer.get('layerName'),
-        $jstree   = $('#navContent').jstree(true);
+  var map = window.oi.olMap.map,
+    selectInteraction,
+    modifyInteraction,
+    selectedFeatures,
+    layerName = layer.get('layerName')
 
-    removeAllInteractions();
+  removeAllInteractions()
 
-    // create select interaction
-    selectInteraction = new ol.interaction.Select({
-        // make sure only the desired layer can be selected
-        layers: function (layer) {
-            return layer.get('layerName') === layerName;
-        },
-        condition: ol.events.condition.click
-    });
+  // create select interaction
+  selectInteraction = new ol.interaction.Select({
+    // make sure only the desired layer can be selected
+    layers: function (layer) {
+      return layer.get('layerName') === layerName
+    },
+    condition: ol.events.condition.click
+  })
 
-    // make interactions global so they can later be removed
-    window.oi.olMap.map.selectInteraction = selectInteraction;
-    map.addInteraction(selectInteraction);
+  // make interactions global so they can later be removed
+  window.oi.olMap.map.selectInteraction = selectInteraction
+  map.addInteraction(selectInteraction)
 
-    addDragboxInteraction();
+  addDragboxInteraction()
 
-    // grab the features from the select interaction to use in the modify interaction
-    selectedFeatures = selectInteraction.getFeatures();
+  // grab the features from the select interaction to use in the modify interaction
+  selectedFeatures = selectInteraction.getFeatures()
 
-    // when features are changed
-    selectedFeatures.on('remove', onRemoveSelectedFeatures);
+  // when features are changed
+  selectedFeatures.on('remove', onRemoveSelectedFeatures)
 
-    // when a feature is selected...
-    selectedFeatures.on('add', onAddSelectedFeatures);
+  // when a feature is selected...
+  selectedFeatures.on('add', onAddSelectedFeatures)
 
-    // create the modify interaction
-    modifyInteraction = new ol.interaction.Modify({
-        features: selectedFeatures,
-        // delete vertices by pressing the SHIFT key
-        deleteCondition: function (event) {
-            return (ol.events.condition.shiftKeyOnly(event) || $('#utilsEditDeletePoint').is(':checked')) &&
-                ol.events.condition.singleClick(event);
-        }
-    });
-    // make interactions global so they can later be removed
-    window.oi.olMap.map.modifyInteraction = modifyInteraction;
-    // add it to the map
-    map.addInteraction(modifyInteraction);
-    // enable buttons
-    toggleEditButtons();
+  // create the modify interaction
+  modifyInteraction = new ol.interaction.Modify({
+    features: selectedFeatures,
+    // delete vertices by pressing the SHIFT key
+    deleteCondition: function (event) {
+      return (ol.events.condition.shiftKeyOnly(event) || $('#utilsEditDeletePoint').is(':checked')) &&
+        ol.events.condition.singleClick(event)
+    }
+  })
+  // make interactions global so they can later be removed
+  window.oi.olMap.map.modifyInteraction = modifyInteraction
+  // add it to the map
+  map.addInteraction(modifyInteraction)
+  // enable buttons
+  toggleEditButtons()
 
-    addSnapInteractions();
-};
+  addSnapInteractions()
+}

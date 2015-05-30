@@ -1,7 +1,6 @@
 'use strict'
 
 var $ = require('jquery'),
-  _ = require('underscore'),
   fitTextareaToContent = require('./form/fitTextareaToContent'),
   onScrollTab = require('./event/onScrollTab'),
   onClickFormNew = require('./event/onClickFormNew'),

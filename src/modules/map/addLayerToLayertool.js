@@ -21,10 +21,7 @@ module.exports = function (layer) {
     projectName,
     object,
     objId,
-    projectHierarchy,
-    $layerGroups
-
-  $layerGroups = $('#utilsLayertoolAccordion').children()
+    projectHierarchy
 
   obj.layerTitle = layer.get('layerTitle')
   obj.layerName = layer.get('layerName')
@@ -36,7 +33,7 @@ module.exports = function (layer) {
   obj.inputType = layerGroup === 'background' ? 'radio' : 'checkbox'
   // name attribute is needed for radios so only one can be choosen
   obj.inputName = 'lyt' + capitalizeFirstLetter(layerGroup)
-  obj.isProject = layerGroup === 'projects' ? true : false
+  obj.isProject = layerGroup === 'projects'
 
   // put obj in object, so it can be used as whole
   dataObject.object = obj

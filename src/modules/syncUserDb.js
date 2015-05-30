@@ -59,7 +59,7 @@ module.exports = function () {
 
       // sync
       window.oi.sync[userDbName] = PouchDB.sync(localDb, remoteDb, syncOptions, function (error, response) {
-        if (error) { return console.log('syncUserDb: error syncing with ' + userDbName + ':', error); }
+        if (error) { return console.log('syncUserDb: error syncing with ' + userDbName + ':', error) }
         console.log('syncUserDb: syncing ' + userDbName + ' with ' + remoteDbAddress + ', response:', response)
       })
     }

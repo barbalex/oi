@@ -1,12 +1,10 @@
 /*
  * initiiert die nav
- * 
  */
 
 'use strict'
 
-var $ = require('jquery'),
-  PouchDB = require('pouchdb'),
+var PouchDB = require('pouchdb'),
   getUserDbName = require('../getUserDbName'),
   initiateUi = require('../initiateUi'),
   syncUserDb = require('../syncUserDb')

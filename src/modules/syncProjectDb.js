@@ -33,7 +33,7 @@ module.exports = function (projectName) {
     changeListener
 
   remoteDb = new PouchDB(remoteDbAddress, dbOptions, function (error) {
-    if (error) { console.log('syncProjectDb: error instantiating remote db ' + remoteDbAddress + ':', error); }
+    if (error) { console.log('syncProjectDb: error instantiating remote db ' + remoteDbAddress + ':', error) }
 
     // make sure syncing and listening to changes is only started if not already started
     if (remoteDb && !window.oi.sync[projectName]) {
@@ -51,10 +51,10 @@ module.exports = function (projectName) {
                 _id: guid(),
                 type: 'projectAdd',
                 projectName: projectName
-              }
+            }
 
             oiDb = new PouchDB('http://' + couchUrl + '/oi_messages', dbOptions, function (error) {
-              if (error) { console.log('syncProjectDb: error instantiating remote oi_messages db:', error); }
+              if (error) { console.log('syncProjectDb: error instantiating remote oi_messages db:', error) }
 
               oiDb.put(message).then(function (response) {
                 console.log('syncProjectDb: response from messaging oi_messages to create new db ' + projectName + ':', response)

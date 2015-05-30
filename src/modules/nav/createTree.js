@@ -1,7 +1,6 @@
 'use strict'
 
 var $ = require('jquery'),
-  jstree = require('jstree'),
   generateDataForTree = require('./generateDataForTree'),
   initiateForm = require('../form/initiateForm'),
   treeContextmenuItems = require('./treeContextmenuItems'),

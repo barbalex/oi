@@ -1,7 +1,6 @@
 'use strict'
 
-var $ = require('jquery'),
-  _ = require('underscore')
+var $ = require('jquery')
 
 module.exports = function (title, text, yesButtonText, noButtonText) {
   var $modal = $('#askYesNoWithModal'),

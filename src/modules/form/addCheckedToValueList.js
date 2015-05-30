@@ -2,7 +2,7 @@
  * erstellt aus einer possibleValues einen Array von Objekten
  * mit value und checked
  * wird benutzt, um opionGroup und checkboxGroup zu bauen
- * damit es auch für select benutzt werden kann, kann selectedOrChecked übergeben werden 
+ * damit es auch für select benutzt werden kann, kann selectedOrChecked übergeben werden
  * type ist select, optionGroup oder checkboxgroup
  */
 

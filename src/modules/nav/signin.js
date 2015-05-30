@@ -27,8 +27,8 @@ function signin (oiDb, signindata) {
     // name in DB speichern
     // nachher auslagern, da auch nach signup
     if (signindata.remember) {
-      localStorage.me_name = signindata.name
-      localStorage.me_password = signindata.password
+      window.localStorage.me_name = signindata.name
+      window.localStorage.me_password = signindata.password
     }
     // when first sync data for model is fetched from remote db instead of locally
     // better because data may not yet have arrived locally
@@ -67,7 +67,7 @@ module.exports = function (signindata) {
     window.oi.changes = []
 
     oiDb.getSession(function (error, response) {
-      if (error) { return console.log('error getting session: ', error); }
+      if (error) { return console.log('error getting session: ', error) }
       if (!response.userCtx.name) {
         // no one logged in, log in
         return signin(oiDb, signindata)

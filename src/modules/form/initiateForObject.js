@@ -2,7 +2,6 @@
 
 var $ = require('jquery'),
   _ = require('underscore'),
-  textarea = require('../../../templates/textarea'),
   formButtonToolbar = require('../../../templates/formButtonToolbar'),
   positionFormBtngroup = require('./positionFormBtngroup'),
   getObject = require('../getObject'),

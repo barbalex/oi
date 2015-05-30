@@ -1,3 +1,3 @@
 var Handlebars = require("handlebars");module.exports = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-    return "<div class=\"btn-toolbar\" role=\"toolbar\" aria-label=\"Daten Toolbar\">\r\n    <div class=\"btn-group pull-right\" role=\"group\" aria-label=\"Daten Button group\">\r\n        <button id=\"formNew\" class=\"btn btn-default\">neu</button>\r\n        <button id=\"formDelete\" class=\"btn btn-default\">löschen</button>\r\n    </div>\r\n</div>";
+    return "<div class=\"btn-toolbar\" role=\"toolbar\" aria-label=\"Daten Toolbar\">\r\n  <div class=\"btn-group pull-right\" role=\"group\" aria-label=\"Daten Button group\">\r\n    <button id=\"formNew\" class=\"btn btn-default\">neu</button>\r\n    <button id=\"formDelete\" class=\"btn btn-default\">löschen</button>\r\n  </div>\r\n</div>";
 },"useData":true});

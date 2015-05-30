@@ -13,10 +13,8 @@
 
 var $ = require('jquery'),
   dateformat = require('dateformat'),
-  ol = require('openlayers'),
   PouchDB = require('pouchdb'),
   getObject = require('../getObject'),
-  getLayerByName = require('../map/getLayerByName'),
   addRoleToUserDb = require('../addRoleToUserDb'),
   getHierarchy = require('../getHierarchy'),
   guid = require('../guid'),

@@ -1,7 +1,6 @@
 'use strict'
 
 var ol = require('openlayers'),
-  proj4 = require('proj4'),
   wmtsSource = require('./wmtsSource')
 
 module.exports = function () {

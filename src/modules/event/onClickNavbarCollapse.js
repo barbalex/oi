@@ -4,7 +4,7 @@
 
 var $ = require('jquery')
 
-module.exports = function () {
+module.exports = function (event) {
   if ($(event.target).is('a')) {
     $(this).collapse('hide')
   }

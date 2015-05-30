@@ -1,7 +1,6 @@
 'use strict'
 
-var ol = require('openlayers'),
-  _ = require('underscore')
+var _ = require('underscore')
 
 module.exports = function () {
   var map,

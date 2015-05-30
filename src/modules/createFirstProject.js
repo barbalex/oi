@@ -12,9 +12,6 @@
 'use strict'
 
 var PouchDB = require('pouchdb'),
-  _ = require('underscore'),
-  configuration = require('./configuration'),
-  couchUrl = configuration.couch.dbUrl,
   guid = require('./guid'),
   addRoleToUserDb = require('./addRoleToUserDb')
 

@@ -5,9 +5,6 @@
 
 'use strict'
 
-var ol = require('openlayers'),
-  _ = require('underscore')
-
 module.exports = function (layer, featureId) {
   var source,
     feature

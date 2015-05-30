@@ -1,10 +1,10 @@
 /*
  * saves previous nav configurations
  * Goal: User sets width of navs
- * the next time he blends the same navs, 
+ * the next time he blends the same navs,
  * they are shown with the same widths as before
  *
- * idea: previous configurations are saved 
+ * idea: previous configurations are saved
  * - in an object ("previous")
  * - inside a key named "w" + window.width
  *   this is to make sure, configurations are only saved for same window widths
@@ -61,6 +61,6 @@ module.exports = function () {
   }
 
   window.oi.previousTabConfig['w' + windowWidth][nowName] = now
-  // save in localStorage so it can be loaded on next app start
-  localStorage.previousTabConfig = JSON.stringify(window.oi.previousTabConfig)
+  // save in window.localStorage so it can be loaded on next app start
+  window.localStorage.previousTabConfig = JSON.stringify(window.oi.previousTabConfig)
 }

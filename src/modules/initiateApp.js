@@ -22,7 +22,7 @@ module.exports = function () {
   }
 
   // muss als globale Variable greifbar sein, weil sonst Probleme entstehen
-  // browserify retourniert statt der Funkion ein leeres Objekt, wegen 
+  // browserify retourniert statt der Funkion ein leeres Objekt, wegen
   // der Abhängigkeiten zwischen den Funktionen...
   window.oi.syncProjectDb = function (role) {
     syncProjectDb(role)
@@ -34,8 +34,8 @@ module.exports = function () {
   })
 
   // letzte Konfiguration für die Tabs holen
-  if (localStorage.previousTabConfig) {
-    window.oi.previousTabConfig = JSON.parse(localStorage.previousTabConfig)
+  if (window.localStorage.previousTabConfig) {
+    window.oi.previousTabConfig = JSON.parse(window.localStorage.previousTabConfig)
   }
 
   window.proj4.defs('EPSG:21781', '+proj=somerc +lat_0=46.95240555555556 +lon_0=7.439583333333333 +k_0=1 +x_0=600000 +y_0=200000 +ellps=bessel +towgs84=674.4,15.1,405.3,0,0,0,0 +units=m +no_defs')

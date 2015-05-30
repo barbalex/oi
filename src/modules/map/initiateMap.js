@@ -1,7 +1,6 @@
 'use strict'
 
 var ol = require('openlayers'),
-  proj4 = require('proj4'),
   addLayers = require('./addLayers'),
   mousePositionControl = require('./mousePositionControl'),
   addLayerToLayertool = require('./addLayerToLayertool'),

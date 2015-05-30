@@ -1,18 +1,17 @@
 // when features are changed
 
-/*jslint node: true, browser: true, nomen: true, todo: true, plusplus */
-'use strict';
+'use strict'
 
 var toggleEditButtons = require('./toggleEditButtons'),
-    styleRed          = require('./styleRed');
+  styleRed = require('./styleRed')
 
 module.exports = function (event) {
-    var feature = event.element;
+  var feature = event.element
 
-    console.log('feature removed from select interaction');
+  console.log('feature removed from select interaction')
 
-    // set different style
-    feature.setStyle(styleRed());
+  // set different style
+  feature.setStyle(styleRed())
 
-    toggleEditButtons();
-};
+  toggleEditButtons()
+}

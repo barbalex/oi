@@ -2,7 +2,7 @@
 
 var $ = require('jquery'),
   getEditingLayer = require('./getEditingLayer'),
-  guid = require('../guid'),
+  // guid = require('../guid'),
   saveFeatureData = require('./saveFeatureData'),
   getActiveObjects = require('../getActiveObjects')
 
@@ -33,7 +33,7 @@ module.exports = function (event) {
   console.log('onEndDraw: objId', objId)
 
   label = layer.get('fieldLabel')
-  geomElemVal = objId ? $('#' + objId + label).val() : null;  // if no object is active, create new one
+  geomElemVal = objId ? $('#' + objId + label).val() : null  // if no object is active, create new one
 
   if (geomElemVal) {
     // TODO

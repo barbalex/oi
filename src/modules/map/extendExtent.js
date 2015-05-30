@@ -1,9 +1,8 @@
 'use strict'
 
-var _ = require('underscore')
-
 module.exports = function (extent, meters) {
   var extendedExtent = []
+
   meters = meters || 200
 
   extendedExtent.push(extent[0] - meters)

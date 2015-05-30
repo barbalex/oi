@@ -1,8 +1,6 @@
 'use strict'
 
-var ol = require('openlayers'),
-  $ = require('jquery'),
-  _ = require('underscore'),
+var $ = require('jquery'),
   getEditingLayer = require('./getEditingLayer'),
   getObject = require('../getObject'),
   saveObjectValue = require('../form/saveObjectValue'),

@@ -1,7 +1,6 @@
 'use strict'
 
-var $ = require('jquery'),
-  createNewObjectFromObject = require('../createNewObjectFromObject'),
+var createNewObjectFromObject = require('../createNewObjectFromObject'),
   createNewObjectFromHierarchy = require('../createNewObjectFromHierarchy'),
   deleteObjectAndChildren = require('../deleteObjectAndChildren')
 

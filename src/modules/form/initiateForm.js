@@ -1,10 +1,6 @@
 'use strict'
 
-var $ = require('jquery'),
-  formButtonToolbar = require('../../../templates/formButtonToolbar'),
-  positionFormBtngroup = require('./positionFormBtngroup'),
-  setActiveObject = require('../setActiveObject'),
-  initiateForObject = require('./initiateForObject'),
+var initiateForObject = require('./initiateForObject'),
   initiateForHierarchy = require('./initiateForHierarchy')
 
 module.exports = function (id, type) {

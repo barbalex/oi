@@ -1,8 +1,8 @@
 'use strict'
 
 module.exports = function () {
-  if (!localStorage.databaseId) {
-    localStorage.databaseId = Math.random()
+  if (!window.localStorage.databaseId) {
+    window.localStorage.databaseId = Math.random()
   }
-  window.oi.databaseId = localStorage.databaseId
+  window.oi.databaseId = window.localStorage.databaseId
 }

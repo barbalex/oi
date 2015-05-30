@@ -1,11 +1,11 @@
 'use strict'
 
-var $ = require('jquery'),
-  dateformat = require('dateformat'),
+var dateformat = require('dateformat'),
+  PouchDB = require('pouchdb') /*,
+  $ = require('jquery'),
   _ = require('underscore'),
-  PouchDB = require('pouchdb'),
   getLabelForObject = require('../nav/getLabelForObject'),
-  getHierarchy = require('../getHierarchy')
+  getHierarchy = require('../getHierarchy')*/
 
 module.exports = function (hierarchy) {
   var lastEdited = {},

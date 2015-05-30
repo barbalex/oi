@@ -1,7 +1,6 @@
 'use strict'
 
 var $ = require('jquery'),
-  _ = require('underscore'),
   Ps = require('perfect-scrollbar'),
   alsoResizeReverse = require('./alsoResizeReverse'),
   setWidthOfTabs = require('./setWidthOfTabs'),

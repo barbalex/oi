@@ -5,7 +5,7 @@ var $ = require('jquery'),
   getObject = require('../getObject'),
   saveHierarchy = require('../form/saveHierarchy')
 
-module.exports = function () {
+module.exports = function (event) {
   event.preventDefault()
   if ($(this).hasClass('active')) {
     $(this).removeClass('active')
@@ -27,8 +27,8 @@ module.exports = function () {
 
         object = getObject(objectId)
 
-        if (!object) { return; }
-        if (!object.hId) { return; }
+        if (!object) { return }
+        if (!object.hId) { return }
 
         correspondingHierarchy = _.find(window.oi.hierarchies, function (hierarchy) {
           return hierarchy._id === object.hId

@@ -3,25 +3,24 @@
  * while holding the shift key
  */
 
-/*jslint node: true, browser: true, nomen: true, todo: true, plusplus */
-'use strict';
+'use strict'
 
-var ol = require('openlayers');
+var ol = require('openlayers')
 
 module.exports = function () {
-    var map = window.oi.olMap.map,
-        dragBox;
+  var map = window.oi.olMap.map,
+    dragBox
 
-    dragBox = new ol.interaction.DragBox({
-        condition: ol.events.condition.shiftKeyOnly,
-        style: new ol.style.Style({
-            stroke: new ol.style.Stroke({
-                color: [0, 0, 255, 1]
-            })
-        })
-    });
+  dragBox = new ol.interaction.DragBox({
+    condition: ol.events.condition.shiftKeyOnly,
+    style: new ol.style.Style({
+      stroke: new ol.style.Stroke({
+        color: [0, 0, 255, 1]
+      })
+    })
+  })
 
-    map.addInteraction(dragBox);
-    // make dragbox global so it can be removed later
-    window.oi.olMap.map.dragBoxInteraction = dragBox;
-};
+  map.addInteraction(dragBox)
+  // make dragbox global so it can be removed later
+  window.oi.olMap.map.dragBoxInteraction = dragBox
+}

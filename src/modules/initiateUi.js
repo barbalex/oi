@@ -1,6 +1,5 @@
 /*
  * initiates the ui
- * 
  */
 
 'use strict'

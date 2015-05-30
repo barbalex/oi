@@ -1,7 +1,6 @@
 'use strict'
 
-var ol = require('openlayers'),
-  $ = require('jquery'),
+var $ = require('jquery'),
   _ = require('underscore'),
   addSelectInteraction = require('../map/addSelectInteraction')
 

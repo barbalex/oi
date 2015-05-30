@@ -2,7 +2,6 @@
 
 var ol = require('openlayers'),
   $ = require('jquery'),
-  _ = require('underscore'),
   getEditingLayer = require('./getEditingLayer'),
   getObject = require('../getObject'),
   saveObjectValue = require('../form/saveObjectValue'),

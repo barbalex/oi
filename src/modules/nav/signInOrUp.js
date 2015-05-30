@@ -10,9 +10,9 @@ function validSignin (signindata) {
     validPassword,
     valid
 
-  validName = signindata.name && validateEmail(signindata.name) ? true : false
-  validPassword = signindata.password                               ? true : false
-  valid = !!(validName && validPassword)
+  validName = signindata.name && validateEmail(signindata.name)
+  validPassword = !!signindata.password
+  valid = validName && validPassword
 
   return valid
 }
