@@ -1,8 +1,5 @@
-/*jslint node: true, browser: true, nomen: true, todo: true */
-'use strict';
+'use strict'
 
-var _ = require('underscore');
+var _ = require('underscore')
 
-module.exports = function () {
-    
-};
+module.exports = function () {}

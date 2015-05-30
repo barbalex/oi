@@ -1,5 +1,5 @@
 <div class="form-group js-form-group">
-    <label for="{{object._id}}{{object.label}}">{{object.label}}</label>
-    <textarea class="form-control" id="{{object._id}}{{object.label}}" data-object="{{json object}}">{{object.value}}</textarea>
-    <button class="js-geometryField btn btn-default btn-xs">zoomen</button>
+  <label for="{{object._id}}{{object.label}}">{{object.label}}</label>
+  <textarea class="form-control" id="{{object._id}}{{object.label}}" data-object="{{json object}}">{{object.value}}</textarea>
+  <button class="js-geometryField btn btn-default btn-xs">zoomen</button>
 </div>

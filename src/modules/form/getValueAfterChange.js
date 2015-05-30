@@ -4,38 +4,37 @@
  * daher müssen sie in den richtigen Datentyp konvertiert werden
  */
 
-/*jslint node: true, browser: true, nomen: true, todo: true */
-'use strict';
+'use strict'
 
-var $                    = require('jquery'),
-    _                    = require('underscore'),
-    convertToCorrectType = require('./convertToCorrectType');
+var $ = require('jquery'),
+  _ = require('underscore'),
+  convertToCorrectType = require('./convertToCorrectType')
 
 module.exports = function (that) {
-    var value,
-        $that = $(that);
+  var value,
+    $that = $(that)
 
-    switch (that.type) {
+  switch (that.type) {
     case 'text':
     case 'number':
     case 'textarea':
     case 'select-one':
     case 'radio':
-        value = convertToCorrectType(that.value);
-        break;
+      value = convertToCorrectType(that.value)
+      break
     case 'checkbox':
-        switch ($that.data('object').inputDataType) {
+      switch ($that.data('object').inputDataType) {
         case 'checkbox':
-            value = $that.is(':checked');
-            break;
+          value = $that.is(':checked')
+          break
         case 'checkboxGroup':
-            value = [];
-            _.each($('[name="' + $that.data('object')._id + $that.data('object').label + '"]:checked'), function (checkbox) {
-                value.push(convertToCorrectType(checkbox.value));
-            });
-            break;
-        }
-        break;
-    }
-    return value;
-};
+          value = []
+          _.each($('[name="' + $that.data('object')._id + $that.data('object').label + '"]:checked'), function (checkbox) {
+            value.push(convertToCorrectType(checkbox.value))
+          })
+          break
+      }
+      break
+  }
+  return value
+}

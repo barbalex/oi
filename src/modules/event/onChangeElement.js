@@ -1,13 +1,12 @@
-/*jslint node: true, browser: true, nomen: true, todo: true */
-'use strict';
+'use strict'
 
-var $                   = require('jquery'),
-    getValueAfterChange = require('../form/getValueAfterChange'),
-    saveObjectValue     = require('../form/saveObjectValue');
+var $ = require('jquery'),
+  getValueAfterChange = require('../form/getValueAfterChange'),
+  saveObjectValue = require('../form/saveObjectValue')
 
 module.exports = function () {
-    var value  = getValueAfterChange(this),
-        object = $(this).data('object');
+  var value = getValueAfterChange(this),
+    object = $(this).data('object')
 
-    saveObjectValue(object, value);
-};
+  saveObjectValue(object, value)
+}

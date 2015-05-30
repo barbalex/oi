@@ -5,12 +5,11 @@
  * dann watch
  */
 
-/*jslint node: true, browser: true, nomen: true, todo: true */
-'use strict';
+'use strict'
 
-var gulp       = require('gulp'),
-    requireDir = require('require-dir');
+var gulp = require('gulp'),
+  requireDir = require('require-dir')
 
-requireDir('../gulp-tasks', {recurse: true});
+requireDir('../gulp-tasks', {recurse: true})
 
-return gulp.task('default', ['dev']);
+gulp.task('default', ['dev'])

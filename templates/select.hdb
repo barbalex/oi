@@ -1,10 +1,10 @@
 <div class="form-group js-form-group">
-    <label class="control-label">{{object.label}}</label>
-    <div class="controls">
-        <select id="{{object._id}}{{object.label}}" data-object="{{json object}}" class="form-control">
-            {{#each object.valueList}}
-                <option value={{{this.value}}} {{this.checked}}>{{this.label}}</option>
-            {{/each}}
-        </select>
-    </div>
+  <label class="control-label">{{object.label}}</label>
+  <div class="controls">
+    <select id="{{object._id}}{{object.label}}" data-object="{{json object}}" class="form-control">
+      {{#each object.valueList}}
+        <option value={{{this.value}}} {{this.checked}}>{{this.label}}</option>
+      {{/each}}
+    </select>
+  </div>
 </div>

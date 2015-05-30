@@ -1,14 +1,12 @@
-/*jslint node: true, browser: true, nomen: true, todo: true */
-'use strict';
+'use strict'
 
-var _             = require('underscore'),
-    syncProjectDb = require('./syncProjectDb');
+var _ = require('underscore'),
+  syncProjectDb = require('./syncProjectDb')
 
 module.exports = function (projectDbs) {
+  // console.log('syncProjectDbs: syncing projects', projectDbs)
 
-    //console.log('syncProjectDbs: syncing projects', projectDbs);
-
-    _.each(projectDbs, function (projectDb) {
-        syncProjectDb(projectDb);
-    });
-};
+  _.each(projectDbs, function (projectDb) {
+    syncProjectDb(projectDb)
+  })
+}

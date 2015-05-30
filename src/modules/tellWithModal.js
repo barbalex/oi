@@ -1,20 +1,19 @@
-/*jslint node: true, browser: true, nomen: true, todo: true */
-'use strict';
+'use strict'
 
-var $ = require('jquery');
+var $ = require('jquery')
 
 module.exports = function (title, text) {
-    var $modal = $('#tellWithModal'),
-        options;
+  var $modal = $('#tellWithModal'),
+    options
 
-    title = title || '';
-    text  = text  || '';
+  title = title || ''
+  text = text || ''
 
-    options = {
-        keyboard: true
-    };
+  options = {
+    keyboard: true
+  }
 
-    $modal.find('.modal-title').html(title);
-    $modal.find('.modal-body').find('p').html(text);
-    $modal.modal(options);
-};
+  $modal.find('.modal-title').html(title)
+  $modal.find('.modal-body').find('p').html(text)
+  $modal.modal(options)
+}

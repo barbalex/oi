@@ -1,10 +1,9 @@
-/*jslint node: true, browser: true, nomen: true, todo: true */
-'use strict';
+'use strict'
 
-var $                       = require('jquery'),
-    deleteObjectAndChildren = require('../deleteObjectAndChildren');
+var $ = require('jquery'),
+  deleteObjectAndChildren = require('../deleteObjectAndChildren')
 
 module.exports = function () {
-    var node = $('#navContent').jstree(true).get_selected(true)[0];
-    deleteObjectAndChildren(node);
-};
+  var node = $('#navContent').jstree(true).get_selected(true)[0]
+  deleteObjectAndChildren(node)
+}

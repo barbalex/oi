@@ -1,13 +1,12 @@
-/*jslint node: true, browser: true, nomen: true, todo: true */
-'use strict';
+'use strict'
 
-var _ = require('underscore');
+var _ = require('underscore')
 
 module.exports = function (id) {
-    // get data for object
-    var object = _.find(window.oi.objects, function (object) {
-        return object._id === id;
-    });
+  // get data for object
+  var object = _.find(window.oi.objects, function (object) {
+    return object._id === id
+  })
 
-    return object || null;
-};
+  return object || null
+}

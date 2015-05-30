@@ -6,67 +6,66 @@
  * type ist select, optionGroup oder checkboxgroup
  */
 
-/*jslint node: true, browser: true, nomen: true, todo: true */
-'use strict';
+'use strict'
 
-var _ = require('underscore');
+var _ = require('underscore')
 
 module.exports = function (possibleValues, setValues, type) {
-    var valueList         = [],
-        selectedOrChecked = type === 'select' ? 'selected' : 'checked',
-        nullObject        = {};
+  var valueList = [],
+    selectedOrChecked = type === 'select' ? 'selected' : 'checked',
+    nullObject = {}
 
-    nullObject.value = null;
-    nullObject.label = '(kein Wert)';
+  nullObject.value = null
+  nullObject.label = '(kein Wert)'
 
+  if (typeof possibleValues[0] === 'object' && possibleValues[0] !== null) {
+    valueList = _.pluck(possibleValues, 'value')
+  }
+
+  // add empty value in selects and optionGroups
+  if (type === 'select' || type === 'optionGroup') {
+    // Vorsicht: null ist auch ein Objekt!
     if (typeof possibleValues[0] === 'object' && possibleValues[0] !== null) {
-        valueList = _.pluck(possibleValues, 'value');
+      if (!_.contains(valueList, null)) {
+        possibleValues.unshift(nullObject)
+        valueList.unshift(null)
+      }
+    } else {
+      if (!_.contains(possibleValues, null)) {
+        possibleValues.unshift(null)
+      }
     }
+  }
 
-    // add empty value in selects and optionGroups
-    if (type === 'select' || type === 'optionGroup') {
-        // Vorsicht: null ist auch ein Objekt!
-        if (typeof possibleValues[0] === 'object' && possibleValues[0] !== null) {
-            if (!_.contains(valueList, null)) {
-                possibleValues.unshift(nullObject);
-                valueList.unshift(null);
-            }
-        } else {
-            if (!_.contains(possibleValues, null)) {
-                possibleValues.unshift(null);
-            }
-        }
+  return _.map(possibleValues, function (value) {
+    var valueObject = {}
+
+    // typeof null ist object!!!
+    if (value && typeof value === 'object') {
+      // valueList enthielt Objekte mit values und labels
+      valueObject.value = value.value
+      valueObject.label = value.label
+
+      // setzen, ob checkbox checked ist
+      if (setValues && setValues.constructor === Array) {
+        valueObject.checked = !_.contains(setValues, value.value) ? selectedOrChecked : ''
+      } else {
+        valueObject.checked = setValues == value.value ? selectedOrChecked : ''
+      }
+    } else {
+      valueObject.value = value
+      if ((type === 'select' || type === 'optionGroup') && value === null) {
+        valueObject.label = '(kein Wert)'
+      } else {
+        valueObject.label = value
+      }
+      // setzen, ob checkbox checked ist
+      if (setValues && setValues.constructor === Array) {
+        valueObject.checked = !_.contains(setValues, value) ? selectedOrChecked : ''
+      } else {
+        valueObject.checked = setValues == value ? selectedOrChecked : ''
+      }
     }
-
-    return _.map(possibleValues, function (value) {
-        var valueObject = {};
-
-        // typeof null ist object!!!
-        if (value && typeof value === 'object') {
-            // valueList enthielt Objekte mit values und labels
-            valueObject.value = value.value;
-            valueObject.label = value.label;
-
-            // setzen, ob checkbox checked ist
-            if (setValues && setValues.constructor === Array) {
-                valueObject.checked = !_.contains(setValues, value.value) ? selectedOrChecked : '';
-            } else {
-                valueObject.checked = setValues == value.value ? selectedOrChecked : '';
-            }
-        } else {
-            valueObject.value = value;
-            if ((type === 'select' || type === 'optionGroup') && value === null) {
-                valueObject.label = '(kein Wert)';
-            } else {
-                valueObject.label = value;
-            }
-            // setzen, ob checkbox checked ist
-            if (setValues && setValues.constructor === Array) {
-                valueObject.checked = !_.contains(setValues, value) ? selectedOrChecked : '';
-            } else {
-                valueObject.checked = setValues == value ? selectedOrChecked : '';
-            }
-        }
-        return valueObject;
-    });
-};
+    return valueObject
+  })
+}

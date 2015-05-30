@@ -3,19 +3,18 @@
  * necessary before writing to the database
  */
 
-/*jslint node: true, browser: true, nomen: true, todo: true */
-'use strict';
+'use strict'
 
-var $ = require('jquery');
+var $ = require('jquery')
 
 module.exports = function (object) {
-    var objectToSave;
+  var objectToSave
 
-    // make a copy of the object
-    objectToSave = $.extend(true, {}, object);
-    if (objectToSave._active) {
-        // remove because db does not accept it
-        delete objectToSave._active;
-    }
-    return objectToSave;
-};
+  // make a copy of the object
+  objectToSave = $.extend(true, {}, object)
+  if (objectToSave._active) {
+    // remove because db does not accept it
+    delete objectToSave._active
+  }
+  return objectToSave
+}

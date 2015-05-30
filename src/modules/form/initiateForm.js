@@ -1,20 +1,19 @@
-/*jslint node: true, browser: true, nomen: true, todo: true */
-'use strict';
+'use strict'
 
-var $                    = require('jquery'),
-    formButtonToolbar    = require('../../../templates/formButtonToolbar'),
-    positionFormBtngroup = require('./positionFormBtngroup'),
-    setActiveObject      = require('../setActiveObject'),
-    initiateForObject    = require('./initiateForObject'),
-    initiateForHierarchy = require('./initiateForHierarchy');
+var $ = require('jquery'),
+  formButtonToolbar = require('../../../templates/formButtonToolbar'),
+  positionFormBtngroup = require('./positionFormBtngroup'),
+  setActiveObject = require('../setActiveObject'),
+  initiateForObject = require('./initiateForObject'),
+  initiateForHierarchy = require('./initiateForHierarchy')
 
 module.exports = function (id, type) {
-    switch (type) {
+  switch (type) {
     case 'object':
-        initiateForObject(id);
-        break;
+      initiateForObject(id)
+      break
     case 'hierarchy':
-        initiateForHierarchy();
-        break;
-    }
-};
+      initiateForHierarchy()
+      break
+  }
+}

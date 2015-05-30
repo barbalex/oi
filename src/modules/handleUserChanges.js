@@ -9,65 +9,64 @@
  * so we need to initiate the ui after the change event
  */
 
-/*jslint node: true, browser: true, nomen: true, todo: true */
-'use strict';
+'use strict'
 
-var _                           = require('underscore'),
-    PouchDB                     = require('pouchdb'),
-    getUserDbName               = require('./getUserDbName'),
-    getProjectNamesToInitiateUi = require('./nav/getProjectNamesToInitiateUi');
+var _ = require('underscore'),
+  PouchDB = require('pouchdb'),
+  getUserDbName = require('./getUserDbName'),
+  getProjectNamesToInitiateUi = require('./nav/getProjectNamesToInitiateUi')
 
 module.exports = function (change) {
-    var userDoc  = change.doc,
-        userName = userDoc.name,
-        userDbName,
-        userDb,
-        rootObjects,
-        rootObjectsProjectNames,
-        projectsToAdd,
-        projectsToRemove;
+  var userDoc = change.doc,
+    userName = userDoc.name,
+    userDbName,
+    userDb,
+    rootObjects,
+    rootObjectsProjectNames,
+    projectsToAdd,
+    projectsToRemove
 
-    if (userName === window.oi.me.name) {
-        // check the revs
-        userDbName = getUserDbName();
-        userDb     = new PouchDB(userDbName);
-        userDb.get(change.id, { revs_info: true }).then(function (doc) {
-            var revisions = doc._revs_info;
+  if (userName === window.oi.me.name) {
+    // check the revs
+    userDbName = getUserDbName()
+    userDb = new PouchDB(userDbName)
+    userDb.get(change.id, { revs_info: true }).then(function (doc) {
+      var revisions = doc._revs_info
 
-            //console.log('handleChangesInUserDb: change: ', change);
-            //console.log('handleChangesInUserDb: revisions: ', revisions);
+      // console.log('handleChangesInUserDb: change: ', change)
+      // console.log('handleChangesInUserDb: revisions: ', revisions)
 
-            if (revisions.length === 1) {
-                // this is a new user doc
-                // need to initiate ui
-                getProjectNamesToInitiateUi(null);
-            }
-        }).catch(function (error) {
-            console.log('error getting revs of doc: ', error);
-        });
+      if (revisions.length === 1) {
+        // this is a new user doc
+        // need to initiate ui
+        getProjectNamesToInitiateUi(null)
+      }
+    }).catch(function (error) {
+      console.log('error getting revs of doc: ', error)
+    })
 
-        rootObjects = _.filter(window.oi.objects, function (object) {
-            return !object.parent;
-        });
-        rootObjectsProjectNames = _.map(rootObjects, function (rootObject) {
-            return 'project_' + rootObject._id;
-        });
+    rootObjects = _.filter(window.oi.objects, function (object) {
+      return !object.parent
+    })
+    rootObjectsProjectNames = _.map(rootObjects, function (rootObject) {
+      return 'project_' + rootObject._id
+    })
 
-        // projects to be removed:
-        projectsToRemove = _.difference(rootObjectsProjectNames, userDoc.roles);
-        // projects to be added:
-        projectsToAdd    = _.difference(userDoc.roles, rootObjectsProjectNames);
+    // projects to be removed:
+    projectsToRemove = _.difference(rootObjectsProjectNames, userDoc.roles)
+    // projects to be added:
+    projectsToAdd = _.difference(userDoc.roles, rootObjectsProjectNames)
 
-        // TODO: remove projectsToRemove?
-        // remove from model, map and nav
-        // remove db if no other user?
+    // TODO: remove projectsToRemove?
+    // remove from model, map and nav
+    // remove db if no other user?
 
-        // TODO: add projectsToAdd?
-        // add to model, nav and map
+    // TODO: add projectsToAdd?
+    // add to model, nav and map
 
-        console.log('rootObjects: ', rootObjects);
-        console.log('rootObjectsProjectNames: ', rootObjectsProjectNames);
-        console.log('projectsToRemove: ', projectsToRemove);
-        console.log('projectsToAdd: ', projectsToAdd);
-    }
-};
+    console.log('rootObjects: ', rootObjects)
+    console.log('rootObjectsProjectNames: ', rootObjectsProjectNames)
+    console.log('projectsToRemove: ', projectsToRemove)
+    console.log('projectsToAdd: ', projectsToAdd)
+  }
+}
